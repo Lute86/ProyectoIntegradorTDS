@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - IFTS 29</title>
+  <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">29</div>
+      <div class="sidebar-title">
+        <h2>IFTS 29</h2>
+        <p>Panel de Administración</p>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Principal</div>
+        <div class="nav-item active" data-page="dashboard">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Contenido</div>
+        <div class="nav-item" data-page="noticias">
+          <span class="icon">📰</span>
+          <span>Noticias</span>
+          <span class="badge">12</span>
+        </div>
+        <div class="nav-item" data-page="carreras">
+          <span class="icon">🎓</span>
+          <span>Carreras</span>
+        </div>
+        <div class="nav-item" data-page="eventos">
+          <span class="icon">📅</span>
+          <span>Eventos</span>
+          <span class="badge">3</span>
+        </div>
+        <div class="nav-item" data-page="galeria">
+          <span class="icon">📷</span>
+          <span>Galería</span>
+        </div>
+        <div class="nav-item" data-page="testimonios">
+          <span class="icon">💬</span>
+          <span>Testimonios</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Usuarios</div>
+        <div class="nav-item" data-page="usuarios">
+          <span class="icon">👥</span>
+          <span>Usuarios</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Configuración</div>
+        <div class="nav-item" data-page="personalizar">
+          <span class="icon">🎨</span>
+          <span>Personalizar Sitio</span>
+        </div>
+        <div class="nav-item" data-page="ajustes">
+          <span class="icon">⚙️</span>
+          <span>Ajustes Generales</span>
+        </div>
+      </div>
+      <div class="nav-section" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #1e293b;">
+        <div class="nav-item" onclick="window.location.href='../public/index.html'">
+          <span class="icon">🌐</span>
+          <span>Ver Sitio Público</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-btn" id="menuToggle" style="display: none;">☰</button>
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="breadcrumb-admin">Inicio / <span id="breadcrumbCurrent">Dashboard</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn">
+          🔍
+        </button>
+        <button class="topbar-btn">
+          🔔
+          <span class="notification-dot"></span>
+        </button>
+        <div class="user-menu">
+          <div class="user-avatar">AD</div>
+          <div class="user-info">
+            <div class="name">Admin</div>
+            <div class="role">Administrador</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Estudiantes</h3>
+              <div class="value">1,523</div>
+              <div class="change positive">↑ 12% este mes</div>
+            </div>
+            <div class="stat-icon" style="background: #dbeafe;">👥</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Carreras Activas</h3>
+              <div class="value">3</div>
+              <div class="change positive">Sin cambios</div>
+            </div>
+            <div class="stat-icon" style="background: #d1fae5;">🎓</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Noticias</h3>
+              <div class="value">12</div>
+              <div class="change positive">↑ 3 esta semana</div>
+            </div>
+            <div class="stat-icon" style="background: #fef3c7;">📰</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Visitas del Sitio</h3>
+              <div class="value">4,892</div>
+              <div class="change positive">↑ 8% este mes</div>
+            </div>
+            <div class="stat-icon" style="background: #e0e7ff;">🌐</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+          <div class="card-admin">
+            <div class="card-header">
+              <h2>Actividad Reciente</h2>
+            </div>
+            <div class="card-body">
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <div class="activity-dot"></div>
+                  <div class="activity-content">
+                    <p><strong>Prof. Martínez</strong> creó la noticia "Inscripciones Abiertas 2025"</p>
+                    <span class="time">Hace 2 horas</span>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-dot" style="background: var(--success);"></div>
+                  <div class="activity-content">
+                    <p><strong>Admin</strong> actualizó la carrera "Desarrollo de Software"</p>
+                    <span class="time">Hace 5 horas</span>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-dot" style="background: var(--warning);"></div>
+                  <div class="activity-content">
+                    <p><strong>Tutor López</strong> subió 3 fotos a la galería</p>
+                    <span class="time">Hace 1 día</span>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-dot" style="background: var(--danger);"></div>
+                  <div class="activity-content">
+                    <p><strong>Admin</strong> eliminó el evento "Charla cancelada"</p>
+                    <span class="time">Hace 2 días</span>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-dot"></div>
+                  <div class="activity-content">
+                    <p><strong>Admin</strong> agregó al usuario "Prof. García"</p>
+                    <span class="time">Hace 3 días</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="card-admin">
+              <div class="card-header">
+                <h2>Acciones Rápidas</h2>
+              </div>
+              <div class="card-body">
+                <div class="quick-actions" style="grid-template-columns: 1fr 1fr;">
+                  <div class="quick-action" onclick="navigateTo('noticias')">
+                    <div class="icon">📝</div>
+                    <h3>Nueva Noticia</h3>
+                  </div>
+                  <div class="quick-action" onclick="navigateTo('carreras')">
+                    <div class="icon">🎓</div>
+                    <h3>Nueva Carrera</h3>
+                  </div>
+                  <div class="quick-action" onclick="navigateTo('eventos')">
+                    <div class="icon">📅</div>
+                    <h3>Nuevo Evento</h3>
+                  </div>
+                  <div class="quick-action" onclick="navigateTo('usuarios')">
+                    <div class="icon">👤</div>
+                    <h3>Nuevo Usuario</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTICIAS -->
+      <div class="page-section" id="page-noticias">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Gestión de Noticias</h2>
+            <button class="btn btn-primary" onclick="openModal('modalNoticia')">+ Nueva Noticia</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Categoría</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Autor</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Inscripciones Abiertas 2025</strong></td>
+                    <td><span class="badge badge-primary">Inscripciones</span></td>
+                    <td><span class="badge badge-success">Publicada</span></td>
+                    <td>15 Mar 2025</td>
+                    <td>Admin</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Calendario de Exámenes Finales</strong></td>
+                    <td><span class="badge badge-success">Exámenes</span></td>
+                    <td><span class="badge badge-success">Publicada</span></td>
+                    <td>10 Mar 2025</td>
+                    <td>Secretaría</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jornada de Puertas Abiertas</strong></td>
+                    <td><span class="badge badge-warning">Evento</span></td>
+                    <td><span class="badge badge-success">Publicada</span></td>
+                    <td>5 Mar 2025</td>
+                    <td>Comunicación</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Workshop: Introducción a la IA</strong></td>
+                    <td><span class="badge badge-info">Tecnología</span></td>
+                    <td><span class="badge badge-warning">Borrador</span></td>
+                    <td>1 Mar 2025</td>
+                    <td>Prof. Martínez</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Nuevo convenio con empresas tech</strong></td>
+                    <td><span class="badge badge-primary">Institucional</span></td>
+                    <td><span class="badge badge-success">Publicada</span></td>
+                    <td>28 Feb 2025</td>
+                    <td>Admin</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARRERAS -->
+      <div class="page-section" id="page-carreras">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Gestión de Carreras</h2>
+            <button class="btn btn-primary" onclick="openModal('modalCarrera')">+ Nueva Carrera</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Carrera</th>
+                    <th>Duración</th>
+                    <th>Modalidad</th>
+                    <th>Estado</th>
+                    <th>Estudiantes</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">💻</div>
+                        <div>
+                          <strong>Desarrollo de Software</strong>
+                          <p style="font-size: 0.8rem; color: var(--text-light);">Tecnicatura Superior</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>2 años</td>
+                    <td>Presencial</td>
+                    <td><span class="badge badge-success">Activa</span></td>
+                    <td>680</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">📋</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 40px; height: 40px; background: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">🔒</div>
+                        <div>
+                          <strong>Seguridad Informática</strong>
+                          <p style="font-size: 0.8rem; color: var(--text-light);">Tecnicatura Superior</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>2 años</td>
+                    <td>Presencial</td>
+                    <td><span class="badge badge-success">Activa</span></td>
+                    <td>420</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">📋</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 40px; height: 40px; background: #f59e0b; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">📊</div>
+                        <div>
+                          <strong>Análisis de Datos</strong>
+                          <p style="font-size: 0.8rem; color: var(--text-light);">Tecnicatura Superior</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>2 años</td>
+                    <td>Presencial</td>
+                    <td><span class="badge badge-warning">En revisión</span></td>
+                    <td>423</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">📋</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENTOS -->
+      <div class="page-section" id="page-eventos">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Gestión de Eventos</h2>
+            <button class="btn btn-primary" onclick="openModal('modalEvento')">+ Nuevo Evento</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Evento</th>
+                    <th>Fecha</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Inicio de Clases - Primer Cuatrimestre</strong></td>
+                    <td>25 Mar 2025</td>
+                    <td>IFTS 29</td>
+                    <td><span class="badge badge-success">Confirmado</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Exámenes Finales - Turno Abril</strong></td>
+                    <td>02 Abr 2025</td>
+                    <td>IFTS 29</td>
+                    <td><span class="badge badge-success">Confirmado</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Charla: Tendencias en Desarrollo Web 2025</strong></td>
+                    <td>15 Abr 2025</td>
+                    <td>Auditorio</td>
+                    <td><span class="badge badge-warning">Pendiente</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GALERIA -->
+      <div class="page-section" id="page-galeria">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Galería de Imágenes</h2>
+            <button class="btn btn-primary">+ Subir Imágenes</button>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+              <div style="height: 150px; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <span style="font-size: 2rem;">📷</span>
+                <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem;">
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">✏️</button>
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">🗑️</button>
+                </div>
+              </div>
+              <div style="height: 150px; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <span style="font-size: 2rem;">📷</span>
+                <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem;">
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">✏️</button>
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">🗑️</button>
+                </div>
+              </div>
+              <div style="height: 150px; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <span style="font-size: 2rem;">📷</span>
+                <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem;">
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">✏️</button>
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">🗑️</button>
+                </div>
+              </div>
+              <div style="height: 150px; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <span style="font-size: 2rem;">📷</span>
+                <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem;">
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">✏️</button>
+                  <button class="btn btn-outline btn-sm btn-icon" style="background: white;">🗑️</button>
+                </div>
+              </div>
+              <div style="height: 150px; border: 2px dashed var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-light);">
+                <div style="text-align: center;">
+                  <div style="font-size: 2rem;">+</div>
+                  <p>Agregar imagen</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TESTIMONIOS -->
+      <div class="page-section" id="page-testimonios">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Gestión de Testimonios</h2>
+            <button class="btn btn-primary" onclick="openModal('modalTestimonio')">+ Nuevo Testimonio</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Autor</th>
+                    <th>Carrera</th>
+                    <th>Testimonio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>María López</strong></td>
+                    <td>Desarrollo de Software</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">El IFTS 29 me dio las herramientas para conseguir trabajo antes de recibirme...</td>
+                    <td><span class="badge badge-success">Visible</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Carlos García</strong></td>
+                    <td>Seguridad Informática</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">La experiencia de estudiar en el IFTS 29 fue increíble...</td>
+                    <td><span class="badge badge-success">Visible</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ana Fernández</strong></td>
+                    <td>Análisis de Datos</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Elegí el IFTS 29 por la flexibilidad de horarios...</td>
+                    <td><span class="badge badge-warning">Pendiente</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USUARIOS -->
+      <div class="page-section" id="page-usuarios">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Gestión de Usuarios</h2>
+            <button class="btn btn-primary" onclick="openModal('modalUsuario')">+ Nuevo Usuario</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Último Acceso</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 36px; height: 36px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">AD</div>
+                        <div>
+                          <strong>Admin Principal</strong>
+                        </div>
+                      </div>
+                    </td>
+                    <td>admin@ifts29.edu.ar</td>
+                    <td><span class="badge badge-danger">Administrador</span></td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>Hoy, 14:30</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🔑</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 36px; height: 36px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">PM</div>
+                        <div>
+                          <strong>Prof. Martínez</strong>
+                        </div>
+                      </div>
+                    </td>
+                    <td>martinez@ifts29.edu.ar</td>
+                    <td><span class="badge badge-primary">Profesor</span></td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>Hoy, 10:15</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🔑</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 36px; height: 36px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">TL</div>
+                        <div>
+                          <strong>Tutor López</strong>
+                        </div>
+                      </div>
+                    </td>
+                    <td>lopez@ifts29.edu.ar</td>
+                    <td><span class="badge badge-warning">Tutor</span></td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>Ayer, 18:45</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🔑</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 36px; height: 36px; background: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">PG</div>
+                        <div>
+                          <strong>Prof. García</strong>
+                        </div>
+                      </div>
+                    </td>
+                    <td>garcia@ifts29.edu.ar</td>
+                    <td><span class="badge badge-primary">Profesor</span></td>
+                    <td><span class="badge badge-danger">Inactivo</span></td>
+                    <td>15 Feb 2025</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm btn-icon">✏️</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🔑</button>
+                      <button class="btn btn-outline btn-sm btn-icon">🗑️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONALIZAR SITIO -->
+      <div class="page-section" id="page-personalizar">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <div class="card-admin">
+              <div class="card-header">
+                <h2>🎨 Colores del Sitio</h2>
+              </div>
+              <div class="card-body">
+                <div class="color-options">
+                  <div class="color-option">
+                    <input type="color" id="colorPrimary" value="#2563eb">
+                    <label>Primario</label>
+                  </div>
+                  <div class="color-option">
+                    <input type="color" id="colorSecondary" value="#0f172a">
+                    <label>Secundario</label>
+                  </div>
+                  <div class="color-option">
+                    <input type="color" id="colorAccent" value="#f59e0b">
+                    <label>Acento</label>
+                  </div>
+                  <div class="color-option">
+                    <input type="color" id="colorBg" value="#ffffff">
+                    <label>Fondo</label>
+                  </div>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                  <h4 style="margin-bottom: 0.75rem;">Temas Predefinidos</h4>
+                  <div class="theme-presets">
+                    <div class="theme-preset active" onclick="applyTheme('default')">
+                      <div class="theme-colors">
+                        <div class="theme-color" style="background: #2563eb;"></div>
+                        <div class="theme-color" style="background: #0f172a;"></div>
+                        <div class="theme-color" style="background: #f59e0b;"></div>
+                      </div>
+                      <p>Clásico</p>
+                    </div>
+                    <div class="theme-preset" onclick="applyTheme('dark')">
+                      <div class="theme-colors">
+                        <div class="theme-color" style="background: #6366f1;"></div>
+                        <div class="theme-color" style="background: #1e1b4b;"></div>
+                        <div class="theme-color" style="background: #ec4899;"></div>
+                      </div>
+                      <p>Oscuro</p>
+                    </div>
+                    <div class="theme-preset" onclick="applyTheme('nature')">
+                      <div class="theme-colors">
+                        <div class="theme-color" style="background: #10b981;"></div>
+                        <div class="theme-color" style="background: #064e3b;"></div>
+                        <div class="theme-color" style="background: #84cc16;"></div>
+                      </div>
+                      <p>Naturaleza</p>
+                    </div>
+                    <div class="theme-preset" onclick="applyTheme('warm')">
+                      <div class="theme-colors">
+                        <div class="theme-color" style="background: #f97316;"></div>
+                        <div class="theme-color" style="background: #431407;"></div>
+                        <div class="theme-color" style="background: #eab308;"></div>
+                      </div>
+                      <p>Cálido</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-admin">
+              <div class="card-header">
+                <h2>📐 Layout del Sitio</h2>
+              </div>
+              <div class="card-body">
+                <div class="layout-options">
+                  <div class="layout-option active" onclick="selectLayout(this, 'navbar')">
+                    <div class="layout-preview">
+                      <div class="topbar-preview"></div>
+                    </div>
+                    <p>Navbar Superior</p>
+                  </div>
+                  <div class="layout-option" onclick="selectLayout(this, 'sidebar')">
+                    <div class="layout-preview">
+                      <div class="sidebar-preview" style="width: 30px;"></div>
+                      <div class="content-preview"></div>
+                    </div>
+                    <p>Sidebar Lateral</p>
+                  </div>
+                  <div class="layout-option" onclick="selectLayout(this, 'minimal')">
+                    <div class="layout-preview">
+                      <div class="content-preview" style="display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 0.7rem; color: var(--text-light);">Centrado</span>
+                      </div>
+                    </div>
+                    <p>Minimalista</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card-admin">
+              <div class="card-header">
+                <h2>📦 Secciones Visibles</h2>
+                <span style="font-size: 0.85rem; color: var(--text-light);">Arrastrá para reordenar</span>
+              </div>
+              <div class="card-body">
+                <div class="draggable-list" id="sectionsList">
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>🏠 Hero / Banner Principal</h4>
+                      <p>Sección de bienvenida con título y botones</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>📊 Estadísticas</h4>
+                      <p>Números destacados del instituto</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>🎓 Carreras</h4>
+                      <p>Listado de carreras disponibles</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>📰 Últimas Noticias</h4>
+                      <p>Noticias más recientes del instituto</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>📅 Próximos Eventos</h4>
+                      <p>Eventos y actividades próximas</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>💬 Testimonios</h4>
+                      <p>Carousel de testimonios de estudiantes</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="draggable-item" draggable="true">
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="item-info">
+                      <h4>📷 Galería</h4>
+                      <p>Fotos del instituto y actividades</p>
+                    </div>
+                    <label class="toggle">
+                      <input type="checkbox">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-admin">
+              <div class="card-header">
+                <h2>🔤 Tipografía</h2>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Fuente Principal</label>
+                  <select>
+                    <option>Segoe UI (Default)</option>
+                    <option>Inter</option>
+                    <option>Roboto</option>
+                    <option>Open Sans</option>
+                    <option>Poppins</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Tamaño Base</label>
+                    <select>
+                      <option>14px</option>
+                      <option selected>16px</option>
+                      <option>18px</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Redondeo de Bordes</label>
+                    <select>
+                      <option>Sin redondeo</option>
+                      <option selected>Suave (8px)</option>
+                      <option>Medio (12px)</option>
+                      <option>Alto (16px)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+          <button class="btn btn-outline">Vista Previa</button>
+          <button class="btn btn-primary" onclick="alert('Cambios guardados (wireframe)')">💾 Guardar Cambios</button>
+        </div>
+      </div>
+
+      <!-- AJUSTES GENERALES -->
+      <div class="page-section" id="page-ajustes">
+        <div class="card-admin">
+          <div class="card-header">
+            <h2>Ajustes Generales del Sitio</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre del Sitio</label>
+                <input type="text" value="IFTS 29">
+              </div>
+              <div class="form-group">
+                <label>Subtítulo</label>
+                <input type="text" value="Instituto de Formación Técnica Superior N° 29">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email de Contacto</label>
+                <input type="email" value="dfts.ifts29@bue.edu.ar">
+              </div>
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input type="text" value="(011) 1234-5678">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Dirección</label>
+              <input type="text" value="Buenos Aires, Argentina">
+            </div>
+            <div class="form-group">
+              <label>Descripción del Sitio (SEO)</label>
+              <textarea style="min-height: 80px;">Instituto de Formación Técnica Superior N° 29. Carreras en tecnología con excelencia académica.</textarea>
+            </div>
+            <div class="form-group">
+              <label>Texto del Footer</label>
+              <input type="text" value="Todos los derechos reservados © IFTS 29 - 2025">
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button class="btn btn-outline">Cancelar</button>
+              <button class="btn btn-primary" onclick="alert('Ajustes guardados (wireframe)')">💾 Guardar Ajustes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: Nueva Noticia -->
+  <div class="modal-overlay" id="modalNoticia">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nueva Noticia</h2>
+        <button class="modal-close" onclick="closeModal('modalNoticia')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" placeholder="Título de la noticia">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Categoría</label>
+            <select>
+              <option>Inscripciones</option>
+              <option>Exámenes</option>
+              <option>Eventos</option>
+              <option>Tecnología</option>
+              <option>Institucional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select>
+              <option>Borrador</option>
+              <option>Publicada</option>
+              <option>Programada</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Imagen Destacada</label>
+          <div style="border: 2px dashed var(--border); border-radius: 8px; padding: 2rem; text-align: center; color: var(--text-light); cursor: pointer;">
+            <div style="font-size: 2rem;">📷</div>
+            <p>Arrastrá una imagen o hacé clic para subir</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Contenido</label>
+          <textarea placeholder="Escribí el contenido de la noticia..." style="min-height: 150px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalNoticia')">Cancelar</button>
+        <button class="btn btn-primary" onclick="closeModal('modalNoticia'); alert('Noticia creada (wireframe)')">Crear Noticia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nueva Carrera -->
+  <div class="modal-overlay" id="modalCarrera">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nueva Carrera</h2>
+        <button class="modal-close" onclick="closeModal('modalCarrera')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nombre de la Carrera</label>
+          <input type="text" placeholder="Ej: Desarrollo de Software">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duración</label>
+            <select>
+              <option>2 años</option>
+              <option>3 años</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Modalidad</label>
+            <select>
+              <option>Presencial</option>
+              <option>Semipresencial</option>
+              <option>Virtual</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea placeholder="Descripción de la carrera..." style="min-height: 100px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Icono</label>
+          <input type="text" placeholder="Emoji o clase de icono (ej: 💻)">
+        </div>
+        <div class="form-group">
+          <label>Color</label>
+          <input type="color" value="#2563eb" style="width: 60px; height: 40px; border: none; cursor: pointer;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalCarrera')">Cancelar</button>
+        <button class="btn btn-primary" onclick="closeModal('modalCarrera'); alert('Carrera creada (wireframe)')">Crear Carrera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Evento -->
+  <div class="modal-overlay" id="modalEvento">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nuevo Evento</h2>
+        <button class="modal-close" onclick="closeModal('modalEvento')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nombre del Evento</label>
+          <input type="text" placeholder="Nombre del evento">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date">
+          </div>
+          <div class="form-group">
+            <label>Ubicación</label>
+            <input type="text" placeholder="Lugar del evento">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea placeholder="Descripción del evento..." style="min-height: 100px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalEvento')">Cancelar</button>
+        <button class="btn btn-primary" onclick="closeModal('modalEvento'); alert('Evento creado (wireframe)')">Crear Evento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Testimonio -->
+  <div class="modal-overlay" id="modalTestimonio">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nuevo Testimonio</h2>
+        <button class="modal-close" onclick="closeModal('modalTestimonio')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" placeholder="Nombre del estudiante">
+          </div>
+          <div class="form-group">
+            <label>Carrera</label>
+            <select>
+              <option>Desarrollo de Software</option>
+              <option>Seguridad Informática</option>
+              <option>Análisis de Datos</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Testimonio</label>
+          <textarea placeholder="Escribí el testimonio..." style="min-height: 100px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalTestimonio')">Cancelar</button>
+        <button class="btn btn-primary" onclick="closeModal('modalTestimonio'); alert('Testimonio creado (wireframe)')">Crear Testimonio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Nuevo Usuario -->
+  <div class="modal-overlay" id="modalUsuario">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nuevo Usuario</h2>
+        <button class="modal-close" onclick="closeModal('modalUsuario')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" placeholder="Apellido">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="email@ifts29.edu.ar">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rol</label>
+            <select>
+              <option>Administrador</option>
+              <option>Profesor</option>
+              <option>Tutor</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" placeholder="Contraseña temporal">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalUsuario')">Cancelar</button>
+        <button class="btn btn-primary" onclick="closeModal('modalUsuario'); alert('Usuario creado (wireframe)')">Crear Usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

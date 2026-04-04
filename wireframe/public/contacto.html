@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - IFTS 29</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .contact-form {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .info-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .info-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .info-card h3 {
+      color: var(--secondary);
+      margin-bottom: 0.25rem;
+    }
+    .info-card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    .map-placeholder {
+      height: 200px;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <div class="logo">29</div>
+        <span>IFTS 29</span>
+      </a>
+      <button class="mobile-menu-btn">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="carreras.html">Carreras</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+        <li><a href="estudiantes.html">Estudiantes</a></li>
+        <li><a href="contacto.html" class="active">Contacto</a></li>
+        <li><a href="../admin/dashboard.html" class="btn btn-accent" style="color: var(--secondary);">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Contacto</h1>
+      <p>Estamos para ayudarte</p>
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>Contacto</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-form">
+          <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Envianos tu consulta</h2>
+          <form onsubmit="event.preventDefault(); alert('Mensaje enviado (wireframe)');">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" placeholder="Tu nombre">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" placeholder="tu@email.com">
+            </div>
+            <div class="form-group">
+              <label>Asunto</label>
+              <select>
+                <option>Consulta general</option>
+                <option>Inscripciones</option>
+                <option>Información de carreras</option>
+                <option>Becas</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Mensaje</label>
+              <textarea placeholder="Escribí tu mensaje..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar mensaje</button>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <div class="info-card">
+            <div class="info-icon">📍</div>
+            <div>
+              <h3>Dirección</h3>
+              <p>Buenos Aires, Argentina</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">📧</div>
+            <div>
+              <h3>Email</h3>
+              <p>dfts.ifts29@bue.edu.ar</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">📞</div>
+            <div>
+              <h3>Teléfono</h3>
+              <p>(011) 1234-5678</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">🕐</div>
+            <div>
+              <h3>Horario de Atención</h3>
+              <p>Lunes a Viernes: 17:00 - 22:00</p>
+            </div>
+          </div>
+          <div class="map-placeholder">🗺️ Mapa de ubicación</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>Todos los derechos reservados © IFTS 29 - 2025</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

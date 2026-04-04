@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carreras - IFTS 29</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .career-detail {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+    .career-main h3 {
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+    .career-main p {
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .career-sidebar {
+      background: var(--bg-light);
+      padding: 1.5rem;
+      border-radius: 12px;
+      height: fit-content;
+    }
+    .career-sidebar h4 {
+      margin-bottom: 1rem;
+      color: var(--secondary);
+    }
+    .career-sidebar ul {
+      list-style: none;
+    }
+    .career-sidebar li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+    .career-sidebar li:last-child {
+      border-bottom: none;
+    }
+    .career-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+    .career-tab {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--text-light);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .career-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .subject-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .subject-item {
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .subject-item h5 {
+      color: var(--secondary);
+      margin-bottom: 0.25rem;
+    }
+    .subject-item p {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    .career-filter {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 25px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <div class="logo">29</div>
+        <span>IFTS 29</span>
+      </a>
+      <button class="mobile-menu-btn">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="carreras.html" class="active">Carreras</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+        <li><a href="estudiantes.html">Estudiantes</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="../admin/dashboard.html" class="btn btn-accent" style="color: var(--secondary);">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Carreras</h1>
+      <p>Explorá nuestras ofertas académicas</p>
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>Carreras</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="career-filter">
+        <button class="filter-btn active">Todas</button>
+        <button class="filter-btn">Desarrollo de Software</button>
+        <button class="filter-btn">Seguridad Informática</button>
+        <button class="filter-btn">Análisis de Datos</button>
+      </div>
+
+      <div class="career-detail">
+        <div class="career-main">
+          <div class="career-tabs">
+            <button class="career-tab active" data-tab="overview">Descripción</button>
+            <button class="career-tab" data-tab="subjects">Materias</button>
+            <button class="career-tab" data-tab="requirements">Requisitos</button>
+            <button class="career-tab" data-tab="schedule">Horarios</button>
+          </div>
+
+          <div class="tab-content active" id="overview">
+            <h3>Tecnicatura en Desarrollo de Software</h3>
+            <p>La Tecnicatura en Desarrollo de Software forma profesionales capaces de analizar, diseñar, desarrollar e implementar soluciones de software utilizando las tecnologías y metodologías más actuales del mercado.</p>
+            <p>El plan de estudios incluye materias de programación, bases de datos, ingeniería de software, desarrollo web y móvil, y un proyecto integrador final.</p>
+            <div class="cards-grid" style="margin-top: 2rem;">
+              <div style="padding: 1rem; background: var(--bg-light); border-radius: 8px; text-align: center;">
+                <h4 style="color: var(--primary);">Duración</h4>
+                <p>2 años (4 cuatrimestres)</p>
+              </div>
+              <div style="padding: 1rem; background: var(--bg-light); border-radius: 8px; text-align: center;">
+                <h4 style="color: var(--primary);">Modalidad</h4>
+                <p>Presencial - Turno tarde/noche</p>
+              </div>
+              <div style="padding: 1rem; background: var(--bg-light); border-radius: 8px; text-align: center;">
+                <h4 style="color: var(--primary);">Título</h4>
+                <p>Técnico Superior en Desarrollo de Software</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="subjects">
+            <h3>Malla Curricular</h3>
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Primer Cuatrimestre</h4>
+              <div class="subject-list">
+                <div class="subject-item"><h5>Programación I</h5><p>6hs semanales</p></div>
+                <div class="subject-item"><h5>Matemática</h5><p>4hs semanales</p></div>
+                <div class="subject-item"><h5>Inglés Técnico I</h5><p>3hs semanales</p></div>
+                <div class="subject-item"><h5>Introducción a la Informática</h5><p>3hs semanales</p></div>
+              </div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Segundo Cuatrimestre</h4>
+              <div class="subject-list">
+                <div class="subject-item"><h5>Programación II</h5><p>6hs semanales</p></div>
+                <div class="subject-item"><h5>Bases de Datos I</h5><p>4hs semanales</p></div>
+                <div class="subject-item"><h5>Inglés Técnico II</h5><p>3hs semanales</p></div>
+                <div class="subject-item"><h5>Lógica Computacional</h5><p>3hs semanales</p></div>
+              </div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Tercer Cuatrimestre</h4>
+              <div class="subject-list">
+                <div class="subject-item"><h5>Desarrollo Web</h5><p>6hs semanales</p></div>
+                <div class="subject-item"><h5>Bases de Datos II</h5><p>4hs semanales</p></div>
+                <div class="subject-item"><h5>Ingeniería de Software I</h5><p>4hs semanales</p></div>
+                <div class="subject-item"><h5>Estadística</h5><p>3hs semanales</p></div>
+              </div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Cuarto Cuatrimestre</h4>
+              <div class="subject-list">
+                <div class="subject-item"><h5>Desarrollo Móvil</h5><p>6hs semanales</p></div>
+                <div class="subject-item"><h5>Ingeniería de Software II</h5><p>4hs semanales</p></div>
+                <div class="subject-item"><h5>Práctica Profesionalizante</h5><p>6hs semanales</p></div>
+                <div class="subject-item"><h5>Ética Profesional</h5><p>2hs semanales</p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="requirements">
+            <h3>Requisitos de Inscripción</h3>
+            <ul style="list-style: disc; padding-left: 1.5rem; line-height: 2;">
+              <li>Título secundario completo</li>
+              <li>DNI original y copia</li>
+              <li>Certificado de estudios secundarios</li>
+              <li>Partida de nacimiento</li>
+              <li>2 fotos 4x4</li>
+              <li>Constancia de CUIL</li>
+            </ul>
+          </div>
+
+          <div class="tab-content" id="schedule">
+            <h3>Horarios</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+              <thead>
+                <tr style="background: var(--secondary); color: white;">
+                  <th style="padding: 1rem; text-align: left;">Día</th>
+                  <th style="padding: 1rem; text-align: left;">Horario</th>
+                  <th style="padding: 1rem; text-align: left;">Aula</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <td style="padding: 1rem;">Lunes</td>
+                  <td style="padding: 1rem;">18:00 - 22:00</td>
+                  <td style="padding: 1rem;">Aula 5</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <td style="padding: 1rem;">Miércoles</td>
+                  <td style="padding: 1rem;">18:00 - 22:00</td>
+                  <td style="padding: 1rem;">Aula 5</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <td style="padding: 1rem;">Viernes</td>
+                  <td style="padding: 1rem;">18:00 - 22:00</td>
+                  <td style="padding: 1rem;">Lab. Computación</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="career-sidebar">
+          <h4>Otras Carreras</h4>
+          <ul>
+            <li>
+              <a href="#" style="font-weight: 500;">Seguridad Informática</a>
+              <span class="badge badge-success">2 años</span>
+            </li>
+            <li>
+              <a href="#" style="font-weight: 500;">Análisis de Datos</a>
+              <span class="badge badge-warning">2 años</span>
+            </li>
+          </ul>
+          <div style="margin-top: 1.5rem; padding: 1rem; background: var(--primary); color: white; border-radius: 8px; text-align: center;">
+            <h4>¿Tenés dudas?</h4>
+            <p style="margin: 0.5rem 0;">Contactanos para más información</p>
+            <a href="contacto.html" class="btn btn-outline" style="font-size: 0.875rem;">Contacto</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>Todos los derechos reservados © IFTS 29 - 2025</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.querySelectorAll('.career-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.career-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

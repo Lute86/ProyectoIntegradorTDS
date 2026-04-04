@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudiantes - IFTS 29</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .student-portal {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .portal-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .portal-card:hover {
+      transform: translateY(-4px);
+    }
+    .portal-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    .portal-card h3 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+    .portal-card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+    .quick-link:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .quick-link:hover a {
+      color: white;
+    }
+    .quick-link span {
+      font-size: 1.5rem;
+    }
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .schedule-table th {
+      background: var(--secondary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+    .schedule-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .schedule-table tr:hover {
+      background: var(--bg-light);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <div class="logo">29</div>
+        <span>IFTS 29</span>
+      </a>
+      <button class="mobile-menu-btn">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="carreras.html">Carreras</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+        <li><a href="estudiantes.html" class="active">Estudiantes</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="../admin/dashboard.html" class="btn btn-accent" style="color: var(--secondary);">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Portal del Estudiante</h1>
+      <p>Todo lo que necesitás en un solo lugar</p>
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>Estudiantes</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Accesos Rápidos</h2>
+        <p>Herramientas y recursos para estudiantes</p>
+      </div>
+      <div class="student-portal">
+        <div class="portal-card">
+          <div class="portal-icon" style="background: #dbeafe;">🎓</div>
+          <h3>Aula Virtual</h3>
+          <p>Accedé a tus cursos, materiales y actividades online</p>
+          <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ingresar</a>
+        </div>
+        <div class="portal-card">
+          <div class="portal-icon" style="background: #d1fae5;">📅</div>
+          <h3>Horarios</h3>
+          <p>Consultá los horarios de clases del cuatrimestre actual</p>
+          <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ver horarios</a>
+        </div>
+        <div class="portal-card">
+          <div class="portal-icon" style="background: #fef3c7;">📝</div>
+          <h3>Exámenes</h3>
+          <p>Fechas de exámenes finales y mesas de examen</p>
+          <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ver calendario</a>
+        </div>
+        <div class="portal-card">
+          <div class="portal-icon" style="background: #fce7f3;">📄</div>
+          <h3>Trámites</h3>
+          <p>Solicitá certificados, constancias y otros documentos</p>
+          <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Iniciar trámite</a>
+        </div>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Horarios - Primer Cuatrimestre 2025</h2>
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Materia</th>
+              <th>Día</th>
+              <th>Horario</th>
+              <th>Aula</th>
+              <th>Profesor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Programación I</strong></td>
+              <td>Lunes</td>
+              <td>18:00 - 20:00</td>
+              <td>Aula 5</td>
+              <td>Prof. Martínez</td>
+            </tr>
+            <tr>
+              <td><strong>Matemática</strong></td>
+              <td>Lunes</td>
+              <td>20:00 - 22:00</td>
+              <td>Aula 5</td>
+              <td>Prof. Rodríguez</td>
+            </tr>
+            <tr>
+              <td><strong>Programación II</strong></td>
+              <td>Miércoles</td>
+              <td>18:00 - 20:00</td>
+              <td>Lab. Computación</td>
+              <td>Prof. García</td>
+            </tr>
+            <tr>
+              <td><strong>Bases de Datos I</strong></td>
+              <td>Miércoles</td>
+              <td>20:00 - 22:00</td>
+              <td>Lab. Computación</td>
+              <td>Prof. López</td>
+            </tr>
+            <tr>
+              <td><strong>Inglés Técnico I</strong></td>
+              <td>Viernes</td>
+              <td>18:00 - 20:00</td>
+              <td>Aula 3</td>
+              <td>Prof. Smith</td>
+            </tr>
+            <tr>
+              <td><strong>Lógica Computacional</strong></td>
+              <td>Viernes</td>
+              <td>20:00 - 22:00</td>
+              <td>Aula 3</td>
+              <td>Prof. Fernández</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Enlaces Útiles</h2>
+        <div class="quick-links">
+          <div class="quick-link">
+            <span>📚</span>
+            <a href="#">Biblioteca Digital</a>
+          </div>
+          <div class="quick-link">
+            <span>💰</span>
+            <a href="#">Becas y Beneficios</a>
+          </div>
+          <div class="quick-link">
+            <span>📋</span>
+            <a href="#">Reglamento Estudiantil</a>
+          </div>
+          <div class="quick-link">
+            <span>🆘</span>
+            <a href="#">Soporte Técnico</a>
+          </div>
+          <div class="quick-link">
+            <span>💼</span>
+            <a href="#">Bolsa de Trabajo</a>
+          </div>
+          <div class="quick-link">
+            <span>📞</span>
+            <a href="#">Contacto Secretaría</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>Todos los derechos reservados © IFTS 29 - 2025</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
