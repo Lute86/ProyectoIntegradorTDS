@@ -1,0 +1,114 @@
+name: ifts29-web
+
+services:
+
+  # ── Base de datos ──────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: ifts29-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-ifts29}
+      POSTGRES_USER:     ${POSTGRES_USER:-ifts29user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ifts29user} -d ${POSTGRES_DB:-ifts29}"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+    networks:
+      - internal
+
+  # ── Backend ────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: ifts29-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV:       production
+      PORT:           3000
+      DB_DIALECT:     postgres
+      DB_HOST:        postgres
+      DB_PORT:        5432
+      DB_NAME:        ${POSTGRES_DB:-ifts29}
+      DB_USER:        ${POSTGRES_USER:-ifts29user}
+      DB_PASSWORD:    ${POSTGRES_PASSWORD}
+      JWT_SECRET:     ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      UPLOAD_DIR:     /app/uploads
+      MAX_FILE_SIZE:  ${MAX_FILE_SIZE:-20971520}
+      FRONTEND_URL:   https://${DOMAIN:-localhost}
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internal
+    expose:
+      - "3000"        # sólo visible dentro de la red Docker (Nginx lo alcanza)
+
+  # ── Frontend — Nginx + React build + SSL ────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: ifts29-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"       # HTTP → redirect a HTTPS
+      - "443:443"     # HTTPS
+    volumes:
+      # Certificados Let's Encrypt (generados por Certbot en el host o con
+      # el servicio certbot de abajo). Si no tenés dominio todavía,
+      # comentá estas dos líneas y usá la variante HTTP.
+      - certbot_certs:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    depends_on:
+      - backend
+    networks:
+      - internal
+
+  # ── Certbot (renovación automática de certificados) ──────────────────────
+  # Ejecutar una vez para obtener el certificado:
+  #   docker compose run --rm certbot certonly --webroot \
+  #     --webroot-path /var/www/certbot \
+  #     --email admin@ifts29.edu.ar \
+  #     --agree-tos --no-eff-email \
+  #     -d ${DOMAIN}
+  #
+  # Luego el servicio se encarga de renovar automáticamente (cada 12h)
+  certbot:
+    image: certbot/certbot:latest
+    container_name: ifts29-certbot
+    volumes:
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: >
+      sh -c "trap exit TERM;
+             while :; do
+               certbot renew --quiet;
+               sleep 12h & wait $${!};
+             done"
+    profiles:
+      - ssl          # sólo corre con: docker compose --profile ssl up
+
+volumes:
+  postgres_data:
+    name: ifts29-postgres-data
+  backend_uploads:
+    name: ifts29-backend-uploads
+  certbot_certs:
+    name: ifts29-certbot-certs
+  certbot_www:
+    name: ifts29-certbot-www
+
+networks:
+  internal:
+    driver: bridge
