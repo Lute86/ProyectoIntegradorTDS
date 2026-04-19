@@ -1,0 +1,44 @@
+{
+  "name": "ifts29-backend",
+  "version": "0.1.0",
+  "description": "API REST — IFTS 29 Nueva Web · GoSoftware",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon --watch src src/server.js",
+    "start": "node src/server.js",
+    "lint": "eslint src/ --ext .js",
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage --forceExit"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.0",
+    "express": "^5.0.0",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.0",
+    "sequelize-cli": "^6.6.0",
+    "slugify": "^1.6.0",
+    "sqlite3": "^6.0.1",
+    "winston": "^3.17.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+# ── Entorno ────────────────────────────────────────────────────────────────
+.env
+.env.production
+.env.local
+
+# ── Dependencias ───────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+package-lock.json
+
+# ── Builds ─────────────────────────────────────────────────────────────────
+frontend/dist/
+frontend/.vite/
+
+# ── Base de datos y uploads (dev) ──────────────────────────────────────────
+backend/data/
+backend/uploads/
+*.sqlite
+*.sqlite-journal
+
+# ── Logs ───────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS / Editor ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ── Docker (producción) ─────────────────────────────────────────────────
+docker-compose.dev.yml
+docker/Dockerfile.backend
+docker/Dockerfile.frontend
+
+# ── Scripts  ────────────────────────────────────────────────────────────
+AGENTS.md
