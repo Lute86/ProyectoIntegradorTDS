@@ -1,0 +1,65 @@
+name: ifts29-web-dev
+
+services:
+
+  # ── Backend (dev) — hot-reload con nodemon, SQLite ─────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend.dev
+    container_name: ifts29-backend-dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV:       development
+      PORT:           3000
+      DB_DIALECT:     sqlite
+      DB_STORAGE:     /app/data/dev.sqlite
+      JWT_SECRET:     ${JWT_SECRET:-dev_secret_change_in_prod}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      UPLOAD_DIR:     /app/uploads
+      MAX_FILE_SIZE:  ${MAX_FILE_SIZE:-20971520}
+    volumes:
+      # Código fuente montado en vivo (hot-reload)
+      - ./backend/src:/app/src
+      - ./backend/.sequelizerc:/app/.sequelizerc
+      - ./backend/package.json:/app/package.json
+      # Persistencia de SQLite y uploads entre reinicios
+      - backend_dev_data:/app/data
+      - backend_dev_uploads:/app/uploads
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    networks:
+      - dev-net
+
+  # ── Frontend (dev) — Vite HMR ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend.dev
+    container_name: ifts29-frontend-dev
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:${BACKEND_PORT:-3000}
+    volumes:
+      # Código fuente montado en vivo
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      # Evitar que el node_modules del host pise el del contenedor
+      - /app/node_modules
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    depends_on:
+      - backend
+    networks:
+      - dev-net
+
+volumes:
+  backend_dev_data:
+    name: ifts29-dev-sqlite
+  backend_dev_uploads:
+    name: ifts29-dev-uploads
+
+networks:
+  dev-net:
+    driver: bridge
