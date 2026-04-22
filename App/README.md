@@ -376,12 +376,14 @@ make dev
 Usá Docker Desktop (PowerShell o CMD):
 
 ```powershell
+terminas de vsc desde app
 docker compose -f docker-compose.dev.yml up --build    # iniciar
+docker compose -f docker-compose.dev.yml up            # levantar
 docker compose -f docker-compose.dev.yml down          # detener
 docker compose -f docker-compose.dev.yml exec backend sh # shell en backend
 docker compose -f docker-compose.dev.yml logs -f       # logs en tiempo real
 ```
-
+en docker-compose.dev.. para que funcione y se actualice en tiempo real en windows agregar en la lista de variables de environment tanto de front como back: --> CHOKIDAR_USEPOLLING: "true"
 ### En Linux/macOS (o WSL con Makefile)
 
 ```bash

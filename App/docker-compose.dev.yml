@@ -18,12 +18,15 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       UPLOAD_DIR:     /app/uploads
       MAX_FILE_SIZE:  ${MAX_FILE_SIZE:-20971520}
+      CHOKIDAR_USEPOLLING: "true" # Para hot-reload en WSL2/Windows
     volumes:
       # Código fuente montado en vivo (hot-reload)
-      - ./backend/src:/app/src
-      - ./backend/.sequelizerc:/app/.sequelizerc
-      - ./backend/package.json:/app/package.json
+      # - ./backend/src:/app/src
+      # - ./backend/.sequelizerc:/app/.sequelizerc
+      #- ./backend/package.json:/app/package.json
       # Persistencia de SQLite y uploads entre reinicios
+      - ./backend:/app
+      - /app/node_modules   
       - backend_dev_data:/app/data
       - backend_dev_uploads:/app/uploads
     ports:
@@ -40,6 +43,7 @@ services:
     restart: unless-stopped
     environment:
       VITE_API_URL: http://localhost:${BACKEND_PORT:-3000}
+      CHOKIDAR_USEPOLLING: "true" # Para hot-reload en WSL2/Windows
     volumes:
       # Código fuente montado en vivo
       - ./frontend/src:/app/src

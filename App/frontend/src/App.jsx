@@ -22,7 +22,7 @@ function App() {
           onClick={checkHealth}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Verificar backend /api/health
+          Verificar backend /api/health 
         </button>
         {status && (
           <pre className="mt-4 p-2 bg-gray-100 text-left text-sm rounded">
