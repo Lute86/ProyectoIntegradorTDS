@@ -112,6 +112,23 @@ make shell-be-dev   # abrir una shell dentro del contenedor del backend
 
 ## 3. Inicio rápido
 
+### En Windows (sin WSL)
+Windows no puede usar `make` de forma nativa. Usá la terminal de Docker (Docker Desktop) o PowerShell con el siguiente flujo:
+
+```powershell
+# 1. Clonar el repositorio
+git clone <url-del-repo> && cd PI
+
+# 2. Crear el archivo de entorno (en dev no hace falta editar nada)
+cp .env.example .env
+
+# 3. Levantar desarrollo (PowerShell en Windows)
+docker compose -f docker-compose.dev.yml up --build
+```
+
+Para detener: `docker compose -f docker-compose.dev.yml down`
+
+### En Linux/macOS (o WSL con Makefile)
 ```bash
 # 1. Clonar el repositorio
 git clone <url-del-repo> && cd PI
@@ -354,6 +371,18 @@ make dev
 ---
 
 ## 9. Referencia de comandos
+
+### En Windows (sin WSL)
+Usá Docker Desktop (PowerShell o CMD):
+
+```powershell
+docker compose -f docker-compose.dev.yml up --build    # iniciar
+docker compose -f docker-compose.dev.yml down          # detener
+docker compose -f docker-compose.dev.yml exec backend sh # shell en backend
+docker compose -f docker-compose.dev.yml logs -f       # logs en tiempo real
+```
+
+### En Linux/macOS (o WSL con Makefile)
 
 ```bash
 make help    # lista todos los comandos
