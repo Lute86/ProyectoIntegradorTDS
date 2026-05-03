@@ -1,20 +1,24 @@
-require('dotenv').config()
-const app  = require('./app')
-const { sequelize } = require('./models')
+import dotenv from 'dotenv';
+dotenv.config();
 
-const PORT = process.env.PORT || 3000
+import app from './app.js';
+import models from './models/index.js';
+import logger from './utils/logger.js';
+
+const PORT = process.env.PORT || 3000;
 
 async function start() {
   try {
-    await sequelize.authenticate()
-    console.log('[db] conexión establecida correctamente')
+    await models.sequelize.authenticate();
+    logger.info('[db] conexión establecida correctamente');
+    
     app.listen(PORT, () => {
-      console.log(`[server] corriendo en http://localhost:${PORT}`)
-    })
+      logger.info(`[server] corriendo en http://localhost:${PORT}`);
+    });
   } catch (err) {
-    console.error('[db] error de conexión:', err.message)
-    process.exit(1)
+    logger.error('[db] error de conexión:', err.message);
+    process.exit(1);
   }
 }
 
-start()
+start();

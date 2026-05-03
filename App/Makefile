@@ -16,7 +16,7 @@ RED    = \033[31m
 .PHONY: dev dev-d dev-down dev-reset
 .PHONY: prod prod-down prod-reset ssl
 .PHONY: logs logs-dev logs-be logs-fe
-.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev
+.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back
 .PHONY: check-env help fclean
 
 # =============================================================================
@@ -125,6 +125,9 @@ migrate-dev: ## Ejecuta migraciones en desarrollo
 
 seed-dev: ## Carga los seeders en desarrollo
 	docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:seed:all
+
+tests-back: ## Ejecuta tests del backend en desarrollo (docker)
+	docker compose -f docker-compose.dev.yml exec backend npm test
 
 # =============================================================================
 # CHECKS / HELP

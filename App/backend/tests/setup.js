@@ -1,3 +1,4 @@
 // Configuración global de Jest
-process.env.NODE_ENV = 'test'
-process.env.JWT_SECRET = 'test_secret'
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test_secret';
+process.env.DB_STORAGE = ':memory:';

@@ -1,26 +1,33 @@
-require('dotenv').config()
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+import dotenv from 'dotenv';
 
-module.exports = {
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
   development: {
     dialect: 'sqlite',
-    storage: process.env.DB_STORAGE || './data/dev.sqlite',
+    storage: process.env.DB_STORAGE || resolve(__dirname, '../../data/dev.sqlite'),
     logging: false,
   },
   test: {
     dialect: 'sqlite',
-    storage: ':memory:',
+    storage: process.env.DB_STORAGE || ':memory:',
     logging: false,
   },
   production: {
-    dialect:  'postgres',
-    host:     process.env.DB_HOST,
-    port:     Number(process.env.DB_PORT) || 5432,
+    dialect: 'postgres',
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT) || 5432,
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    logging:  false,
+    logging: false,
     dialectOptions: {
-      ssl: false, // cambiar a true si el proveedor lo requiere
+      ssl: false,
     },
   },
-}
+};
