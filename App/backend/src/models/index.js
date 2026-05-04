@@ -1,18 +1,32 @@
-'use strict'
-const { Sequelize } = require('sequelize')
-const config = require('../config/database')
+import { Sequelize, DataTypes } from 'sequelize';
+import databaseConfig from '../config/database.js';
 
-const env = process.env.NODE_ENV || 'development'
-const dbConfig = config[env]
+const env = process.env.NODE_ENV || 'development';
+const config = databaseConfig[env];
 
-const sequelize = dbConfig.dialect === 'sqlite'
-  ? new Sequelize({ ...dbConfig })
-  : new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, { ...dbConfig })
+let sequelizeInstance;
 
-const db = { sequelize, Sequelize }
+if (config.use_env_variable) {
+  sequelizeInstance = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelizeInstance = new Sequelize(config.database, config.username, config.password, config);
+}
 
-// TODO: importar y asociar modelos aquí a medida que se implementen
-// const User = require('./User')(sequelize, Sequelize.DataTypes)
-// db.User = User
+const models = {
+  sequelize: sequelizeInstance,
+  Sequelize,
+};
 
-module.exports = db
+// Importar modelos
+import userModel from './user.model.js';
+const User = userModel(sequelizeInstance, DataTypes);
+models.User = User;
+
+Object.keys(models).forEach((modelName) => {
+  if (models[modelName].associate) {
+    models[modelName].associate(models);
+  }
+});
+
+export { sequelizeInstance as sequelize, Sequelize };
+export default models;
