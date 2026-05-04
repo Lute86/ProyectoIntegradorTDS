@@ -11,9 +11,15 @@ export function errorHandler(err, req, res, next) {
   const statusCode = err.status || err.statusCode || 500;
   const message = err.message || 'Error interno del servidor';
 
-  return res.status(statusCode).json({
+  const response = {
     success: false,
     message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
-  });
+  };
+
+  // Solo incluir stack en desarrollo
+  if (process.env.NODE_ENV === 'development') {
+    response.stack = err.stack;
+  }
+
+  return res.status(statusCode).json(response);
 }

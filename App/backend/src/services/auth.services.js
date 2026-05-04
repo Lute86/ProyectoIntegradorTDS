@@ -2,104 +2,96 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import models from '../models/index.js';
 import logger from '../utils/logger.js';
+import { UnauthorizedError, ForbiddenError, ConflictError } from '../utils/AppError.js';
+import { handleDbErrors } from '../utils/dbErrorHandler.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_in_production';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 
-export async function login(email, password) {
-  try {
-    const user = await models.User.findOne({ where: { email } });
+export const login = handleDbErrors(async (email, password) => {
+  const user = await models.User.findOne({ where: { email } });
 
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
+  if (!user) {
+    throw new UnauthorizedError('Usuario no encontrado');
+  }
 
-    if (!user.activo) {
-      throw new Error('Usuario inactivo');
-    }
+  if (!user.activo) {
+    throw new ForbiddenError('Usuario inactivo');
+  }
 
-    const validPassword = await bcrypt.compare(password, user.password_hash);
-    if (!validPassword) {
-      throw new Error('Contraseña incorrecta');
-    }
+  const validPassword = await bcrypt.compare(password, user.password_hash);
+  if (!validPassword) {
+    throw new UnauthorizedError('Contraseña incorrecta');
+  }
 
-    const payload = {
+  const payload = {
+    id: user.id,
+    email: user.email,
+    rol: user.rol,
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+  await user.update({ ultimo_acceso: new Date() });
+
+  return {
+    token,
+    user: {
       id: user.id,
+      nombre: user.nombre,
+      apellido: user.apellido,
       email: user.email,
       rol: user.rol,
-    };
+      avatar_url: user.avatar_url,
+    },
+  };
+});
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-
-    await user.update({ ultimo_acceso: new Date() });
-
-    return {
-      token,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        email: user.email,
-        rol: user.rol,
-        avatar_url: user.avatar_url,
-      },
-    };
-  } catch (error) {
-    logger.error('Error en auth.service.login:', error);
-    throw error;
+export const register = handleDbErrors(async ({ nombre, apellido, email, password, rol = 'profesor' }) => {
+  const existingUser = await models.User.findOne({ where: { email } });
+  if (existingUser) {
+    throw new ConflictError('El email ya está registrado');
   }
-}
 
-export async function register({ nombre, apellido, email, password, rol = 'profesor' }) {
-  try {
-    const existingUser = await models.User.findOne({ where: { email } });
-    if (existingUser) {
-      throw new Error('El email ya está registrado');
-    }
+  const passwordHash = await bcrypt.hash(password, 10);
 
-    const passwordHash = await bcrypt.hash(password, 10);
+  const user = await models.User.create({
+    nombre,
+    apellido,
+    email,
+    password_hash: passwordHash,
+    rol,
+    activo: true,
+  });
 
-    const user = await models.User.create({
-      nombre,
-      apellido,
-      email,
-      password_hash: passwordHash,
-      rol,
-      activo: true,
-    });
+  const payload = {
+    id: user.id,
+    email: user.email,
+    rol: user.rol,
+  };
 
-    const payload = {
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+  return {
+    token,
+    user: {
       id: user.id,
+      nombre: user.nombre,
+      apellido: user.apellido,
       email: user.email,
       rol: user.rol,
-    };
+      avatar_url: user.avatar_url,
+    },
+  };
+});
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-
-    return {
-      token,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        email: user.email,
-        rol: user.rol,
-        avatar_url: user.avatar_url,
-      },
-    };
-  } catch (error) {
-    logger.error('Error en auth.service.register:', error);
-    throw error;
-  }
-}
-
-export async function refreshToken(token) {
+export const refreshToken = handleDbErrors(async (token) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await models.User.findByPk(decoded.id);
 
     if (!user || !user.activo) {
-      throw new Error('Usuario no válido');
+      throw new UnauthorizedError('Usuario no válido');
     }
 
     const payload = {
@@ -122,11 +114,13 @@ export async function refreshToken(token) {
       },
     };
   } catch (error) {
-    logger.error('Error en auth.service.refreshToken:', error);
-    throw new Error('Token inválido o expirado');
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      throw new UnauthorizedError('Token inválido o expirado');
+    }
+    throw error; // Re-lanzar para que handleDbErrors lo maneje
   }
-}
+});
 
-export async function hashPassword(password) {
+export const hashPassword = handleDbErrors(async (password) => {
   return await bcrypt.hash(password, 10);
-}
+});
