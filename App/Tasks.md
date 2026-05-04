@@ -3,7 +3,7 @@
 ## Asignación del Equipo
 | Rol | Miembro |
 |-----|---------|
-| Frontend | FE Dev 1 |
+| Frontend | FE Dev 1 Lucas|
 | Frontend | FE Dev 2 |
 | Backend | BE Dev 1 (SL) |
 | Backend | BE Dev 2 |
