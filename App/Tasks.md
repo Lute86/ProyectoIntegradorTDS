@@ -4,7 +4,7 @@
 | Rol | Miembro |
 |-----|---------|
 | Frontend | FE Dev 1 Lucas|
-| Frontend | FE Dev 2 |
+| Frontend | FE Dev 2 Andres|
 | Backend | BE Dev 1 (SL) |
 | Backend | BE Dev 2 |
 
