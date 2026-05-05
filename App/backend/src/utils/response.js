@@ -16,6 +16,10 @@ export function created(res, data = null, message = 'Recurso creado exitosamente
   return success(res, data, message, 201);
 }
 
+export function deleted(res, message = 'Recurso eliminado exitosamente') {
+  return success(res, null, message, 200);
+}
+
 export function noContent(res) {
   return res.status(204).send();
 }
@@ -84,6 +88,7 @@ export function serverError(res, message = 'Error interno del servidor') {
 export default {
   success,
   created,
+  deleted,
   noContent,
   badRequest,
   unauthorized,
