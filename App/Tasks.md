@@ -20,17 +20,17 @@
 ### BE Dev 1 (SL): Fundación y Modelos Core
 #### Módulo 1: Configuración Base y Usuario/Auth
 **Tareas:**
-- [ ] Implementar modelo User (id, nombre, apellido, email, password_hash, rol, avatar_url, activo, ultimo_acceso)
-- [ ] Crear migración de users
-- [ ] Crear seeder de usuario admin (admin@ifts29.edu.ar / admin1234)
-- [ ] Implementar JWT auth (generación y verificación de tokens)
-- [ ] Middleware de autenticación (validación JWT)
-- [ ] Middleware de roles (RBAC: admin/profesor/tutor)
-- [ ] Controlador de auth (login, register, refresh token)
-- [ ] Rutas de auth (POST /api/auth/login, /register, /refresh)
-- [ ] Validadores de auth (email, password, rol)
-- [ ] Middleware global de manejo de errores
-- [ ] Configuración base de multer para uploads
+- [ ✓] Implementar modelo User (id, nombre, apellido, email, password_hash, rol, avatar_url, activo, ultimo_acceso)
+- [ ✓] Crear migración de users
+- [ ✓] Crear seeder de usuario admin (admin@ifts29.edu.ar / admin1234)
+- [ ✓] Implementar JWT auth (generación y verificación de tokens)
+- [ ✓] Middleware de autenticación (validación JWT)
+- [ ✓] Middleware de roles (RBAC: admin/profesor/tutor)
+- [ ✓] Controlador de auth (login, register, refresh token)
+- [ ✓] Rutas de auth (POST /api/auth/login, /register, /refresh)
+- [ ✓] Validadores de auth (email, password, rol)
+- [ ✓] Middleware global de manejo de errores
+- [ ✓] Configuración base de multer para uploads
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 1
