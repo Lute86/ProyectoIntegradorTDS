@@ -4,84 +4,75 @@
 > Instituto de Formación Técnica Superior N° 29
 
 ## Descripción
+Rediseño de la página web del IFTS 29 con un sitio público dinámico y un panel de administración (back office) para gestión de contenido, usuarios y personalización del sitio.
 
-Wireframe interactivo y funcional para el rediseño de la página web del IFTS 29. Este prototipo incluye tanto el sitio público como un panel de administración completo (back office) que permite gestionar contenido, usuarios y la apariencia del sitio de forma dinámica.
+## 🚧 Estado del Proyecto
+**En desarrollo** - Se está construyendo la estructura base de la aplicación (App) con tecnologías modernas. El proyecto es evolutivo y los componentes, tecnologías y estructura pueden cambiar.
 
-## Estructura del Proyecto
+## Estructura del Repositorio
 
 ```
-PI/
-├── public/                     # Sitio público
-│   ├── index.html              # Landing page principal
-│   ├── carreras.html           # Detalle de carreras
-│   ├── noticias.html           # Listado de noticias
-│   ├── estudiantes.html        # Portal del estudiante
-│   ├── contacto.html           # Formulario de contacto
-│   ├── styles/
-│   │   └── main.css            # Estilos del sitio público
-│   └── js/
-│       └── main.js             # Scripts del sitio público
+BASE/
+├── App/                          # Aplicación Full-Stack (en desarrollo)
+│   ├── backend/                  # API REST (Express, Sequelize, SQLite/PostgreSQL)
+│   ├── frontend/                 # Frontend (React, Vite, TailwindCSS)
+│   ├── docker/                   # Dockerfiles para desarrollo y producción
+│   ├── Makefile                  # Comandos de desarrollo (Makefile)
+│   ├── Tasks.md                  # Tareas del proyecto
+│   ├── WORKFLOW.md               # Guía de flujo de trabajo
+│   └── .github/                 # GitHub Actions (CI/CD)
 │
-└── admin/                      # Panel de administración
-    ├── dashboard.html          # Back office completo
-    ├── styles/
-    │   └── admin.css           # Estilos del admin
-    └── js/
-        └── admin.js            # Scripts del admin
+├── wireframe/                    # Prototipo estático (HTML/CSS/JS)
+│   ├── public/                   # Sitio público (landing, carreras, noticias, etc.)
+│   ├── admin/                    # Panel de administración (prototipo)
+│   └── README.md                # Documentación del wireframe
+│
+└── README.md                    # Este archivo
 ```
-
-## Características
-
-### Sitio Público
-
-- **Landing Page** con hero, estadísticas, carreras destacadas, noticias, eventos, testimonios en carousel y galería
-- **Página de Carreras** con tabs interactivos (descripción, malla curricular, requisitos, horarios)
-- **Página de Noticias** con filtros, búsqueda, categorías y paginación
-- **Portal del Estudiante** con accesos rápidos, tabla de horarios y enlaces útiles
-- **Página de Contacto** con formulario funcional e información de contacto
-- **Diseño responsive** adaptado a móviles y tablets
-
-### Back Office (Admin Dashboard)
-
-- **Dashboard principal** con estadísticas, actividad reciente y accesos rápidos
-- **Gestión de Noticias** - Crear, editar, eliminar y publicar noticias con categorías
-- **Gestión de Carreras** - Administrar carreras, duración, modalidad y estado
-- **Gestión de Eventos** - Crear y administrar eventos del instituto
-- **Galería** - Subir, organizar y eliminar imágenes
-- **Testimonios** - Administrar testimonios de estudiantes/egresados
-- **Gestión de Usuarios** - Crear y administrar usuarios con roles:
-  - **Administrador** - Control total del sitio
-  - **Profesor** - Gestión de contenido académico
-  - **Tutor** - Acompañamiento estudiantil
-
-### Personalización del Sitio
-
-- **Colores** - Color picker individual para primario, secundario, acento y fondo
-- **Temas predefinidos** - Clásico, Oscuro, Naturaleza, Cálido
-- **Layout** - Selector de disposición: Navbar superior, Sidebar lateral o Minimalista
-- **Secciones visibles** - Drag & drop para reordenar y toggles para mostrar/ocultar:
-  - Hero/Banner principal
-  - Estadísticas
-  - Carreras
-  - Últimas noticias
-  - Próximos eventos
-  - Testimonios
-  - Galería
-- **Tipografía** - Selección de fuente, tamaño base y redondeo de bordes
-- **Ajustes generales** - Nombre del sitio, contacto, SEO, footer
-
-## Cómo Usar
-
-1. Abrir `public/index.html` en un navegador para ver el sitio público
-2. Abrir `admin/dashboard.html` en un navegador para acceder al panel de administración
-3. Navegar entre las secciones del admin usando el menú lateral
-4. Probar la personalización del sitio en la sección "Personalizar Sitio"
 
 ## Tecnologías
 
-- HTML5
-- CSS3 (CSS Variables, Grid, Flexbox)
-- JavaScript Vanilla (sin frameworks)
+### App (Full-Stack - En Desarrollo)
+- **Frontend**: React 19, Vite 6, TailwindCSS 4, Zustand, React Router 7, TipTap, React Hook Form, Zod
+- **Backend**: Express 5, Sequelize, SQLite (desarrollo) / PostgreSQL (producción), JWT, bcryptjs, Winston
+- **Testing**: Jest + Supertest (backend), Vitest + Testing Library (frontend)
+- **Despliegue**: Docker, Nginx, certificados SSL
+
+### Wireframe (Prototipo Estático)
+- HTML5, CSS3 (Variables, Grid, Flexbox), JavaScript Vanilla
+
+## Características Planificadas
+
+### Sitio Público
+- Landing Page con hero, estadísticas, carreras destacadas, noticias, eventos, testimonios y galería
+- Página de Carreras con tabs interactivos (descripción, malla curricular, requisitos, horarios)
+- Página de Noticias con filtros, búsqueda, categorías y paginación
+- Portal del Estudiante con accesos rápidos y tabla de horarios
+- Página de Contacto con formulario funcional
+
+### Back Office (Admin Dashboard)
+- Dashboard principal con estadísticas y actividad reciente
+- Gestión de Noticias, Carreras, Eventos, Testimonios y Galería
+- Gestión de Usuarios con roles (Administrador, Profesor, Tutor)
+- Personalización del Sitio (colores, temas, layout, secciones, tipografía)
+
+## Comenzar
+
+### App (Desarrollo)
+1. Clonar el repositorio
+2. Entrar a `App/` y seguir las instrucciones de `README.md`
+3. Usar Docker con Makefile:
+   ```bash
+   cd App
+   make help          # Ver comandos disponibles
+   make dev           # Iniciar entorno de desarrollo
+   ```
+   - Frontend: http://localhost:5173
+   - Backend: http://localhost:3000/api
+
+### Wireframe (Prototipo)
+- Sitio público: abrir `wireframe/public/index.html` en un navegador
+- Panel admin: abrir `wireframe/admin/dashboard.html` en un navegador
 
 ## Equipo
 
@@ -90,4 +81,4 @@ IFTS 29 - Desarrollo de Software
 
 ---
 
-> Este wireframe es un prototipo funcional a nivel frontend. La persistencia de datos, autenticación y backend se implementarán en fases posteriores del proyecto.
+> ⚠️ **Nota**: Este proyecto está en fase de desarrollo. La estructura, tecnologías y funcionalidades descritas son la base actual y pueden sufrir modificaciones a medida que avance el proyecto.
