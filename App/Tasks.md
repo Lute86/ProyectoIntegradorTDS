@@ -39,19 +39,28 @@
 **Tareas:**
 - [ ✓] Implementar modelo Carrera (id, nombre, slug, descripcion, duracion, modalidad, icono, color, activa)
 - [ ✓] Implementar modelo Materia (id, nombre, carrera_id, cuatrimestre, carga_horaria_semanal, descripcion)
-- [ ] Crear migración de carreras
-- [ ] Crear migración de materias
-- [ ] Seeder de carreras de ejemplo
-- [ ] Controlador de Carrera (CRUD, filtrar por modalidad/estado)
-- [ ] Controlador de Materia (CRUD, filtrar por carrera)
-- [ ] Rutas de Carrera (GET/POST/PUT/DELETE /api/carreras)
-- [ ] Rutas de Materia (GET/POST/PUT/DELETE /api/materias)
-- [ ] Validadores de Carrera y Materia
+- [ ✓] Crear migración de carreras
+- [ ✓] Crear migración de materias
+- [ ✓] Seeder de carreras de ejemplo
+- [ ✓] Controlador de Carrera (CRUD, filtrar por modalidad/estado)
+- [ ✓] Controlador de Materia (CRUD, filtrar por carrera)
+- [ ✓] Rutas de Carrera (GET/POST/PUT/DELETE /api/carreras)
+- [ ✓] Rutas de Materia (GET/POST/PUT/DELETE /api/materias)
+- [ ✓] Validadores de Carrera y Materia
 
 **Dependencias:** Ninguna (Materia solo referencia a Carrera dentro de este módulo)
 **Contraparte FE:** Módulo FE 2
 
-#### Módulo 3: Configuración del Sitio y Estadísticas
+#### Módulo 3: Gestión de Usuarios
+**Tareas:**
+- [ ] Controlador de User (CRUD, asignación de roles)
+- [ ] Rutas de User (GET/POST/PUT/DELETE /api/usuarios)
+- [ ] Validadores de usuarios
+
+**Dependencias:** Modelo User (Módulo BE 1)
+**Contraparte FE:** Módulo FE 4
+
+#### Módulo 4: Configuración del Sitio y Estadísticas
 **Tareas:**
 - [ ] Implementar modelo SiteConfig (id, site_name, site_subtitle, contact_email, contact_phone, address, seo_description, footer_text, colors, layout, sections, typography, theme_preset)
 - [ ] Crear migración de site-config
@@ -103,18 +112,16 @@
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 4
 
-#### Módulo 6: Galería y Gestión de Usuarios
+#### Módulo 6: Galería
 **Tareas:**
 - [ ] Implementar modelo Imagen (id, url, alt_text, categoria, entidad_id)
 - [ ] Crear migración de imagenes
 - [ ] Controlador de Galería (upload, listar, eliminar imágenes, filtrar por categoría/entidad)
-- [ ] Controlador de User (CRUD, asignación de roles)
 - [ ] Rutas de Galería (GET/POST/DELETE /api/imagenes)
-- [ ] Rutas de User (GET/POST/PUT/DELETE /api/usuarios)
-- [ ] Validadores de Galería y usuarios
+- [ ] Validadores de Galería
 - [ ] Upload de imágenes para galería
 
-**Dependencias:** Modelo User (Módulo BE 1)
+**Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 4
 
 ---
@@ -194,12 +201,13 @@
 |--------|-------------------|---------------|
 | BE 1 | BE 4, FE 1 | Ninguno |
 | BE 2 | BE 5, FE 2 | Ninguno |
-| BE 3 | BE 6, FE 5 | Ninguno |
-| BE 4 | BE 2, FE 3 | BE 1 |
-| BE 5 | BE 3, FE 4 | Ninguno |
-| BE 6 | BE 5, FE 4 | BE 1 |
+| BE 3 | BE 4, FE 4 | BE 1 |
+| BE 4 | BE 7, FE 5 | Ninguno |
+| BE 5 | BE 3, FE 3 | BE 1 |
+| BE 6 | BE 4, FE 4 | Ninguno |
+| BE 7 | BE 6, FE 4 | Ninguno |
 | FE 1 | BE 1, FE 4 | Ninguno (usar mocks) |
 | FE 2 | BE 2, FE 3 | Ninguno (usar mocks) |
 | FE 3 | BE 4, FE 2 | Ninguno (usar mocks) |
-| FE 4 | BE 3, FE 5 | Ninguno (usar mocks) |
-| FE 5 | BE 6, FE 4 | BE 3 |
+| FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
+| FE 5 | BE 7, FE 4 | BE 4 |
