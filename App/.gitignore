@@ -37,3 +37,4 @@ docker/Dockerfile.frontend
 
 # ── Scripts  ────────────────────────────────────────────────────────────
 AGENTS.md
+GUIDELINES.md
