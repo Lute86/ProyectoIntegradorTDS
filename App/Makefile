@@ -16,7 +16,7 @@ RED    = \033[31m
 .PHONY: dev dev-d dev-down dev-reset
 .PHONY: prod prod-down prod-reset ssl
 .PHONY: logs logs-dev logs-be logs-fe
-.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back
+.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back lint-backend lint-frontend
 .PHONY: check-env help fclean
 
 # =============================================================================
@@ -128,6 +128,12 @@ seed-dev: ## Carga los seeders en desarrollo
 
 tests-back: ## Ejecuta tests del backend en desarrollo (docker)
 	docker compose -f docker-compose.dev.yml exec backend npm test
+
+lint-backend: ## Ejecuta lint del backend (docker)
+	docker compose -f docker-compose.dev.yml exec backend npm run lint
+
+lint-frontend: ## Ejecuta lint del frontend (docker)
+	docker compose -f docker-compose.dev.yml exec frontend npm run lint
 
 # =============================================================================
 # CHECKS / HELP
