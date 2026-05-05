@@ -19,8 +19,17 @@ const models = {
 
 // Importar modelos
 import userModel from './user.model.js';
+import carreraModel from './carrera.model.js';
+import materiaModel from './materia.model.js';
+
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
+
+const Carrera = carreraModel(sequelizeInstance, DataTypes);
+models.Carrera = Carrera;
+
+const Materia = materiaModel(sequelizeInstance, DataTypes);
+models.Materia = Materia;
 
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
