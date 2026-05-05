@@ -5,11 +5,10 @@ import { success, created, deleted, validationError } from '../utils/response.js
 
 export const getAll = asyncHandler(async (req, res) => {
   const filters = {};
-  
   if (req.query.modalidad) {
     filters.modalidad = req.query.modalidad;
   }
-  
+
   if (req.query.activa !== undefined) {
     filters.activa = req.query.activa === 'true';
   }
@@ -19,6 +18,11 @@ export const getAll = asyncHandler(async (req, res) => {
 });
 
 export const getById = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return validationError(res, errors.array());
+  }
+
   const { id } = req.params;
   const carrera = await carreraService.getById(id);
   return success(res, carrera, 'Carrera obtenida exitosamente');
@@ -52,6 +56,11 @@ export const update = asyncHandler(async (req, res) => {
 });
 
 export const remove = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return validationError(res, errors.array());
+  }
+
   const { id } = req.params;
   await carreraService.remove(id);
   return deleted(res, 'Carrera eliminada exitosamente');
