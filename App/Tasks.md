@@ -37,8 +37,8 @@
 
 #### Módulo 2: Carreras y Materias
 **Tareas:**
-- [ ] Implementar modelo Carrera (id, nombre, slug, descripcion, duracion, modalidad, icono, color, activa)
-- [ ] Implementar modelo Materia (id, nombre, carrera_id, cuatrimestre, carga_horaria_semanal, descripcion)
+- [ ✓] Implementar modelo Carrera (id, nombre, slug, descripcion, duracion, modalidad, icono, color, activa)
+- [ ✓] Implementar modelo Materia (id, nombre, carrera_id, cuatrimestre, carga_horaria_semanal, descripcion)
 - [ ] Crear migración de carreras
 - [ ] Crear migración de materias
 - [ ] Seeder de carreras de ejemplo
