@@ -20,43 +20,43 @@
 ### BE Dev 1 (SL): Fundación y Modelos Core
 #### Módulo 1: Configuración Base y Usuario/Auth
 **Tareas:**
-- [ ✓] Implementar modelo User (id, nombre, apellido, email, password_hash, rol, avatar_url, activo, ultimo_acceso)
-- [ ✓] Crear migración de users
-- [ ✓] Crear seeder de usuario admin (admin@ifts29.edu.ar / admin1234)
-- [ ✓] Implementar JWT auth (generación y verificación de tokens)
-- [ ✓] Middleware de autenticación (validación JWT)
-- [ ✓] Middleware de roles (RBAC: admin/profesor/tutor)
-- [ ✓] Controlador de auth (login, register, refresh token)
-- [ ✓] Rutas de auth (POST /api/auth/login, /register, /refresh)
-- [ ✓] Validadores de auth (email, password, rol)
-- [ ✓] Middleware global de manejo de errores
-- [ ✓] Configuración base de multer para uploads
+- [x] Implementar modelo User (id, nombre, apellido, email, password_hash, rol, avatar_url, activo, ultimo_acceso)
+- [x] Crear migración de users
+- [x] Crear seeder de usuario admin (admin@ifts29.edu.ar / admin1234)
+- [x] Implementar JWT auth (generación y verificación de tokens)
+- [x] Middleware de autenticación (validación JWT)
+- [x] Middleware de roles (RBAC: admin/profesor/tutor)
+- [x] Controlador de auth (login, register, refresh token)
+- [x] Rutas de auth (POST /api/auth/login, /register, /refresh)
+- [x] Validadores de auth (email, password, rol)
+- [x] Middleware global de manejo de errores
+- [x] Configuración base de multer para uploads
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 1
 
 #### Módulo 2: Carreras y Materias
 **Tareas:**
-- [ ✓] Implementar modelo Carrera (id, nombre, slug, descripcion, duracion, modalidad, icono, color, activa)
-- [ ✓] Implementar modelo Materia (id, nombre, carrera_id, cuatrimestre, carga_horaria_semanal, descripcion)
-- [ ✓] Crear migración de carreras
-- [ ✓] Crear migración de materias
-- [ ✓] Seeder de carreras de ejemplo
-- [ ✓] Controlador de Carrera (CRUD, filtrar por modalidad/estado)
-- [ ✓] Controlador de Materia (CRUD, filtrar por carrera)
-- [ ✓] Rutas de Carrera (GET/POST/PUT/DELETE /api/carreras)
-- [ ✓] Rutas de Materia (GET/POST/PUT/DELETE /api/materias)
-- [ ✓] Validadores de Carrera y Materia
+- [x] Implementar modelo Carrera (id, nombre, slug, descripcion, duracion, modalidad, icono, color, activa)
+- [x] Implementar modelo Materia (id, nombre, carrera_id, cuatrimestre, carga_horaria_semanal, descripcion)
+- [x] Crear migración de carreras
+- [x] Crear migración de materias
+- [x] Seeder de carreras de ejemplo
+- [x] Controlador de Carrera (CRUD, filtrar por modalidad/estado)
+- [x] Controlador de Materia (CRUD, filtrar por carrera)
+- [x] Rutas de Carrera (GET/POST/PUT/DELETE /api/carreras)
+- [x] Rutas de Materia (GET/POST/PUT/DELETE /api/materias)
+- [x] Validadores de Carrera y Materia
 
 **Dependencias:** Ninguna (Materia solo referencia a Carrera dentro de este módulo)
 **Contraparte FE:** Módulo FE 2
 
 #### Módulo 3: Gestión de Usuarios
 **Tareas:**
-- [ ] Controlador de User (CRUD, asignación de roles)
-- [ ] Rutas de User (GET/POST/PUT/DELETE /api/usuarios)
-- [ ] Validadores de usuarios
-
+- [x] Controlador de User (CRUD, asignación de roles)
+- [x] Rutas de User (GET/POST/PUT/DELETE /api/usuarios)
+- [x] Validadores de usuarios
+ 
 **Dependencias:** Modelo User (Módulo BE 1)
 **Contraparte FE:** Módulo FE 4
 
