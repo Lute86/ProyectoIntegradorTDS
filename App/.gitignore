@@ -38,3 +38,6 @@ docker/Dockerfile.frontend
 # ── Scripts  ────────────────────────────────────────────────────────────
 AGENTS.md
 GUIDELINES.md
+
+# ── Otros  ────────────────────────────────────────────────────────────
+Mejoras.txt

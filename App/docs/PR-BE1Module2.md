@@ -25,27 +25,23 @@ Se implementa el sistema de gestión de carreras y materias para el backend de l
 
 ### Carreras
 
-| Método | Endpoint | Descripción | Auth requerida |
-|--------|----------|-------------|----------------|
-| GET | `/api/carreras` | Listar carreras (filtros: `?modalidad=virtual&activa=true`) | No |
-| POST | `/api/carreras` | Crear nueva carrera | No* |
-| GET | `/api/carreras/:id` | Obtener carrera por ID (incluye materias) | No |
-| PUT | `/api/carreras/:id` | Actualizar carrera | No* |
-| DELETE | `/api/carreras/:id` | Eliminar carrera (requiere sin materias asociadas) | No* |
-
-*En producción deberían estar protegidas con autenticación y roles.
+| Método | Endpoint | Descripción | Auth requerida | Autorización |
+|--------|----------|-------------|----------------|---------------|
+| GET | `/api/carreras` | Listar carreras (filtros: `?modalidad=virtual&activa=true`) | Sí | Todos los roles |
+| POST | `/api/carreras` | Crear nueva carrera | Sí | admin |
+| GET | `/api/carreras/:id` | Obtener carrera por ID (incluye materias) | Sí | Todos los roles |
+| PUT | `/api/carreras/:id` | Actualizar carrera | Sí | admin |
+| DELETE | `/api/carreras/:id` | Eliminar carrera (requiere sin materias asociadas) | Sí | admin |
 
 ### Materias
 
-| Método | Endpoint | Descripción | Auth requerida |
-|--------|----------|-------------|----------------|
-| GET | `/api/materias` | Listar materias (filtros: `?carrera_id=1&cuatrimestre=1`) | No |
-| POST | `/api/materias` | Crear nueva materia | No* |
-| GET | `/api/materias/:id` | Obtener materia por ID (incluye carrera) | No |
-| PUT | `/api/materias/:id` | Actualizar materia | No* |
-| DELETE | `/api/materias/:id` | Eliminar materia | No* |
-
-*En producción deberían estar protegidas con autenticación y roles.
+| Método | Endpoint | Descripción | Auth requerida | Autorización |
+|--------|----------|-------------|----------------|---------------|
+| GET | `/api/materias` | Listar materias (filtros: `?carrera_id=1&cuatrimestre=1`) | Sí | Todos los roles |
+| POST | `/api/materias` | Crear nueva materia | Sí | admin, profesor |
+| GET | `/api/materias/:id` | Obtener materia por ID (incluye carrera) | Sí | Todos los roles |
+| PUT | `/api/materias/:id` | Actualizar materia | Sí | admin, profesor |
+| DELETE | `/api/materias/:id` | Eliminar materia | Sí | admin |
 
 ## Variables de entorno necesarias
 
