@@ -56,7 +56,7 @@
 - [x] Controlador de User (CRUD, asignación de roles)
 - [x] Rutas de User (GET/POST/PUT/DELETE /api/usuarios)
 - [x] Validadores de usuarios
- 
+
 **Dependencias:** Modelo User (Módulo BE 1)
 **Contraparte FE:** Módulo FE 4
 
