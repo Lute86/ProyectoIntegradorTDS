@@ -21,6 +21,7 @@ const models = {
 import userModel from './user.model.js';
 import carreraModel from './carrera.model.js';
 import materiaModel from './materia.model.js';
+import siteconfigModel from './siteconfig.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -30,6 +31,9 @@ models.Carrera = Carrera;
 
 const Materia = materiaModel(sequelizeInstance, DataTypes);
 models.Materia = Materia;
+
+const SiteConfig = siteconfigModel(sequelizeInstance, DataTypes);
+models.SiteConfig = SiteConfig;
 
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
