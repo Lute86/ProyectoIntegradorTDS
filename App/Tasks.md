@@ -62,14 +62,14 @@
 
 #### Módulo 4: Configuración del Sitio y Estadísticas
 **Tareas:**
-- [ ] Implementar modelo SiteConfig (id, site_name, site_subtitle, contact_email, contact_phone, address, seo_description, footer_text, colors, layout, sections, typography, theme_preset)
-- [ ] Crear migración de site-config
-- [ ] Seeder de configuración por defecto del sitio
-- [ ] Controlador de SiteConfig (GET/PUT /api/config)
-- [ ] Controlador de Stats (contadores para dashboard: usuarios, noticias, eventos)
-- [ ] Rutas de SiteConfig (GET/PUT /api/config)
-- [ ] Rutas de Stats (GET /api/stats)
-- [ ] Validadores de SiteConfig
+- [x] Implementar modelo SiteConfig (id, site_name, site_subtitle, contact_email, contact_phone, address, seo_description, footer_text, colors, layout, sections, typography, theme_preset)
+- [x] Crear migración de site-config
+- [x] Seeder de configuración por defecto del sitio
+- [x] Controlador de SiteConfig (GET/PUT /api/config) + rutas y servicios
+- [x] Controlador de Stats (contadores para dashboard: usuarios, noticias, eventos) + rutas y servicios
+- [x] Rutas de SiteConfig (GET/PUT /api/config)
+- [x] Rutas de Stats (GET /api/stats)
+- [x] Validadores de SiteConfig
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 5
