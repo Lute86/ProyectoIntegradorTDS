@@ -4,6 +4,7 @@ import carreraRoutes from './carrera.routes.js';
 import materiaRoutes from './materia.routes.js';
 import userRoutes from './user.routes.js';
 import siteConfigRoutes from './siteconfig.routes.js';
+import statsRoutes from './stats.routes.js';
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use('/carreras', carreraRoutes);
 router.use('/materias', materiaRoutes);
 router.use('/usuarios', userRoutes);
 router.use('/config', siteConfigRoutes);
+router.use('/stats', statsRoutes);
 
 export default router;
