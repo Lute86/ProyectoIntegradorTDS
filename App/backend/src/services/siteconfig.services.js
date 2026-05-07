@@ -1,12 +1,14 @@
 import models from '../models/index.js';
-import { NotFoundError } from '../utils/AppError.js';
 import { handleDbErrors } from '../utils/dbErrorHandler.js';
 
 export const getConfig = handleDbErrors(async () => {
   let config = await models.SiteConfig.findOne();
 
   if (!config) {
-    throw new NotFoundError('Configuración del sitio no encontrada');
+    config = await models.SiteConfig.create({
+      site_name: 'IFTS 29',
+      site_subtitle: 'Nueva Web',
+    });
   }
 
   return config;
