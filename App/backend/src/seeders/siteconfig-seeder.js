@@ -24,9 +24,13 @@ export async function up(queryInterface, Sequelize) {
           sidebar: true,
         }),
         sections: JSON.stringify([
-          { name: 'hero', enabled: true },
-          { name: 'about', enabled: true },
-          { name: 'courses', enabled: true },
+          { id: 'hero', visible: true, order: 1 },
+          { id: 'statistics', visible: true, order: 2 },
+          { id: 'careers', visible: true, order: 3 },
+          { id: 'news', visible: true, order: 4 },
+          { id: 'events', visible: true, order: 5 },
+          { id: 'testimonials', visible: true, order: 6 },
+          { id: 'gallery', visible: false, order: 7 },
         ]),
         typography: JSON.stringify({
           fontFamily: 'Inter',
