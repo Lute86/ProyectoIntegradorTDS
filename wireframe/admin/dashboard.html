@@ -723,10 +723,29 @@
 
             <div class="card-admin">
               <div class="card-header">
-                <h2>📐 Layout del Sitio</h2>
+                <h2>📐 Imagen del Layout</h2>
+              </div>
+              <div class="card-body" style="display: grid; gap: 1.25rem;">
+                <div style="display: grid; grid-template-columns: minmax(320px, 1.4fr) minmax(260px, 1fr); gap: 1.25rem; align-items: center;">
+                  <div style="display: grid; gap: 1rem;">
+                    <div>
+                      <div style="margin-bottom: 0.75rem; font-weight: 400;">Imagen actual</div>
+                      <div style="border: 1px dashed var(--border); border-radius: 14px; overflow: hidden; min-height: 240px; background: #f8fafc; display: flex; align-items: center; justify-content: center;">
+                        <img id="currentLayoutImage" src="https://via.placeholder.com/480x260?text=Imagen+actual" alt="Imagen actual del layout" style="width: 100%; height: 100%; object-fit: cover;">
+                      </div>
+                    </div>
+                    <div>
+                      <button class="btn btn-primary" onclick="openModal('modalLayoutImage')">Seleccionar imagen</button>
+                    </div>
+                  </div>
+                  <div>
+                    
+                  </div>
+                </div>
+                <h2>💡 Tipo de Navbar</h2>
               </div>
               <div class="card-body">
-                <div class="layout-options">
+                <div class="layout-options" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem;">
                   <div class="layout-option active" onclick="selectLayout(this, 'navbar')">
                     <div class="layout-preview">
                       <div class="topbar-preview"></div>
@@ -1145,6 +1164,47 @@
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeModal('modalUsuario')">Cancelar</button>
         <button class="btn btn-primary" onclick="closeModal('modalUsuario'); alert('Usuario creado (wireframe)')">Crear Usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Cambiar imagen del layout -->
+  <div class="modal-overlay" id="modalLayoutImage">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Cambiar imagen del layout</h2>
+        <button class="modal-close" onclick="closeModal('modalLayoutImage')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Seleccionar imagen</label>
+          <input type="file" id="layoutImageInput" accept="image/*" onchange="handleLayoutImageSelect(event)">
+        </div>
+        <div class="form-row" style="gap: 1.25rem;">
+          <div style="flex: 1;">
+            <label>Imagen actual</label>
+            <div style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden; min-height: 180px; display: flex; align-items: center; justify-content: center; background: #f8fafc; margin-top: 0.5rem;">
+              <img id="modalCurrentImage" src="https://via.placeholder.com/420x220?text=Imagen+actual" alt="Imagen actual" style="width:100%; height:100%; object-fit: cover;">
+            </div>
+          </div>
+          <div style="flex: 1;">
+            <label>Previsualización</label>
+            <div style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden; min-height: 180px; display: flex; align-items: center; justify-content: center; background: #f8fafc; margin-top: 0.5rem;">
+              <img id="layoutImagePreview" src="https://via.placeholder.com/420x220?text=Previsualizaci%C3%B3n" alt="Previsualización" style="width:100%; height:100%; object-fit: contain;">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Modo de ajuste</label>
+          <select id="layoutImageFit" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+            <option value="cover" selected>Cover</option>
+            <option value="contain">Contain</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modalLayoutImage')">Cancelar</button>
+        <button class="btn btn-primary" onclick="applyLayoutImage()">Aplicar imagen</button>
       </div>
     </div>
   </div>
