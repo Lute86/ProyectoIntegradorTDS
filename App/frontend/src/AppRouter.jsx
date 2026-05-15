@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PublicLayout from './components/layout/PublicLayout/PublicLayout'
 import HomePage from './pages/public/HomePage/HomePage'
 import CarrerasPage from './pages/public/CarrerasPage/CarrerasPage'
+import CarreraDetailPage from './pages/public/CarrerasPage/CarreraDetailPage'
 import ContactoPage from './pages/public/ContactoPage/ContactoPage'
 import EstudiantesPage from './pages/public/EstudiantesPage/EstudiantesPage'
 import NoticiasPage from './pages/public/NoticiasPage/NoticiasPage'
@@ -30,6 +31,7 @@ export default function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/carreras" element={<CarrerasPage />} />
+          <Route path="/carreras/:slug" element={<CarreraDetailPage />} />
           <Route path="/noticias" element={<NoticiasPage />} />
           <Route path="/noticias/:slug" element={<NoticiaDetailPage />} />
           <Route path="/contacto" element={<ContactoPage />} />
