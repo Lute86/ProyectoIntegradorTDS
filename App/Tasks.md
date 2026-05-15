@@ -131,14 +131,16 @@
 ### FE Dev 1: Sitio Público y Fundación
 #### Módulo 1: Fundación y Autenticación
 **Tareas:**
-- [ ] Configurar React Router (todas las rutas públicas/admin)
-- [ ] Crear capa de servicios API (axios con interceptores)
-- [ ] Implementar AuthContext, ThemeContext, LayoutContext, ToastContext
-- [ ] Crear authStore, uiStore
-- [ ] Construir sistema de diseño UI: Button, Input, Select, Textarea, Card, Badge, Modal, Table, Pagination, Toggle, Toast, Skeleton, EmptyState
-- [ ] Construir PublicLayout (Navbar, Footer, MobileMenu)
-- [ ] Construir LoginPage
-- [ ] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
+- [x] Configurar React Router (todas las rutas públicas/admin)
+- [x] Crear capa de servicios API (axios con interceptores)
+- [x] Implementar AuthContext, ThemeContext
+- [x] Implementar LayoutContext, ToastContext
+- [x] Crear authStore, uiStore
+- [x] Construir sistema de diseño UI: Button, Input, Select, Textarea, Card, Badge
+- [x] Construir sistema de diseño UI: Modal, Table, Pagination, Toggle, Toast, Skeleton, EmptyState
+- [x] Construir PublicLayout (Navbar, Footer, MobileMenu)
+- [x] Construir LoginPage
+- [x] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
 
 **Dependencias:** Puede usar datos mock de auth hasta que el Módulo BE 1 esté listo
 **Contraparte BE:** Módulo BE 1
@@ -157,8 +159,8 @@
 
 #### Módulo 3: Noticias y Contacto Público
 **Tareas:**
-- [ ] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
-- [ ] Construir NoticiaDetailPage
+- [x] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
+- [x] Construir NoticiaDetailPage
 - [ ] Construir componentes: NewsCard, NewsSidebar
 - [ ] Construir ContactoPage, ContactForm
 - [ ] Construir EstudiantesPage, QuickLinks
