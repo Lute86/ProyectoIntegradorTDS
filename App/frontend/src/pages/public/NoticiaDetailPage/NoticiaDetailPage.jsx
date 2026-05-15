@@ -30,17 +30,7 @@ export default function NoticiaDetailPage() {
   const badgeColor = BADGE_COLORS[noticia.categoria] || 'bg-gray-100 text-gray-700'
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-blue-600">Inicio</Link><span>/</span>
-            <Link to="/noticias" className="hover:text-blue-600">Noticias</Link><span>/</span>
-            <span className="text-slate-800 font-medium truncate">{noticia.titulo}</span>
-          </nav>
-        </div>
-      </div>
-
+    <div className="bg-slate-50">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
         <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>{noticia.categoria}</span>

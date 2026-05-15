@@ -8,8 +8,8 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-3">IFTS 29</h3>
             <p className="text-sm leading-relaxed">
-              Instituto de Formacion Tecnica Superior N 29. Formando profesionales en tecnologia desde hace mas de 15
-              anos.
+               Instituto de Formacion Tecnica Superior N 29. Formando profesionales en tecnologia desde hace mas de 15
+               años.
             </p>
           </div>
           <div>
@@ -32,7 +32,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-slate-700 py-4 text-center text-sm">
-        <p>Todos los derechos reservados &copy; IFTS 29 - 2026</p>
+        <p>Todos los derechos reservados &copy; IFTS N°29 - 2026</p>
       </div>
     </footer>
   );
