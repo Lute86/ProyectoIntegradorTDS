@@ -22,29 +22,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    try {
-      const { data } = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      setUser(data.user);
-      return data;
-    } catch {
-      if (email === 'admin@ifts29.edu.ar' && password === 'admin1234') {
-        const mockUser = {
-          id: 1,
-          email,
-          role: 'admin',
-          nombre: 'Admin',
-          apellido: 'IFTS 29',
-        };
-        const mockToken = 'mock-token-' + Date.now();
-        localStorage.setItem('token', mockToken);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        setUser(mockUser);
-        return { user: mockUser, token: mockToken };
-      }
-      throw new Error('Credenciales invalidas');
-    }
+    const { data } = await api.post('/auth/login', { email, password });
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setUser(data.user);
+    return data;
   };
 
   const logout = () => {

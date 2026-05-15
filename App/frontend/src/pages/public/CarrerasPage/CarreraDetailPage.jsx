@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Badge from '../../../components/ui/Badge/Badge'
 import HorariosTable from '../../../components/public/HorariosTable/HorariosTable'
-import { MOCK_CARRERAS } from '../../../data/mockCarreras'
+import useCarrerasStore from '../../../stores/carrerasStore'
 
 const TABS = [
   { id: 'descripcion', label: 'Descripcion' },
@@ -14,28 +14,37 @@ const TABS = [
 export default function CarreraDetailPage() {
   const { slug } = useParams()
   const [activeTab, setActiveTab] = useState('descripcion')
+  const { carreras, selectedCarrera, loading, fetchCarreras, fetchCarreraBySlug } = useCarrerasStore()
 
-  const carrera = useMemo(
-    () => MOCK_CARRERAS.find((c) => c.slug === slug),
-    [slug],
-  )
+  useEffect(() => {
+    fetchCarreras()
+    fetchCarreraBySlug(slug)
+  }, [slug, fetchCarreras, fetchCarreraBySlug])
 
   const otrasCarreras = useMemo(
-    () => MOCK_CARRERAS.filter((c) => c.slug !== slug),
-    [slug],
+    () => carreras.filter((c) => c.slug !== slug),
+    [carreras, slug],
   )
 
   const materiasPorCuatri = useMemo(() => {
-    if (!carrera) return []
+    if (!selectedCarrera || !selectedCarrera.materias) return []
     const grupos = {}
-    carrera.materias.forEach((m) => {
+    selectedCarrera.materias.forEach((m) => {
       if (!grupos[m.cuatrimestre]) grupos[m.cuatrimestre] = []
       grupos[m.cuatrimestre].push(m)
     })
     return Object.entries(grupos).sort(([a], [b]) => Number(a) - Number(b))
-  }, [carrera])
+  }, [selectedCarrera])
 
-  if (!carrera) {
+  if (loading && !selectedCarrera) {
+    return (
+      <div className="bg-slate-50 min-h-screen flex items-center justify-center">
+        <p className="text-slate-500">Cargando...</p>
+      </div>
+    )
+  }
+
+  if (!selectedCarrera) {
     return (
       <div className="bg-slate-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -57,8 +66,10 @@ export default function CarreraDetailPage() {
     <div className="bg-slate-50 min-h-screen">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
         <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">{carrera.nombre}</h1>
-          <p className="text-blue-200">{carrera.titulo_oficial}</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{selectedCarrera.nombre}</h1>
+          {selectedCarrera.titulo_oficial && (
+            <p className="text-blue-200">{selectedCarrera.titulo_oficial}</p>
+          )}
         </div>
       </div>
 
@@ -83,21 +94,25 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'descripcion' && (
               <div>
-                <p className="text-slate-700 leading-relaxed mb-6">{carrera.descripcion_larga}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {carrera.informacion.map((item, i) => (
-                    <div key={i} className="bg-white p-4 rounded-lg shadow-sm text-center">
-                      <h4 className="text-blue-600 font-bold text-sm mb-1">{item.label}</h4>
-                      <p className="text-slate-700 text-sm">{item.valor}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-slate-700 leading-relaxed mb-6">
+                  {selectedCarrera.descripcion_larga || selectedCarrera.descripcion}
+                </p>
+                {selectedCarrera.informacion && (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {selectedCarrera.informacion.map((item, i) => (
+                      <div key={i} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                        <h4 className="text-blue-600 font-bold text-sm mb-1">{item.label}</h4>
+                        <p className="text-slate-700 text-sm">{item.valor}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === 'materias' && (
               <div>
-                {materiasPorCuatri.map(([cuatri, materias]) => (
+                {materiasPorCuatri.length > 0 ? materiasPorCuatri.map(([cuatri, materias]) => (
                   <div key={cuatri} className="mb-6">
                     <h4 className="text-blue-600 font-bold mb-3">
                       {nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}
@@ -109,28 +124,38 @@ export default function CarreraDetailPage() {
                           className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600"
                         >
                           <h5 className="font-semibold text-slate-900 text-sm">{m.nombre}</h5>
-                          <p className="text-xs text-slate-500 mt-1">{m.carga_horaria}</p>
+                          <p className="text-xs text-slate-500 mt-1">{m.carga_horaria || ''}</p>
                         </div>
                       ))}
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <p className="text-slate-500">No hay materias cargadas.</p>
+                )}
               </div>
             )}
 
             {activeTab === 'requisitos' && (
-              <ul className="space-y-3">
-                {carrera.requisitos.map((req, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-700">
-                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
-                    {req}
-                  </li>
-                ))}
-              </ul>
+              selectedCarrera.requisitos && selectedCarrera.requisitos.length > 0 ? (
+                <ul className="space-y-3">
+                  {selectedCarrera.requisitos.map((req, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-700">
+                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
+                      {req}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-slate-500">No hay requisitos cargados.</p>
+              )
             )}
 
             {activeTab === 'horarios' && (
-              <HorariosTable horarios={carrera.horarios} />
+              selectedCarrera.horarios && selectedCarrera.horarios.length > 0 ? (
+                <HorariosTable horarios={selectedCarrera.horarios} />
+              ) : (
+                <p className="text-slate-500">No hay horarios cargados.</p>
+              )
             )}
           </div>
 
@@ -138,7 +163,7 @@ export default function CarreraDetailPage() {
             <div className="bg-white p-5 rounded-xl shadow-sm">
               <h4 className="font-bold text-slate-900 mb-3">Otras Carreras</h4>
               <ul className="space-y-3">
-                {otrasCarreras.map((oc) => (
+                {otrasCarreras.length > 0 ? otrasCarreras.map((oc) => (
                   <li key={oc.id} className="flex items-center justify-between">
                     <Link
                       to={`/carreras/${oc.slug}`}
@@ -146,9 +171,11 @@ export default function CarreraDetailPage() {
                     >
                       {oc.nombre}
                     </Link>
-                    <Badge variant={oc.badgeVariant}>{oc.duracion}</Badge>
+                    <Badge variant={oc.badgeVariant || 'blue'}>{oc.duracion}</Badge>
                   </li>
-                ))}
+                )) : (
+                  <p className="text-sm text-slate-500">No hay otras carreras disponibles.</p>
+                )}
               </ul>
             </div>
 

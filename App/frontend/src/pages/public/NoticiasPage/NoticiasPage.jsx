@@ -1,25 +1,21 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
+import { BADGE_COLORS } from '../../../data/mockNoticias'
+import useNoticiasStore from '../../../stores/noticiasStore'
+import NewsSidebar from '../../../components/public/NewsSidebar/NewsSidebar'
 
-const ITEMS_PER_PAGE = 4 // noticias por pagina
+const ITEMS_PER_PAGE = 4
 
 export default function NoticiasPage() {
-  // estado del buscador, filtro y pagina actual
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const { noticias, loading, fetchNoticias } = useNoticiasStore()
 
-  // cuenta cuantas noticias hay por categoria
-  const categorias = useMemo(() => {
-    const counts = {}
-    MOCK_NOTICIAS.forEach((n) => { counts[n.categoria] = (counts[n.categoria] || 0) + 1 })
-    return Object.entries(counts).map(([nombre, count]) => ({ nombre, count }))
-  }, [])
+  useEffect(() => { fetchNoticias() }, [fetchNoticias])
 
-  // filtra noticias por texto y categoria
   const noticiasFiltradas = useMemo(() => {
-    let result = [...MOCK_NOTICIAS]
+    let result = [...noticias]
     if (search.trim()) {
       const q = search.toLowerCase()
       result = result.filter((n) =>
@@ -28,9 +24,8 @@ export default function NoticiasPage() {
     }
     if (selectedCategory) result = result.filter((n) => n.categoria === selectedCategory)
     return result
-  }, [search, selectedCategory])
+  }, [noticias, search, selectedCategory])
 
-  // calcula paginas totales
   const totalPages = Math.max(1, Math.ceil(noticiasFiltradas.length / ITEMS_PER_PAGE))
   const paginatedNoticias = noticiasFiltradas.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -67,31 +62,21 @@ export default function NoticiasPage() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-              <div className="flex flex-col sm:flex-row gap-4 mb-5">
-                <div className="flex-1 relative">
-                  <input
-                    type="text" placeholder="Buscar noticias..." value={search} onChange={handleSearch}
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <svg className="absolute left-3 top-3 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-                {(search || selectedCategory) && (
-                  <button onClick={() => { setSearch(''); setSelectedCategory(''); setCurrentPage(1) }}
-                    className="px-4 py-2.5 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
-                  >Limpiar filtros</button>
-                )}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="flex-1 relative">
+                <input
+                  type="text" placeholder="Buscar noticias..." value={search} onChange={handleSearch}
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <svg className="absolute left-3 top-3 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {categorias.map((cat) => (
-                  <button key={cat.nombre} onClick={() => handleCategoryFilter(cat.nombre)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                      selectedCategory === cat.nombre ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}>{cat.nombre} ({cat.count})</button>
-                ))}
-              </div>
+              {(search || selectedCategory) && (
+                <button onClick={() => { setSearch(''); setSelectedCategory(''); setCurrentPage(1) }}
+                  className="px-4 py-2.5 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
+                >Limpiar filtros</button>
+              )}
             </div>
 
             <p className="text-sm text-slate-500 mb-4">
@@ -136,7 +121,11 @@ export default function NoticiasPage() {
             )}
           </div>
 
-          
+          <NewsSidebar
+            noticias={noticias}
+            search={search} setSearch={handleSearch}
+            selectedCategory={selectedCategory} onCategoryChange={handleCategoryFilter}
+          />
         </div>
       </div>
     </div>

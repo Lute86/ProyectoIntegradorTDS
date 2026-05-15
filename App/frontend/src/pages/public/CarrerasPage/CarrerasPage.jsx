@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Badge from '../../../components/ui/Badge/Badge'
-import { MOCK_CARRERAS } from '../../../data/mockCarreras'
+import useCarrerasStore from '../../../stores/carrerasStore'
 
 export default function CarrerasPage() {
   const [selectedFilter, setSelectedFilter] = useState('Todas')
+  const { carreras, loading, fetchCarreras } = useCarrerasStore()
 
-  const modalidades = ['Todas', ...new Set(MOCK_CARRERAS.map((c) => c.modalidad))]
+  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+
+  const modalidades = ['Todas', ...new Set(carreras.map((c) => c.modalidad))]
 
   const filtradas = selectedFilter === 'Todas'
-    ? MOCK_CARRERAS
-    : MOCK_CARRERAS.filter((c) => c.modalidad === selectedFilter)
+    ? carreras
+    : carreras.filter((c) => c.modalidad === selectedFilter)
 
   return (
     <div className="bg-slate-50 min-h-screen">
@@ -39,7 +42,9 @@ export default function CarrerasPage() {
         </div>
 
         <div className="space-y-5">
-          {filtradas.length === 0 ? (
+          {loading ? (
+            <p className="text-slate-500 text-center py-12">Cargando carreras...</p>
+          ) : filtradas.length === 0 ? (
             <p className="text-slate-500 text-center py-12">No se encontraron carreras.</p>
           ) : (
             filtradas.map((c) => (

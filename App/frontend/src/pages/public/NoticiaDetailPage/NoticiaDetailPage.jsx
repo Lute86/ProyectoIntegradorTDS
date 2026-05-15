@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
+import { BADGE_COLORS } from '../../../data/mockNoticias'
+import useNoticiasStore from '../../../stores/noticiasStore'
 
 const gradientMap = {
   Inscripciones: 'from-blue-400 to-blue-600',
@@ -11,7 +13,19 @@ const gradientMap = {
 
 export default function NoticiaDetailPage() {
   const { slug } = useParams()
-  const noticia = MOCK_NOTICIAS.find((n) => n.slug === slug)
+  const { selectedNoticia, loading, fetchNoticiaBySlug } = useNoticiasStore()
+
+  useEffect(() => { fetchNoticiaBySlug(slug) }, [slug, fetchNoticiaBySlug])
+
+  const noticia = selectedNoticia
+
+  if (loading && !noticia) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-slate-500">Cargando...</p>
+      </div>
+    )
+  }
 
   if (!noticia) {
     return (
