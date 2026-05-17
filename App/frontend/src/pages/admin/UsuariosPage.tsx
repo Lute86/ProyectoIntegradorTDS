@@ -1,7 +1,8 @@
 import { DataTable, Column } from '../../components/ui/DataTable';
 import { User } from '../../mocks/users.mock';
 import { useUsuariosStore } from '../../stores/usuariosStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import UsuarioFormModal from '../../components/admin/UsuarioFormModal';
 
 /**
  * UsuariosPage - Módulo 4: Gestión de Usuarios Admin
@@ -11,8 +12,25 @@ import { useEffect } from 'react';
  */
 const UsuariosPage = () => {
   const { usuarios, isLoading, error, fetchUsuarios } = useUsuariosStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [usuarioToEdit, setUsuarioToEdit] = useState<User | null>(null);
 
   useEffect(() => { fetchUsuarios(); }, []);
+
+  const abrirModalCrear = () => {
+    setUsuarioToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const abrirModalEditar = (user: User) => {
+    setUsuarioToEdit(user);
+    setIsModalOpen(true);
+  };
+
+  const cerrarModal = () => {
+    setIsModalOpen(false);
+    setUsuarioToEdit(null);
+  };
 
   // Definición de columnas alineada con el modelo de Backend y Wireframe
   const columns: Column<User>[] = [
@@ -75,6 +93,18 @@ const UsuariosPage = () => {
           </span>
         </div>
       ),
+    },
+    {
+      header: 'Acciones',
+      accessor: (user) => (
+        <button
+          onClick={() => abrirModalEditar(user)}
+          className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+        >
+          Editar
+        </button>
+      ),
+      className: 'text-right'
     }
   ];
 
@@ -87,7 +117,10 @@ const UsuariosPage = () => {
           <p className="text-sm text-gray-500">Administra los accesos y roles del personal del instituto.</p>
         </div>
         
-        <button className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm active:scale-95 gap-2">
+        <button
+          onClick={abrirModalCrear}
+          className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm active:scale-95 gap-2"
+        >
           <span className="text-lg">+</span>
           <span>Nuevo Usuario</span>
         </button>
@@ -122,6 +155,12 @@ const UsuariosPage = () => {
           />
         )}
       </div>
+
+      <UsuarioFormModal
+        isOpen={isModalOpen}
+        onClose={cerrarModal}
+        usuarioToEdit={usuarioToEdit}
+      />
     </div>
   );
 };
