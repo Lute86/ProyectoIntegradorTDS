@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '../components/layout/AdminLayout/AdminLayout';
 import UsuariosPage from '../pages/admin/UsuariosPage';
+import DashboardPage from '../pages/admin/DashboardPage/DashboardPage';
 
 /**
  * AppRouter - Definición central de rutas de la aplicación.
@@ -12,12 +13,12 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         {/* Redirección inicial al Dashboard de Admin o Home Pública */}
-        <Route path="/" element={<Navigate to="/admin/usuarios" replace />} />
+        <Route path="/" element={<Navigate to="/admin" replace />} />
 
         {/* Rutas de Administración (Módulos 4 y 5) */}
         <Route path="/admin" element={<AdminLayout />}>
-          {/* Redirección por defecto dentro de admin */}
-          <Route index element={<Navigate to="/admin/usuarios" replace />} />
+          {/* Pagina por defecto: Dashboard */}
+          <Route index element={<DashboardPage />} />
           
           {/* Gestión de Usuarios (Tarea Actual) */}
           <Route path="usuarios" element={<UsuariosPage />} />

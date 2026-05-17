@@ -172,14 +172,17 @@
 ### FE Dev 2: Páginas de Admin y Personalización
 #### Módulo 4: Gestión de Contenido Admin
 **Tareas:**
-- [ ] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
+- [x] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
 - [ ] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
 - [ ] Construir Admin EventosPage + EventoFormModal
 - [ ] Construir Admin TestimoniosPage + TestimonioFormModal
 - [ ] Construir GaleriaPage + ImageUploadModal (drag & drop)
-- [ ] Construir UsuariosPage + UsuarioFormModal
+- [x] Construir UsuariosPage + UsuarioFormModal
 - [ ] Construir componentes: DataTable, ImageUploader, RichEditor, UserAvatar
-- [ ] Implementar eventosStore, testimoniosStore, galeriaStore, usuariosStore
+- [ ] Implementar eventosStore
+- [ ] Implementar testimoniosStore
+- [ ] Implementar galeriaStore
+- [x] Implementar usuariosStore
 
 **Dependencias:** Puede usar datos mock hasta que los Módulos BE 4,5,6 estén listos
 **Contraparte BE:** Módulos BE 4,5,6
