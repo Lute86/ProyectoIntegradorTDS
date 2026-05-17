@@ -143,16 +143,15 @@
 - [x] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
 
 **Dependencias:** Puede usar datos mock de auth hasta que el Módulo BE 1 esté listo
-**Contraparte BE:** Módulo BE 1
 
 #### Módulo 2: Inicio y Carreras Públicas
 **Tareas:**
-- [ ] Construir HomePage (Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel)
-- [ ] Construir CarrerasPage (listado)
-- [ ] Construir CarreraDetailPage (CareerTabs: descripción, plan de estudios, requisitos, horarios)
-- [ ] Construir componentes: CareerCards, CareerCard, StatItem, Hero, TestimonialsCarousel
-- [ ] Construir componente HorariosTable
-- [ ] Implementar carrerasStore
+- [x] Construir HomePage (Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel)
+- [x] Construir CarrerasPage (listado)
+- [x] Construir CarreraDetailPage (CareerTabs: descripción, plan de estudios, requisitos, horarios)
+- [x] Construir componentes: CareerCards, CareerCard, StatItem, Hero, TestimonialsCarousel
+- [x] Construir componente HorariosTable
+- [x] Implementar carrerasStore
 
 **Dependencias:** Puede usar datos mock de carreras hasta que el Módulo BE 2 esté listo
 **Contraparte BE:** Módulo BE 2
