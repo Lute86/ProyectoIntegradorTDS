@@ -194,8 +194,10 @@
 **Tareas:**
 - [ ] Construir PersonalizarPage (ColorConfig, ThemePresets, LayoutSelector, SectionsConfig con drag & drop, TypographyConfig, PreviewPanel)
 - [ ] Construir AjustesPage (GeneralSettings, SEOSettings, SocialSettings)
-- [ ] Implementar siteConfigStore
-- [ ] Construir componentes: ColorPicker, SectionManager, DraggableSection
+- [x] Implementar siteConfigStore
+- [x] Construir ColorPicker
+- [ ] Construir SectionManager
+- [ ] Construir DraggableSection
 
 **Dependencias:** Módulo BE 3 (Site Config)
 **Contraparte BE:** Módulo BE 3
