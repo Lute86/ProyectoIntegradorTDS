@@ -174,7 +174,7 @@
 **Tareas:**
 - [x] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
 - [x] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
-- [ ] Construir Admin EventosPage + EventoFormModal
+- [x] Construir Admin EventosPage + EventoFormModal
 - [ ] Construir Admin TestimoniosPage + TestimonioFormModal
 - [ ] Construir GaleriaPage + ImageUploadModal (drag & drop)
 - [x] Construir UsuariosPage + UsuarioFormModal
@@ -182,7 +182,7 @@
 - [ ] Construir ImageUploader
 - [x] Construir RichEditor
 - [ ] Construir UserAvatar
-- [ ] Implementar eventosStore
+- [x] Implementar eventosStore
 - [ ] Implementar testimoniosStore
 - [ ] Implementar galeriaStore
 - [x] Implementar usuariosStore
