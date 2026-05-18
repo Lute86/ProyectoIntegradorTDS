@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '../components/layout/AdminLayout/AdminLayout';
 import UsuariosPage from '../pages/admin/UsuariosPage';
 import DashboardPage from '../pages/admin/DashboardPage/DashboardPage';
+import NoticiasPage from '../pages/admin/NoticiasPage/NoticiasPage';
 
 /**
  * AppRouter - Definición central de rutas de la aplicación.
@@ -23,8 +24,8 @@ const AppRouter = () => {
           {/* Gestión de Usuarios (Tarea Actual) */}
           <Route path="usuarios" element={<UsuariosPage />} />
 
-          {/* Placeholders para futuros módulos de FE Dev 2 */}
-          <Route path="noticias" element={<div className="p-8 text-gray-400 italic">Módulo de Noticias en construcción...</div>} />
+          {/* Gestion de Noticias */}
+          <Route path="noticias" element={<NoticiasPage />} />
           <Route path="eventos" element={<div className="p-8 text-gray-400 italic">Módulo de Eventos en construcción...</div>} />
         </Route>
 
