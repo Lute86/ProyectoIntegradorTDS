@@ -176,15 +176,15 @@
 - [x] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
 - [x] Construir Admin EventosPage + EventoFormModal
 - [x] Construir Admin TestimoniosPage + TestimonioFormModal
-- [ ] Construir GaleriaPage + ImageUploadModal (drag & drop)
+- [x] Construir GaleriaPage + ImageUploadModal (drag & drop)
 - [x] Construir UsuariosPage + UsuarioFormModal
 - [x] Construir DataTable
-- [ ] Construir ImageUploader
+- [x] Construir ImageUploader
 - [x] Construir RichEditor
-- [ ] Construir UserAvatar
+- [x] Construir UserAvatar
 - [x] Implementar eventosStore
 - [x] Implementar testimoniosStore
-- [ ] Implementar galeriaStore
+- [x] Implementar galeriaStore
 - [x] Implementar usuariosStore
 
 **Dependencias:** Puede usar datos mock hasta que los Módulos BE 4,5,6 estén listos
