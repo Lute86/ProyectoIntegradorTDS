@@ -5,6 +5,7 @@ import DashboardPage from '../pages/admin/DashboardPage/DashboardPage';
 import NoticiasPage from '../pages/admin/NoticiasPage/NoticiasPage';
 import EventosPage from '../pages/admin/EventosPage/EventosPage';
 import TestimoniosPage from '../pages/admin/TestimoniosPage/TestimoniosPage';
+import GaleriaPage from '../pages/admin/GaleriaPage/GaleriaPage';
 
 /**
  * AppRouter - Definición central de rutas de la aplicación.
@@ -30,6 +31,7 @@ const AppRouter = () => {
           <Route path="noticias" element={<NoticiasPage />} />
           <Route path="eventos" element={<EventosPage />} />
           <Route path="testimonios" element={<TestimoniosPage />} />
+          <Route path="galeria" element={<GaleriaPage />} />
         </Route>
 
         {/* Manejo de errores 404 */}
