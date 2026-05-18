@@ -3,6 +3,7 @@ import ColorPicker from '../../../components/ui/ColorPicker';
 import ThemePresets from '../../../components/admin/ThemePresets';
 import TypographyConfig from '../../../components/admin/TypographyConfig';
 import LayoutSelector from '../../../components/admin/LayoutSelector';
+import SectionManager from '../../../components/admin/SectionManager';
 
 const COLOR_LABELS: Record<string, string> = {
   primary: 'Color Principal',
@@ -48,6 +49,15 @@ const PersonalizarPage = () => {
           <p className="text-xs text-gray-500">Seleccione la disposicion del contenido.</p>
         </div>
         <LayoutSelector />
+      </section>
+
+      {/* Seccion: Orden de secciones */}
+      <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+        <div>
+          <h2 className="text-base font-bold text-gray-900">Orden de Secciones</h2>
+          <p className="text-xs text-gray-500">Arrastre las secciones para reordenarlas en la pagina principal.</p>
+        </div>
+        <SectionManager />
       </section>
 
       {/* Seccion: Colores personalizados */}

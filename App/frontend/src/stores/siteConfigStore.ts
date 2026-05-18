@@ -22,7 +22,7 @@ export interface SiteConfig {
   };
   layout: 'boxed' | 'full-width';
   themePreset: string;
-  sections: string[];
+  sections: { id: string; visible: boolean }[];
 }
 
 const DEFAULT_CONFIG: SiteConfig = {
@@ -47,7 +47,13 @@ const DEFAULT_CONFIG: SiteConfig = {
   },
   layout: 'full-width',
   themePreset: 'moderno',
-  sections: ['hero', 'carreras', 'noticias', 'testimonios', 'contacto'],
+  sections: [
+    { id: 'hero', visible: true },
+    { id: 'carreras', visible: true },
+    { id: 'noticias', visible: true },
+    { id: 'testimonios', visible: true },
+    { id: 'contacto', visible: true },
+  ],
 };
 
 interface SiteConfigState {
@@ -56,6 +62,7 @@ interface SiteConfigState {
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
+  toggleSectionVisibility: (sectionId: string) => void;
   resetConfig: () => void;
 }
 
@@ -82,6 +89,17 @@ export const useSiteConfigStore = create<SiteConfigState>((set) => ({
       config: {
         ...state.config,
         typography: { ...state.config.typography, ...typography },
+      },
+      isDirty: true,
+    }));
+  },
+  toggleSectionVisibility: (sectionId) => {
+    set((state) => ({
+      config: {
+        ...state.config,
+        sections: state.config.sections.map((s) =>
+          s.id === sectionId ? { ...s, visible: !s.visible } : s
+        ),
       },
       isDirty: true,
     }));

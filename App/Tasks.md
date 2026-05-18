@@ -197,8 +197,8 @@
 - [ ] Construir AjustesPage (GeneralSettings, SEOSettings, SocialSettings)
 - [x] Implementar siteConfigStore
 - [x] Construir ColorPicker
-- [ ] Construir SectionManager
-- [ ] Construir DraggableSection
+- [x] Construir SectionManager
+- [x] Construir DraggableSection
 
 **Dependencias:** Módulo BE 3 (Site Config)
 **Contraparte BE:** Módulo BE 3
