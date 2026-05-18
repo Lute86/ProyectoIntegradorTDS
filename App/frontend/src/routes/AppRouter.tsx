@@ -7,6 +7,7 @@ import EventosPage from '../pages/admin/EventosPage/EventosPage';
 import TestimoniosPage from '../pages/admin/TestimoniosPage/TestimoniosPage';
 import GaleriaPage from '../pages/admin/GaleriaPage/GaleriaPage';
 import PersonalizarPage from '../pages/admin/PersonalizarPage/PersonalizarPage';
+import AjustesPage from '../pages/admin/AjustesPage/AjustesPage';
 
 /**
  * AppRouter - Definición central de rutas de la aplicación.
@@ -34,6 +35,7 @@ const AppRouter = () => {
           <Route path="testimonios" element={<TestimoniosPage />} />
           <Route path="galeria" element={<GaleriaPage />} />
           <Route path="personalizar" element={<PersonalizarPage />} />
+          <Route path="ajustes" element={<AjustesPage />} />
         </Route>
 
         {/* Manejo de errores 404 */}

@@ -23,6 +23,10 @@ export interface SiteConfig {
   layout: 'boxed' | 'full-width';
   themePreset: string;
   sections: { id: string; visible: boolean }[];
+  socialLinks: {
+    instagram: string;
+    facebook: string;
+  };
 }
 
 const DEFAULT_CONFIG: SiteConfig = {
@@ -54,6 +58,10 @@ const DEFAULT_CONFIG: SiteConfig = {
     { id: 'testimonios', visible: true },
     { id: 'contacto', visible: true },
   ],
+  socialLinks: {
+    instagram: 'https://instagram.com/ifts29',
+    facebook: 'https://facebook.com/ifts29',
+  },
 };
 
 interface SiteConfigState {
