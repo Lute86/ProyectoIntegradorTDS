@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import UserAvatar from '../../ui/UserAvatar';
 
 /**
  * AdminLayout - Shell básico para el panel de administración.
@@ -49,9 +50,7 @@ const AdminLayout = () => {
               <span className="text-sm font-semibold text-gray-700">Admin</span>
               <span className="text-[10px] text-gray-400 uppercase">Superusuario</span>
             </div>
-            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
-              AD
-            </div>
+            <UserAvatar nombre="Admin" apellido="IFTS" size="md" />
           </div>
         </header>
 

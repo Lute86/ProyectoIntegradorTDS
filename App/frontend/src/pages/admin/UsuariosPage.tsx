@@ -3,6 +3,7 @@ import { User } from '../../mocks/users.mock';
 import { useUsuariosStore } from '../../stores/usuariosStore';
 import { useEffect, useState } from 'react';
 import UsuarioFormModal from '../../components/admin/UsuarioFormModal';
+import UserAvatar from '../../components/ui/UserAvatar';
 
 /**
  * UsuariosPage - Módulo 4: Gestión de Usuarios Admin
@@ -43,17 +44,12 @@ const UsuariosPage = () => {
       header: 'Usuario',
       accessor: (user) => (
         <div className="flex items-center gap-3">
-          {user.avatar_url ? (
-            <img 
-              src={user.avatar_url} 
-              alt={user.nombre} 
-              className="w-9 h-9 rounded-full border border-gray-100 object-cover"
-            />
-          ) : (
-            <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
-              {user.nombre.charAt(0)}{user.apellido.charAt(0)}
-            </div>
-          )}
+          <UserAvatar
+            nombre={user.nombre}
+            apellido={user.apellido}
+            imagenUrl={user.avatar_url}
+            size="sm"
+          />
           <div className="flex flex-col">
             <span className="font-semibold text-gray-800 text-sm">
               {user.nombre} {user.apellido}
