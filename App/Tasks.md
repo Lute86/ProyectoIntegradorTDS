@@ -173,12 +173,15 @@
 #### Módulo 4: Gestión de Contenido Admin
 **Tareas:**
 - [x] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
-- [ ] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
+- [x] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
 - [ ] Construir Admin EventosPage + EventoFormModal
 - [ ] Construir Admin TestimoniosPage + TestimonioFormModal
 - [ ] Construir GaleriaPage + ImageUploadModal (drag & drop)
 - [x] Construir UsuariosPage + UsuarioFormModal
-- [ ] Construir componentes: DataTable, ImageUploader, RichEditor, UserAvatar
+- [x] Construir DataTable
+- [ ] Construir ImageUploader
+- [x] Construir RichEditor
+- [ ] Construir UserAvatar
 - [ ] Implementar eventosStore
 - [ ] Implementar testimoniosStore
 - [ ] Implementar galeriaStore

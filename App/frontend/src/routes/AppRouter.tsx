@@ -3,6 +3,7 @@ import AdminLayout from '../components/layout/AdminLayout/AdminLayout';
 import UsuariosPage from '../pages/admin/UsuariosPage';
 import DashboardPage from '../pages/admin/DashboardPage/DashboardPage';
 import NoticiasPage from '../pages/admin/NoticiasPage/NoticiasPage';
+import EventosPage from '../pages/admin/EventosPage/EventosPage';
 
 /**
  * AppRouter - Definición central de rutas de la aplicación.
@@ -26,7 +27,7 @@ const AppRouter = () => {
 
           {/* Gestion de Noticias */}
           <Route path="noticias" element={<NoticiasPage />} />
-          <Route path="eventos" element={<div className="p-8 text-gray-400 italic">Módulo de Eventos en construcción...</div>} />
+          <Route path="eventos" element={<EventosPage />} />
         </Route>
 
         {/* Manejo de errores 404 */}
