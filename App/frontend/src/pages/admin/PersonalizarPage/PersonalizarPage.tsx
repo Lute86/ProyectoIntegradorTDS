@@ -1,6 +1,8 @@
 import { useSiteConfigStore } from '../../../stores/siteConfigStore';
 import ColorPicker from '../../../components/ui/ColorPicker';
 import ThemePresets from '../../../components/admin/ThemePresets';
+import TypographyConfig from '../../../components/admin/TypographyConfig';
+import LayoutSelector from '../../../components/admin/LayoutSelector';
 
 const COLOR_LABELS: Record<string, string> = {
   primary: 'Color Principal',
@@ -28,6 +30,24 @@ const PersonalizarPage = () => {
           <p className="text-xs text-gray-500">Seleccione un tema para cambiar toda la paleta de colores de una vez.</p>
         </div>
         <ThemePresets />
+      </section>
+
+      {/* Seccion: Tipografia */}
+      <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+        <div>
+          <h2 className="text-base font-bold text-gray-900">Tipografia</h2>
+          <p className="text-xs text-gray-500">Configure las fuentes y el tamano base del sitio.</p>
+        </div>
+        <TypographyConfig />
+      </section>
+
+      {/* Seccion: Layout */}
+      <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+        <div>
+          <h2 className="text-base font-bold text-gray-900">Layout</h2>
+          <p className="text-xs text-gray-500">Seleccione la disposicion del contenido.</p>
+        </div>
+        <LayoutSelector />
       </section>
 
       {/* Seccion: Colores personalizados */}

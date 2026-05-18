@@ -193,6 +193,7 @@
 #### Módulo 5: Personalización y Configuración del Sitio
 **Tareas:**
 - [ ] Construir PersonalizarPage (ColorConfig, ThemePresets, LayoutSelector, SectionsConfig con drag & drop, TypographyConfig, PreviewPanel)
+- [x] Construir ThemePresets
 - [ ] Construir AjustesPage (GeneralSettings, SEOSettings, SocialSettings)
 - [x] Implementar siteConfigStore
 - [x] Construir ColorPicker
