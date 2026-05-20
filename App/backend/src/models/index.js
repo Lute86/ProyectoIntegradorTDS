@@ -22,6 +22,8 @@ import userModel from './user.model.js';
 import carreraModel from './carrera.model.js';
 import materiaModel from './materia.model.js';
 import siteconfigModel from './siteconfig.model.js';
+import categoriaModel from './categoria.model.js';
+import noticiaModel from './noticia.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -34,6 +36,12 @@ models.Materia = Materia;
 
 const SiteConfig = siteconfigModel(sequelizeInstance, DataTypes);
 models.SiteConfig = SiteConfig;
+
+const Categoria = categoriaModel(sequelizeInstance, DataTypes);
+models.Categoria = Categoria;
+
+const Noticia = noticiaModel(sequelizeInstance, DataTypes);
+models.Noticia = Noticia;
 
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
