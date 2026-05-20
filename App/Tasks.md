@@ -79,18 +79,18 @@
 ### BE Dev 2: Modelos de Contenido
 #### Módulo 4: Categorías y Noticias
 **Tareas:**
-- [ ] Implementar modelo Categoria (id, nombre, slug, color)
-- [ ] Implementar modelo Noticia (id, titulo, slug, contenido, imagen_destacada_url, categoria_id, autor_id, estado, fecha_publicacion)
-- [ ] Crear migración de categorias
-- [ ] Crear migración de noticias
-- [ ] Seeder de categorías de ejemplo
-- [ ] Seeder de noticias de ejemplo
-- [ ] Controlador de Categoria (CRUD)
-- [ ] Controlador de Noticia (CRUD, filtrar por categoría/estado/fecha, paginación, búsqueda)
-- [ ] Rutas de Categoria (GET/POST/PUT/DELETE /api/categorias)
-- [ ] Rutas de Noticia (GET/POST/PUT/DELETE /api/noticias)
-- [ ] Validadores de Categoria y Noticia
-- [ ] Upload de imágenes para noticias destacadas
+- [X] Implementar modelo Categoria (id, nombre, slug, color)
+- [X] Implementar modelo Noticia (id, titulo, slug, contenido, imagen_destacada_url, categoria_id, autor_id, estado, fecha_publicacion)
+- [X] Crear migración de categorias
+- [X] Crear migración de noticias
+- [X] Seeder de categorías de ejemplo
+- [X] Seeder de noticias de ejemplo
+- [X] Controlador de Categoria (CRUD)
+- [X] Controlador de Noticia (CRUD, filtrar por categoría/estado/fecha, paginación, búsqueda)
+- [X] Rutas de Categoria (GET/POST/PUT/DELETE /api/categorias)
+- [X] Rutas de Noticia (GET/POST/PUT/DELETE /api/noticias)
+- [X] Validadores de Categoria y Noticia
+- [X] Upload de imágenes para noticias destacadas
 
 **Dependencias:** Modelo User (Módulo BE 1), Categoria (mismo módulo)
 **Contraparte FE:** Módulo FE 3
