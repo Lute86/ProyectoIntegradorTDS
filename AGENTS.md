@@ -1,75 +1,71 @@
-# AGENTS.md - IFTS 29 Nueva Web
+# AGENTS.md — IFTS 29 Nueva Web
 
-##  Critical Rules
-- **NEVER use npm directly** - Always use Makefile in App/ or docker exec
-- **NEVER commit/push without explicit user request** - Wait for user to ask
-- **Only implement what the user explicitly asks** - No features, no refactors, no extras
-- **Comment code in Spanish** - Simple, short, no icons. Explain what each section does
-- **No emojis/icons in code files** - Use text labels instead (e.g. 'NOT' instead of 📰)
+## Reglas críticas
+- No usar npm directo — siempre Makefile en App/ o `docker exec`
+- No commit/push sin pedido explícito
+- Código comentado en español, simple, sin emojis
+- Solo implementar lo pedido — nada de features, refactors ni extras
 
-##  Read These First
-| File | What it contains |
-|------|-----------------|
-| `App/AGENTS.md` | All make commands, troubleshooting |
-| `App/GUIDELINES.md` | Code patterns, module structure, ESM rules, doc process |
-| `App/Tasks.md` | Task tracking (tick when done) |
-| `App/WORKFLOW.md` | Git flow, PR process, testing requirements |
-| `App/frontend/AGENTS.md` | Frontend-specific info |
+## Primero leer
+| Archivo | Contenido |
+|---------|-----------|
+| `App/AGENTS.md` | comandos make, troubleshooting |
+| `App/GUIDELINES.md` | patrones de código, estructura de módulos, ESM |
+| `App/Tasks.md` | seguimiento de tareas (tachar al completar) |
+| `App/WORKFLOW.md` | flujo git, PRs, testing |
+| `App/frontend/AGENTS.md` | frontend específico |
 
-##  Essential Commands (from App/)
+## Comandos esenciales (desde App/)
 ```bash
-make dev              # Start dev (frontend:5173, backend:3000/api)
-make dev-down         # Stop dev
-make dev-reset        # Stop dev + delete SQLite DB
-make migrate-dev      # Run migrations
-make seed-dev         # Load seed data
-make tests-back       # Backend tests (Jest)
-make tests-frontend   # Frontend tests (Vitest --run)
-make lint-frontend    # Frontend lint (eslint --max-warnings 0)
-make lint-backend     # Backend lint
-make install          # Install all deps (frontend + backend)
-make logs-dev         # Real-time logs
-make shell-be-dev     # Backend container shell
-# Windows (PowerShell, no WSL):
+make dev              # iniciar (FE:5173 + BE:3000/api)
+make dev-down         # detener
+make dev-reset        # detener + borrar SQLite
+make migrate-dev      # migraciones
+make seed-dev         # seed data
+make tests-back       # tests backend (Jest)
+make tests-frontend   # tests frontend (Vitest --run)
+make lint-frontend    # eslint --max-warnings 0
+make lint-backend     # eslint backend
+make install          # npm install en frontend + backend
+make logs-dev         # logs en vivo
+# Windows (PowerShell, sin WSL):
 docker compose -f docker-compose.dev.yml up --build
 docker compose -f docker-compose.dev.yml down
 ```
 
-##  Quick Setup
-```
-cd App && cp .env.example .env   # Edit JWT_SECRET, DOMAIN
-make install && make dev
-```
+## Stack
+- **FE**: React 19 / Vite 6 / TailwindCSS 4 / Zustand 5 / React Router 7 / RHF+Zod / Axios / clsx / date-fns
+- **BE**: Express 5 / Sequelize / SQLite(dev) / PostgreSQL(prod) / JWT / bcryptjs / Winston
+- **Tests**: Jest+Supertest (BE), Vitest+Testing Library (FE)
 
-##  Admin Credentials
-- Email: admin@ifts29.edu.ar
-- Password: admin1234
+## ⚠️ Performance: stores sin caché
+Cada página pública re-fetcha datos del API al montarse porque los stores de Zustand no tienen cooldown. Solución implementada: `_lastFetched` con TTL de 30s en `carrerasStore.js` y `noticiasStore.js`. Si ya hay datos frescos, salta el fetch.
 
-##  URLs
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000/api
+## Ruteo de páginas
+- Páginas: `pages/public/XPage/` o `pages/admin/XPage/` — todas lazy-loaded en `AppRouter.jsx`
+- Detalle usa `/:slug` (ej: `/noticias/:slug`)
+- Admin anidado bajo `<Route path="/admin" element={<ProtectedRoute>}>`
 
-##  FE Stack & Conventions
-React 19 / Vite 6 / TailwindCSS 4 / Zustand 5 / React Router 7 / RHF + Zod / Axios / clsx / date-fns
-- Tests: Vitest + Testing Library in `src/tests/`
-- Proxy: `/api` → `http://backend:3000` (vite.config.js)
-- UI: TailwindCSS 4 all styling, `clsx` for conditional classes
-- Wireframe: open `wireframe/*.html` in browser for visual reference
-- Mock data allowed until BE module is ready
+## Frontend — peculiaridades
+- Proxy Vite: `/api` → `http://backend:3000`
+- Imports desde `pages/` necesitan `../../../` para llegar a `src/`
+- `ThemeContext`, `LayoutContext`, `ToastContext` existen como carpetas pero están vacíos — la funcionalidad vive en `uiStore.js`
+- Mock data como fallback para módulos BE que aún no existen (noticias, eventos, testimonios, galería)
+- Admin seed: admin@ifts29.edu.ar / admin1234
 
-##  Page & Route Pattern
-- Create page at: `pages/public/XPage/XPage.jsx` or `pages/admin/XPage/XPage.jsx`
-- Register route in `src/AppRouter.jsx`
-- Detail pages use `/:slug` param (e.g. `/noticias/:slug`)
-- Admin routes nest under `<Route path="/admin" element={<ProtectedRoute>}>` in AppRouter
-- **To add a new page** (e.g. NoticiaDetailPage): create the .jsx, import in AppRouter, add `<Route>`
+## Backend — peculiaridades
+- ESM: `import`/`export`, incluir extensión `.js`
+- Patrón módulo: Model → Migration → Service → Controller → Validator → Routes
+- Módulos BE completos: Auth, Carreras/Materias, Usuarios, SiteConfig/Stats
+- Módulos BE pendientes: Noticias/Categorías, Eventos/Testimonios, Galería
 
-##  After Finishing a Module
-1. Create `App/docs/PR-FEModuleX.md` (follow `App/docs/PR-BE1Module1.md` format as reference)
-2. Tick completed tasks in `App/Tasks.md`
-3. Write tests following the backend test patterns in `App/backend/tests/` as reference (not mandatory, but keep in mind)
+## Después de completar un módulo FE
+1. Crear `App/docs/PR-FEModuleX.md` (seguir formato de `App/docs/PR-BE1Module1.md`)
+2. Tachar tareas en `App/Tasks.md`
+3. Escribir tests
 
-##  Troubleshooting
-- "Cannot find module": `make dev-down && make dev`
-- Migration errors: `make migrate-dev` (or `make dev-reset && make dev`)
-- Container issues: Check logs `make logs-dev` then restart
+## Troubleshooting
+- `make dev-down && make dev` para módulos/caché
+- `make migrate-dev` para errores de migración
+- `make dev-reset && make dev` para borrar BD SQLite
+- `make logs-dev` para revisar logs

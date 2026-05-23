@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { carrerasService } from '../services/carrerasService'
-import { MOCK_CARRERAS } from '../data/mockCarreras'
+
+const CACHE_TTL = 30000
 
 // Parsea requisitos y horarios de JSON string a array
 function parseCarrera(c) {
@@ -21,17 +22,17 @@ const useCarrerasStore = create((set, get) => ({
   selectedCarrera: null,
   loading: false,
   error: null,
+  _lastFetched: 0,
 
   fetchCarreras: async () => {
+    if (Date.now() - get()._lastFetched < CACHE_TTL && get().carreras.length > 0) return
     set({ loading: true, error: null })
     try {
       const res = await carrerasService.getAll()
-      // El backend devuelve { success, data: [...], message }
-      // Extraemos el array de carreras compatiblemente
       const carrerasData = Array.isArray(res.data) ? res.data : (res.data?.data || [])
-      set({ carreras: parseCarreras(carrerasData), loading: false })
-    } catch {
-      set({ carreras: MOCK_CARRERAS, loading: false })
+      set({ carreras: parseCarreras(carrerasData), loading: false, _lastFetched: Date.now() })
+    } catch (err) {
+      set({ error: err?.response?.data?.message || err.message, loading: false })
     }
   },
 
@@ -39,12 +40,10 @@ const useCarrerasStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const res = await carrerasService.getBySlug(slug)
-      // El backend devuelve { success, data: {...}, message }
       const carreraData = res.data?.data || res.data
       set({ selectedCarrera: parseCarrera(carreraData), loading: false })
-    } catch {
-      const carrera = MOCK_CARRERAS.find((c) => c.slug === slug) || null
-      set({ selectedCarrera: carrera, loading: false })
+    } catch (err) {
+      set({ error: err?.response?.data?.message || err.message, loading: false })
     }
   },
 
