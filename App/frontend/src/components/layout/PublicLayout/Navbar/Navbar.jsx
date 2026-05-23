@@ -18,7 +18,7 @@ export default function Navbar() {
     <nav className="bg-slate-900 sticky top-0 z-50 shadow">
       <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 text-white font-bold text-xl">
-          <img src={logo} alt="IFTS 29" className="w-10 h-10 rounded-lg object-cover" />
+          <img src={logo} alt="IFTS 29" loading="lazy" width={40} height={40} className="w-10 h-10 rounded-lg object-cover" />
           <span>IFTS 29</span>
         </Link>
 

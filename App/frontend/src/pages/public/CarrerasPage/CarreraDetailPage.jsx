@@ -36,6 +36,22 @@ export default function CarreraDetailPage() {
     return Object.entries(grupos).sort(([a], [b]) => Number(a) - Number(b))
   }, [selectedCarrera])
 
+  const tabsDisponibles = useMemo(
+    () => TABS.filter((t) => {
+      if (t.id === 'requisitos') return selectedCarrera?.requisitos?.length > 0
+      if (t.id === 'horarios') return selectedCarrera?.horarios?.length > 0
+      return true
+    }),
+    [selectedCarrera],
+  )
+
+  useEffect(() => {
+    if (!tabsDisponibles.find((t) => t.id === activeTab)) {
+      setActiveTab('descripcion')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabsDisponibles])
+
   if (loading && !selectedCarrera) {
     return (
       <div className="bg-slate-50 min-h-screen flex items-center justify-center">
@@ -77,7 +93,7 @@ export default function CarreraDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="flex gap-1 border-b border-slate-300 mb-6">
-              {TABS.map((tab) => (
+              {tabsDisponibles.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
@@ -124,7 +140,7 @@ export default function CarreraDetailPage() {
                           className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600"
                         >
                           <h5 className="font-semibold text-slate-900 text-sm">{m.nombre}</h5>
-                          <p className="text-xs text-slate-500 mt-1">{m.carga_horaria || ''}</p>
+                          <p className="text-xs text-slate-500 mt-1">{m.carga_horaria_semanal ? `${m.carga_horaria_semanal}hs` : m.carga_horaria || ''}</p>
                         </div>
                       ))}
                     </div>
@@ -135,27 +151,19 @@ export default function CarreraDetailPage() {
               </div>
             )}
 
-            {activeTab === 'requisitos' && (
-              selectedCarrera.requisitos && selectedCarrera.requisitos.length > 0 ? (
-                <ul className="space-y-3">
-                  {selectedCarrera.requisitos.map((req, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-700">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
-                      {req}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-slate-500">No hay requisitos cargados.</p>
-              )
+            {activeTab === 'requisitos' && selectedCarrera.requisitos && selectedCarrera.requisitos.length > 0 && (
+              <ul className="space-y-3">
+                {selectedCarrera.requisitos.map((req, i) => (
+                  <li key={i} className="flex items-start gap-3 text-slate-700">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
+                    {req}
+                  </li>
+                ))}
+              </ul>
             )}
 
-            {activeTab === 'horarios' && (
-              selectedCarrera.horarios && selectedCarrera.horarios.length > 0 ? (
-                <HorariosTable horarios={selectedCarrera.horarios} />
-              ) : (
-                <p className="text-slate-500">No hay horarios cargados.</p>
-              )
+            {activeTab === 'horarios' && selectedCarrera.horarios && selectedCarrera.horarios.length > 0 && (
+              <HorariosTable horarios={selectedCarrera.horarios} />
             )}
           </div>
 
@@ -171,7 +179,7 @@ export default function CarreraDetailPage() {
                     >
                       {oc.nombre}
                     </Link>
-                    <Badge variant={oc.badgeVariant || 'blue'}>{oc.duracion}</Badge>
+                    <Badge>{oc.duracion} años</Badge>
                   </li>
                 )) : (
                   <p className="text-sm text-slate-500">No hay otras carreras disponibles.</p>

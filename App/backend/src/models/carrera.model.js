@@ -29,6 +29,14 @@ export default (sequelize, DataTypes) => {
         isIn: [['presencial', 'virtual', 'hibrida']],
       },
     },
+    requisitos: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    horarios: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     icono: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -4,8 +4,8 @@ import { MemoryRouter } from 'react-router-dom'
 import CareerCards from '../../components/public/CareerCards/CareerCards'
 
 const carreras = [
-  { id: 1, slug: 'a', nombre: 'Carrera A', duracion: '1 ano', modalidad: 'Presencial', descripcion: 'Desc A', icono: 'A', color: 'from-blue-500 to-blue-700', badgeVariant: 'blue' },
-  { id: 2, slug: 'b', nombre: 'Carrera B', duracion: '2 anos', modalidad: 'Virtual', descripcion: 'Desc B', icono: 'B', color: 'from-green-500 to-green-700', badgeVariant: 'green' },
+  { id: 1, slug: 'a', nombre: 'Carrera A', duracion: 1, modalidad: 'presencial', descripcion: 'Desc A', icono: 'A', color: 'from-blue-500 to-blue-700' },
+  { id: 2, slug: 'b', nombre: 'Carrera B', duracion: 2, modalidad: 'virtual', descripcion: 'Desc B', icono: 'B', color: 'from-green-500 to-green-700' },
 ]
 
 describe('CareerCards', () => {

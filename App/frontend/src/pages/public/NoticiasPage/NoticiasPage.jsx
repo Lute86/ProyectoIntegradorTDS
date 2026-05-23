@@ -26,11 +26,12 @@ export default function NoticiasPage() {
     return result
   }, [noticias, search, selectedCategory])
 
-  const totalPages = Math.max(1, Math.ceil(noticiasFiltradas.length / ITEMS_PER_PAGE))
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(noticiasFiltradas.length / ITEMS_PER_PAGE)), [noticiasFiltradas.length])
   const paginatedNoticias = noticiasFiltradas.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   )
+  const pageNumbers = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages])
 
   const handleSearch = (e) => { setSearch(e.target.value); setCurrentPage(1) }
   const handleCategoryFilter = (cat) => { setSelectedCategory(cat === selectedCategory ? '' : cat); setCurrentPage(1) }
@@ -111,7 +112,7 @@ export default function NoticiasPage() {
               <div className="flex items-center justify-center gap-2 mt-8">
                 <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}
                   className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100">◀</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                {pageNumbers.map((p) => (
                   <button key={p} onClick={() => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
                     className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${p === currentPage ? 'bg-blue-600 text-white' : 'border border-slate-300 hover:bg-slate-100'}`}>{p}</button>
                 ))}
@@ -123,7 +124,6 @@ export default function NoticiasPage() {
 
           <NewsSidebar
             noticias={noticias}
-            search={search} setSearch={handleSearch}
             selectedCategory={selectedCategory} onCategoryChange={handleCategoryFilter}
           />
         </div>

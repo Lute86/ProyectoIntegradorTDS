@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Badge from '../../../components/ui/Badge/Badge'
 import useCarrerasStore from '../../../stores/carrerasStore'
 
+const capitalize = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : ''
+
 export default function CarrerasPage() {
   const [selectedFilter, setSelectedFilter] = useState('Todas')
   const { carreras, loading, fetchCarreras } = useCarrerasStore()
@@ -36,7 +38,7 @@ export default function CarrerasPage() {
                   : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
               }`}
             >
-              {m}
+              {capitalize(m)}
             </button>
           ))}
         </div>
@@ -58,13 +60,13 @@ export default function CarrerasPage() {
                     {c.icono}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant={c.badgeVariant}>{c.duracion}</Badge>
-                      <span className="text-xs text-slate-400">{c.modalidad}</span>
-                    </div>
+                    <span className="text-xs text-slate-400 mb-2 block">{capitalize(c.modalidad)}</span>
                     <h3 className="text-xl font-bold text-slate-900 mb-1">{c.nombre}</h3>
                     <p className="text-sm text-slate-500 mb-3 line-clamp-2">{c.descripcion}</p>
-                    <span className="text-blue-600 font-semibold text-sm">Ver carrera →</span>
+                    <div className="flex items-center justify-between">
+                      <Badge>{c.duracion} anos</Badge>
+                      <span className="text-blue-600 font-semibold text-sm">Ver carrera →</span>
+                    </div>
                   </div>
                 </div>
               </Link>

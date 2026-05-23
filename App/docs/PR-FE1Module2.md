@@ -4,6 +4,20 @@
 
 Se implementa la HomePage completa y las paginas de Carreras (listado + detalle con tabs).
 
+## Adaptacion a datos reales del backend (2026-05-20)
+
+Se modificaron los componentes de frontend para consumir los datos reales del backend (modulo BE 2 - Carreras y Materias) en lugar de depender de datos mock.
+
+### Cambios realizados
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/pages/public/CarrerasPage/CarrerasPage.jsx` | Se elimino dependencia de `badgeVariant` (no existe en backend). Se agrego funcion `capitalize` para mostrar `modalidad` correctamente. |
+| `src/pages/public/CarrerasPage/CarreraDetailPage.jsx` | Tabs de Requisitos y Horarios condicionales (solo se muestran si los datos existen). Se usa `carga_horaria_semanal` del backend. Se elimino `fetchCarreras()` redundante. Sidebar usa Badge sin variant. |
+| `src/components/public/CareerCards/CareerCard.jsx` | Se elimino dependencia de `badgeVariant`. Badge usa variante por defecto. |
+| `src/tests/components/CareerCard.test.jsx` | Fixture actualizado: duracion como int, sin badgeVariant, modalidad lowercase. |
+| `src/tests/components/CareerCards.test.jsx` | Fixtures actualizados: mismo cambio. |
+
 ### HomePage
 5 secciones: Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel (con auto-play cada 5s).
 
@@ -46,8 +60,24 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 | `src/pages/public/CarrerasPage/CarreraDetailPage.jsx` | Nuevo | Detalle con 4 tabs + sidebar |
 | `src/AppRouter.jsx` | Modificado | Ruta /carreras/:slug agregada |
 
+## Correccion de modalidad + requisitos/horarios backend (2026-05-20)
+
+### Problema
+Los 3 registros de carreras en la DB tenian modalidad `'presencial'` en lugar de los valores correctos del seeder.
+
+### Cambios backend
+| Archivo | Cambio |
+|---------|--------|
+| `src/migrations/20260520-add-requisitos-horarios-to-carreras.js` | Migracion que agrega columnas `requisitos` (TEXT) y `horarios` (TEXT) a la tabla `carreras`, y corrige modalidades via UPDATE |
+| `src/models/carrera.model.js` | Agregados campos `requisitos` (DataTypes.TEXT) y `horarios` (DataTypes.TEXT) |
+| `src/seeders/carrera-seeder.js` | Agregados datos de requisitos (6 items) y horarios (3 franjas por carrera) como JSON.stringify |
+
+### Cambios frontend
+| Archivo | Cambio |
+|---------|--------|
+| `src/stores/carrerasStore.js` | Agregadas funciones `parseCarrera` y `parseCarreras` que convierten JSON string → array para requisitos/horarios. Se aplican al recibir datos del backend. |
+
 ### Tests
-| Archivo | Tests |
 |---------|-------|
 | `src/tests/components/Hero.test.jsx` | 3 tests (render, CTA, links) |
 | `src/tests/components/StatItem.test.jsx` | 1 test (valor + label) |

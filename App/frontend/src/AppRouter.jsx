@@ -1,24 +1,26 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PublicLayout from './components/layout/PublicLayout/PublicLayout'
-import HomePage from './pages/public/HomePage/HomePage'
-import CarrerasPage from './pages/public/CarrerasPage/CarrerasPage'
-import CarreraDetailPage from './pages/public/CarrerasPage/CarreraDetailPage'
-import ContactoPage from './pages/public/ContactoPage/ContactoPage'
-import EstudiantesPage from './pages/public/EstudiantesPage/EstudiantesPage'
-import NoticiasPage from './pages/public/NoticiasPage/NoticiasPage'
-import NoticiaDetailPage from './pages/public/NoticiaDetailPage/NoticiaDetailPage'
-import LoginPage from './pages/admin/LoginPage/LoginPage'
-import DashboardPage from './pages/admin/DashboardPage/DashboardPage'
-import UsuariosPage from './pages/admin/UsuariosPage/UsuariosPage'
-import PersonalizarPage from './pages/admin/PersonalizarPage/PersonalizarPage'
-import TestimoniosPage from './pages/admin/TestimoniosPage/TestimoniosPage'
-import GaleriaPage from './pages/admin/GaleriaPage/GaleriaPage'
-import EventosPage from './pages/admin/EventosPage/EventosPage'
-import AdminNoticiasPage from './pages/admin/NoticiasPage/NoticiasPage'
-import AdminCarrerasPage from './pages/admin/CarrerasPage/CarrerasPage'
-import AjustesPage from './pages/admin/AjustesPage/AjustesPage'
 import { useAuth } from './contexts/AuthContext/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+
+const HomePage = lazy(() => import('./pages/public/HomePage/HomePage'))
+const CarrerasPage = lazy(() => import('./pages/public/CarrerasPage/CarrerasPage'))
+const CarreraDetailPage = lazy(() => import('./pages/public/CarrerasPage/CarreraDetailPage'))
+const ContactoPage = lazy(() => import('./pages/public/ContactoPage/ContactoPage'))
+const EstudiantesPage = lazy(() => import('./pages/public/EstudiantesPage/EstudiantesPage'))
+const NoticiasPage = lazy(() => import('./pages/public/NoticiasPage/NoticiasPage'))
+const NoticiaDetailPage = lazy(() => import('./pages/public/NoticiaDetailPage/NoticiaDetailPage'))
+const LoginPage = lazy(() => import('./pages/admin/LoginPage/LoginPage'))
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage/DashboardPage'))
+const UsuariosPage = lazy(() => import('./pages/admin/UsuariosPage/UsuariosPage'))
+const PersonalizarPage = lazy(() => import('./pages/admin/PersonalizarPage/PersonalizarPage'))
+const TestimoniosPage = lazy(() => import('./pages/admin/TestimoniosPage/TestimoniosPage'))
+const GaleriaPage = lazy(() => import('./pages/admin/GaleriaPage/GaleriaPage'))
+const EventosPage = lazy(() => import('./pages/admin/EventosPage/EventosPage'))
+const AdminNoticiasPage = lazy(() => import('./pages/admin/NoticiasPage/NoticiasPage'))
+const AdminCarrerasPage = lazy(() => import('./pages/admin/CarrerasPage/CarrerasPage'))
+const AjustesPage = lazy(() => import('./pages/admin/AjustesPage/AjustesPage'))
 
 export default function AppRouter() {
   const { user, loading } = useAuth()
@@ -27,6 +29,7 @@ export default function AppRouter() {
 
   return (
     <BrowserRouter>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">Cargando...</div>}>
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -55,6 +58,7 @@ export default function AppRouter() {
 
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
       </Routes>
+    </Suspense>
     </BrowserRouter>
   )
 }
