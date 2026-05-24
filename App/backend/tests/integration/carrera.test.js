@@ -213,12 +213,13 @@ describe('Carrera Endpoints', () => {
       expect(res.body.data[0].activa).toBe(true);
     });
 
-    it('debería fallar sin token', async () => {
+  // Las rutas GET /api/carreras son publicas para que visitantes puedan ver carreras sin login
+    it('deberia obtener carreras sin token (ruta publica)', async () => {
       const res = await request(app)
         .get('/api/carreras')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
     });
   });
 

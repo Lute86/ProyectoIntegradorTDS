@@ -12,13 +12,8 @@ const mockNoticias = [
 ]
 
 describe('NewsSidebar', () => {
-  it('renderiza buscador y categorias', () => {
-    render(<MemoryRouter><NewsSidebar noticias={mockNoticias} search="" setSearch={vi.fn()} selectedCategory="" onCategoryChange={vi.fn()} /></MemoryRouter>)
-    expect(screen.getByPlaceholderText('Buscar noticias...')).toBeInTheDocument()
-  })
-
   it('renderiza categorias con contador', () => {
-    render(<MemoryRouter><NewsSidebar noticias={mockNoticias} search="" setSearch={vi.fn()} selectedCategory="" onCategoryChange={vi.fn()} /></MemoryRouter>)
+    render(<MemoryRouter><NewsSidebar noticias={mockNoticias} selectedCategory="" onCategoryChange={vi.fn()} /></MemoryRouter>)
     expect(screen.getByText('Inscripciones')).toBeInTheDocument()
     expect(screen.getByText('Exámenes')).toBeInTheDocument()
     expect(screen.getByText('Evento')).toBeInTheDocument()
@@ -27,7 +22,7 @@ describe('NewsSidebar', () => {
   })
 
   it('renderiza ultimas noticias', () => {
-    render(<MemoryRouter><NewsSidebar noticias={mockNoticias} search="" setSearch={vi.fn()} selectedCategory="" onCategoryChange={vi.fn()} /></MemoryRouter>)
+    render(<MemoryRouter><NewsSidebar noticias={mockNoticias} selectedCategory="" onCategoryChange={vi.fn()} /></MemoryRouter>)
     expect(screen.getByText('Noticia 1')).toBeInTheDocument()
     expect(screen.getByText('Noticia 2')).toBeInTheDocument()
   })

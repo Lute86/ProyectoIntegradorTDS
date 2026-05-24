@@ -2,18 +2,18 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
-// Mock axios para que la API falle y el store caiga a MOCK_CARRERAS
-vi.mock('axios', () => {
-  const mockAxios = {
-    create: vi.fn(() => mockAxios),
-    get: vi.fn().mockRejectedValue(new Error('API no disponible')),
-    post: vi.fn().mockRejectedValue(new Error('API no disponible')),
-    put: vi.fn().mockRejectedValue(new Error('API no disponible')),
-    delete: vi.fn().mockRejectedValue(new Error('API no disponible')),
-    interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
+const mockCarreras = [
+  { id: 1, slug: 'desarrollo-de-software', nombre: 'Desarrollo de Software', titulo_oficial: 'Tecnico Superior en Desarrollo de Software', modalidad: 'Presencial', duracion: '3 años', descripcion: '...', icono: 'DS', color: 'from-blue-400 to-blue-600' },
+  { id: 2, slug: 'seguridad-informatica', nombre: 'Seguridad Informatica', titulo_oficial: 'Tecnico Superior en Seguridad Informatica', modalidad: 'Distancia', duracion: '3 años', descripcion: '...', icono: 'SI', color: 'from-green-400 to-green-600' },
+  { id: 3, slug: 'analisis-de-datos', nombre: 'Analisis de Datos', titulo_oficial: 'Tecnico Superior en Analisis de Datos', modalidad: 'Semipresencial', duracion: '3 años', descripcion: '...', icono: 'AD', color: 'from-purple-400 to-purple-600' },
+]
+
+vi.mock('../../services/carrerasService', () => ({
+  carrerasService: {
+    getAll: vi.fn().mockResolvedValue({ data: { data: mockCarreras } }),
+    getBySlug: vi.fn(),
   }
-  return { default: mockAxios }
-})
+}))
 
 import CarrerasPage from '../../pages/public/CarrerasPage/CarrerasPage'
 
