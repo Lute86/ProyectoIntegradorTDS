@@ -43,7 +43,7 @@ const useCarrerasStore = create((set, get) => ({
       const carreraData = res.data?.data || res.data
       set({ selectedCarrera: parseCarrera(carreraData), loading: false })
     } catch (err) {
-      set({ error: err?.response?.data?.message || err.message, loading: false })
+      set({ selectedCarrera: null, error: err?.response?.data?.message || err.message, loading: false })
     }
   },
 
