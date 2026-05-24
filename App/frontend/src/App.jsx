@@ -1,13 +1,25 @@
-import AppRouter from './routes/AppRouter'
+import { AuthProvider } from './contexts/AuthContext/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
+import { LayoutProvider } from './contexts/LayoutContext/LayoutContext';
+import { ToastProvider } from './contexts/ToastContext/ToastContext';
+import AppRouter from './AppRouter';
 
 /**
  * App Component - Punto de entrada principal.
- * Simplemente renderiza el router para gestionar la navegación.
+ * Renderiza el router y envuelve la app en todos los contextos necesarios.
  */
 function App() {
   return (
-    <AppRouter />
-  )
+    <ThemeProvider>
+      <AuthProvider>
+        <LayoutProvider>
+          <ToastProvider>
+            <AppRouter />
+          </ToastProvider>
+        </LayoutProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;

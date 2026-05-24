@@ -79,18 +79,18 @@
 ### BE Dev 2: Modelos de Contenido
 #### Módulo 4: Categorías y Noticias
 **Tareas:**
-- [ ] Implementar modelo Categoria (id, nombre, slug, color)
-- [ ] Implementar modelo Noticia (id, titulo, slug, contenido, imagen_destacada_url, categoria_id, autor_id, estado, fecha_publicacion)
-- [ ] Crear migración de categorias
-- [ ] Crear migración de noticias
-- [ ] Seeder de categorías de ejemplo
-- [ ] Seeder de noticias de ejemplo
-- [ ] Controlador de Categoria (CRUD)
-- [ ] Controlador de Noticia (CRUD, filtrar por categoría/estado/fecha, paginación, búsqueda)
-- [ ] Rutas de Categoria (GET/POST/PUT/DELETE /api/categorias)
-- [ ] Rutas de Noticia (GET/POST/PUT/DELETE /api/noticias)
-- [ ] Validadores de Categoria y Noticia
-- [ ] Upload de imágenes para noticias destacadas
+- [X] Implementar modelo Categoria (id, nombre, slug, color)
+- [X] Implementar modelo Noticia (id, titulo, slug, contenido, imagen_destacada_url, categoria_id, autor_id, estado, fecha_publicacion)
+- [X] Crear migración de categorias
+- [X] Crear migración de noticias
+- [X] Seeder de categorías de ejemplo
+- [X] Seeder de noticias de ejemplo
+- [X] Controlador de Categoria (CRUD)
+- [X] Controlador de Noticia (CRUD, filtrar por categoría/estado/fecha, paginación, búsqueda)
+- [X] Rutas de Categoria (GET/POST/PUT/DELETE /api/categorias)
+- [X] Rutas de Noticia (GET/POST/PUT/DELETE /api/noticias)
+- [X] Validadores de Categoria y Noticia
+- [X] Upload de imágenes para noticias destacadas
 
 **Dependencias:** Modelo User (Módulo BE 1), Categoria (mismo módulo)
 **Contraparte FE:** Módulo FE 3
@@ -131,34 +131,35 @@
 ### FE Dev 1: Sitio Público y Fundación
 #### Módulo 1: Fundación y Autenticación
 **Tareas:**
-- [ ] Configurar React Router (todas las rutas públicas/admin)
-- [ ] Crear capa de servicios API (axios con interceptores)
-- [ ] Implementar AuthContext, ThemeContext, LayoutContext, ToastContext
-- [ ] Crear authStore, uiStore
-- [ ] Construir sistema de diseño UI: Button, Input, Select, Textarea, Card, Badge, Modal, Table, Pagination, Toggle, Toast, Skeleton, EmptyState
-- [ ] Construir PublicLayout (Navbar, Footer, MobileMenu)
-- [ ] Construir LoginPage
-- [ ] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
+- [x] Configurar React Router (todas las rutas públicas/admin)
+- [x] Crear capa de servicios API (axios con interceptores)
+- [x] Implementar AuthContext, ThemeContext
+- [x] Implementar LayoutContext, ToastContext
+- [x] Crear authStore, uiStore
+- [x] Construir sistema de diseño UI: Button, Input, Select, Textarea, Card, Badge
+- [x] Construir sistema de diseño UI: Modal, Table, Pagination, Toggle, Toast, Skeleton, EmptyState
+- [x] Construir PublicLayout (Navbar, Footer, MobileMenu)
+- [x] Construir LoginPage
+- [x] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
 
 **Dependencias:** Puede usar datos mock de auth hasta que el Módulo BE 1 esté listo
-**Contraparte BE:** Módulo BE 1
 
 #### Módulo 2: Inicio y Carreras Públicas
 **Tareas:**
-- [ ] Construir HomePage (Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel)
-- [ ] Construir CarrerasPage (listado)
-- [ ] Construir CarreraDetailPage (CareerTabs: descripción, plan de estudios, requisitos, horarios)
-- [ ] Construir componentes: CareerCards, CareerCard, StatItem, Hero, TestimonialsCarousel
-- [ ] Construir componente HorariosTable
-- [ ] Implementar carrerasStore
+- [x] Construir HomePage (Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel)
+- [x] Construir CarrerasPage (listado)
+- [x] Construir CarreraDetailPage (CareerTabs: descripción, plan de estudios, requisitos, horarios)
+- [x] Construir componentes: CareerCards, CareerCard, StatItem, Hero, TestimonialsCarousel
+- [x] Construir componente HorariosTable
+- [x] Implementar carrerasStore
 
 **Dependencias:** Puede usar datos mock de carreras hasta que el Módulo BE 2 esté listo
 **Contraparte BE:** Módulo BE 2
 
 #### Módulo 3: Noticias y Contacto Público
 **Tareas:**
-- [ ] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
-- [ ] Construir NoticiaDetailPage
+- [x] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
+- [x] Construir NoticiaDetailPage
 - [ ] Construir componentes: NewsCard, NewsSidebar
 - [ ] Construir ContactoPage, ContactForm
 - [ ] Construir EstudiantesPage, QuickLinks
