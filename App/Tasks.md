@@ -173,24 +173,33 @@
 ### FE Dev 2: Páginas de Admin y Personalización
 #### Módulo 4: Gestión de Contenido Admin
 **Tareas:**
-- [ ] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
-- [ ] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
-- [ ] Construir Admin EventosPage + EventoFormModal
-- [ ] Construir Admin TestimoniosPage + TestimonioFormModal
-- [ ] Construir GaleriaPage + ImageUploadModal (drag & drop)
-- [ ] Construir UsuariosPage + UsuarioFormModal
-- [ ] Construir componentes: DataTable, ImageUploader, RichEditor, UserAvatar
-- [ ] Implementar eventosStore, testimoniosStore, galeriaStore, usuariosStore
+- [x] Construir DashboardPage (StatCards, ActivityFeed, QuickActions)
+- [x] Construir Admin NoticiasPage + NoticiaFormModal (editor TipTap)
+- [x] Construir Admin EventosPage + EventoFormModal
+- [x] Construir Admin TestimoniosPage + TestimonioFormModal
+- [x] Construir GaleriaPage + ImageUploadModal (drag & drop)
+- [x] Construir UsuariosPage + UsuarioFormModal
+- [x] Construir DataTable
+- [x] Construir ImageUploader
+- [x] Construir RichEditor
+- [x] Construir UserAvatar
+- [x] Implementar eventosStore
+- [x] Implementar testimoniosStore
+- [x] Implementar galeriaStore
+- [x] Implementar usuariosStore
 
 **Dependencias:** Puede usar datos mock hasta que los Módulos BE 4,5,6 estén listos
 **Contraparte BE:** Módulos BE 4,5,6
 
 #### Módulo 5: Personalización y Configuración del Sitio
 **Tareas:**
-- [ ] Construir PersonalizarPage (ColorConfig, ThemePresets, LayoutSelector, SectionsConfig con drag & drop, TypographyConfig, PreviewPanel)
-- [ ] Construir AjustesPage (GeneralSettings, SEOSettings, SocialSettings)
-- [ ] Implementar siteConfigStore
-- [ ] Construir componentes: ColorPicker, SectionManager, DraggableSection
+- [x] Construir PersonalizarPage (ColorConfig, ThemePresets, LayoutSelector, SectionsConfig con drag & drop, TypographyConfig, PreviewPanel)
+- [x] Construir ThemePresets
+- [x] Construir AjustesPage (GeneralSettings, SEOSettings, SocialSettings)
+- [x] Implementar siteConfigStore
+- [x] Construir ColorPicker
+- [x] Construir SectionManager
+- [x] Construir DraggableSection
 
 **Dependencias:** Módulo BE 3 (Site Config)
 **Contraparte BE:** Módulo BE 3

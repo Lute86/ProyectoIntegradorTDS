@@ -4,6 +4,10 @@ import { LayoutProvider } from './contexts/LayoutContext/LayoutContext';
 import { ToastProvider } from './contexts/ToastContext/ToastContext';
 import AppRouter from './AppRouter';
 
+/**
+ * App Component - Punto de entrada principal.
+ * Renderiza el router y envuelve la app en todos los contextos necesarios.
+ */
 function App() {
   return (
     <ThemeProvider>

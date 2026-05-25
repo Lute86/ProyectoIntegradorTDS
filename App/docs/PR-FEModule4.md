@@ -1,0 +1,79 @@
+# Pull Request - Modulo 4: Gestion de Contenido Admin
+
+**Autor:** Andres (FE Dev 2)
+**Rama:** `feature/fe-modulo4-admin`
+**Stack:** React 19, Vite 6, Tailwind 4, Zustand, React Hook Form + Zod, TipTap
+
+---
+
+## Resumen
+
+Implementacion completa del panel de administracion de contenido del IFTS 29. Se construyeron 6 paginas CRUD con sus respectivos stores de Zustand, modales de formulario y componentes base reutilizables. Todos los datos son simulados (mocks) para independencia del backend.
+
+---
+
+## Paginas Construidas
+
+| Pagina | Ruta | Modal Asociado |
+|--------|------|----------------|
+| DashboardPage | `/admin` | — |
+| UsuariosPage | `/admin/usuarios` | UsuarioFormModal |
+| NoticiasPage | `/admin/noticias` | NoticiaFormModal |
+| EventosPage | `/admin/eventos` | EventoFormModal |
+| TestimoniosPage | `/admin/testimonios` | TestimonioFormModal |
+| GaleriaPage | `/admin/galeria` | ImageUploadModal |
+
+---
+
+## Componentes Base Creados
+
+| Componente | Ubicacion | Proposito |
+|------------|-----------|-----------|
+| DataTable | `src/components/ui/DataTable.tsx` | Tabla generica con tipado `<T>`, columnas configurables y estados empty |
+| RichEditor | `src/components/ui/RichEditor.tsx` | Editor de texto enriquecido con TipTap (toolbar: N, C, H1-H3, Lista, Num., Cite, Link) |
+| ImageUploader | `src/components/ui/ImageUploader.tsx` | Zona de drag & drop visual con preview y seleccion por clic |
+| UserAvatar | `src/components/ui/UserAvatar.tsx` | Avatar circular con imagen o iniciales, 3 tamanos (sm/md/lg) |
+
+---
+
+## Stores de Estado (Zustand)
+
+| Store | Metodos |
+|-------|---------|
+| `usuariosStore` | fetchUsuarios, addUsuario, updateUsuario, deleteUsuario |
+| `noticiasStore` | fetchNoticias, addNoticia, updateNoticia, deleteNoticia |
+| `eventosStore` | fetchEventos, addEvento, updateEvento, deleteEvento |
+| `testimoniosStore` | fetchTestimonios, addTestimonio, updateTestimonio, deleteTestimonio |
+| `galeriaStore` | fetchImagenes, addImagen, deleteImagen |
+
+---
+
+## Archivos de Mock
+
+| Archivo | Contenido |
+|---------|-----------|
+| `src/mocks/users.mock.ts` | 5 usuarios de prueba (admin, profesores, tutores) |
+| `src/mocks/noticias.mock.ts` | 4 noticias con contenido HTML |
+| `src/mocks/eventos.mock.ts` | 4 eventos con fecha, hora y modalidad |
+| `src/mocks/testimonios.mock.ts` | 4 testimonios con estado pendiente/aprobado |
+| `src/mocks/galeria.mock.ts` | 6 imagenes con URL de placeholder |
+
+---
+
+## Detalles Tecnicos
+
+- **Validacion:** Todos los formularios usan Zod schemas con mensajes de error en espanol
+- **RichEditor:** Integrado via `Controller` de react-hook-form en NoticiaFormModal y EventoFormModal
+- **UX States:** Cada pagina implementa Loading (skeleton), Error (banner rojo) y Empty (mensaje informativo)
+- **Galeria:** Layout con CSS Grid responsivo, overlay con info al hover, boton de eliminacion superpuesto
+- **Enrutador:** `AppRouter.tsx` con index route al Dashboard y rutas anidadas bajo `/admin`
+- **Sin emojis:** Todos los iconos reemplazados por texto simple o bloques de color Tailwind
+
+---
+
+## Pendientes
+
+- Integracion con API real cuando los modulos BE 4, 5 y 6 esten completos
+- Implementar `ImageUploader` con subida real al servidor
+- Agregar paginacion y busqueda en DataTable
+- Escribir tests unitarios (Vitest) para stores y componentes

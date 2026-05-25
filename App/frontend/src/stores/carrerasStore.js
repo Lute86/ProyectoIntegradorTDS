@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-import { carrerasService } from '../services/carrerasService'
-import { MOCK_CARRERAS } from '../data/mockCarreras'
+import api from '../services/api'
 
 const useCarrerasStore = create((set, get) => ({
   carreras: [],
@@ -11,21 +10,58 @@ const useCarrerasStore = create((set, get) => ({
   fetchCarreras: async () => {
     set({ loading: true, error: null })
     try {
-      const { data } = await carrerasService.getAll()
-      set({ carreras: data, loading: false })
-    } catch {
-      set({ carreras: MOCK_CARRERAS, loading: false })
+      const response = await api.get('/carreras')
+      set({ carreras: response.data.data, loading: false })
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al cargar las carreras'
+      set({ error: mensaje, loading: false })
     }
   },
 
   fetchCarreraBySlug: async (slug) => {
     set({ loading: true, error: null })
     try {
-      const { data } = await carrerasService.getBySlug(slug)
-      set({ selectedCarrera: data, loading: false })
-    } catch {
-      const carrera = MOCK_CARRERAS.find((c) => c.slug === slug) || null
-      set({ selectedCarrera: carrera, loading: false })
+      const response = await api.get(`/carreras/${slug}`)
+      set({ selectedCarrera: response.data.data, loading: false })
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al cargar la carrera'
+      set({ error: mensaje, loading: false })
+    }
+  },
+
+  addCarrera: async (carrera) => {
+    try {
+      const response = await api.post('/carreras', carrera)
+      set((state) => ({ carreras: [...state.carreras, response.data.data] }))
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al crear la carrera'
+      set({ error: mensaje })
+    }
+  },
+
+  updateCarrera: async (id, data) => {
+    try {
+      const response = await api.put(`/carreras/${id}`, data)
+      set((state) => ({
+        carreras: state.carreras.map((c) =>
+          c.id === id ? { ...c, ...response.data.data } : c
+        ),
+      }))
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al actualizar la carrera'
+      set({ error: mensaje })
+    }
+  },
+
+  deleteCarrera: async (id) => {
+    try {
+      await api.delete(`/carreras/${id}`)
+      set((state) => ({
+        carreras: state.carreras.filter((c) => c.id !== id),
+      }))
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al eliminar la carrera'
+      set({ error: mensaje })
     }
   },
 
