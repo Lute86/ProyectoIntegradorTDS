@@ -1,21 +1,17 @@
 import { create } from 'zustand';
-import { User, USERS_MOCK } from '../mocks/users.mock';
+import api from '../services/api';
+import { User } from '../mocks/users.mock';
 
 interface UsuariosState {
   usuarios: User[];
   isLoading: boolean;
   error: string | null;
-  // Acciones
   fetchUsuarios: () => Promise<void>;
-  addUsuario: (usuario: Omit<User, 'id' | 'ultimo_acceso'>) => void;
-  updateUsuario: (id: number, data: Partial<User>) => void;
-  deleteUsuario: (id: number) => void;
+  addUsuario: (usuario: Omit<User, 'id' | 'ultimo_acceso'>) => Promise<void>;
+  updateUsuario: (id: number, data: Partial<User>) => Promise<void>;
+  deleteUsuario: (id: number) => Promise<void>;
 }
 
-/**
- * usuariosStore - Módulo 4: Gestión de Usuarios
- * Implementación Simple & Type-Safe con Zustand.
- */
 export const useUsuariosStore = create<UsuariosState>((set) => ({
   usuarios: [],
   isLoading: false,
@@ -23,32 +19,46 @@ export const useUsuariosStore = create<UsuariosState>((set) => ({
   fetchUsuarios: async () => {
     set({ isLoading: true, error: null });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      set({ usuarios: USERS_MOCK, isLoading: false });
-    } catch (err) {
-      set({ error: 'Error al cargar los usuarios', isLoading: false });
+      const response = await api.get('/usuarios');
+      set({ usuarios: response.data.data, isLoading: false });
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al cargar los usuarios';
+      set({ error: mensaje, isLoading: false });
     }
   },
-  addUsuario: (nuevoUsuario) => {
-    set((state) => ({
-      usuarios: [
-        ...state.usuarios,
-        {
-          ...nuevoUsuario,
-          id: Math.max(...state.usuarios.map((u) => u.id), 0) + 1,
-          ultimo_acceso: new Date().toISOString(),
-        },
-      ],
-    }));
+  addUsuario: async (nuevoUsuario) => {
+    try {
+      const response = await api.post('/usuarios', nuevoUsuario);
+      set((state) => ({
+        usuarios: [...state.usuarios, response.data.data],
+      }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al crear el usuario';
+      set({ error: mensaje });
+    }
   },
-  updateUsuario: (id, data) => {
-    set((state) => ({
-      usuarios: state.usuarios.map((u) => (u.id === id ? { ...u, ...data } : u)),
-    }));
+  updateUsuario: async (id, data) => {
+    try {
+      const response = await api.put(`/usuarios/${id}`, data);
+      set((state) => ({
+        usuarios: state.usuarios.map((u) =>
+          u.id === id ? { ...u, ...response.data.data } : u
+        ),
+      }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al actualizar el usuario';
+      set({ error: mensaje });
+    }
   },
-  deleteUsuario: (id) => {
-    set((state) => ({
-      usuarios: state.usuarios.filter((u) => u.id !== id),
-    }));
+  deleteUsuario: async (id) => {
+    try {
+      await api.delete(`/usuarios/${id}`);
+      set((state) => ({
+        usuarios: state.usuarios.filter((u) => u.id !== id),
+      }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al eliminar el usuario';
+      set({ error: mensaje });
+    }
   },
 }));

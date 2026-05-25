@@ -23,11 +23,12 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const { data } = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      setUser(data.user);
-      return data;
+      const response = await api.post('/auth/login', { email, password });
+      const { token, user } = response.data.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+      return { token, user };
     } catch {
       if (email === 'admin@ifts29.edu.ar' && password === 'admin1234') {
         const mockUser = {

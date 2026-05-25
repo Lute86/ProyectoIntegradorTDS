@@ -13,6 +13,7 @@ const usuarioSchema = z.object({
   rol: z.enum(['admin', 'profesor', 'tutor'], {
     required_error: 'Seleccione un rol',
   }),
+  password: z.string().min(6, 'La contrasena debe tener al menos 6 caracteres').optional(),
 });
 
 type UsuarioFormData = z.infer<typeof usuarioSchema>;
@@ -44,6 +45,7 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
       apellido: '',
       email: '',
       rol: undefined,
+      password: '',
     },
   });
 
@@ -63,9 +65,10 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
 
   const onSubmit = (data: UsuarioFormData) => {
     if (esEdicion && usuarioToEdit) {
-      updateUsuario(usuarioToEdit.id, data);
+      const { password, ...datosLimpios } = data;
+      updateUsuario(usuarioToEdit.id, datosLimpios);
     } else {
-      addUsuario({ ...data, activo: true });
+      addUsuario({ ...data, activo: true } as any);
     }
     onClose();
   };
@@ -129,6 +132,22 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
               <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
             )}
           </div>
+
+          {/* Campo: Contrasena (solo en creacion) */}
+          {!esEdicion && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Contrasena</label>
+              <input
+                {...register('password')}
+                type="password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                placeholder="Minimo 6 caracteres"
+              />
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+              )}
+            </div>
+          )}
 
           {/* Campo: Rol (select) */}
           <div>
