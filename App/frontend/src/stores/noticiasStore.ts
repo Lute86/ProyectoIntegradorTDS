@@ -55,7 +55,8 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await noticiasService.getAll();
-      set({ noticias: response.data.data, isLoading: false, _lastFetched: Date.now() });
+      const datos = response.data?.data;
+      set({ noticias: Array.isArray(datos) ? datos : [], isLoading: false, _lastFetched: Date.now() });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar las noticias';
       set({ error: mensaje, isLoading: false });
@@ -66,7 +67,7 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
     set({ isLoading: true, error: null, selectedNoticia: null });
     try {
       const response = await noticiasService.getBySlug(slug);
-      set({ selectedNoticia: response.data.data, isLoading: false });
+      set({ selectedNoticia: response.data?.data || response.data, isLoading: false });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar la noticia';
       set({ error: mensaje, isLoading: false });

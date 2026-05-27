@@ -33,7 +33,8 @@ export default function NoticiasPage() {
   useEffect(() => { fetchNoticias() }, [fetchNoticias])
 
   const displayNoticias = useMemo(() => {
-    if (storeNoticias.length > 0) return storeNoticias.map(adaptNoticia)
+    const lista = Array.isArray(storeNoticias) ? storeNoticias : []
+    if (lista.length > 0) return lista.map(adaptNoticia)
     return MOCK_NOTICIAS
   }, [storeNoticias])
 

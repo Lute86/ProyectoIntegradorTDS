@@ -41,7 +41,8 @@ export default function NoticiaDetailPage() {
   }, [slug, fetchNoticiaBySlug, noticias])
 
   const noticia = useMemo(() => {
-    const storeHit = noticias.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug))
+    const lista = Array.isArray(noticias) ? noticias : []
+    const storeHit = lista.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug))
       || selectedNoticia
     if (storeHit) return adaptNoticia(storeHit)
     return MOCK_NOTICIAS.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug)) || null
@@ -92,7 +93,6 @@ export default function NoticiaDetailPage() {
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
         <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>{noticia.categoria}</span>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">{noticia.titulo}</h1>
           <div className="flex items-center gap-4 text-blue-200 text-sm">
             <span>Por {noticia.autor}</span>
             <span className="w-1 h-1 bg-blue-300 rounded-full" />
@@ -102,14 +102,14 @@ export default function NoticiaDetailPage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
-        <div className={`h-56 md:h-72 rounded-xl bg-gradient-to-br ${gradientMap[noticia.categoria] || 'from-blue-500 to-purple-600'} flex items-center justify-center text-white text-5xl font-bold shadow-lg`}>
-          NOT
+        <div className={`h-56 md:h-72 rounded-xl bg-gradient-to-br ${gradientMap[noticia.categoria] || 'from-blue-500 to-purple-600'} flex flex-col items-center justify-center text-white shadow-lg`}>
+          <h1 className="text-2xl md:text-3xl font-bold px-6 text-center leading-tight">{noticia.titulo}</h1>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pb-16">
         <article className="bg-white rounded-xl shadow-sm p-6 md:p-10">
-          <div className="text-slate-700 leading-relaxed whitespace-pre-line">
+          <div className="font-serif text-lg md:text-xl leading-loose text-slate-800 space-y-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:text-slate-900 [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:font-bold [&_strong]:font-bold [&_strong]:text-slate-900 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-1 whitespace-pre-line">
             {noticia.contenido}
           </div>
         </article>
