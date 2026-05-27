@@ -10,15 +10,17 @@ export default function CareerCard({ carrera }) {
         {icono}
       </div>
       <div className="p-6">
-        <Badge variant={badgeVariant}>{duracion}</Badge>
-        <h3 className="text-lg font-bold text-slate-900 mt-3 mb-2">{nombre}</h3>
+        <h3 className="text-lg font-bold text-slate-900 mb-2">{nombre}</h3>
         <p className="text-sm text-slate-500 mb-4">{descripcion}</p>
-        <Link
-          to={`/carreras`}
-          className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700"
-        >
-          Ver mas →
-        </Link>
+        <div className="flex items-center justify-between">
+          <Badge variant={badgeVariant}>{duracion}</Badge>
+          <Link
+            to={`/carreras`}
+            className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700"
+          >
+            Ver mas →
+          </Link>
+        </div>
       </div>
     </div>
   )
