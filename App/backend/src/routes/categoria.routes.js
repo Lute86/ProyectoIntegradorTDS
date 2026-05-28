@@ -6,10 +6,11 @@ import { createCategoriaValidation, updateCategoriaValidation, idParamValidation
 
 const router = Router();
 
-router.use(authenticate);
 
 router.get('/', categoriaController.getAll);
 router.get('/:id', idParamValidation, categoriaController.getById);
+
+router.use(authenticate);
 router.post('/', authorize('admin'), createCategoriaValidation, categoriaController.create);
 router.put('/:id', authorize('admin'), idParamValidation, updateCategoriaValidation, categoriaController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, categoriaController.remove);

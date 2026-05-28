@@ -226,12 +226,13 @@ describe('Materia Endpoints', () => {
       expect(res.body.data[0].cuatrimestre).toBe(1);
     });
 
-    it('debería fallar sin token', async () => {
+    it('debería obtener todas las materias sin token (público)', async () => {
       const res = await request(app)
         .get('/api/materias')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data).toHaveLength(2);
     });
   });
 
@@ -278,6 +279,15 @@ describe('Materia Endpoints', () => {
         .expect(404);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una materia por ID sin token (público)', async () => {
+      const res = await request(app)
+        .get(`/api/materias/${materiaId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.id).toBe(materiaId);
     });
   });
 
