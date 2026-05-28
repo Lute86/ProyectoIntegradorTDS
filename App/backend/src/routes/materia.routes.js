@@ -6,10 +6,11 @@ import { createMateriaValidation, updateMateriaValidation, idParamValidation } f
 
 const router = Router();
 
-router.use(authenticate);
 
 router.get('/', materiaController.getAll);
 router.get('/:id', idParamValidation, materiaController.getById);
+
+router.use(authenticate);
 router.post('/', authorize('admin', 'profesor'), createMateriaValidation, materiaController.create);
 router.put('/:id', authorize('admin', 'profesor'), idParamValidation, updateMateriaValidation, materiaController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, materiaController.remove);

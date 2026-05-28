@@ -256,12 +256,14 @@ describe('Noticia Endpoints', () => {
       expect(res.body.data.totalPages).toBe(2);
     });
 
-    it('debería fallar sin token', async () => {
+    it('debería obtener todas las noticias sin token (público)', async () => {
       const res = await request(app)
         .get('/api/noticias')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.data).toHaveLength(2);
+      expect(res.body.data.total).toBe(2);
     });
   });
 
@@ -296,6 +298,15 @@ describe('Noticia Endpoints', () => {
         .expect(404);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una noticia por slug sin token (público)', async () => {
+      const res = await request(app)
+        .get('/api/noticias/slug/por-slug')
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.slug).toBe('por-slug');
     });
   });
 
@@ -344,6 +355,15 @@ describe('Noticia Endpoints', () => {
         .expect(404);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una noticia por ID sin token (público)', async () => {
+      const res = await request(app)
+        .get(`/api/noticias/${noticiaId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.id).toBe(noticiaId);
     });
   });
 

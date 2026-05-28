@@ -213,12 +213,13 @@ describe('Carrera Endpoints', () => {
       expect(res.body.data[0].activa).toBe(true);
     });
 
-    it('debería fallar sin token', async () => {
+    it('debería obtener todas las carreras sin token (público)', async () => {
       const res = await request(app)
         .get('/api/carreras')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data).toHaveLength(2);
     });
   });
 
@@ -274,6 +275,15 @@ describe('Carrera Endpoints', () => {
         .expect(404);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una carrera por ID sin token (público)', async () => {
+      const res = await request(app)
+        .get(`/api/carreras/${carreraId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.id).toBe(carreraId);
     });
   });
 
