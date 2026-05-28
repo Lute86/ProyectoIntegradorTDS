@@ -48,7 +48,7 @@ export default function ContactoPage() {
               </div>
             ))}
             <div className="h-48 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center text-slate-500 text-lg border border-slate-100">
-              Mapa de ubicacion
+              Mapa de ubicacion: https://maps.app.goo.gl/T77yJ988eh6yhaRSA
             </div>
           </div>
         </div>
