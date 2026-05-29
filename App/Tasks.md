@@ -60,7 +60,7 @@
 **Dependencias:** Modelo User (Módulo BE 1)
 **Contraparte FE:** Módulo FE 4
 
-#### Módulo 4: Configuración del Sitio y Estadísticas
+#### Módulo 7: Configuración del Sitio y Estadísticas
 **Tareas:**
 - [x] Implementar modelo SiteConfig (id, site_name, site_subtitle, contact_email, contact_phone, address, seo_description, footer_text, colors, layout, sections, typography, theme_preset)
 - [x] Crear migración de site-config
@@ -73,6 +73,24 @@
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 5
+
+#### Módulo 8: Consultas / Contactos
+**Tareas:**
+- [ ] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
+- [ ] Crear migración de consultas
+- [ ] Controlador de Consultas:
+  - POST /api/consultas (público, con rate limit)
+  - GET /api/consultas (auth, listado con paginación y filtros)
+  - GET /api/consultas/:id (auth, detalle)
+  - PUT /api/consultas/:id (auth, responder/marcar como leída)
+  - DELETE /api/consultas/:id (admin, eliminar)
+- [ ] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
+- [ ] Validadores de Consulta (nombre, email, asunto, mensaje)
+- [ ] Tests de integración para todos los endpoints
+- [ ] Registrar rutas en src/routes/index.js
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Módulo FE 6
 
 ---
 
@@ -204,6 +222,17 @@
 **Dependencias:** Módulo BE 3 (Site Config)
 **Contraparte BE:** Módulo BE 3
 
+#### Módulo 6: Gestión de Consultas (Admin)
+**Tareas:**
+- [ ] Construir ConsultasPage (listado con DataTable, filtros por estado/fecha)
+- [ ] Construir ConsultaDetailModal (ver mensaje, campo de respuesta, marcar como leída)
+- [ ] Implementar consultasStore (listar, responder, eliminar)
+- [ ] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
+- [ ] Agregar ruta /admin/consultas en AppRouter
+
+**Dependencias:** Módulo BE 8
+**Contraparte BE:** Módulo BE 8
+
 ---
 
 ## Guía de Ejecución en Paralelo
@@ -216,8 +245,10 @@
 | BE 5 | BE 3, FE 3 | BE 1 |
 | BE 6 | BE 4, FE 4 | Ninguno |
 | BE 7 | BE 6, FE 4 | Ninguno |
+| BE 8 | FE 6 | Ninguno |
 | FE 1 | BE 1, FE 4 | Ninguno (usar mocks) |
 | FE 2 | BE 2, FE 3 | Ninguno (usar mocks) |
 | FE 3 | BE 4, FE 2 | Ninguno (usar mocks) |
 | FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
 | FE 5 | BE 7, FE 4 | BE 4 |
+| FE 6 | BE 8 | Módulo BE 8 |
