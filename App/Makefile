@@ -126,8 +126,12 @@ migrate-dev: ## Ejecuta migraciones en desarrollo
 seed-dev: ## Carga los seeders en desarrollo
 	docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:seed:all
 
-tests-back: ## Ejecuta tests del backend en desarrollo (docker)
+tests-back: ## Ejecuta tests del backend (docker). Uso: make tests-back | make tests-back arg=consulta
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- $(arg)
+else
 	docker compose -f docker-compose.dev.yml exec backend npm test
+endif
 
 tests-frontend: ## Ejecuta tests del frontend en desarrollo (docker)
 	docker compose -f docker-compose.dev.yml exec frontend npm test -- --run
