@@ -287,6 +287,48 @@ describe('Carrera Endpoints', () => {
     });
   });
 
+  describe('GET /api/carreras/slug/:slug', () => {
+    beforeEach(async () => {
+      await request(app)
+        .post('/api/carreras')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          nombre: 'Desarrollo de Software',
+          slug: 'desarrollo-de-software',
+          descripcion: 'Carrera técnica en programación',
+          modalidad: 'virtual',
+        });
+    });
+
+    it('debería obtener una carrera por slug (profesor)', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/desarrollo-de-software')
+        .set('Authorization', `Bearer ${profesorToken}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.slug).toBe('desarrollo-de-software');
+      expect(res.body.data.nombre).toBe('Desarrollo de Software');
+    });
+
+    it('debería obtener una carrera por slug sin token (público)', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/desarrollo-de-software')
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.slug).toBe('desarrollo-de-software');
+    });
+
+    it('debería fallar si el slug no existe', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/no-existe')
+        .expect(404);
+
+      expect(res.body.success).toBe(false);
+    });
+  });
+
   describe('PUT /api/carreras/:id', () => {
     let carreraId;
 
