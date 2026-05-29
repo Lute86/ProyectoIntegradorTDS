@@ -21,7 +21,7 @@ const useCarrerasStore = create((set, get) => ({
   fetchCarreraBySlug: async (slug) => {
     set({ loading: true, error: null })
     try {
-      const response = await api.get(`/carreras/${slug}`)
+      const response = await api.get(`/carreras/slug/${slug}`)
       set({ selectedCarrera: response.data.data, loading: false })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al cargar la carrera'

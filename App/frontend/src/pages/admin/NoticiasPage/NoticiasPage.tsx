@@ -5,7 +5,7 @@ import { useNoticiasStore } from '../../../stores/noticiasStore';
 import NoticiaFormModal from '../../../components/admin/NoticiaFormModal';
 
 const NoticiasPage = () => {
-  const { noticias, isLoading, error, fetchNoticias } = useNoticiasStore();
+  const { noticias, isLoading, error, fetchNoticias, deleteNoticia } = useNoticiasStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [noticiaToEdit, setNoticiaToEdit] = useState<Noticia | null>(null);
 
@@ -37,13 +37,13 @@ const NoticiasPage = () => {
       accessor: (n) => (
         <div className="flex flex-col">
           <span className="font-semibold text-gray-800 text-sm">{n.titulo}</span>
-          <span className="text-xs text-gray-400 lg:hidden">{n.categoria}</span>
+          <span className="text-xs text-gray-400 lg:hidden">{n.categoria?.nombre ?? '-'}</span>
         </div>
       ),
     },
     {
       header: 'Categoria',
-      accessor: 'categoria',
+      accessor: (n) => n.categoria?.nombre ?? '-',
       className: 'hidden lg:table-cell text-sm',
     },
     {
@@ -68,12 +68,20 @@ const NoticiasPage = () => {
     {
       header: 'Acciones',
       accessor: (n) => (
-        <button
-          onClick={() => abrirModalEditar(n)}
-          className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-        >
-          Editar
-        </button>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => abrirModalEditar(n)}
+            className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => { if (confirm('¿Eliminar esta noticia?')) deleteNoticia(n.id); }}
+            className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+          >
+            Eliminar
+          </button>
+        </div>
       ),
       className: 'text-right',
     },

@@ -178,10 +178,10 @@
 **Tareas:**
 - [x] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
 - [x] Construir NoticiaDetailPage
-- [ ] Construir componentes: NewsCard, NewsSidebar
-- [ ] Construir ContactoPage, ContactForm
-- [ ] Construir EstudiantesPage, QuickLinks
-- [ ] Implementar noticiasStore
+- [x] Construir componentes: NewsCard, NewsSidebar
+- [x] Construir ContactoPage, ContactForm
+- [x] Construir EstudiantesPage, QuickLinks
+- [x] Implementar noticiasStore
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
