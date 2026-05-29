@@ -7,6 +7,7 @@ import siteConfigRoutes from './siteconfig.routes.js';
 import statsRoutes from './stats.routes.js';
 import categoriaRoutes from './categoria.routes.js';
 import noticiaRoutes from './noticia.routes.js';
+import consultaRoutes from './consulta.routes.js';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/config', siteConfigRoutes);
 router.use('/stats', statsRoutes);
 router.use('/categorias', categoriaRoutes);
 router.use('/noticias', noticiaRoutes);
+router.use('/consultas', consultaRoutes);
 
 export default router;

@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "lint": "eslint src/ --ext .js",
     "test": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --forceExit --no-cache",
+    "test:arg": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --forceExit --no-cache --testPathPattern",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --no-cache",
     "test:cov": "node --experimental-vm-modules node_modules/.bin/jest --coverage --forceExit --no-cache"
   },
