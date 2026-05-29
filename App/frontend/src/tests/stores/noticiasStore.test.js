@@ -20,8 +20,8 @@ vi.mock('../../services/noticiasService', () => {
   const mockCategoria = { id: 1, nombre: 'Novedades', slug: 'novedades', color: '#000' };
   return {
     noticiasService: {
-      getAll: vi.fn().mockResolvedValue({ data: { data: [mockNoticia], total: 1, page: 1, limit: 10, totalPages: 1 } }),
-      getBySlug: vi.fn().mockResolvedValue({ data: { data: mockNoticia } }),
+      getAll: vi.fn().mockResolvedValue({ data: { success: true, data: { data: [mockNoticia], total: 1, page: 1, limit: 10, totalPages: 1 } } }),
+      getBySlug: vi.fn().mockResolvedValue({ data: { success: true, data: mockNoticia } }),
       getCategories: vi.fn().mockResolvedValue({ data: { data: [mockCategoria] } }),
       create: vi.fn(),
       update: vi.fn(),

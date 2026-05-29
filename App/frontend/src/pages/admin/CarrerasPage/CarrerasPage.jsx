@@ -20,7 +20,7 @@ const AdminCarrerasPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [carreraToEdit, setCarreraToEdit] = useState(null);
 
-  useEffect(() => { fetchCarreras(); }, []);
+  useEffect(() => { fetchCarreras(); }, [fetchCarreras]);
 
   const abrirModalCrear = () => {
     setCarreraToEdit(null);

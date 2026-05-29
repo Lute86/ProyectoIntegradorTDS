@@ -20,7 +20,7 @@ export default function CarrerasPage() {
   const { carreras, loading, fetchCarreras } = useCarrerasStore()
   const [selectedFilter, setSelectedFilter] = useState('Todas')
 
-  useEffect(() => { fetchCarreras() }, [])
+  useEffect(() => { fetchCarreras() }, [fetchCarreras])
 
   const modalidades = useMemo(() => {
     const mods = [...new Set(carreras.map((c) => c.modalidad).filter(Boolean))]

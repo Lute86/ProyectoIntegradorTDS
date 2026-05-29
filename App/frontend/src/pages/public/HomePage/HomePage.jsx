@@ -12,7 +12,7 @@ import { MOCK_STATS } from '../../../data/mockStats'
 export default function HomePage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
 
-  useEffect(() => { fetchCarreras() }, [])
+  useEffect(() => { fetchCarreras() }, [fetchCarreras])
 
   return (
     <>

@@ -4,9 +4,9 @@ import { MemoryRouter } from 'react-router-dom'
 import CareerCard from '../../components/public/CareerCards/CareerCard'
 
 const carrera = {
-  id: 1, slug: 'test', nombre: 'Test Carrera', duracion: '2 anos',
-  modalidad: 'Presencial', descripcion: 'Descripcion de prueba',
-  icono: 'TC', color: 'from-blue-500 to-blue-700', badgeVariant: 'blue',
+  id: 1, slug: 'test', nombre: 'Test Carrera', duracion: 2,
+  modalidad: 'presencial', descripcion: 'Descripcion de prueba',
+  color: '#3B82F6',
 }
 
 describe('CareerCard', () => {
@@ -17,13 +17,13 @@ describe('CareerCard', () => {
     expect(screen.getByText('Descripcion de prueba')).toBeInTheDocument()
   })
 
-  it('renderiza icono', () => {
+  it('renderiza iniciales del nombre', () => {
     render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
     expect(screen.getByText('TC')).toBeInTheDocument()
   })
 
-  it('linkea a /carreras', () => {
+  it('linkea a /carreras/:slug', () => {
     render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
-    expect(screen.getByText('Ver mas →').closest('a')).toHaveAttribute('href', '/carreras')
+    expect(screen.getByText('Ver mas →').closest('a')).toHaveAttribute('href', '/carreras/test')
   })
 })

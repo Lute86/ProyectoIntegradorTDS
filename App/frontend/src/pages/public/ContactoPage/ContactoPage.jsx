@@ -47,8 +47,18 @@ export default function ContactoPage() {
                 </div>
               </div>
             ))}
-            <div className="h-48 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center text-slate-500 text-lg border border-slate-100">
-              Mapa de ubicacion: https://maps.app.goo.gl/T77yJ988eh6yhaRSA
+            <div className="h-64 rounded-xl overflow-hidden border border-slate-100 shadow-sm">
+              <iframe
+                src="https://www.google.com/maps?q=-34.602693,-58.371193&output=embed&z=16"
+                width="100%"
+                height="100%"
+                className="w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicacion IFTS 29"
+              />
             </div>
           </div>
         </div>

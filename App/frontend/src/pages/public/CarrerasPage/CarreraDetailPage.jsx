@@ -40,7 +40,7 @@ export default function CarreraDetailPage() {
     if (!fromCache) {
       fetchCarreraBySlug(slug)
     }
-  }, [slug])
+  }, [slug, carreras, fetchCarreraBySlug])
 
   const carrera = useMemo(() => {
     return carreras.find((c) => c.slug === slug) || selectedCarrera || null
@@ -49,7 +49,7 @@ export default function CarreraDetailPage() {
   const otrasCarreras = useMemo(() => {
     if (!carrera) return []
     return carreras.filter((c) => c.slug !== slug)
-  }, [carreras, carreras, slug])
+  }, [carrera, carreras, slug])
 
   const materiasPorCuatri = useMemo(() => {
     if (!carrera?.materias) return []
