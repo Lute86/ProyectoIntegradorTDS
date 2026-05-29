@@ -19,7 +19,7 @@ function adaptNoticia(n) {
     fecha: n.fecha_publicacion
       ? new Date(n.fecha_publicacion).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
       : n.fecha || '',
-    resumen: n.resumen || n.contenido?.replace(/[#*]/g, '').trim().substring(0, 120) + '...' || '',
+    resumen: n.resumen || n.contenido?.replace(/<[^>]*>/g, '').replace(/[#*]/g, '').trim().substring(0, 120) + '...' || '',
   }
 }
 

@@ -7,13 +7,13 @@ import upload from '../middlewares/multer.config.js';
 
 const router = Router();
 
-router.use(authenticate);
-
-router.post('/upload-imagen', authorize('admin', 'profesor'), upload.single('imagen'), noticiaController.uploadImagen);
-
 router.get('/', noticiaController.getAll);
 router.get('/slug/:slug', slugParamValidation, noticiaController.getBySlug);
 router.get('/:id', idParamValidation, noticiaController.getById);
+
+router.use(authenticate);
+
+router.post('/upload-imagen', authorize('admin', 'profesor'), upload.single('imagen'), noticiaController.uploadImagen);
 router.post('/', authorize('admin', 'profesor'), createNoticiaValidation, noticiaController.create);
 router.put('/:id', authorize('admin', 'profesor'), idParamValidation, updateNoticiaValidation, noticiaController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, noticiaController.remove);

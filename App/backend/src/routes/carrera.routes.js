@@ -6,10 +6,11 @@ import { createCarreraValidation, updateCarreraValidation, idParamValidation } f
 
 const router = Router();
 
-router.use(authenticate);
-
 router.get('/', carreraController.getAll);
 router.get('/:id', idParamValidation, carreraController.getById);
+
+router.use(authenticate);
+
 router.post('/', authorize('admin'), createCarreraValidation, carreraController.create);
 router.put('/:id', authorize('admin'), idParamValidation, updateCarreraValidation, carreraController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, carreraController.remove);

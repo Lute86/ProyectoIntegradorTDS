@@ -49,14 +49,17 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
   fetchNoticias: async () => {
     const now = Date.now();
     const { _lastFetched, noticias } = get();
+    // Si ya hay datos frescos (TTL 30s), saltea el fetch
     if (_lastFetched > 0 && now - _lastFetched < TTL && noticias.length > 0) {
       return;
     }
     set({ isLoading: true, error: null });
     try {
       const response = await noticiasService.getAll();
+      // La API devuelve { success, data: { data: [...], total, page, limit, totalPages } }
       const datos = response.data?.data;
-      set({ noticias: Array.isArray(datos) ? datos : [], isLoading: false, _lastFetched: Date.now() });
+      const noticiasData = datos?.data ?? [];
+      set({ noticias: noticiasData, isLoading: false, _lastFetched: Date.now() });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar las noticias';
       set({ error: mensaje, isLoading: false });

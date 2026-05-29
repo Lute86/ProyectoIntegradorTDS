@@ -109,9 +109,8 @@ export default function NoticiaDetailPage() {
 
       <div className="max-w-4xl mx-auto px-4 pb-16">
         <article className="bg-white rounded-xl shadow-sm p-6 md:p-10">
-          <div className="font-serif text-lg md:text-xl leading-loose text-slate-800 space-y-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:text-slate-900 [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:font-bold [&_strong]:font-bold [&_strong]:text-slate-900 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-1 whitespace-pre-line">
-            {noticia.contenido}
-          </div>
+          <div className="font-serif text-lg md:text-xl leading-loose text-slate-800 prose prose-slate max-w-none"
+            dangerouslySetInnerHTML={{ __html: noticia.contenido }} />
         </article>
         <div className="mt-8 text-center">
           <Link to="/noticias" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold">

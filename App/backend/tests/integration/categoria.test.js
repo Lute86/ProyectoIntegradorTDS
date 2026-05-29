@@ -183,12 +183,13 @@ describe('Categoria Endpoints', () => {
       expect(res.body.data).toHaveLength(2);
     });
 
-    it('debería fallar sin token', async () => {
+    it('debería obtener todas las categorias sin token (público)', async () => {
       const res = await request(app)
         .get('/api/categorias')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data).toHaveLength(2);
     });
   });
 
@@ -244,6 +245,15 @@ describe('Categoria Endpoints', () => {
         .expect(404);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una categoria por ID sin token (público)', async () => {
+      const res = await request(app)
+        .get(`/api/categorias/${categoriaId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.id).toBe(categoriaId);
     });
   });
 
