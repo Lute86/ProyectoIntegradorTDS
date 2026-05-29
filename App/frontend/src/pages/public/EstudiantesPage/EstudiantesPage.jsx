@@ -4,22 +4,22 @@ const portalCards = [
   {
     icon: '🎓', title: 'Aula Virtual',
     desc: 'Accede a tus cursos, materiales y actividades online',
-    btn: 'Ingresar', href: '#', bg: 'bg-blue-100',
+    btn: 'Ingresar', href: 'https://aulasvirtuales.bue.edu.ar/', bg: 'bg-blue-100',
   },
   {
     icon: '📅', title: 'Horarios',
     desc: 'Consulta los horarios de clases del cuatrimestre actual',
-    btn: 'Ver horarios', href: '#', bg: 'bg-emerald-100',
+    btn: 'Ver horarios', href: 'https://aulasvirtuales.bue.edu.ar/', bg: 'bg-emerald-100',
   },
   {
     icon: '📝', title: 'Examenes',
     desc: 'Fechas de examenes finales y mesas de examen',
-    btn: 'Ver calendario', href: '#', bg: 'bg-amber-100',
+    btn: 'Ver calendario', href: 'https://aulasvirtuales.bue.edu.ar/', bg: 'bg-amber-100',
   },
   {
     icon: '📄', title: 'Portal SIU',
     desc: 'Solicita certificados, constancias y otros documentos',
-    btn: 'Iniciar tramite', href: '#', bg: 'bg-rose-100',
+    btn: 'Iniciar tramite', href: 'https://guarani-autogestionagencia.bue.edu.ar/acceso', bg: 'bg-rose-100',
   },
 ]
 
