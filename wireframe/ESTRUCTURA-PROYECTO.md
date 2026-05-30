@@ -698,9 +698,9 @@ npx sequelize db:migrate:undo
 | Recurso | Admin | Profesor | Tutor |
 |---------|-------|----------|-------|
 | Dashboard | ✅ Full | ✅ Solo lectura | ✅ Solo lectura |
-| Noticias | ✅ CRUD | ✅ CRUD propias | 👁️ Ver |
+| Noticias | ✅ CRUD | ✅ CRUD propias | ✅ CRUD propias |
 | Carreras | ✅ CRUD | 👁️ Ver | 👁️ Ver |
-| Materias | ✅ CRUD | ✅ CRUD propias | 👁️ Ver |
+| Materias | ✅ CRUD | 👁️ Ver | 👁️ Ver |
 | Eventos | ✅ CRUD | ✅ CRUD | ✅ CRUD |
 | Galería | ✅ CRUD | ✅ Subir | 👁️ Ver |
 | Testimonios | ✅ CRUD | ❌ | ❌ |

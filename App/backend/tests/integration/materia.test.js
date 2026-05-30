@@ -83,7 +83,7 @@ describe('Materia Endpoints', () => {
       expect(res.body.data.carrera_id).toBe(carreraId);
     });
 
-    it('debería crear una materia con datos válidos (profesor)', async () => {
+    it('debería fallar al crear materia con token de profesor (solo admin)', async () => {
       const res = await request(app)
         .post('/api/materias')
         .set('Authorization', `Bearer ${profesorToken}`)
@@ -93,10 +93,9 @@ describe('Materia Endpoints', () => {
           cuatrimestre: 2,
           carga_horaria_semanal: 8,
         })
-        .expect(201);
+        .expect(403);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.nombre).toBe('Programación II');
+      expect(res.body.success).toBe(false);
     });
 
     it('debería fallar si falta el nombre', async () => {
@@ -321,17 +320,16 @@ describe('Materia Endpoints', () => {
       expect(res.body.data.cuatrimestre).toBe(3);
     });
 
-    it('debería actualizar una materia (profesor)', async () => {
+    it('debería fallar al actualizar materia con token de profesor (solo admin)', async () => {
       const res = await request(app)
         .put(`/api/materias/${materiaId}`)
         .set('Authorization', `Bearer ${profesorToken}`)
         .send({
           nombre: 'Actualizada por Profesor',
         })
-        .expect(200);
+        .expect(403);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.nombre).toBe('Actualizada por Profesor');
+      expect(res.body.success).toBe(false);
     });
 
     it('debería fallar si la materia no existe', async () => {

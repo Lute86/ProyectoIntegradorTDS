@@ -6,6 +6,7 @@ import { sequelize } from '../../src/models/index.js';
 describe('Stats Endpoints', () => {
   let adminToken;
   let profesorToken;
+  let tutorToken;
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
@@ -42,7 +43,7 @@ describe('Stats Endpoints', () => {
         password: '123456',
         rol: 'tutor',
       });
-    const tutorToken = tutorRes.body.data.token;
+    tutorToken = tutorRes.body.data.token;
 
     // Crear carreras y materias para las estadísticas
     await request(app)
@@ -109,13 +110,24 @@ describe('Stats Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar con token de profesor (no admin)', async () => {
+    it('debería obtener estadísticas con token de profesor', async () => {
       const res = await request(app)
         .get('/api/stats/dashboard')
         .set('Authorization', `Bearer ${profesorToken}`)
-        .expect(403);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.carreras).toBeDefined();
+    });
+
+    it('debería obtener estadísticas con token de tutor', async () => {
+      const res = await request(app)
+        .get('/api/stats/dashboard')
+        .set('Authorization', `Bearer ${tutorToken}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.carreras).toBeDefined();
     });
   });
 });
