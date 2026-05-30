@@ -20,7 +20,7 @@ export default function NewsCard({ noticia }) {
         <p className="text-sm text-slate-500 mb-4 line-clamp-2">{resumen}</p>
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>{fecha}</span>
-          <span className="text-blue-600 font-semibold">Leer mas →</span>
+          <span className="text-blue-600 font-semibold">Leer más →</span>
         </div>
       </div>
     </Link>

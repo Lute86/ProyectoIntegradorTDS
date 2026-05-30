@@ -59,7 +59,7 @@ export default function AdminTopbar() {
             <p className="text-sm font-medium text-gray-800 leading-tight">
               {user?.nombre || 'Admin'} {user?.apellido || ''}
             </p>
-            <p className="text-xs text-gray-500 capitalize">{user?.role || 'Administrador'}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.rol || 'Administrador'}</p>
           </div>
           <button onClick={logout} className="text-xs text-gray-400 hover:text-red-500 transition-colors" title="Cerrar sesion">
             Salir

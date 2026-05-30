@@ -1,7 +1,8 @@
 import Hero from '../../../components/public/Hero/Hero'
 import Stats from '../../../components/public/Stats/Stats'
-import CareerCards from '../../../components/public/CareerCards/CareerCards'
+import CareerCarousel from '../../../components/public/CareerCarousel/CareerCarousel'
 import NewsSection from '../../../components/public/NewsSection/NewsSection'
+import GaleriaCarousel from '../../../components/public/GaleriaCarousel/GaleriaCarousel'
 import TestimonialsCarousel from '../../../components/public/TestimonialsCarousel/TestimonialsCarousel'
 import { useEffect } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
@@ -18,8 +19,9 @@ export default function HomePage() {
     <>
       <Hero />
       <Stats items={MOCK_STATS} />
-      <CareerCards carreras={carreras} />
+      <CareerCarousel carreras={carreras} />
       <NewsSection noticias={MOCK_NOTICIAS} />
+      <GaleriaCarousel />
       <TestimonialsCarousel testimonios={MOCK_TESTIMONIOS} />
     </>
   )

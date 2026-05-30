@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import NewsCard from './NewsCard'
+import CareerCard from '../CareerCards/CareerCard'
 
-export default function NewsSection({ noticias }) {
+export default function CareerCarousel({ carreras }) {
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
 
@@ -18,8 +17,7 @@ export default function NewsSection({ noticias }) {
     return () => window.removeEventListener('resize', updateVisible)
   }, [])
 
-  const ultimas = noticias?.slice(0, 6) || []
-  const total = ultimas.length
+  const total = carreras?.length || 0
   const maxIndex = Math.max(0, total - visible)
 
   const goTo = useCallback((i) => {
@@ -38,11 +36,11 @@ export default function NewsSection({ noticias }) {
   if (total === 0) return null
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-slate-50">
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-slate-900">Ultimas Noticias</h2>
-          <p className="text-slate-500 mt-2">Mantenete informado sobre las novedades del instituto</p>
+          <h2 className="text-h2 text-slate-900">Nuestras Carreras</h2>
+          <p className="text-slate-500 mt-2">Formacion tecnica de calidad con salida laboral inmediata</p>
         </div>
 
         <div className="relative">
@@ -57,10 +55,10 @@ export default function NewsSection({ noticias }) {
           <div className="overflow-hidden">
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
-              {ultimas.map((n) => (
-                <div key={n.id} className="px-2 shrink-0"
+              {carreras.map((c) => (
+                <div key={c.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
-                  <NewsCard noticia={n} />
+                  <CareerCard carrera={c} />
                 </div>
               ))}
             </div>
@@ -84,13 +82,6 @@ export default function NewsSection({ noticias }) {
             ))}
           </div>
         )}
-
-        <div className="text-center mt-8">
-          <Link to="/noticias"
-            className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-            Ver todas las noticias
-          </Link>
-        </div>
       </div>
     </section>
   )

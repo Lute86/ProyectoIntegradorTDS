@@ -36,19 +36,19 @@ export default function EstudiantesPage() {
   return (
     <div className="bg-slate-50">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">Portal del Estudiante</h1>
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
+          <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
           <p className="text-blue-200 text-lg">Todo lo que necesitas en un solo lugar</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-12">
+      <div className="max-w-content mx-auto px-4 py-8 space-y-12">
         <section>
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900">Accesos Rapidos</h2>
             <p className="text-slate-500 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 gap-6">
             {portalCards.map((card) => (
               <div key={card.title}
                 className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md"

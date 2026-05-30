@@ -5,8 +5,8 @@ export default function Stats({ items }) {
 
   return (
     <section className="py-12 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-content mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-8">
           {items.map((item) => (
             <StatItem key={item.id} valor={item.valor} label={item.label} />
           ))}
