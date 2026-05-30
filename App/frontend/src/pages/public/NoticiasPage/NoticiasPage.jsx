@@ -85,14 +85,14 @@ export default function NoticiasPage() {
   return (
     <div className="bg-slate-50">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">Noticias</h1>
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
+          <h1 className="text-h1 mb-3">Noticias</h1>
           <p className="text-blue-200 text-lg">Mantenete informado sobre las novedades del instituto</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-content mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row gap-4 mb-5">

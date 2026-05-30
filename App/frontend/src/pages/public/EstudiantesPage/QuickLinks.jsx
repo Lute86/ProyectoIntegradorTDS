@@ -13,7 +13,7 @@ export default function QuickLinks({ links = LINKS }) {
   return (
     <div>
       <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">Enlaces Utiles</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {links.map((link) => (
           <a
             key={link.label} href={link.href}

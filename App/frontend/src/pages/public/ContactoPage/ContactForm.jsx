@@ -19,12 +19,17 @@ const asuntos = [
 ]
 
 export default function ContactForm({ onSubmit, isLoading }) {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
   })
 
+  const onSubmitWrapper = async (data) => {
+    await onSubmit(data)
+    reset()
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmitWrapper)} className="space-y-5">
       <div>
         <label className="block text-sm font-semibold text-slate-900 mb-1.5">Nombre completo</label>
         <input

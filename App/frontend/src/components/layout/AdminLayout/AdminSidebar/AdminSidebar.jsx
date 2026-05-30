@@ -1,5 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
+import { useAuth } from '../../../../contexts/AuthContext/AuthContext';
+
+const roleAccess = {
+  admin: ['dashboard', 'noticias', 'carreras', 'eventos', 'galeria', 'testimonios', 'consultas', 'usuarios', 'personalizar', 'ajustes'],
+  profesor: ['dashboard', 'noticias', 'carreras', 'eventos', 'galeria'],
+  tutor: ['dashboard', 'noticias', 'carreras', 'eventos'],
+};
 
 const sections = [
   {
@@ -35,6 +42,19 @@ const sections = [
 ];
 
 export default function AdminSidebar() {
+  const { user } = useAuth();
+  const allowed = roleAccess[user?.rol] || roleAccess.admin;
+
+  const filteredSections = sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        const route = item.to.replace('/admin/', '');
+        return allowed.includes(route);
+      }),
+    }))
+    .filter((section) => section.items.length > 0);
+
   return (
     <aside className="w-64 bg-slate-900 text-white flex flex-col shrink-0 h-screen sticky top-0 overflow-y-auto">
       <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-700">
@@ -46,7 +66,7 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-6">
-        {sections.map((section) => (
+        {filteredSections.map((section) => (
           <div key={section.title}>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">
               {section.title}

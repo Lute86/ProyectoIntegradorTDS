@@ -25,9 +25,9 @@ export default function TestimonialsCarousel({ testimonios }) {
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Lo que dicen nuestros estudiantes</h2>
+          <h2 className="text-h2 text-slate-900">Lo que dicen nuestros estudiantes</h2>
           <p className="text-slate-500 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
         </div>
 

@@ -13,7 +13,7 @@ describe('CareerCard', () => {
   it('renderiza nombre, duracion y descripcion', () => {
     render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
     expect(screen.getByText('Test Carrera')).toBeInTheDocument()
-    expect(screen.getByText('2 anos')).toBeInTheDocument()
+    expect(screen.getByText('2 años')).toBeInTheDocument()
     expect(screen.getByText('Descripcion de prueba')).toBeInTheDocument()
   })
 
@@ -24,6 +24,6 @@ describe('CareerCard', () => {
 
   it('linkea a /carreras/:slug', () => {
     render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
-    expect(screen.getByText('Ver mas →').closest('a')).toHaveAttribute('href', '/carreras/test')
+    expect(screen.getByText('Ver más →').closest('a')).toHaveAttribute('href', '/carreras/test')
   })
 })

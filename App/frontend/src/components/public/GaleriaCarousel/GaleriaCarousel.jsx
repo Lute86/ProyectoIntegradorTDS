@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import NewsCard from './NewsCard'
+import { GALERIA_MOCK } from '../../../mocks/galeria.mock'
 
-export default function NewsSection({ noticias }) {
+const badgeColors = {
+  Instalaciones: 'bg-blue-100 text-blue-700',
+  Eventos: 'bg-amber-100 text-amber-700',
+  Alumnos: 'bg-green-100 text-green-700',
+}
+
+export default function GaleriaCarousel() {
+  const imagenes = GALERIA_MOCK
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
 
@@ -18,8 +24,7 @@ export default function NewsSection({ noticias }) {
     return () => window.removeEventListener('resize', updateVisible)
   }, [])
 
-  const ultimas = noticias?.slice(0, 6) || []
-  const total = ultimas.length
+  const total = imagenes.length
   const maxIndex = Math.max(0, total - visible)
 
   const goTo = useCallback((i) => {
@@ -31,18 +36,16 @@ export default function NewsSection({ noticias }) {
 
   useEffect(() => {
     if (total <= visible) return
-    const timer = setInterval(goNext, 6000)
+    const timer = setInterval(goNext, 5000)
     return () => clearInterval(timer)
   }, [goNext, total, visible])
 
-  if (total === 0) return null
-
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-slate-50">
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-slate-900">Ultimas Noticias</h2>
-          <p className="text-slate-500 mt-2">Mantenete informado sobre las novedades del instituto</p>
+          <h2 className="text-h2 text-slate-900">Galeria del Instituto</h2>
+          <p className="text-slate-500 mt-2">Imagenes de nuestras instalaciones, eventos y alumnos</p>
         </div>
 
         <div className="relative">
@@ -54,13 +57,24 @@ export default function NewsSection({ noticias }) {
             </button>
           )}
 
-          <div className="overflow-hidden">
+          <div className="overflow-hidden rounded-xl">
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
-              {ultimas.map((n) => (
-                <div key={n.id} className="px-2 shrink-0"
+              {imagenes.map((img) => (
+                <div key={img.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
-                  <NewsCard noticia={n} />
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div className="aspect-[4/3] overflow-hidden">
+                      <img src={img.url} alt={img.titulo}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="p-4">
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${badgeColors[img.categoria] || 'bg-gray-100 text-gray-700'}`}>
+                        {img.categoria}
+                      </span>
+                      <h3 className="text-sm font-bold text-slate-900">{img.titulo}</h3>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -80,17 +94,10 @@ export default function NewsSection({ noticias }) {
             {Array.from({ length: maxIndex + 1 }, (_, i) => (
               <button key={i} onClick={() => goTo(i)}
                 className={`w-2.5 h-2.5 rounded-full transition-colors ${i === current ? 'bg-blue-600' : 'bg-slate-300'}`}
-                aria-label={`Ir al grupo ${i + 1}`} />
+                aria-label={`Ir a la imagen ${i + 1}`} />
             ))}
           </div>
         )}
-
-        <div className="text-center mt-8">
-          <Link to="/noticias"
-            className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-            Ver todas las noticias
-          </Link>
-        </div>
       </div>
     </section>
   )

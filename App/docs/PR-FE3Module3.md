@@ -46,3 +46,28 @@
 ## Integración con Store
 
 Las páginas públicas (`NoticiasPage`, `NoticiaDetailPage`) se conectan al store y usan un adaptador (`adaptNoticia`) que transforma el formato API (con `categoria.nombre`, `autor.nombre + apellido`, `fecha_publicacion` ISO) al formato mock que la UI espera. Si el store no tiene datos (API caído o vacío), caen a MOCK_NOTICIAS como fallback.
+
+## Pendiente
+
+### Tests faltantes
+| Archivo | Prioridad |
+|---------|-----------|
+| `tests/pages/NoticiasPage.test.jsx` | Alta |
+| `tests/pages/NoticiaDetailPage.test.jsx` | Alta |
+| `tests/pages/ContactoPage.test.jsx` | Media |
+| `tests/pages/EstudiantesPage.test.jsx` | Media |
+
+### Issues de implementación
+- ContactForm no envía al backend — handleSubmit usa solo setTimeout (1s), no llama a ninguna API
+- QuickLinks usa href="#" — todos los enlaces son placeholders sin destino real
+- adaptNoticia() duplicado en NoticiasPage.jsx y NoticiaDetailPage.jsx — extraer a util compartida
+- mockNoticias.categoria es string pero NewsSidebar espera objeto {nombre} — puede causar undefined en keys
+
+## Responsive — Fix completo (contenedores + grids + tipografía)
+
+**En este módulo:**
+- Contenedores: `NoticiasPage`, `ContactoPage`, `EstudiantesPage` → `max-w-content`
+- Grids: `NoticiasPage` layout (xl:4), `EstudiantesPage` cards (xl:5 3xl:6), `QuickLinks` (xl:4)
+- Tipografía: páginas H1 → `text-h1`
+
+Ver detalle completo en `PR-FE1Module1.md`

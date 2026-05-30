@@ -32,13 +32,13 @@ export default function CareerCard({ carrera }) {
         <p className="text-sm text-slate-500 mb-4">{descripcion}</p>
         <div className="flex items-center justify-between">
           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeStyles[badgeVariant(modalidad)]}`}>
-            {duracion ? `${duracion} anos` : ''}
+            {duracion ? `${duracion} años` : ''}
           </span>
           <Link
             to={`/carreras/${slug}`}
             className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700"
           >
-            Ver mas →
+            Ver más →
           </Link>
         </div>
       </div>
