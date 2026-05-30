@@ -5,6 +5,6 @@ import { authorize } from '../middlewares/role.middleware.js';
 
 const router = Router();
 
-router.get('/dashboard', authenticate, authorize('admin'), statsController.getDashboardStats);
+router.get('/dashboard', authenticate, authorize('admin', 'profesor', 'tutor'), statsController.getDashboardStats);
 
 export default router;
