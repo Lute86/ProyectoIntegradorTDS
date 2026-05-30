@@ -27,7 +27,7 @@ export const getById = handleDbErrors(async (id) => {
       {
         model: models.Materia,
         as: 'materias',
-        attributes: ['id', 'nombre', 'cuatrimestre'],
+        attributes: ['id', 'nombre', 'cuatrimestre', 'carga_horaria_semanal'],
       },
     ],
   });
@@ -46,7 +46,7 @@ export const getBySlug = handleDbErrors(async (slug) => {
       {
         model: models.Materia,
         as: 'materias',
-        attributes: ['id', 'nombre', 'cuatrimestre'],
+        attributes: ['id', 'nombre', 'cuatrimestre', 'carga_horaria_semanal'],
       },
     ],
   });

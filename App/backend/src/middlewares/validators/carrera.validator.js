@@ -11,6 +11,11 @@ export const createCarreraValidation = [
     .trim()
     .matches(/^[a-z0-9-]+$/)
     .withMessage('Slug inválido (solo minúsculas, números y guiones)'),
+  body('titulo')
+    .optional()
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage('Título debe tener al menos 2 caracteres'),
   body('descripcion')
     .optional()
     .trim(),
@@ -46,6 +51,11 @@ export const updateCarreraValidation = [
     .trim()
     .matches(/^[a-z0-9-]+$/)
     .withMessage('Slug inválido (solo minúsculas, números y guiones)'),
+  body('titulo')
+    .optional()
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage('Título debe tener al menos 2 caracteres'),
   body('descripcion')
     .optional()
     .trim(),
