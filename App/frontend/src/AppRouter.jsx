@@ -17,6 +17,7 @@ import EventosPage from './pages/admin/EventosPage/EventosPage.tsx'
 import AdminNoticiasPage from './pages/admin/NoticiasPage/NoticiasPage.tsx'
 import AdminCarrerasPage from './pages/admin/CarrerasPage/CarrerasPage'
 import AjustesPage from './pages/admin/AjustesPage/AjustesPage.tsx'
+import ConsultasPage from './pages/admin/ConsultasPage/ConsultasPage'
 import { useAuth } from './contexts/AuthContext/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -51,6 +52,7 @@ export default function AppRouter() {
           <Route path="noticias" element={<AdminNoticiasPage />} />
           <Route path="carreras" element={<AdminCarrerasPage />} />
           <Route path="ajustes" element={<AjustesPage />} />
+          <Route path="consultas" element={<ConsultasPage />} />
         </Route>
 
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

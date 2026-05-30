@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../../contexts/AuthContext/AuthContext';
 import AdminBreadcrumbs from '../AdminBreadcrumbs/AdminBreadcrumbs';
+import { useConsultasStore } from '../../../../stores/consultasStore';
 
 const titles = {
   dashboard: 'Dashboard',
@@ -12,6 +14,7 @@ const titles = {
   usuarios: 'Usuarios',
   personalizar: 'Personalizar Sitio',
   ajustes: 'Ajustes Generales',
+  consultas: 'Consultas',
 };
 
 export default function AdminTopbar() {
@@ -19,6 +22,12 @@ export default function AdminTopbar() {
   const { user, logout } = useAuth();
   const segment = pathname.split('/')[1] || 'dashboard';
   const title = titles[segment] || 'Dashboard';
+
+  const unreadCount = useConsultasStore((s) => s.unreadCount);
+
+  useEffect(() => {
+    useConsultasStore.getState().fetchUnreadCount();
+  }, []);
 
   const initials = user
     ? `${user.nombre?.charAt(0) || ''}${user.apellido?.charAt(0) || ''}`.toUpperCase() || 'AD'
@@ -35,7 +44,11 @@ export default function AdminTopbar() {
         <button className="text-gray-400 hover:text-gray-600 text-lg" title="Buscar">{'\u{1F50D}'}</button>
         <button className="text-gray-400 hover:text-gray-600 text-lg relative" title="Notificaciones">
           {'\u{1F514}'}
-          <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 leading-none">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
         </button>
 
         <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
