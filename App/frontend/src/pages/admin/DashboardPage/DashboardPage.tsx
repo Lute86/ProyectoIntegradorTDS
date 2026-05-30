@@ -20,10 +20,11 @@ const MOCK_ACTIVITIES = [
 ];
 
 const QUICK_ACTIONS = [
-  { label: 'Nueva Noticia', href: '/admin/noticias', color: 'bg-blue-600 hover:bg-blue-700' },
-  { label: 'Nuevo Evento', href: '/admin/eventos', color: 'bg-emerald-600 hover:bg-emerald-700' },
-  { label: 'Nuevo Usuario', href: '/admin/usuarios', color: 'bg-amber-600 hover:bg-amber-700' },
-  { label: 'Ir a Galeria', href: '/admin/galeria', color: 'bg-violet-600 hover:bg-violet-700' },
+  { label: 'Nueva Noticia', href: '/admin/noticias', icono: '\u{1F4F0}' },
+  { label: 'Nuevo Evento', href: '/admin/eventos', icono: '\u{1F4C5}' },
+  { label: 'Nuevo Usuario', href: '/admin/usuarios', icono: '\u{1F465}' },
+  { label: 'Ir a Galeria', href: '/admin/galeria', icono: '\u{1F4F7}' },
+  { label: 'Gestionar Consultas', href: '/admin/consultas', icono: '\u{1F4E8}' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -78,14 +79,17 @@ const DashboardPage = () => {
         {/* QuickActions */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
           <h2 className="text-base font-bold text-gray-900">Acciones Rapidas</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {QUICK_ACTIONS.map((action) => (
               <Link
                 key={action.label}
                 to={action.href}
-                className={`${action.color} text-white text-sm font-semibold rounded-lg py-3 px-4 text-center transition-all shadow-sm active:scale-95`}
+                className="flex flex-col items-center justify-center gap-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-500 focus:border-blue-500 hover:-translate-y-1 transition-all duration-200 p-5"
               >
-                {action.label}
+                <span className="text-3xl">{action.icono}</span>
+                <span className="text-sm font-semibold text-gray-800 text-center leading-tight">
+                  {action.label}
+                </span>
               </Link>
             ))}
           </div>

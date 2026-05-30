@@ -224,11 +224,11 @@
 
 #### Módulo 6: Gestión de Consultas (Admin)
 **Tareas:**
-- [ ] Construir ConsultasPage (listado con DataTable, filtros por estado/fecha)
-- [ ] Construir ConsultaDetailModal (ver mensaje, campo de respuesta, marcar como leída)
-- [ ] Implementar consultasStore (listar, responder, eliminar)
-- [ ] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
-- [ ] Agregar ruta /admin/consultas en AppRouter
+- [x] Construir ConsultasPage (listado con DataTable, filtros por estado/fecha)
+- [x] Construir ConsultaDetailModal (ver mensaje, campo de respuesta, marcar como leída)
+- [x] Implementar consultasStore (listar, responder, eliminar)
+- [x] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
+- [x] Agregar ruta /admin/consultas en AppRouter
 
 **Dependencias:** Módulo BE 8
 **Contraparte BE:** Módulo BE 8

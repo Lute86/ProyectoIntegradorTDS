@@ -16,6 +16,7 @@ const sections = [
       { to: '/admin/eventos', label: 'Eventos', icon: '\u{1F4C5}' },
       { to: '/admin/galeria', label: 'Galeria', icon: '\u{1F4F7}' },
       { to: '/admin/testimonios', label: 'Testimonios', icon: '\u{1F4AC}' },
+      { to: '/admin/consultas', label: 'Consultas', icon: '\u{1F4E8}' },
     ],
   },
   {
