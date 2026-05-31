@@ -25,6 +25,7 @@ import siteconfigModel from './siteconfig.model.js';
 import categoriaModel from './categoria.model.js';
 import noticiaModel from './noticia.model.js';
 import consultaModel from './consulta.model.js';
+import horarioModel from './horario.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -46,6 +47,9 @@ models.Noticia = Noticia;
 
 const Consulta = consultaModel(sequelizeInstance, DataTypes);
 models.Consulta = Consulta;
+
+const Horario = horarioModel(sequelizeInstance, DataTypes);
+models.Horario = Horario;
 
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {

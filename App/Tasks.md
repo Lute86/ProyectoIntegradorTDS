@@ -76,21 +76,35 @@
 
 #### Módulo 8: Consultas / Contactos
 **Tareas:**
-- [ ] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
-- [ ] Crear migración de consultas
-- [ ] Controlador de Consultas:
+- [x] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
+- [x] Crear migración de consultas
+- [x] Controlador/Servicios de Consultas:
   - POST /api/consultas (público, con rate limit)
   - GET /api/consultas (auth, listado con paginación y filtros)
   - GET /api/consultas/:id (auth, detalle)
   - PUT /api/consultas/:id (auth, responder/marcar como leída)
   - DELETE /api/consultas/:id (admin, eliminar)
-- [ ] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
-- [ ] Validadores de Consulta (nombre, email, asunto, mensaje)
-- [ ] Tests de integración para todos los endpoints
-- [ ] Registrar rutas en src/routes/index.js
+- [x] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
+- [x] Validadores de Consulta (nombre, email, asunto, mensaje)
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 6
+
+#### Módulo 9: Horarios
+**Tareas:**
+- [x] Implementar modelo Horario (id, materia_id, dia, horario, aula, profesor, activo)
+- [x] Crear migración de horarios
+- [x] Seeder de horarios de ejemplo
+- [x] Controlador de Horario (CRUD, filtrar por materia_id/dia)
+- [x] Rutas de Horario (GET/POST/PUT/DELETE /api/horarios)
+- [x] Validadores de Horario
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
+
+**Dependencias:** Modelo Materia (Módulo BE 2)
+**Contraparte FE:** Módulo FE 2
 
 ---
 
