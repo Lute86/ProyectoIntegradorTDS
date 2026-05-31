@@ -8,6 +8,7 @@ import statsRoutes from './stats.routes.js';
 import categoriaRoutes from './categoria.routes.js';
 import noticiaRoutes from './noticia.routes.js';
 import consultaRoutes from './consulta.routes.js';
+import horarioRoutes from './horario.routes.js';
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use('/stats', statsRoutes);
 router.use('/categorias', categoriaRoutes);
 router.use('/noticias', noticiaRoutes);
 router.use('/consultas', consultaRoutes);
+router.use('/horarios', horarioRoutes);
 
 export default router;
