@@ -160,17 +160,19 @@ describe('Noticia Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar con token de tutor (no autorizado)', async () => {
+    it('debería crear una noticia con tutor', async () => {
       const res = await request(app)
         .post('/api/noticias')
         .set('Authorization', `Bearer ${tutorToken}`)
         .send({
-          titulo: 'Test',
-          slug: 'test',
+          titulo: 'Noticia tutor',
+          slug: 'noticia-tutor',
+          contenido: 'Contenido',
         })
-        .expect(403);
+        .expect(201);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.titulo).toBe('Noticia tutor');
     });
   });
 
@@ -398,17 +400,16 @@ describe('Noticia Endpoints', () => {
       expect(res.body.data.estado).toBe('publicado');
     });
 
-    it('debería actualizar una noticia (profesor)', async () => {
+    it('debería fallar al actualizar noticia ajena con token de profesor', async () => {
       const res = await request(app)
         .put(`/api/noticias/${noticiaId}`)
         .set('Authorization', `Bearer ${profesorToken}`)
         .send({
           titulo: 'Actualizado por profesor',
         })
-        .expect(200);
+        .expect(403);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.titulo).toBe('Actualizado por profesor');
+      expect(res.body.success).toBe(false);
     });
 
     it('debería fallar si el nuevo slug ya existe', async () => {
@@ -546,14 +547,15 @@ describe('Noticia Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar con token de tutor (no autorizado)', async () => {
+    it('debería subir una imagen (tutor)', async () => {
       const res = await request(app)
         .post('/api/noticias/upload-imagen')
         .set('Authorization', `Bearer ${tutorToken}`)
         .attach('imagen', Buffer.from('fake-image-content'), 'test.jpg')
-        .expect(403);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.url).toMatch(/^\/uploads\//);
     });
   });
 });

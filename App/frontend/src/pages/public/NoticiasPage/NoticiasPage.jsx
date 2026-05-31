@@ -1,25 +1,51 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
+import { useNoticiasStore } from '../../../stores/noticiasStore'
+import NewsSidebar from './NewsSidebar'
 
-const ITEMS_PER_PAGE = 4 // noticias por pagina
+const ITEMS_PER_PAGE = 4
+
+function adaptNoticia(n) {
+  return {
+    id: n.id,
+    slug: n.slug,
+    titulo: n.titulo,
+    contenido: n.contenido,
+    categoria: n.categoria?.nombre || n.categoria || 'Sin categoria',
+    autor: n.autor
+      ? `${n.autor.nombre || ''} ${n.autor.apellido || ''}`.trim() || 'Admin'
+      : n.autor || 'Admin',
+    fecha: n.fecha_publicacion
+      ? new Date(n.fecha_publicacion).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
+      : n.fecha || '',
+    resumen: n.resumen || n.contenido?.replace(/<[^>]*>/g, '').replace(/[#*]/g, '').trim().substring(0, 120) + '...' || '',
+  }
+}
 
 export default function NoticiasPage() {
-  // estado del buscador, filtro y pagina actual
+  const { noticias: storeNoticias, isLoading, fetchNoticias } = useNoticiasStore()
+
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
-  // cuenta cuantas noticias hay por categoria
+  useEffect(() => { fetchNoticias() }, [fetchNoticias])
+
+  const displayNoticias = useMemo(() => {
+    const lista = Array.isArray(storeNoticias) ? storeNoticias : []
+    if (lista.length > 0) return lista.map(adaptNoticia)
+    return MOCK_NOTICIAS
+  }, [storeNoticias])
+
   const categorias = useMemo(() => {
     const counts = {}
-    MOCK_NOTICIAS.forEach((n) => { counts[n.categoria] = (counts[n.categoria] || 0) + 1 })
+    displayNoticias.forEach((n) => { counts[n.categoria] = (counts[n.categoria] || 0) + 1 })
     return Object.entries(counts).map(([nombre, count]) => ({ nombre, count }))
-  }, [])
+  }, [displayNoticias])
 
-  // filtra noticias por texto y categoria
   const noticiasFiltradas = useMemo(() => {
-    let result = [...MOCK_NOTICIAS]
+    let result = [...displayNoticias]
     if (search.trim()) {
       const q = search.toLowerCase()
       result = result.filter((n) =>
@@ -28,9 +54,8 @@ export default function NoticiasPage() {
     }
     if (selectedCategory) result = result.filter((n) => n.categoria === selectedCategory)
     return result
-  }, [search, selectedCategory])
+  }, [search, selectedCategory, displayNoticias])
 
-  // calcula paginas totales
   const totalPages = Math.max(1, Math.ceil(noticiasFiltradas.length / ITEMS_PER_PAGE))
   const paginatedNoticias = noticiasFiltradas.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -42,15 +67,17 @@ export default function NoticiasPage() {
 
   const gradientMap = {
     Inscripciones: 'from-blue-400 to-blue-600',
-    Exámenes: 'from-emerald-400 to-emerald-600',
+    Examenes: 'from-emerald-400 to-emerald-600',
+    'Exámenes': 'from-emerald-400 to-emerald-600',
     Evento: 'from-amber-400 to-amber-600',
-    Tecnología: 'from-purple-400 to-purple-600',
+    Tecnologia: 'from-purple-400 to-purple-600',
+    'Tecnología': 'from-purple-400 to-purple-600',
     Becas: 'from-rose-400 to-rose-600',
   }
 
-  // texto corto para mostrar en la imagen de cada noticia
   const initialMap = {
-    Inscripciones: 'INS', Exámenes: 'EXA', Evento: 'EVT', Tecnología: 'TEC', Becas: 'BEC',
+    Inscripciones: 'INS', Examenes: 'EXA', 'Exámenes': 'EXA',
+    Evento: 'EVT', Tecnologia: 'TEC', 'Tecnología': 'TEC', Becas: 'BEC',
   }
 
   const GRADIENT_BG = 'bg-gradient-to-br'
@@ -58,14 +85,14 @@ export default function NoticiasPage() {
   return (
     <div className="bg-slate-50">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">Noticias</h1>
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
+          <h1 className="text-h1 mb-3">Noticias</h1>
           <p className="text-blue-200 text-lg">Mantenete informado sobre las novedades del instituto</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-content mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row gap-4 mb-5">
@@ -94,49 +121,67 @@ export default function NoticiasPage() {
               </div>
             </div>
 
-            <p className="text-sm text-slate-500 mb-4">
-              {noticiasFiltradas.length === 0
-                ? 'No se encontraron noticias'
-                : `Mostrando ${paginatedNoticias.length} de ${noticiasFiltradas.length} noticia${noticiasFiltradas.length !== 1 ? 's' : ''}`}
-            </p>
-
-            <div className="space-y-5">
-              {paginatedNoticias.map((n) => (
-                <Link key={n.id} to={`/noticias/${n.slug}`}
-                  className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                  <div className="flex flex-col sm:flex-row gap-5 p-5">
-                    <div className={`sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center text-4xl ${GRADIENT_BG} ${gradientMap[n.categoria] || 'from-slate-400 to-slate-600'} text-white`}>
-                      {initialMap[n.categoria] || 'NOT'}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700'}`}>{n.categoria}</span>
-                      <h3 className="text-lg font-bold text-slate-900 mb-1.5 line-clamp-2">{n.titulo}</h3>
-                      <p className="text-sm text-slate-500 mb-3 line-clamp-2">{n.resumen}</p>
-                      <div className="flex items-center justify-between text-xs text-slate-400">
-                        <span>Por {n.autor} · {n.fecha}</span>
-                        <span className="text-blue-600 font-semibold">Leer más →</span>
-                      </div>
-                    </div>
+            {isLoading && storeNoticias.length === 0 ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-xl shadow-sm p-5 animate-pulse">
+                    <div className="h-4 bg-slate-200 rounded w-1/3 mb-3" />
+                    <div className="h-6 bg-slate-200 rounded w-2/3 mb-2" />
+                    <div className="h-4 bg-slate-100 rounded w-full" />
                   </div>
-                </Link>
-              ))}
-            </div>
-
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}
-                  className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100">◀</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button key={p} onClick={() => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                    className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${p === currentPage ? 'bg-blue-600 text-white' : 'border border-slate-300 hover:bg-slate-100'}`}>{p}</button>
                 ))}
-                <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}
-                  className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100">▶</button>
               </div>
+            ) : (
+              <>
+                <p className="text-sm text-slate-500 mb-4">
+                  {noticiasFiltradas.length === 0
+                    ? 'No se encontraron noticias'
+                    : `Mostrando ${paginatedNoticias.length} de ${noticiasFiltradas.length} noticia${noticiasFiltradas.length !== 1 ? 's' : ''}`}
+                </p>
+
+                <div className="space-y-5">
+                  {paginatedNoticias.map((n) => (
+                    <Link key={n.id} to={`/noticias/${n.slug}`}
+                      className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                      <div className="flex flex-col sm:flex-row gap-5 p-5">
+                        <div className={`sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center text-4xl ${GRADIENT_BG} ${gradientMap[n.categoria] || 'from-slate-400 to-slate-600'} text-white`}>
+                          {initialMap[n.categoria] || 'NOT'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700'}`}>{n.categoria}</span>
+                          <h3 className="text-lg font-bold text-slate-900 mb-1.5 line-clamp-2">{n.titulo}</h3>
+                          <p className="text-sm text-slate-500 mb-3 line-clamp-2">{n.resumen}</p>
+                          <div className="flex items-center justify-between text-xs text-slate-400">
+                            <span>Por {n.autor} · {n.fecha}</span>
+                            <span className="text-blue-600 font-semibold">Leer mas →</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-8">
+                    <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}
+                      className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100">◀</button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                      <button key={p} onClick={() => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                        className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${p === currentPage ? 'bg-blue-600 text-white' : 'border border-slate-300 hover:bg-slate-100'}`}>{p}</button>
+                    ))}
+                    <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}
+                      className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100">▶</button>
+                  </div>
+                )}
+              </>
             )}
           </div>
-
-          
+          <NewsSidebar
+            categorias={categorias}
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryFilter}
+            destacadas={displayNoticias.slice(0, 5)}
+          />
         </div>
       </div>
     </div>

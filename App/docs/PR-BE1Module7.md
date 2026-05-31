@@ -1,4 +1,4 @@
-# PR Módulo 4: Configuración del Sitio y Estadísticas
+# PR Módulo 7: Configuración del Sitio y Estadísticas
 
 ## Descripción
 Implementación del módulo de configuración del sitio (SiteConfig) y estadísticas del dashboard (Stats) para el panel de administración del IFTS 29.

@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import UserAvatar from '../../ui/UserAvatar';
 
 /**
@@ -22,11 +22,42 @@ const AdminLayout = () => {
         </div>
         
         <nav className="mt-4 flex-1 px-4 space-y-1">
-          <div className="flex items-center gap-3 px-4 py-3 bg-blue-600/10 text-blue-400 rounded-lg border border-blue-600/20">
-            <div className="w-6 h-6 rounded bg-blue-400/20 flex items-center justify-center text-[10px] font-bold text-blue-400">US</div>
-            <span className="font-medium text-sm">Usuarios</span>
-          </div>
-          {/* Otros ítems del menú se agregarán dinámicamente */}
+          {/* Grupo: CONTENIDO */}
+          <p className="px-4 pt-4 pb-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contenido</p>
+          <Link to="/admin/noticias" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">NO</div>
+            <span>Noticias</span>
+          </Link>
+          <Link to="/admin/eventos" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">EV</div>
+            <span>Eventos</span>
+          </Link>
+          <Link to="/admin/testimonios" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">TE</div>
+            <span>Testimonios</span>
+          </Link>
+          <Link to="/admin/consultas" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">CO</div>
+            <span>Consultas</span>
+          </Link>
+
+          {/* Separador */}
+          <div className="border-t border-slate-800 my-3" />
+
+          {/* Grupo: ADMIN */}
+          <p className="px-4 pb-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Admin</p>
+          <Link to="/admin/usuarios" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">US</div>
+            <span>Usuarios</span>
+          </Link>
+          <Link to="/admin/personalizar" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">PA</div>
+            <span>Personalizar</span>
+          </Link>
+          <Link to="/admin/ajustes" className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm">
+            <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">AJ</div>
+            <span>Ajustes</span>
+          </Link>
         </nav>
         
         <div className="p-4 border-t border-slate-800">

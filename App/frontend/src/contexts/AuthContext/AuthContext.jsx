@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
         const mockUser = {
           id: 1,
           email,
-          role: 'admin',
+          rol: 'admin',
           nombre: 'Admin',
           apellido: 'IFTS 29',
         };

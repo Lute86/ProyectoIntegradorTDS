@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@theme {
+  --breakpoint-3xl: 1920px;
+  --width-content: 90rem;
+  --text-h1: clamp(1.875rem, 4vw, 3rem);
+  --text-h1--font-weight: 700;
+  --text-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --text-h2--font-weight: 700;
+  --text-hero: clamp(2rem, 5vw, 3.5rem);
+  --text-hero--font-weight: 700;
+}

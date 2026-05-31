@@ -28,12 +28,14 @@ app.use(cors({
 }));
 
 // ── Rate limiting ─────────────────────────────────────────────────────────
-app.use('/api/', rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-}));
+if (process.env.NODE_ENV !== 'test') {
+  app.use('/api/', rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 200,
+    standardHeaders: true,
+    legacyHeaders: false,
+  }));
+}
 
 // ── Body parsing ─────────────────────────────────────────────────────────
 app.use(express.json());

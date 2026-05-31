@@ -60,7 +60,7 @@
 **Dependencias:** Modelo User (Módulo BE 1)
 **Contraparte FE:** Módulo FE 4
 
-#### Módulo 4: Configuración del Sitio y Estadísticas
+#### Módulo 7: Configuración del Sitio y Estadísticas
 **Tareas:**
 - [x] Implementar modelo SiteConfig (id, site_name, site_subtitle, contact_email, contact_phone, address, seo_description, footer_text, colors, layout, sections, typography, theme_preset)
 - [x] Crear migración de site-config
@@ -73,6 +73,38 @@
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 5
+
+#### Módulo 8: Consultas / Contactos
+**Tareas:**
+- [x] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
+- [x] Crear migración de consultas
+- [x] Controlador/Servicios de Consultas:
+  - POST /api/consultas (público, con rate limit)
+  - GET /api/consultas (auth, listado con paginación y filtros)
+  - GET /api/consultas/:id (auth, detalle)
+  - PUT /api/consultas/:id (auth, responder/marcar como leída)
+  - DELETE /api/consultas/:id (admin, eliminar)
+- [x] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
+- [x] Validadores de Consulta (nombre, email, asunto, mensaje)
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Módulo FE 6
+
+#### Módulo 9: Horarios
+**Tareas:**
+- [x] Implementar modelo Horario (id, materia_id, dia, horario, aula, profesor, activo)
+- [x] Crear migración de horarios
+- [x] Seeder de horarios de ejemplo
+- [x] Controlador de Horario (CRUD, filtrar por materia_id/dia)
+- [x] Rutas de Horario (GET/POST/PUT/DELETE /api/horarios)
+- [x] Validadores de Horario
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
+
+**Dependencias:** Modelo Materia (Módulo BE 2)
+**Contraparte FE:** Módulo FE 2
 
 ---
 
@@ -160,10 +192,10 @@
 **Tareas:**
 - [x] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
 - [x] Construir NoticiaDetailPage
-- [ ] Construir componentes: NewsCard, NewsSidebar
-- [ ] Construir ContactoPage, ContactForm
-- [ ] Construir EstudiantesPage, QuickLinks
-- [ ] Implementar noticiasStore
+- [x] Construir componentes: NewsCard, NewsSidebar
+- [x] Construir ContactoPage, ContactForm
+- [x] Construir EstudiantesPage, QuickLinks
+- [x] Implementar noticiasStore
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
@@ -204,6 +236,17 @@
 **Dependencias:** Módulo BE 3 (Site Config)
 **Contraparte BE:** Módulo BE 3
 
+#### Módulo 6: Gestión de Consultas (Admin)
+**Tareas:**
+- [x] Construir ConsultasPage (listado con DataTable, filtros por estado/fecha)
+- [x] Construir ConsultaDetailModal (ver mensaje, campo de respuesta, marcar como leída)
+- [x] Implementar consultasStore (listar, responder, eliminar)
+- [x] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
+- [x] Agregar ruta /admin/consultas en AppRouter
+
+**Dependencias:** Módulo BE 8
+**Contraparte BE:** Módulo BE 8
+
 ---
 
 ## Guía de Ejecución en Paralelo
@@ -216,8 +259,10 @@
 | BE 5 | BE 3, FE 3 | BE 1 |
 | BE 6 | BE 4, FE 4 | Ninguno |
 | BE 7 | BE 6, FE 4 | Ninguno |
+| BE 8 | FE 6 | Ninguno |
 | FE 1 | BE 1, FE 4 | Ninguno (usar mocks) |
 | FE 2 | BE 2, FE 3 | Ninguno (usar mocks) |
 | FE 3 | BE 4, FE 2 | Ninguno (usar mocks) |
 | FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
 | FE 5 | BE 7, FE 4 | BE 4 |
+| FE 6 | BE 8 | Módulo BE 8 |
