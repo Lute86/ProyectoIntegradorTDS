@@ -24,6 +24,8 @@ import materiaModel from './materia.model.js';
 import siteconfigModel from './siteconfig.model.js';
 import categoriaModel from './categoria.model.js';
 import noticiaModel from './noticia.model.js';
+import eventoModel from './evento.model.js';
+import testimonioModel from './testimonio.model.js';
 import consultaModel from './consulta.model.js';
 import horarioModel from './horario.model.js';
 
@@ -45,6 +47,11 @@ models.Categoria = Categoria;
 const Noticia = noticiaModel(sequelizeInstance, DataTypes);
 models.Noticia = Noticia;
 
+const Evento = eventoModel(sequelizeInstance, DataTypes);
+models.Evento = Evento;
+
+const Testimonio = testimonioModel(sequelizeInstance, DataTypes);
+models.Testimonio = Testimonio;
 const Consulta = consultaModel(sequelizeInstance, DataTypes);
 models.Consulta = Consulta;
 
