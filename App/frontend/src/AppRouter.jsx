@@ -17,6 +17,7 @@ import EventosPage from './pages/admin/EventosPage/EventosPage.tsx'
 import AdminNoticiasPage from './pages/admin/NoticiasPage/NoticiasPage.tsx'
 import AdminCarrerasPage from './pages/admin/CarrerasPage/CarrerasPage'
 import AjustesPage from './pages/admin/AjustesPage/AjustesPage.tsx'
+import ConsultasPage from './pages/admin/ConsultasPage/ConsultasPage'
 import { useAuth } from './contexts/AuthContext/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -42,15 +43,16 @@ export default function AppRouter() {
 
         <Route path="/admin" element={<ProtectedRoute user={user} loading={loading} />}>
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="usuarios" element={<UsuariosPage />} />
-          <Route path="personalizar" element={<PersonalizarPage />} />
-          <Route path="testimonios" element={<TestimoniosPage />} />
-          <Route path="galeria" element={<GaleriaPage />} />
-          <Route path="eventos" element={<EventosPage />} />
-          <Route path="noticias" element={<AdminNoticiasPage />} />
-          <Route path="carreras" element={<AdminCarrerasPage />} />
-          <Route path="ajustes" element={<AjustesPage />} />
+          <Route path="dashboard" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><DashboardPage /></ProtectedRoute>} />
+          <Route path="noticias" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminNoticiasPage /></ProtectedRoute>} />
+          <Route path="carreras" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminCarrerasPage /></ProtectedRoute>} />
+          <Route path="eventos" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><EventosPage /></ProtectedRoute>} />
+          <Route path="galeria" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor']}><GaleriaPage /></ProtectedRoute>} />
+          <Route path="testimonios" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><TestimoniosPage /></ProtectedRoute>} />
+          <Route path="usuarios" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><UsuariosPage /></ProtectedRoute>} />
+          <Route path="personalizar" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><PersonalizarPage /></ProtectedRoute>} />
+          <Route path="ajustes" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><AjustesPage /></ProtectedRoute>} />
+          <Route path="consultas" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><ConsultasPage /></ProtectedRoute>} />
         </Route>
 
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

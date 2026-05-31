@@ -62,3 +62,22 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 | `src/tests/pages/HomePage.test.jsx` | 1 test (5 secciones renderizan) |
 | `src/tests/pages/CarrerasPage.test.jsx` | 3 tests (h1, filtro, 3 carreras) |
 | `src/tests/pages/CarreraDetailPage.test.jsx` | 4 tests (h1, tabs, sidebar, 404) |
+
+## Pendiente
+
+### Tests faltantes
+| Archivo | Prioridad |
+|---------|-----------|
+| `tests/stores/carrerasStore.test.js` | Alta — store sin cobertura |
+
+### Issues
+- HomePage.test.jsx tiene solo 1 test smoke, sin cobertura de loading/error/estados vacios
+
+## Responsive — Fix completo (contenedores + grids + tipografía)
+
+**En este módulo:**
+- Contenedores: `Hero`, `Stats`, `CareerCards`, `NewsSection`, `TestimonialsCarousel`, `CarrerasPage`, `CarreraDetailPage` → `max-w-content`
+- Grids: `Stats` (xl:6), `CareerCards` (xl:4), `NewsSection` (xl:4), `CarreraDetailPage` layout (xl:4) y materias (xl:3)
+- Tipografía: Hero H1 → `text-hero`, section H2 → `text-h2`, páginas H1 → `text-h1`
+
+Ver detalle completo en `PR-FE1Module1.md`

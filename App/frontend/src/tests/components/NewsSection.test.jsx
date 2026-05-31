@@ -17,12 +17,12 @@ describe('NewsSection', () => {
     expect(screen.getByText('Ver todas las noticias')).toBeInTheDocument()
   })
 
-  it('muestra solo las 3 primeras noticias', () => {
+  it('muestra hasta 6 noticias en carrusel', () => {
     render(<MemoryRouter><NewsSection noticias={noticias} /></MemoryRouter>)
     expect(screen.getByText('Noticia 1')).toBeInTheDocument()
     expect(screen.getByText('Noticia 2')).toBeInTheDocument()
     expect(screen.getByText('Noticia 3')).toBeInTheDocument()
-    expect(screen.queryByText('Noticia 4')).not.toBeInTheDocument()
+    expect(screen.getByText('Noticia 4')).toBeInTheDocument()
   })
 
   it('no renderiza nada si la lista esta vacia', () => {

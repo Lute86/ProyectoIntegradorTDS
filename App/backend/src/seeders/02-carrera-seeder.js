@@ -9,6 +9,7 @@ export async function up(queryInterface, Sequelize) {
       {
         nombre: 'Desarrollo de Software (a distancia)',
         slug,
+        titulo: 'Tecnico Superior en Desarrollo de Software',
         descripcion: 'Carrera técnica en desarrollo de software con modalidad virtual',
         duracion: 3,
         modalidad: 'virtual',

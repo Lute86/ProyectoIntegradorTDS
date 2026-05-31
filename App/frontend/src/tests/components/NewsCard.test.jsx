@@ -18,6 +18,6 @@ describe('NewsCard', () => {
 
   it('linkea al detalle de la noticia', () => {
     render(<MemoryRouter><NewsCard noticia={noticia} /></MemoryRouter>)
-    expect(screen.getByText('Leer mas →').closest('a')).toHaveAttribute('href', '/noticias/test-slug')
+    expect(screen.getByText('Leer más →').closest('a')).toHaveAttribute('href', '/noticias/test-slug')
   })
 })

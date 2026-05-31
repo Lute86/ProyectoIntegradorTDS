@@ -6,11 +6,12 @@ import { Noticia } from '../../mocks/noticias.mock';
 import { useNoticiasStore } from '../../stores/noticiasStore';
 import RichEditor from '../ui/RichEditor';
 
-const CATEGORIAS = ['Institucional', 'Eventos', 'Cursos', 'Novedades'] as const;
-
+// Esquema de validacion del formulario de noticias
 const noticiaSchema = z.object({
   titulo: z.string().min(5, 'El titulo debe tener al menos 5 caracteres'),
-  categoria: z.enum(CATEGORIAS, { required_error: 'Seleccione una categoria' }),
+  slug: z.string().min(3, 'El slug debe tener al menos 3 caracteres')
+    .regex(/^[a-z0-9-]+$/, 'Solo minusculas, numeros y guiones'),
+  categoria_id: z.string().min(1, 'Seleccione una categoria'),
   estado: z.enum(['borrador', 'publicado'], { required_error: 'Seleccione un estado' }),
   contenido: z.string().min(10, 'El contenido debe tener al menos 10 caracteres'),
 });
@@ -23,8 +24,18 @@ interface NoticiaFormModalProps {
   noticiaToEdit: Noticia | null;
 }
 
+// Genera un slug a partir de un texto (minusculas, guiones, sin acentos)
+const generarSlug = (texto: string): string => {
+  return texto
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
 const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalProps) => {
-  const { addNoticia, updateNoticia } = useNoticiasStore();
+  const { addNoticia, updateNoticia, categorias, fetchCategorias } = useNoticiasStore();
   const esEdicion = noticiaToEdit !== null;
 
   const {
@@ -32,40 +43,71 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<NoticiaFormData>({
     resolver: zodResolver(noticiaSchema),
     defaultValues: {
       titulo: '',
-      categoria: undefined,
+      slug: '',
+      categoria_id: '',
       estado: undefined,
       contenido: '',
     },
   });
 
+  // Trae las categorias de la API al abrir el modal
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategorias();
+    }
+  }, [isOpen, fetchCategorias]);
+
+  // Cuando se edita, precarga los datos de la noticia
   useEffect(() => {
     if (noticiaToEdit) {
       reset({
         titulo: noticiaToEdit.titulo,
-        categoria: noticiaToEdit.categoria as NoticiaFormData['categoria'],
-        estado: noticiaToEdit.estado,
+        slug: noticiaToEdit.slug ?? generarSlug(noticiaToEdit.titulo),
+        categoria_id: String(noticiaToEdit.categoria_id ?? ''),
+        estado: noticiaToEdit.estado as NoticiaFormData['estado'],
         contenido: noticiaToEdit.contenido,
       });
     } else {
-      reset({ titulo: '', categoria: undefined, estado: undefined, contenido: '' });
+      reset({ titulo: '', slug: '', categoria_id: '', estado: undefined, contenido: '' });
     }
   }, [noticiaToEdit, reset]);
 
-  const onSubmit = (data: NoticiaFormData) => {
-    if (esEdicion && noticiaToEdit) {
-      updateNoticia(noticiaToEdit.id, data);
-    } else {
-      addNoticia({
-        ...data,
-        fecha_publicacion: new Date().toISOString().split('T')[0],
-      });
+  // Auto-genera el slug cuando cambia el titulo (solo al crear)
+  const tituloActual = watch('titulo');
+  useEffect(() => {
+    if (!esEdicion && tituloActual) {
+      setValue('slug', generarSlug(tituloActual));
     }
-    onClose();
+  }, [tituloActual, esEdicion, setValue]);
+
+  // Envia los datos a la API
+  const onSubmit = async (data: NoticiaFormData) => {
+    const body = {
+      titulo: data.titulo,
+      slug: data.slug,
+      contenido: data.contenido,
+      categoria_id: parseInt(data.categoria_id),
+      estado: data.estado,
+      fecha_publicacion: new Date().toISOString(),
+    };
+
+    try {
+      if (esEdicion && noticiaToEdit) {
+        await updateNoticia(noticiaToEdit.id, body);
+      } else {
+        await addNoticia(body);
+      }
+      onClose();
+    } catch {
+      // el store ya maneja el error
+    }
   };
 
   if (!isOpen) return null;
@@ -101,21 +143,24 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
             )}
           </div>
 
+          {/* Slug oculto (se auto-genera desde el titulo) */}
+          <input type="hidden" {...register('slug')} />
+
           {/* Filas: Categoria + Estado */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Categoria</label>
               <select
-                {...register('categoria')}
+                {...register('categoria_id')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
               >
                 <option value="">Seleccione una categoria</option>
-                {CATEGORIAS.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {categorias.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.nombre}</option>
                 ))}
               </select>
-              {errors.categoria && (
-                <p className="text-xs text-red-500 mt-1">{errors.categoria.message}</p>
+              {errors.categoria_id && (
+                <p className="text-xs text-red-500 mt-1">{errors.categoria_id.message}</p>
               )}
             </div>
 

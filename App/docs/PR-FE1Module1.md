@@ -64,6 +64,55 @@ Se implementa la capa base del frontend: sistema de diseno UI completo, capa de 
 - ProtectedRoute importado con `{ }` pero exportado como `default`
 - LoginPage pasaba objeto `{ email, role }` en vez de `(email, password)` al AuthContext
 
+## Pendiente
+
+### Tests faltantes
+| Archivo | Prioridad |
+|---------|-----------|
+| `tests/stores/authStore.test.js` | Alta — store crítico sin cobertura |
+| `tests/components/Select.test.jsx` | Media |
+| `tests/components/Textarea.test.jsx` | Media |
+| `tests/components/layout/Navbar.test.jsx` | Media |
+| `tests/components/layout/MobileMenu.test.jsx` | Baja |
+| `tests/components/layout/Footer.test.jsx` | Baja |
+| `tests/components/layout/PublicLayout.test.jsx` | Media |
+| `tests/pages/admin/LoginPage.test.jsx` | Alta |
+| `tests/components/layout/AdminLayout.test.jsx` | Media |
+| `tests/components/layout/AdminSidebar.test.jsx` | Media |
+
+### Issues
+- AGENTS.md línea 56 dice que ThemeContext/LayoutContext/ToastContext están vacíos — ya están implementados, actualizar doc
+
+## Responsive — Fix completo (contenedores + grids + tipografía)
+
+**Problema:** Al alejar zoom, el contenido se "achicaba" porque todo usaba `max-w-6xl` (1152px) fijo, generando márgenes enormes en viewports efectivos grandes. Además, los grids no expandían columnas ni la tipografía escalaba.
+
+### Cambios realizados
+
+**1. `globals.css`** — `@theme` con:
+- `--breakpoint-3xl: 1920px` (nuevo breakpoint ultra-wide)
+- `--width-content: 90rem` (contenedor de 1440px)
+- `--text-h1`, `--text-h2`, `--text-hero` con `clamp()` para tipografía fluida
+
+**2. Contenedores** — 19 replaces de `max-w-6xl` → `max-w-content` en 12 archivos públicos
+
+**3. Grids responsivos** — variantes `xl:` y `3xl:` agregadas:
+- `Stats`: `xl:grid-cols-6`
+- `CareerCards`, `NewsSection`, `Footer`: `xl:grid-cols-4`
+- `NoticiasPage`, `CarreraDetailPage` (layout): `xl:grid-cols-4`
+- `CarreraDetailPage` (materias): `xl:grid-cols-3`
+- `EstudiantesPage` (cards): `xl:grid-cols-5 3xl:grid-cols-6`
+- `QuickLinks`: `xl:grid-cols-4`
+
+**4. Tipografía fluida** — headings reemplazados por clases fluidas:
+- `text-h1` (clamp 1.875rem–3rem): pages H1
+- `text-h2` (clamp 1.5rem–2.25rem): secciones H2
+- `text-hero` (clamp 2rem–3.5rem): Hero H1
+
+**Archivos tocados:** `globals.css` + 16 archivos .jsx públicos
+
+**Admin no se modificó.**
+
 ## Como usar
 
 ```jsx

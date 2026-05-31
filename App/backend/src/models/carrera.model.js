@@ -14,6 +14,10 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    titulo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     descripcion: {
       type: DataTypes.TEXT,
       allowNull: true,
