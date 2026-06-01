@@ -59,7 +59,7 @@ export default function GaleriaCarousel() {
 
           <div className="overflow-hidden rounded-xl">
             <div className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
+              style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {imagenes.map((img) => (
                 <div key={img.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
