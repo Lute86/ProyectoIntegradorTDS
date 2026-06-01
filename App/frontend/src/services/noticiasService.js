@@ -1,7 +1,7 @@
 import api from './api'
 
 export const noticiasService = {
-  getAll: () => api.get('/noticias'),
+  getAll: (params) => api.get('/noticias', { params }),
   getBySlug: (slug) => api.get(`/noticias/slug/${slug}`),
   getCategories: () => api.get('/categorias'),
   create: (data) => api.post('/noticias', data),

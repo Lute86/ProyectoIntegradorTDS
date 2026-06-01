@@ -36,14 +36,11 @@ export default function CarreraDetailPage() {
   const [activeTab, setActiveTab] = useState('descripcion')
 
   useEffect(() => {
-    const fromCache = carreras.find((c) => c.slug === slug)
-    if (!fromCache) {
-      fetchCarreraBySlug(slug)
-    }
-  }, [slug, carreras, fetchCarreraBySlug])
+    fetchCarreraBySlug(slug)
+  }, [slug, fetchCarreraBySlug])
 
   const carrera = useMemo(() => {
-    return carreras.find((c) => c.slug === slug) || selectedCarrera || null
+    return selectedCarrera || carreras.find((c) => c.slug === slug) || null
   }, [slug, carreras, selectedCarrera])
 
   const otrasCarreras = useMemo(() => {

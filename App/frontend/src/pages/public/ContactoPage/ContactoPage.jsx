@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import api from '../../../services/api'
 import ContactForm from './ContactForm'
 
 const infoCards = [
@@ -10,11 +11,23 @@ const infoCards = [
 
 export default function ContactoPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data) => {
     setIsLoading(true)
-    await new Promise((r) => setTimeout(r, 1000))
-    setIsLoading(false)
+    setError('')
+    setSuccess(false)
+    try {
+      await api.post('/consultas', data)
+      setSuccess(true)
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Error al enviar la consulta'
+      setError(msg)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -31,6 +44,8 @@ export default function ContactoPage() {
           <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-slate-100">
             <h2 className="text-xl font-bold text-slate-900 mb-6">Envia tu consulta</h2>
             <ContactForm onSubmit={handleSubmit} isLoading={isLoading} />
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {success && <p className="text-green-600 text-sm mt-2">Consulta enviada exitosamente</p>}
           </div>
 
           <div className="space-y-4">
