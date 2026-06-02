@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import api from '../../../services/api'
 import ContactForm from './ContactForm'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 
-const infoCards = [
-  { icon: '📍', title: 'Direccion', text: 'Buenos Aires, Argentina' },
-  { icon: '📧', title: 'Email', text: 'dfts.ifts29@bue.edu.ar' },
-  { icon: '📞', title: 'Telefono', text: '(011) 1234-5678' },
-  { icon: '🕐', title: 'Horario de Atencion', text: 'Lunes a Viernes: 17:00 - 22:00' },
-]
+import contacBg from '../../../assets/fonts/contac.png'
 
 export default function ContactoPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const { config } = useSiteConfigStore()
+
+  const infoCards = [
+    { icon: '📍', title: 'Direccion', text: config.address || 'Buenos Aires, Argentina' },
+    { icon: '📧', title: 'Email', text: config.contactEmail || 'dfts.ifts29@bue.edu.ar' },
+    { icon: '📞', title: 'Telefono', text: config.contactPhone || '(011) 1234-5678' },
+    { icon: '🕐', title: 'Horario de Atencion', text: 'Lunes a Viernes: 17:00 - 22:00' },
+  ]
 
   const handleSubmit = async (data) => {
     setIsLoading(true)
@@ -24,25 +28,27 @@ export default function ContactoPage() {
     } catch (err) {
       const msg = err.response?.data?.message || 'Error al enviar la consulta'
       setError(msg)
-      throw err
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="bg-slate-50">
-      <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
-          <h1 className="text-h1 mb-3">Contacto</h1>
-          <p className="text-blue-200 text-lg">Estamos para ayudarte</p>
+    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
+      <div
+        className="text-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${contacBg})` }}
+      >
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <h1 className="text-h1 mb-3" style={{ color: '#fff' }}>Contacto</h1>
+          <p style={{ color: 'rgba(255,255,255,0.8)' }} className="text-lg">Estamos para ayudarte</p>
         </div>
       </div>
 
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Envia tu consulta</h2>
+          <div className="rounded-xl shadow-sm p-6 md:p-8 border" style={{ backgroundColor: '#fff', borderColor: 'var(--clr-primary)' }}>
+            <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--clr-text)' }}>Envia tu consulta</h2>
             <ContactForm onSubmit={handleSubmit} isLoading={isLoading} />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             {success && <p className="text-green-600 text-sm mt-2">Consulta enviada exitosamente</p>}
@@ -51,18 +57,18 @@ export default function ContactoPage() {
           <div className="space-y-4">
             {infoCards.map((card) => (
               <div key={card.title}
-                className="bg-white rounded-xl shadow-sm p-5 flex gap-4 items-start border border-slate-100"
+                className="rounded-xl shadow-sm p-5 flex gap-4 items-start border" style={{ backgroundColor: '#fff', borderColor: 'var(--clr-primary)' }}
               >
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-xl shrink-0">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: 'var(--clr-primary)' }}>
                   {card.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{card.title}</h3>
-                  <p className="text-sm text-slate-500 mt-0.5">{card.text}</p>
+                  <h3 className="font-semibold" style={{ color: 'var(--clr-text)' }}>{card.title}</h3>
+                  <p className="text-sm mt-0.5" style={{ color: 'rgba(0,0,0,0.5)' }}>{card.text}</p>
                 </div>
               </div>
             ))}
-            <div className="h-64 rounded-xl overflow-hidden border border-slate-100 shadow-sm">
+            <div className="h-64 rounded-xl overflow-hidden border shadow-sm" style={{ borderColor: 'var(--clr-primary)' }}>
               <iframe
                 src="https://www.google.com/maps?q=-34.602693,-58.371193&output=embed&z=16"
                 width="100%"

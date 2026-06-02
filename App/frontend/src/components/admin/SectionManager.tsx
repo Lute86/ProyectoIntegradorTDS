@@ -5,10 +5,14 @@ import DraggableSection from './DraggableSection';
 
 const SECTION_LABELS: Record<string, string> = {
   hero: 'Hero / Portada',
-  carreras: 'Carreras',
-  noticias: 'Noticias',
-  testimonios: 'Testimonios',
-  contacto: 'Contacto',
+  statistics: 'Estadisticas',
+  careers: 'Carreras',
+  news: 'Noticias',
+  events: 'Eventos',
+  testimonials: 'Testimonios',
+  gallery: 'Galeria',
+  students: 'Estudiantes',
+  contact: 'Contacto',
 };
 
 const SectionManager = () => {

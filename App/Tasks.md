@@ -196,6 +196,13 @@
 - [x] Construir ContactoPage, ContactForm
 - [x] Construir EstudiantesPage, QuickLinks
 - [x] Implementar noticiasStore
+- [x] Agregar imagen de fondo `carrera1.png` en portada de CarrerasPage
+- [x] Agregar imagen de fondo `noticia1.png` en portada y cards de NoticiasPage
+- [x] Agregar imagen de fondo `estudiantes1.png` en portada de EstudiantesPage
+- [x] Agregar imagen de fondo `contac.png` en portada de ContactoPage
+- [x] Crear EventosSection + EventosCard (carrusel en Home)
+- [x] Crear eventosService.js con fallback a mock
+- [x] Conectar EventosSection en HomePage
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4

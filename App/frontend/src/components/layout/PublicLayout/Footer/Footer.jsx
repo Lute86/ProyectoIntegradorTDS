@@ -1,38 +1,40 @@
 import { Link } from 'react-router-dom';
+import { useSiteConfigStore } from '../../../../stores/siteConfigStore';
 
 export default function Footer() {
+  const { config } = useSiteConfigStore()
+
   return (
-    <footer className="bg-slate-900 text-gray-300 mt-auto">
+    <footer className="mt-auto" style={{ backgroundColor: 'var(--clr-surface)' }}>
       <div className="max-w-content mx-auto px-5 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ color: 'rgba(255,255,255,0.8)' }}>
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">IFTS 29</h3>
-            <p className="text-sm leading-relaxed">
-               Instituto de Formacion Tecnica Superior N 29. Formando profesionales en tecnologia desde hace mas de 15
-               años.
+            <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>{config.siteName}</h3>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+               {config.siteSubtitle}
             </p>
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">Enlaces Rapidos</h3>
+            <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Enlaces Rapidos</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/carreras" className="hover:text-white transition-colors">Carreras</Link></li>
-              <li><Link to="/noticias" className="hover:text-white transition-colors">Noticias</Link></li>
-              <li><Link to="/estudiantes" className="hover:text-white transition-colors">Estudiantes</Link></li>
-              <li><Link to="/login" className="hover:text-white transition-colors">Administracion</Link></li>
+              <li><Link to="/carreras" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Carreras</Link></li>
+              <li><Link to="/noticias" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Noticias</Link></li>
+              <li><Link to="/estudiantes" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Estudiantes</Link></li>
+              <li><Link to="/login" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Administracion</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">Contacto</h3>
-            <ul className="space-y-2 text-sm">
-              <li>dfts.ifts29@bue.edu.ar</li>
-              <li>Buenos Aires, Argentina</li>
-              <li>(011) 1234-5678</li>
+            <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Contacto</h3>
+            <ul className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              <li>{config.contactEmail}</li>
+              <li>{config.address}</li>
+              <li>{config.contactPhone}</li>
             </ul>
           </div>
         </div>
       </div>
-      <div className="border-t border-slate-700 py-4 text-center text-sm">
-        <p>Todos los derechos reservados &copy; IFTS N°29 - 2026</p>
+      <div className="py-4 text-center text-sm" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}>
+        <p>{config.footerText}</p>
       </div>
     </footer>
   );

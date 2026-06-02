@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
+import { horariosService } from '../../../services/horariosService'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 
@@ -34,10 +35,9 @@ export default function CarreraDetailPage() {
   const { slug } = useParams()
   const { carreras, selectedCarrera, loading, fetchCarreraBySlug } = useCarrerasStore()
   const [activeTab, setActiveTab] = useState('descripcion')
-
-  useEffect(() => {
-    fetchCarreraBySlug(slug)
-  }, [slug, fetchCarreraBySlug])
+  const [horarios, setHorarios] = useState([])
+  const [selectedComision, setSelectedComision] = useState('')
+  const [loadingHorarios, setLoadingHorarios] = useState(false)
 
   const carrera = useMemo(() => {
     return selectedCarrera || carreras.find((c) => c.slug === slug) || null
@@ -57,6 +57,49 @@ export default function CarreraDetailPage() {
     })
     return Object.entries(grupos).sort(([a], [b]) => Number(a) - Number(b))
   }, [carrera])
+
+  useEffect(() => {
+    fetchCarreraBySlug(slug)
+  }, [slug, fetchCarreraBySlug])
+
+  const fetchHorarios = useCallback(async (materias) => {
+    if (!materias || materias.length === 0) return
+    setLoadingHorarios(true)
+    try {
+      const results = await Promise.all(
+        materias.map((m) => horariosService.getAll({ materia_id: m.id }))
+      )
+      const todos = results.flatMap((r) => r.data?.data || r.data || [])
+      setHorarios(todos)
+    } catch {
+      setHorarios([])
+    } finally {
+      setLoadingHorarios(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeTab === 'horarios' && carrera?.materias && horarios.length === 0 && !loadingHorarios) {
+      fetchHorarios(carrera.materias)
+    }
+  }, [activeTab, carrera, horarios.length, loadingHorarios, fetchHorarios])
+
+  const comisiones = useMemo(() => {
+    const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
+    return Array.from(set).sort()
+  }, [horarios])
+
+  const horariosFiltrados = useMemo(() => {
+    if (!selectedComision) return []
+    return horarios
+      .filter((h) => h.comision === selectedComision)
+      .sort((a, b) => {
+        const nomA = a.materia?.nombre || ''
+        const nomB = b.materia?.nombre || ''
+        if (nomA !== nomB) return nomA.localeCompare(nomB)
+        return (a.dia || '').localeCompare(b.dia || '')
+      })
+  }, [horarios, selectedComision])
 
   if (loading && !carrera) {
     return (
@@ -137,14 +180,90 @@ export default function CarreraDetailPage() {
             )}
 
             {activeTab === 'requisitos' && (
-              <div className="text-center py-12">
-                <p className="text-slate-400 text-sm">Proximamente.</p>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Requisitos de Inscripcion</h3>
+                <p className="text-slate-500 text-sm mb-6">Documentacion necesaria para todas las carreras</p>
+                <ul className="space-y-3 max-w-xl">
+                  {[
+                    'Titulo secundario completo',
+                    'DNI original y copia',
+                    'Certificado de estudios secundarios',
+                    'Partida de nacimiento',
+                    '2 fotos 4x4',
+                    'Constancia de CUIL',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-slate-700">
+                      <svg className="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
             {activeTab === 'horarios' && (
-              <div className="text-center py-12">
-                <p className="text-slate-400 text-sm">Proximamente.</p>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Horarios por Comision</h3>
+                <p className="text-slate-500 text-sm mb-6">Selecciona una comision para ver los horarios de todas las materias</p>
+
+                {loadingHorarios ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="bg-white rounded-xl shadow-sm p-5 animate-pulse">
+                        <div className="h-5 bg-slate-200 rounded w-1/3 mb-4" />
+                        <div className="h-4 bg-slate-100 rounded w-full mb-2" />
+                        <div className="h-4 bg-slate-100 rounded w-3/4" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {comisiones.map((com) => (
+                        <button key={com} onClick={() => setSelectedComision(com)}
+                          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                            selectedComision === com
+                              ? 'bg-blue-600 text-white shadow-sm'
+                              : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                          }`}
+                        >Comision {com}</button>
+                      ))}
+                    </div>
+
+                    {!selectedComision ? (
+                      <p className="text-slate-400 text-center py-8 text-sm">
+                        Selecciona una comision para ver los horarios.
+                      </p>
+                    ) : horariosFiltrados.length === 0 ? (
+                      <p className="text-slate-400 text-center py-8 text-sm">
+                        No hay horarios disponibles para esta comision.
+                      </p>
+                    ) : (
+                      <div className="overflow-x-auto rounded-xl border border-slate-200">
+                        <table className="w-full border-collapse text-sm">
+                          <thead>
+                            <tr className="bg-slate-50">
+                              <th className="p-3 text-left font-semibold text-slate-600">Materia</th>
+                              <th className="p-3 text-left font-semibold text-slate-600">Dia</th>
+                              <th className="p-3 text-left font-semibold text-slate-600">Horario</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {horariosFiltrados.map((h, i) => (
+                              <tr key={i} className="border-t border-slate-100 hover:bg-slate-50">
+                                <td className="p-3 text-slate-900 font-medium">{h.materia?.nombre || '—'}</td>
+                                <td className="p-3 text-slate-700">{h.dia}</td>
+                                <td className="p-3 text-slate-600">{h.horario}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             )}
 

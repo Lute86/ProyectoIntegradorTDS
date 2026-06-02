@@ -26,7 +26,7 @@ describe('ContactoPage', () => {
     render(<ContactoPage />)
     expect(screen.getByText('Envia tu consulta')).toBeInTheDocument()
     expect(screen.getByText('Direccion')).toBeInTheDocument()
-    expect(screen.getByText('Email')).toBeInTheDocument()
+    expect(screen.getAllByText('Email')[0]).toBeInTheDocument()
   })
 
   it('llama api.post con los datos del formulario', async () => {

@@ -8,18 +8,29 @@ const MOCK_CARRERAS = [
   { id: 3, slug: 'analisis-de-datos', nombre: 'Analisis de Datos', duracion: 2, modalidad: 'hibrida', descripcion: 'Datos.', color: '#D97706' },
 ]
 
-const mockStore = vi.hoisted(() => vi.fn())
-vi.mock('../../stores/carrerasStore', () => ({ default: mockStore }))
+const MOCK_TESTIMONIOS = [
+  { id: 1, texto: 'Testimonio 1', autor_nombre: 'Ana', autor_carrera: 'DS', iniciales: 'AN' },
+]
+
+const mockCarrerasStore = vi.hoisted(() => vi.fn())
+const mockTestimoniosStore = vi.hoisted(() => vi.fn())
+
+vi.mock('../../stores/carrerasStore', () => ({ default: mockCarrerasStore }))
+vi.mock('../../stores/testimoniosStore', () => ({ useTestimoniosStore: mockTestimoniosStore }))
 
 import HomePage from '../../pages/public/HomePage/HomePage'
 
 describe('HomePage', () => {
   beforeEach(() => {
-    mockStore.mockReturnValue({
+    mockCarrerasStore.mockReturnValue({
       carreras: MOCK_CARRERAS,
       loading: false,
       error: null,
       fetchCarreras: vi.fn(),
+    })
+    mockTestimoniosStore.mockReturnValue({
+      testimonios: MOCK_TESTIMONIOS,
+      fetchTestimonios: vi.fn(),
     })
   })
 

@@ -7,19 +7,21 @@ import ContactoPage from './pages/public/ContactoPage/ContactoPage'
 import EstudiantesPage from './pages/public/EstudiantesPage/EstudiantesPage'
 import NoticiasPage from './pages/public/NoticiasPage/NoticiasPage'
 import NoticiaDetailPage from './pages/public/NoticiaDetailPage/NoticiaDetailPage'
+import EventosPagePublic from './pages/public/EventosPage/EventosPage'
 import LoginPage from './pages/admin/LoginPage/LoginPage'
 import DashboardPage from './pages/admin/DashboardPage/DashboardPage.tsx'
 import UsuariosPage from './pages/admin/UsuariosPage'
 import PersonalizarPage from './pages/admin/PersonalizarPage/PersonalizarPage.tsx'
 import TestimoniosPage from './pages/admin/TestimoniosPage/TestimoniosPage.tsx'
 import GaleriaPage from './pages/admin/GaleriaPage/GaleriaPage.tsx'
-import EventosPage from './pages/admin/EventosPage/EventosPage.tsx'
+import AdminEventosPage from './pages/admin/EventosPage/EventosPage.tsx'
 import AdminNoticiasPage from './pages/admin/NoticiasPage/NoticiasPage.tsx'
 import AdminCarrerasPage from './pages/admin/CarrerasPage/CarrerasPage'
 import AjustesPage from './pages/admin/AjustesPage/AjustesPage.tsx'
 import ConsultasPage from './pages/admin/ConsultasPage/ConsultasPage'
 import { useAuth } from './contexts/AuthContext/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import SectionGuard from './components/SectionGuard'
 
 export default function AppRouter() {
   const { user, loading } = useAuth()
@@ -31,12 +33,13 @@ export default function AppRouter() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/carreras" element={<CarrerasPage />} />
-          <Route path="/carreras/:slug" element={<CarreraDetailPage />} />
-          <Route path="/noticias" element={<NoticiasPage />} />
-          <Route path="/noticias/:slug" element={<NoticiaDetailPage />} />
-          <Route path="/contacto" element={<ContactoPage />} />
-          <Route path="/estudiantes" element={<EstudiantesPage />} />
+          <Route path="/carreras" element={<SectionGuard sectionId="careers"><CarrerasPage /></SectionGuard>} />
+          <Route path="/carreras/:slug" element={<SectionGuard sectionId="careers"><CarreraDetailPage /></SectionGuard>} />
+          <Route path="/noticias" element={<SectionGuard sectionId="news"><NoticiasPage /></SectionGuard>} />
+          <Route path="/noticias/:slug" element={<SectionGuard sectionId="news"><NoticiaDetailPage /></SectionGuard>} />
+          <Route path="/eventos" element={<SectionGuard sectionId="events"><EventosPagePublic /></SectionGuard>} />
+          <Route path="/contacto" element={<SectionGuard sectionId="contact"><ContactoPage /></SectionGuard>} />
+          <Route path="/estudiantes" element={<SectionGuard sectionId="students"><EstudiantesPage /></SectionGuard>} />
         </Route>
 
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/admin/dashboard" replace />} />
@@ -46,7 +49,7 @@ export default function AppRouter() {
           <Route path="dashboard" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><DashboardPage /></ProtectedRoute>} />
           <Route path="noticias" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminNoticiasPage /></ProtectedRoute>} />
           <Route path="carreras" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminCarrerasPage /></ProtectedRoute>} />
-          <Route path="eventos" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><EventosPage /></ProtectedRoute>} />
+          <Route path="eventos" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminEventosPage /></ProtectedRoute>} />
           <Route path="galeria" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor']}><GaleriaPage /></ProtectedRoute>} />
           <Route path="testimonios" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><TestimoniosPage /></ProtectedRoute>} />
           <Route path="usuarios" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><UsuariosPage /></ProtectedRoute>} />

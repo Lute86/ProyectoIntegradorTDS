@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import portadaCBg from '../../../assets/fonts/carrera1.png'
+
 
 const badgeVariant = (mod) => {
   const mapa = { presencial: 'blue', virtual: 'green', hibrida: 'amber' }
@@ -23,7 +25,7 @@ export default function CareerCard({ carrera }) {
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div
         className="p-6 flex items-center justify-center text-4xl text-white"
-        style={{ backgroundColor: color || '#3B82F6' }}
+        style={{ backgroundImage: `url(${portadaCBg})` }}
       >
         {iniciales(nombre)}
       </div>

@@ -1,10 +1,10 @@
 const LINKS = [
-  { icon: '📚', label: 'Biblioteca Digital', href: '#' },
-  { icon: '💰', label: 'Becas y Beneficios', href: '#' },
+  { icon: '📚', label: 'Biblioteca Digital', href: 'http://www.bibliotecadigital.gob.ar/' },
+  { icon: '💰', label: 'Becas y Beneficios', href: 'https://www.argentina.gob.ar/educacion/progresar' },
   { icon: '📋', label: 'Reglamento Estudiantil', href: '#' },
   { icon: '🆘', label: 'Soporte Tecnico', href: '#' },
   { icon: '💼', label: 'Bolsa de Trabajo', href: '#' },
-  { icon: '📞', label: 'Contacto Secretaria', href: '#' },
+  { icon: '📞', label: 'Contacto Secretaria', href: '/contacto' },
 ]
 
 export default function QuickLinks({ links = LINKS }) {
