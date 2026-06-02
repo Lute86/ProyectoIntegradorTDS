@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
@@ -32,13 +32,15 @@ export default function NoticiasPage() {
 
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('categoria') || '')
+  const selectedCategoryRef = useRef(selectedCategory)
+  selectedCategoryRef.current = selectedCategory
   const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => { fetchNoticias() }, [fetchNoticias])
 
   useEffect(() => {
     const cat = searchParams.get('categoria')
-    if (cat && cat !== selectedCategory) {
+    if (cat && cat !== selectedCategoryRef.current) {
       setSelectedCategory(cat)
       setCurrentPage(1)
     }
