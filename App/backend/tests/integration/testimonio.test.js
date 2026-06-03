@@ -158,20 +158,9 @@ describe('Testimonio Endpoints', () => {
         });
     });
 
-    it('deberia obtener todos los testimonios (profesor)', async () => {
+    it('deberia obtener todos los testimonios (sin auth)', async () => {
       const res = await request(app)
         .get('/api/testimonios')
-        .set('Authorization', `Bearer ${profesorToken}`)
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(2);
-    });
-
-    it('deberia obtener todos los testimonios (tutor)', async () => {
-      const res = await request(app)
-        .get('/api/testimonios')
-        .set('Authorization', `Bearer ${tutorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -181,20 +170,11 @@ describe('Testimonio Endpoints', () => {
     it('deberia filtrar por visibles', async () => {
       const res = await request(app)
         .get('/api/testimonios?visible=true')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].visible).toBe(true);
-    });
-
-    it('deberia fallar sin token', async () => {
-      const res = await request(app)
-        .get('/api/testimonios')
-        .expect(401);
-
-      expect(res.body.success).toBe(false);
     });
   });
 
@@ -213,10 +193,9 @@ describe('Testimonio Endpoints', () => {
       testimonioId = res.body.data.id;
     });
 
-    it('deberia obtener un testimonio por ID (profesor)', async () => {
+    it('deberia obtener un testimonio por ID (sin auth)', async () => {
       const res = await request(app)
         .get(`/api/testimonios/${testimonioId}`)
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -224,20 +203,9 @@ describe('Testimonio Endpoints', () => {
       expect(res.body.data.autor_nombre).toBe('Test');
     });
 
-    it('deberia obtener un testimonio por ID (tutor)', async () => {
-      const res = await request(app)
-        .get(`/api/testimonios/${testimonioId}`)
-        .set('Authorization', `Bearer ${tutorToken}`)
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(testimonioId);
-    });
-
     it('deberia fallar con ID invalido', async () => {
       const res = await request(app)
         .get('/api/testimonios/invalid')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(400);
 
       expect(res.body.success).toBe(false);
@@ -246,7 +214,6 @@ describe('Testimonio Endpoints', () => {
     it('deberia fallar si el testimonio no existe', async () => {
       const res = await request(app)
         .get('/api/testimonios/9999')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(404);
 
       expect(res.body.success).toBe(false);
