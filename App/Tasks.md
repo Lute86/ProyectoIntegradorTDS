@@ -106,6 +106,29 @@
 **Dependencias:** Modelo Materia (Módulo BE 2)
 **Contraparte FE:** Módulo FE 2
 
+#### Módulo 10: Unit Tests — Utils
+- [x] Mocks compartidos de Sequelize
+- [x] Tests de AppError
+- [x] Tests de token
+- [x] Tests de asyncHandler
+- [x] Tests de dbErrorHandler
+- [x] Tests de response
+
+#### Módulo 11: Unit Tests — Services
+- [x] Tests de auth.services
+- [x] Tests de user.services
+- [x] Tests de carrera.services
+- [x] Tests de materia.services
+- [x] Tests de noticia.services
+- [x] Tests de categoria.services
+- [x] Tests de evento.services
+- [x] Tests de testimonio.services
+- [x] Tests de horario.services
+- [x] Tests de consulta.services
+- [x] Tests de imagen.services
+- [x] Tests de stats.services
+- [x] Tests de siteconfig.services
+
 ---
 
 ### BE Dev 2: Modelos de Contenido

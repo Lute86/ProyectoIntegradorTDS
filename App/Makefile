@@ -16,7 +16,7 @@ RED    = \033[31m
 .PHONY: dev dev-d dev-down dev-reset
 .PHONY: prod prod-down prod-reset ssl
 .PHONY: logs logs-dev logs-be logs-fe
-.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-frontend lint-backend lint-frontend
+.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
 .PHONY: check-env help fclean
 
 # =============================================================================
@@ -127,6 +127,20 @@ seed-dev: ## Carga los seeders en desarrollo
 	docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:seed:all
 
 tests-back: ## Ejecuta tests del backend (docker). Uso: make tests-back | make tests-back arg=consulta
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- $(arg)
+else
+	docker compose -f docker-compose.dev.yml exec backend npm test
+endif
+
+tests-back-unit: ## Ejecuta solo unit tests del backend (docker). Uso: make tests-back-unit | make tests-back-unit arg=auth
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- tests/unit $(arg)
+else
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- tests/unit
+endif
+
+tests-back-all: ## Ejecuta todos los tests del backend: integration + unit (docker). Uso: make tests-back-all | make tests-back-all arg=evento
 ifdef arg
 	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- $(arg)
 else
