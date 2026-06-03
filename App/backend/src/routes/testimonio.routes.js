@@ -6,10 +6,10 @@ import { createTestimonioValidation, updateTestimonioValidation, idParamValidati
 
 const router = Router();
 
-router.use(authenticate);
 
 router.get('/', testimonioController.getAll);
 router.get('/:id', idParamValidation, testimonioController.getById);
+router.use(authenticate);
 router.post('/', authorize('admin', 'profesor'), createTestimonioValidation, testimonioController.create);
 router.put('/:id', authorize('admin', 'profesor'), idParamValidation, updateTestimonioValidation, testimonioController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, testimonioController.remove);

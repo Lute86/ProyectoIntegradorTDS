@@ -6,10 +6,10 @@ import { createEventoValidation, updateEventoValidation, idParamValidation } fro
 
 const router = Router();
 
-router.use(authenticate);
 
 router.get('/', eventoController.getAll);
 router.get('/:id', idParamValidation, eventoController.getById);
+router.use(authenticate);
 router.post('/', authorize('admin', 'profesor'), createEventoValidation, eventoController.create);
 router.put('/:id', authorize('admin', 'profesor'), idParamValidation, updateEventoValidation, eventoController.update);
 router.delete('/:id', authorize('admin'), idParamValidation, eventoController.remove);

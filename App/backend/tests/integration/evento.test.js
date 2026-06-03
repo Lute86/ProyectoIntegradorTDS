@@ -174,20 +174,9 @@ describe('Evento Endpoints', () => {
         });
     });
 
-    it('deberia obtener todos los eventos (profesor)', async () => {
+    it('deberia obtener todos los eventos (sin auth)', async () => {
       const res = await request(app)
         .get('/api/eventos')
-        .set('Authorization', `Bearer ${profesorToken}`)
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(2);
-    });
-
-    it('deberia obtener todos los eventos (tutor)', async () => {
-      const res = await request(app)
-        .get('/api/eventos')
-        .set('Authorization', `Bearer ${tutorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -197,7 +186,6 @@ describe('Evento Endpoints', () => {
     it('deberia filtrar por estado', async () => {
       const res = await request(app)
         .get('/api/eventos?estado=confirmado')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -208,20 +196,11 @@ describe('Evento Endpoints', () => {
     it('deberia filtrar por fecha_desde', async () => {
       const res = await request(app)
         .get('/api/eventos?fecha_desde=2026-08-01')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].nombre).toBe('Evento Pendiente');
-    });
-
-    it('deberia fallar sin token', async () => {
-      const res = await request(app)
-        .get('/api/eventos')
-        .expect(401);
-
-      expect(res.body.success).toBe(false);
     });
   });
 
@@ -240,10 +219,9 @@ describe('Evento Endpoints', () => {
       eventoId = res.body.data.id;
     });
 
-    it('deberia obtener un evento por ID (profesor)', async () => {
+    it('deberia obtener un evento por ID (sin auth)', async () => {
       const res = await request(app)
         .get(`/api/eventos/${eventoId}`)
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -251,20 +229,9 @@ describe('Evento Endpoints', () => {
       expect(res.body.data.nombre).toBe('Evento Test');
     });
 
-    it('deberia obtener un evento por ID (tutor)', async () => {
-      const res = await request(app)
-        .get(`/api/eventos/${eventoId}`)
-        .set('Authorization', `Bearer ${tutorToken}`)
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(eventoId);
-    });
-
     it('deberia fallar con ID invalido', async () => {
       const res = await request(app)
         .get('/api/eventos/invalid')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(400);
 
       expect(res.body.success).toBe(false);
@@ -273,7 +240,6 @@ describe('Evento Endpoints', () => {
     it('deberia fallar si el evento no existe', async () => {
       const res = await request(app)
         .get('/api/eventos/9999')
-        .set('Authorization', `Bearer ${profesorToken}`)
         .expect(404);
 
       expect(res.body.success).toBe(false);
