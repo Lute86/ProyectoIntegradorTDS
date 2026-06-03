@@ -106,72 +106,28 @@
 **Dependencias:** Modelo Materia (Módulo BE 2)
 **Contraparte FE:** Módulo FE 2
 
-#### Módulo 10: Unit Tests — Auth Core (Utils + Services)
-**Tareas:**
-- [x] Crear carpeta `tests/unit/mocks/` con mocks compartidos de Sequelize (modelos, Op, sequelize instance)
-- [x] Test `AppError.js`: cada subclase tiene status code correcto (400/401/403/404/409), instanceof AppError, mensaje por defecto vs custom
-- [x] Test `token.js`: generateToken genera string válido, verifyToken retorna payload o lanza error, decodeToken retorna payload o null
-- [x] Test `auth.services.js`: register hashea password y genera token, login verifica credentials y actualiza ultimo_acceso, rechaza email duplicado, refreshToken valida token, hashPassword retorna hash
+#### Módulo 10: Unit Tests — Utils
+- [x] Mocks compartidos de Sequelize
+- [x] Tests de AppError
+- [x] Tests de token
+- [x] Tests de asyncHandler
+- [x] Tests de dbErrorHandler
+- [x] Tests de response
 
-**Dependencias:** Ninguna
-**Directorio:** `tests/unit/utils/` + `tests/unit/services/` + `tests/unit/mocks/`
-
-#### Módulo 11: Unit Tests — Async Handler y User (Utils + Services)
-**Tareas:**
-- [x] Test `asyncHandler.js`: éxito retorna resultado, rechazo llama next(error)
-- [x] Test `user.services.js`: create hashea password y excluye password_hash del retorno, rechaza email duplicado, toggleActive cambia estado, getAll filtra por rol
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/utils/` + `tests/unit/services/`
-
-#### Módulo 12: Unit Tests — Error Handling y Response (Utils)
-**Tareas:**
-- [x] Test `dbErrorHandler.js`: SequelizeUniqueConstraintError → ConflictError(409), SequelizeValidationError → BadRequestError(400), SequelizeForeignKeyConstraintError → BadRequestError(400), SequelizeEmptyResultError → NotFoundError(404), AppError se re-lanza, error desconocido se re-lanza
-- [x] Test `response.js`: success/created/deleted/noContent/badRequest/unauthorized/forbidden/notFound/conflict/validationError/tooManyRequests/serverError retornan status y JSON correctos, badRequest incluye/excluye errors condicionalmente
-
-**Dependencias:** Módulo 10 (AppError para dbErrorHandler)
-**Directorio:** `tests/unit/utils/`
-
-#### Módulo 13: Unit Tests — Carreras y Materias (Services)
-**Tareas:**
-- [x] Test `carrera.services.js`: create genera slug único, rechaza slug duplicado, remove bloquea si tiene materias asociadas (cascade protection), getAll filtra por modalidad/activa
-- [x] Test `materia.services.js`: create valida que carrera_id existe (FK), getAll filtra por carrera_id/cuatrimestre, eager-load de carrera en getById
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/services/`
-
-#### Módulo 14: Unit Tests — Contenido (Services)
-**Tareas:**
-- [x] Test `noticia.services.js`: getAll con paginación (page/limit/totalPages), búsqueda por titulo/contenido con Op.or, create valida FK de categoria_id y autor_id, slug único en create/update
-- [x] Test `categoria.services.js`: create genera slug único, rechaza slug duplicado, getAll retorna todas las categorías
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/services/`
-
-#### Módulo 15: Unit Tests — Eventos y Testimonios (Services)
-**Tareas:**
-- [x] Test `evento.services.js`: getAll con filtros fecha_desde/fecha_hasta (Op.gte/Op.lte), filtro por estado, nombre único en update
-- [x] Test `testimonio.services.js`: getAll con filtro visible, create retorna testimonio con visible=true por defecto
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/services/`
-
-#### Módulo 16: Unit Tests — Horarios, Consultas, Imágenes (Services)
-**Tareas:**
-- [x] Test `horario.services.js`: create valida que materia_id existe, eager-load de materia en getById, filtro por materia_id/comision/dia
-- [x] Test `consulta.services.js`: getUnreadCount retorna conteo correcto, búsqueda por nombre/email/asunto con Op.or, paginación
-- [x] Test `imagen.services.js`: create valida URL única, update rechaza URL duplicada, filtro por categoria/entidad_id
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/services/`
-
-#### Módulo 17: Unit Tests — Stats y Config (Services)
-**Tareas:**
-- [x] Test `stats.services.js`: getDashboardStats retorna conteos correctos (carreras activas, materias, staff)
-- [x] Test `siteconfig.services.js`: getConfig crea registro default si no existe, updateConfig upsert correctamente
-
-**Dependencias:** Módulo 10 (mocks compartidos)
-**Directorio:** `tests/unit/services/`
+#### Módulo 11: Unit Tests — Services
+- [x] Tests de auth.services
+- [x] Tests de user.services
+- [x] Tests de carrera.services
+- [x] Tests de materia.services
+- [x] Tests de noticia.services
+- [x] Tests de categoria.services
+- [x] Tests de evento.services
+- [x] Tests de testimonio.services
+- [x] Tests de horario.services
+- [x] Tests de consulta.services
+- [x] Tests de imagen.services
+- [x] Tests de stats.services
+- [x] Tests de siteconfig.services
 
 ---
 
