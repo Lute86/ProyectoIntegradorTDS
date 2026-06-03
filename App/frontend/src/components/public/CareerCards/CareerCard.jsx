@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import portadaCBg from '../../../assets/fonts/carrera1.png'
+import CareerIcon from '../../ui/CareerIcon/CareerIcon'
 
 const badgeVariant = (mod) => {
   const mapa = { presencial: 'blue', virtual: 'green', hibrida: 'amber' }
@@ -17,15 +19,16 @@ const iniciales = (nombre) => {
 }
 
 export default function CareerCard({ carrera }) {
-  const { nombre, slug, duracion, descripcion, modalidad, color } = carrera
+  const { nombre, slug, duracion, descripcion, modalidad, color, icono } = carrera
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div
         className="p-6 flex items-center justify-center text-4xl text-white"
-        style={{ backgroundColor: color || '#3B82F6' }}
+        style={{ backgroundImage: `url(${portadaCBg})` }}
       >
-        {iniciales(nombre)}
+        {icono && <CareerIcon name={icono} className="w-12 h-12 [&_svg]:w-full [&_svg]:h-full [&_svg]:fill-current" />}
+        {!icono && <span>{iniciales(nombre)}</span>}
       </div>
       <div className="p-6">
         <h3 className="text-lg font-bold text-slate-900 mb-2">{nombre}</h3>

@@ -56,7 +56,7 @@ export default function NewsSection({ noticias }) {
 
           <div className="overflow-hidden">
             <div className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
+              style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {ultimas.map((n) => (
                 <div key={n.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>

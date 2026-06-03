@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
+import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 
 export default function NewsSidebar({
   categorias = [],
@@ -19,16 +20,19 @@ export default function NewsSidebar({
           <ul className="divide-y divide-slate-100">
             {categorias.map((cat) => (
               <li key={cat.nombre}>
-                <button
-                  onClick={() => onCategoryChange?.(cat.nombre)}
-                  className={clsx(
-                    'w-full flex items-center justify-between py-2.5 text-sm transition-colors',
-                    selectedCategory === cat.nombre
-                      ? 'text-blue-700 font-semibold'
-                      : 'text-slate-600 hover:text-blue-600',
-                  )}
-                >
-                  <span>{cat.nombre}</span>
+                  <button
+                    onClick={() => onCategoryChange?.(cat.nombre)}
+                    className={clsx(
+                      'w-full flex items-center justify-between py-2.5 text-sm transition-colors',
+                      selectedCategory === cat.nombre
+                        ? 'text-blue-700 font-semibold'
+                        : 'text-slate-600 hover:text-blue-600',
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      <IconoCategoria categoria={cat.nombre} className="w-4 h-4" selected={selectedCategory === cat.nombre} />
+                      {cat.nombre}
+                    </span>
                   <span className={clsx(
                     'text-xs px-2.5 py-0.5 rounded-full font-medium',
                     selectedCategory === cat.nombre

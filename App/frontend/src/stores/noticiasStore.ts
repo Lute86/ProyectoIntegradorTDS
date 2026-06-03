@@ -29,7 +29,7 @@ interface NoticiasState {
   isLoading: boolean;
   error: string | null;
   _lastFetched: number;
-  fetchNoticias: () => Promise<void>;
+  fetchNoticias: (params?: Record<string, unknown>) => Promise<void>;
   fetchNoticiaBySlug: (slug: string) => Promise<void>;
   fetchCategorias: () => Promise<void>;
   addNoticia: (noticia: FormData | Record<string, unknown>) => Promise<void>;
@@ -46,16 +46,16 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
   error: null,
   _lastFetched: 0,
 
-  fetchNoticias: async () => {
+  fetchNoticias: async (params?: Record<string, unknown>) => {
     const now = Date.now();
     const { _lastFetched, noticias } = get();
-    // Si ya hay datos frescos (TTL 30s), saltea el fetch
-    if (_lastFetched > 0 && now - _lastFetched < TTL && noticias.length > 0) {
+    // Si ya hay datos frescos (TTL 30s) y no hay filtros nuevos, saltea el fetch
+    if (!params && _lastFetched > 0 && now - _lastFetched < TTL && noticias.length > 0) {
       return;
     }
     set({ isLoading: true, error: null });
     try {
-      const response = await noticiasService.getAll();
+      const response = await noticiasService.getAll(params);
       // La API devuelve { success, data: { data: [...], total, page, limit, totalPages } }
       const datos = response.data?.data;
       const noticiasData = datos?.data ?? [];

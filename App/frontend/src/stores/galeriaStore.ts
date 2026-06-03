@@ -1,13 +1,18 @@
 import { create } from 'zustand';
-import { GaleriaImagen, GALERIA_MOCK } from '../mocks/galeria.mock';
+import api from '../services/api';
+
+export interface GaleriaImagen {
+  id: number;
+  titulo: string;
+  categoria?: string;
+  url: string;
+}
 
 interface GaleriaState {
   imagenes: GaleriaImagen[];
   isLoading: boolean;
   error: string | null;
   fetchImagenes: () => Promise<void>;
-  addImagen: (imagen: Omit<GaleriaImagen, 'id'>) => void;
-  deleteImagen: (id: number) => void;
 }
 
 export const useGaleriaStore = create<GaleriaState>((set) => ({
@@ -17,26 +22,10 @@ export const useGaleriaStore = create<GaleriaState>((set) => ({
   fetchImagenes: async () => {
     set({ isLoading: true, error: null });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      set({ imagenes: GALERIA_MOCK, isLoading: false });
+      const res = await api.get('/imagenes');
+      set({ imagenes: res.data.data || res.data || [], isLoading: false });
     } catch {
       set({ error: 'Error al cargar las imagenes', isLoading: false });
     }
-  },
-  addImagen: (nuevaImagen) => {
-    set((state) => ({
-      imagenes: [
-        ...state.imagenes,
-        {
-          ...nuevaImagen,
-          id: Math.max(...state.imagenes.map((i) => i.id), 0) + 1,
-        },
-      ],
-    }));
-  },
-  deleteImagen: (id) => {
-    set((state) => ({
-      imagenes: state.imagenes.filter((i) => i.id !== id),
-    }));
   },
 }));

@@ -1,8 +1,11 @@
-import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
+import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 import NewsSidebar from './NewsSidebar'
+import noticiaBg from '../../../assets/fonts/noticia1.png'
+
 
 const ITEMS_PER_PAGE = 4
 
@@ -25,12 +28,23 @@ function adaptNoticia(n) {
 
 export default function NoticiasPage() {
   const { noticias: storeNoticias, isLoading, fetchNoticias } = useNoticiasStore()
+  const [searchParams] = useSearchParams()
 
   const [search, setSearch] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('categoria') || '')
+  const selectedCategoryRef = useRef(selectedCategory)
+  selectedCategoryRef.current = selectedCategory
   const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => { fetchNoticias() }, [fetchNoticias])
+
+  useEffect(() => {
+    const cat = searchParams.get('categoria')
+    if (cat && cat !== selectedCategoryRef.current) {
+      setSelectedCategory(cat)
+      setCurrentPage(1)
+    }
+  }, [searchParams])
 
   const displayNoticias = useMemo(() => {
     const lista = Array.isArray(storeNoticias) ? storeNoticias : []
@@ -41,7 +55,9 @@ export default function NoticiasPage() {
   const categorias = useMemo(() => {
     const counts = {}
     displayNoticias.forEach((n) => { counts[n.categoria] = (counts[n.categoria] || 0) + 1 })
-    return Object.entries(counts).map(([nombre, count]) => ({ nombre, count }))
+    return Object.entries(counts)
+      .filter(([nombre]) => nombre !== 'Evento')
+      .map(([nombre, count]) => ({ nombre, count }))
   }, [displayNoticias])
 
   const noticiasFiltradas = useMemo(() => {
@@ -65,27 +81,13 @@ export default function NoticiasPage() {
   const handleSearch = (e) => { setSearch(e.target.value); setCurrentPage(1) }
   const handleCategoryFilter = (cat) => { setSelectedCategory(cat === selectedCategory ? '' : cat); setCurrentPage(1) }
 
-  const gradientMap = {
-    Inscripciones: 'from-blue-400 to-blue-600',
-    Examenes: 'from-emerald-400 to-emerald-600',
-    'Exámenes': 'from-emerald-400 to-emerald-600',
-    Evento: 'from-amber-400 to-amber-600',
-    Tecnologia: 'from-purple-400 to-purple-600',
-    'Tecnología': 'from-purple-400 to-purple-600',
-    Becas: 'from-rose-400 to-rose-600',
-  }
-
-  const initialMap = {
-    Inscripciones: 'INS', Examenes: 'EXA', 'Exámenes': 'EXA',
-    Evento: 'EVT', Tecnologia: 'TEC', 'Tecnología': 'TEC', Becas: 'BEC',
-  }
-
-  const GRADIENT_BG = 'bg-gradient-to-br'
-
   return (
-    <div className="bg-slate-50">
-      <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
+    <div className="bg-slate-50 overflow-x-hidden">
+      <div
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${noticiaBg})` }}
+      >
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-slate-900/50">
           <h1 className="text-h1 mb-3">Noticias</h1>
           <p className="text-blue-200 text-lg">Mantenete informado sobre las novedades del instituto</p>
         </div>
@@ -93,7 +95,7 @@ export default function NoticiasPage() {
 
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 xl:col-span-3">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row gap-4 mb-5">
                 <div className="flex-1 relative">
@@ -114,9 +116,12 @@ export default function NoticiasPage() {
               <div className="flex flex-wrap gap-2">
                 {categorias.map((cat) => (
                   <button key={cat.nombre} onClick={() => handleCategoryFilter(cat.nombre)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                    className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                       selectedCategory === cat.nombre ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}>{cat.nombre} ({cat.count})</button>
+                    }`}>
+                    <IconoCategoria categoria={cat.nombre} className="w-3.5 h-3.5" selected={selectedCategory === cat.nombre} />
+                    {cat.nombre} ({cat.count})
+                  </button>
                 ))}
               </div>
             </div>
@@ -133,22 +138,23 @@ export default function NoticiasPage() {
               </div>
             ) : (
               <>
-                <p className="text-sm text-slate-500 mb-4">
-                  {noticiasFiltradas.length === 0
-                    ? 'No se encontraron noticias'
-                    : `Mostrando ${paginatedNoticias.length} de ${noticiasFiltradas.length} noticia${noticiasFiltradas.length !== 1 ? 's' : ''}`}
-                </p>
+                {noticiasFiltradas.length === 0 && (
+                  <p className="text-sm text-slate-500 mb-4">No se encontraron noticias</p>
+                )}
 
                 <div className="space-y-5">
                   {paginatedNoticias.map((n) => (
                     <Link key={n.id} to={`/noticias/${n.slug}`}
                       className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
-                        <div className={`sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center text-4xl ${GRADIENT_BG} ${gradientMap[n.categoria] || 'from-slate-400 to-slate-600'} text-white`}>
-                          {initialMap[n.categoria] || 'NOT'}
+                        <div className={`sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center text-4xl bg-gradient-to-br from-slate-400 to-slate-600 text-white`}>
+                          NOT
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700'}`}>{n.categoria}</span>
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700'}`}>
+                            <IconoCategoria categoria={n.categoria} className="w-3 h-3" />
+                            {n.categoria}
+                          </span>
                           <h3 className="text-lg font-bold text-slate-900 mb-1.5 line-clamp-2">{n.titulo}</h3>
                           <p className="text-sm text-slate-500 mb-3 line-clamp-2">{n.resumen}</p>
                           <div className="flex items-center justify-between text-xs text-slate-400">

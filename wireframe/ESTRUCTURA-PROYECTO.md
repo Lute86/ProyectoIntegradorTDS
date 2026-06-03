@@ -707,3 +707,4 @@ npx sequelize db:migrate:undo
 | Usuarios | ✅ CRUD | ❌ | ❌ |
 | Personalizar | ✅ Full | ❌ | ❌ |
 | Ajustes | ✅ Full | ❌ | ❌ |
+| Consulta | ✅ Full |✅ Full |✅ Full |
