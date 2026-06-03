@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import api from '../services/api';
 
 export interface SiteConfig {
   siteName: string;
@@ -66,7 +67,11 @@ const DEFAULT_CONFIG: SiteConfig = {
 
 interface SiteConfigState {
   config: SiteConfig;
+  isLoading: boolean;
+  error: string | null;
   isDirty: boolean;
+  fetchConfig: () => Promise<void>;
+  saveConfig: () => Promise<void>;
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
@@ -74,9 +79,31 @@ interface SiteConfigState {
   resetConfig: () => void;
 }
 
-export const useSiteConfigStore = create<SiteConfigState>((set) => ({
+export const useSiteConfigStore = create<SiteConfigState>((set, get) => ({
   config: DEFAULT_CONFIG,
+  isLoading: false,
+  error: null,
   isDirty: false,
+  fetchConfig: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.get('/config');
+      set({ config: response.data.data, isLoading: false });
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al cargar la configuracion';
+      set({ error: mensaje, isLoading: false });
+    }
+  },
+  saveConfig: async () => {
+    try {
+      const { config } = get();
+      await api.put('/config', config);
+      set({ isDirty: false });
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al guardar la configuracion';
+      set({ error: mensaje });
+    }
+  },
   updateConfig: (data) => {
     set((state) => ({
       config: { ...state.config, ...data },
