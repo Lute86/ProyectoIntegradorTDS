@@ -272,3 +272,42 @@ Se ejecuta en `PublicLayout.jsx` via `useThemeStyles()`.
 - `NoticiasPage.jsx`: filtro de categoria "Evento" eliminado de las pills
 
 Ver detalle completo en `PR-FE1Module1.md`
+
+---
+
+## Footer — datos dinamicos desde siteConfig (3 Junio 2026)
+
+**Motivo:** El Footer mostraba "Enlaces Rapidos" hardcodeados (Carreras, Noticias, Estudiantes, Administracion) y no cargaba datos reales de configuracion del sitio al navegar directo a una pagina (sin pasar por Home).
+
+**Archivos modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/components/layout/PublicLayout/Footer/Footer.jsx` | Eliminada seccion "Enlaces Rapidos" con links estaticos |
+| `Footer.jsx` | Agregado `useEffect(() => fetchConfig(), [fetchConfig])` para cargar datos reales del backend |
+| `Footer.jsx` | Agregada seccion "Redes Sociales" con Instagram/Facebook desde `config.socialLinks` |
+| `Footer.jsx` | Fallback "Sin redes configuradas" cuando no hay URLs configuradas |
+| `Footer.jsx` | Grid mantiene 3 columnas (Nombre + Contacto + Redes) |
+
+**Detalles tecnicos:**
+- `fetchConfig()` en el Footer asegura que los datos (siteName, contactEmail, redes sociales, etc.) se carguen incluso si el usuario ingresa por URL directa a cualquier pagina publica
+- Las redes sociales se renderizan condicionalmente: solo aparecen si tienen URL configurada en el admin (Ajustes Generales)
+- Sin dependencia de backend ni admin — solo cambios de frontend
+
+## Pendiente actualizado (3 Junio 2026)
+
+### Tests faltantes
+| Archivo | Prioridad |
+|---------|-----------|
+| `tests/pages/NoticiasPage.test.jsx` | Alta |
+| `tests/pages/NoticiaDetailPage.test.jsx` | Alta |
+| `tests/pages/EstudiantesPage.test.jsx` | Media |
+| `tests/components/Footer.test.jsx` | Media — verificar render condicional de redes sociales y llamado a fetchConfig |
+
+### Issues de implementacion
+- QuickLinks usa href="#" — todos los enlaces son placeholders sin destino real
+- adaptNoticia() duplicado en NoticiasPage.jsx y NoticiaDetailPage.jsx — extraer a util compartida
+- mockNoticias.categoria es string pero NewsSidebar espera objeto {nombre} — puede causar undefined en keys
+- Eventos y Testimonios no muestran datos reales por bug de auth en BE (evento.routes.js:9, testimonio.routes.js:9)
+- Falta saveConfig() en siteConfigStore (cambios de AjustesPage y PersonalizarPage solo quedan en memoria) — lo implementa FE Dev 2
+- **`siteConfigStore.fetchConfig()` linea 141 hardcodea `socialLinks: DEFAULT_CONFIG.socialLinks`** — nunca carga Instagram/Facebook desde el backend. Aunque el admin configure redes sociales, al recargar la pagina el Footer mostrara los defaults. Requiere que `fetchConfig()` mapee `data.social_links?.instagram` y `data.social_links?.facebook` desde la respuesta del backend.

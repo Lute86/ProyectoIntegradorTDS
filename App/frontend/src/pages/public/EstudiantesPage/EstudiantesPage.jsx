@@ -112,10 +112,10 @@ export default function EstudiantesPage() {
             <h2 className="text-2xl font-bold text-slate-900">Accesos Rapidos</h2>
             <p className="text-slate-500 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
               <div key={card.title}
-                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md"
+                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md w-64"
               >
                 <div className={`w-20 h-20 rounded-full ${card.bg} flex items-center justify-center text-3xl mx-auto mb-4`}>
                   {card.icon}
@@ -180,21 +180,22 @@ export default function EstudiantesPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-slate-900 text-white">
-                      <th className="text-left px-4 py-3 font-semibold">Materia</th>
-                      <th className="text-left px-4 py-3 font-semibold">Dia</th>
-                      <th className="text-left px-4 py-3 font-semibold">Horario</th>
-                      <th className="text-left px-4 py-3 font-semibold">Aula</th>
-                      <th className="text-left px-4 py-3 font-semibold">Profesor</th>
+                      <th className="text-center
+                       px-4 py-3 font-semibold">Materia</th>
+                      <th className="text-center px-4 py-3 font-semibold">Dia</th>
+                      <th className="text-center px-4 py-3 font-semibold">Horario</th>
+                      <th className="text-center px-4 py-3 font-semibold">Aula</th>
+                      <th className="text-center px-4 py-3 font-semibold">Profesor</th>
                     </tr>
                   </thead>
                   <tbody>
                     {horariosFiltrados.map((h, i) => (
                       <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                        <td className="px-4 py-3 font-semibold text-slate-900">{h.materia?.nombre || '—'}</td>
-                        <td className="px-4 py-3 text-slate-600">{h.dia}</td>
-                        <td className="px-4 py-3 text-slate-600">{h.horario}</td>
-                        <td className="px-4 py-3 text-slate-600">{h.aula}</td>
-                        <td className="px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
+                        <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.materia?.nombre || '—'}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
                       </tr>
                     ))}
                   </tbody>

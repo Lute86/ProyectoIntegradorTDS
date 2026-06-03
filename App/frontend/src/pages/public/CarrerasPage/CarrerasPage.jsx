@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import carreraImg from '../../../assets/fonts/carrera1.png'
+import CareerIcon from '../../../components/ui/CareerIcon/CareerIcon'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 
@@ -92,8 +93,8 @@ export default function CarrerasPage() {
                       className="h-24 flex items-center justify-center text-white"
                       style={{ backgroundColor: c.color || '#3B82F6' }}
                     >
-                      <div className="text-white/90 group-hover:scale-110 transition-transform duration-300">
-                        <IconAcademico />
+                      <div className="text-white/90 group-hover:scale-110 transition-transform duration-300 w-full h-full flex items-center justify-center">
+                        {c.icono ? <CareerIcon name={c.icono} className="w-10 h-10" /> : <IconAcademico />}
                       </div>
                     </div>
                     <div className="p-4">

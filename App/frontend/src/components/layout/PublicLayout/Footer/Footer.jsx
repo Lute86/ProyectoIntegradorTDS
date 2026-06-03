@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useSiteConfigStore } from '../../../../stores/siteConfigStore';
 
 export default function Footer() {
-  const { config } = useSiteConfigStore()
+  const { config, fetchConfig } = useSiteConfigStore()
+
+  useEffect(() => { fetchConfig() }, [fetchConfig])
 
   return (
     <footer className="mt-auto" style={{ backgroundColor: 'var(--clr-surface)' }}>
@@ -15,20 +17,33 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Enlaces Rapidos</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/carreras" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Carreras</Link></li>
-              <li><Link to="/noticias" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Noticias</Link></li>
-              <li><Link to="/estudiantes" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Estudiantes</Link></li>
-              <li><Link to="/login" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>Administracion</Link></li>
-            </ul>
-          </div>
-          <div>
             <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Contacto</h3>
             <ul className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
               <li>{config.contactEmail}</li>
               <li>{config.address}</li>
               <li>{config.contactPhone}</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Redes Sociales</h3>
+            <ul className="space-y-2 text-sm">
+              {config.socialLinks?.instagram && (
+                <li>
+                  <a href={config.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Instagram
+                  </a>
+                </li>
+              )}
+              {config.socialLinks?.facebook && (
+                <li>
+                  <a href={config.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Facebook
+                  </a>
+                </li>
+              )}
+              {(!config.socialLinks?.instagram && !config.socialLinks?.facebook) &&
+                <li style={{ color: 'rgba(255,255,255,0.5)' }}>Sin redes configuradas</li>
+              }
             </ul>
           </div>
         </div>
