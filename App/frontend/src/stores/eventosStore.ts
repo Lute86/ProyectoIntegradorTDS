@@ -3,12 +3,11 @@ import api from '../services/api';
 
 export interface Evento {
   id: number;
-  titulo: string;
-  fecha: string;
-  hora: string;
-  modalidad: string;
-  estado: string;
+  nombre: string;
   descripcion: string;
+  fecha: string;
+  ubicacion: string;
+  estado: string;
 }
 
 interface EventosState {

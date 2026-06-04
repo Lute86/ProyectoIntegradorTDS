@@ -2,16 +2,17 @@ import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Evento } from '../../mocks/eventos.mock';
+import { Evento } from '../../stores/eventosStore';
 import { useEventosStore } from '../../stores/eventosStore';
 import RichEditor from '../ui/RichEditor';
 
 const eventoEsquema = z.object({
-  titulo: z.string().min(5, 'El titulo debe tener al menos 5 caracteres'),
+  nombre: z.string().min(5, 'El nombre debe tener al menos 5 caracteres'),
   fecha: z.string().min(1, 'Seleccione una fecha'),
-  hora: z.string().min(1, 'Seleccione una hora'),
-  modalidad: z.enum(['presencial', 'virtual'], { required_error: 'Seleccione una modalidad' }),
-  estado: z.enum(['borrador', 'publicado'], { required_error: 'Seleccione un estado' }),
+  ubicacion: z.string().min(1, 'Ingrese la ubicacion o modalidad'),
+  estado: z.enum(['pendiente', 'confirmado', 'finalizado', 'cancelado'], {
+    required_error: 'Seleccione un estado',
+  }),
   descripcion: z.string().min(10, 'La descripcion debe tener al menos 10 caracteres'),
 });
 
@@ -36,10 +37,9 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
   } = useForm<EventoFormData>({
     resolver: zodResolver(eventoEsquema),
     defaultValues: {
-      titulo: '',
+      nombre: '',
       fecha: '',
-      hora: '',
-      modalidad: undefined,
+      ubicacion: '',
       estado: undefined,
       descripcion: '',
     },
@@ -48,15 +48,14 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
   useEffect(() => {
     if (eventoToEdit) {
       reset({
-        titulo: eventoToEdit.titulo,
+        nombre: eventoToEdit.nombre,
         fecha: eventoToEdit.fecha,
-        hora: eventoToEdit.hora,
-        modalidad: eventoToEdit.modalidad,
-        estado: eventoToEdit.estado,
+        ubicacion: eventoToEdit.ubicacion,
+        estado: eventoToEdit.estado as EventoFormData['estado'],
         descripcion: eventoToEdit.descripcion,
       });
     } else {
-      reset({ titulo: '', fecha: '', hora: '', modalidad: undefined, estado: undefined, descripcion: '' });
+      reset({ nombre: '', fecha: '', ubicacion: '', estado: undefined, descripcion: '' });
     }
   }, [eventoToEdit, reset]);
 
@@ -89,20 +88,20 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Campo: Titulo */}
+          {/* Campo: Nombre */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Titulo</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
             <input
-              {...register('titulo')}
+              {...register('nombre')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholder="Titulo del evento"
+              placeholder="Nombre del evento"
             />
-            {errors.titulo && (
-              <p className="text-xs text-red-500 mt-1">{errors.titulo.message}</p>
+            {errors.nombre && (
+              <p className="text-xs text-red-500 mt-1">{errors.nombre.message}</p>
             )}
           </div>
 
-          {/* Filas: Fecha + Hora */}
+          {/* Fecha + Ubicacion */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha</label>
@@ -115,54 +114,38 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
                 <p className="text-xs text-red-500 mt-1">{errors.fecha.message}</p>
               )}
             </div>
-
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Hora</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Ubicacion / Modalidad</label>
               <input
-                type="time"
-                {...register('hora')}
+                {...register('ubicacion')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                placeholder="Ej: Presencial, Virtual, Aula 3"
               />
-              {errors.hora && (
-                <p className="text-xs text-red-500 mt-1">{errors.hora.message}</p>
+              {errors.ubicacion && (
+                <p className="text-xs text-red-500 mt-1">{errors.ubicacion.message}</p>
               )}
             </div>
           </div>
 
-          {/* Filas: Modalidad + Estado */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Modalidad</label>
-              <select
-                {...register('modalidad')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
-              >
-                <option value="">Seleccione modalidad</option>
-                <option value="presencial">Presencial</option>
-                <option value="virtual">Virtual</option>
-              </select>
-              {errors.modalidad && (
-                <p className="text-xs text-red-500 mt-1">{errors.modalidad.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Estado</label>
-              <select
-                {...register('estado')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
-              >
-                <option value="">Seleccione un estado</option>
-                <option value="borrador">Borrador</option>
-                <option value="publicado">Publicado</option>
-              </select>
-              {errors.estado && (
-                <p className="text-xs text-red-500 mt-1">{errors.estado.message}</p>
-              )}
-            </div>
+          {/* Estado */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Estado</label>
+            <select
+              {...register('estado')}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
+            >
+              <option value="">Seleccione un estado</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="finalizado">Finalizado</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+            {errors.estado && (
+              <p className="text-xs text-red-500 mt-1">{errors.estado.message}</p>
+            )}
           </div>
 
-          {/* Campo: Descripcion (RichEditor con Controller) */}
+          {/* Descripcion (RichEditor) */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Descripcion</label>
             <Controller
@@ -181,7 +164,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
             )}
           </div>
 
-          {/* Botones de accion */}
+          {/* Botones */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
