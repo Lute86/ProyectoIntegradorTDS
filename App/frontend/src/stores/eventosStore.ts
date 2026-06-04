@@ -1,15 +1,24 @@
 import { create } from 'zustand';
-import { Evento, EVENTOS_MOCK } from '../mocks/eventos.mock';
-import { eventosService } from '../services/eventosService';
+import api from '../services/api';
+
+export interface Evento {
+  id: number;
+  titulo: string;
+  fecha: string;
+  hora: string;
+  modalidad: string;
+  estado: string;
+  descripcion: string;
+}
 
 interface EventosState {
   eventos: Evento[];
   isLoading: boolean;
   error: string | null;
   fetchEventos: () => Promise<void>;
-  addEvento: (evento: Omit<Evento, 'id'>) => void;
-  updateEvento: (id: number, data: Partial<Evento>) => void;
-  deleteEvento: (id: number) => void;
+  addEvento: (evento: Omit<Evento, 'id'>) => Promise<void>;
+  updateEvento: (id: number, data: Partial<Evento>) => Promise<void>;
+  deleteEvento: (id: number) => Promise<void>;
 }
 
 export const useEventosStore = create<EventosState>((set) => ({
@@ -19,35 +28,40 @@ export const useEventosStore = create<EventosState>((set) => ({
   fetchEventos: async () => {
     set({ isLoading: true, error: null });
     try {
-      const data = await eventosService.getEventos({ estado: 'confirmado' })
-      if (data && data.length > 0) {
-        set({ eventos: data, isLoading: false })
-      } else {
-        set({ eventos: EVENTOS_MOCK.filter((e) => e.estado === 'publicado'), isLoading: false })
-      }
-    } catch {
-      set({ eventos: EVENTOS_MOCK.filter((e) => e.estado === 'publicado'), isLoading: false });
+      const response = await api.get('/eventos');
+      set({ eventos: response.data.data, isLoading: false });
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al cargar los eventos';
+      set({ error: mensaje, isLoading: false });
     }
   },
-  addEvento: (nuevoEvento) => {
-    set((state) => ({
-      eventos: [
-        ...state.eventos,
-        {
-          ...nuevoEvento,
-          id: Math.max(...state.eventos.map((e) => e.id), 0) + 1,
-        },
-      ],
-    }));
+  addEvento: async (nuevoEvento) => {
+    try {
+      const response = await api.post('/eventos', nuevoEvento);
+      set((state) => ({ eventos: [...state.eventos, response.data.data] }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al crear el evento';
+      set({ error: mensaje });
+    }
   },
-  updateEvento: (id, data) => {
-    set((state) => ({
-      eventos: state.eventos.map((e) => (e.id === id ? { ...e, ...data } : e)),
-    }));
+  updateEvento: async (id, data) => {
+    try {
+      const response = await api.put(`/eventos/${id}`, data);
+      set((state) => ({
+        eventos: state.eventos.map((e) => (e.id === id ? { ...e, ...response.data.data } : e)),
+      }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al actualizar el evento';
+      set({ error: mensaje });
+    }
   },
-  deleteEvento: (id) => {
-    set((state) => ({
-      eventos: state.eventos.filter((e) => e.id !== id),
-    }));
+  deleteEvento: async (id) => {
+    try {
+      await api.delete(`/eventos/${id}`);
+      set((state) => ({ eventos: state.eventos.filter((e) => e.id !== id) }));
+    } catch (err: any) {
+      const mensaje = err.response?.data?.message || 'Error al eliminar el evento';
+      set({ error: mensaje });
+    }
   },
 }));
