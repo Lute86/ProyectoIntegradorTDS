@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { DataTable, Column } from '../../../components/ui/DataTable';
-import { Evento } from '../../../mocks/eventos.mock';
-import { useEventosStore } from '../../../stores/eventosStore';
+import { Evento, useEventosStore } from '../../../stores/eventosStore';
 import EventoFormModal from '../../../components/admin/EventoFormModal';
 
 const EventosPage = () => {
-  const { eventos, isLoading, error, fetchEventos } = useEventosStore();
+  const { eventos, isLoading, error, fetchEventos, deleteEvento } = useEventosStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventoToEdit, setEventoToEdit] = useState<Evento | null>(null);
 
@@ -26,6 +25,12 @@ const EventosPage = () => {
     setEventoToEdit(null);
   };
 
+  const handleEliminar = async (id: number) => {
+    if (window.confirm('Confirma que desea eliminar este evento?')) {
+      await deleteEvento(id);
+    }
+  };
+
   const columns: Column<Evento>[] = [
     {
       header: 'ID',
@@ -33,59 +38,52 @@ const EventosPage = () => {
       className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
     },
     {
-      header: 'Titulo',
+      header: 'Nombre',
       accessor: (e) => (
-        <div className="flex flex-col">
-          <span className="font-semibold text-gray-800 text-sm">{e.titulo}</span>
-        </div>
+        <span className="font-semibold text-gray-800 text-sm">{e.nombre}</span>
       ),
     },
     {
       header: 'Fecha',
-      accessor: (e) => (
-        <span className="text-sm">{e.fecha} - {e.hora}</span>
-      ),
+      accessor: (e) => <span className="text-sm">{e.fecha}</span>,
     },
     {
-      header: 'Modalidad',
+      header: 'Ubicacion',
+      accessor: (e) => <span className="text-sm text-gray-600">{e.ubicacion}</span>,
+    },
+    {
+      header: 'Estado',
       accessor: (e) => {
-        const esPresencial = e.modalidad === 'presencial';
+        const estilos: Record<string, string> = {
+          pendiente: 'bg-amber-50 text-amber-600 border-amber-100',
+          confirmado: 'bg-green-50 text-green-600 border-green-100',
+          finalizado: 'bg-blue-50 text-blue-600 border-blue-100',
+          cancelado: 'bg-red-50 text-red-600 border-red-100',
+        };
         return (
-          <span
-            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-              esPresencial
-                ? 'bg-blue-50 text-blue-600 border-blue-100'
-                : 'bg-violet-50 text-violet-600 border-violet-100'
-            }`}
-          >
-            {e.modalidad}
+          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${estilos[e.estado] || 'bg-gray-50 text-gray-600'}`}>
+            {e.estado}
           </span>
         );
       },
     },
     {
-      header: 'Estado',
-      accessor: (e) => (
-        <span
-          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-            e.estado === 'publicado'
-              ? 'bg-green-50 text-green-600 border-green-100'
-              : 'bg-amber-50 text-amber-600 border-amber-100'
-          }`}
-        >
-          {e.estado}
-        </span>
-      ),
-    },
-    {
       header: 'Acciones',
       accessor: (e) => (
-        <button
-          onClick={() => abrirModalEditar(e)}
-          className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-        >
-          Editar
-        </button>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => abrirModalEditar(e)}
+            className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => handleEliminar(e.id)}
+            className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+          >
+            Borrar
+          </button>
+        </div>
       ),
       className: 'text-right',
     },
@@ -93,7 +91,6 @@ const EventosPage = () => {
 
   return (
     <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
-      {/* Header de la Pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Eventos</h1>
@@ -109,7 +106,6 @@ const EventosPage = () => {
         </button>
       </div>
 
-      {/* Contenedor de la Tabla */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
