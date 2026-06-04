@@ -10,20 +10,18 @@ const SECTION_BLOCKS: Record<string, { alto: string; color: 'primary' | 'seconda
 
 const PreviewPanel = () => {
   const { config } = useSiteConfigStore();
+  const esBoxed = config.layout === 'boxed';
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 space-y-3 sticky top-8">
-      {/* Encabezado del panel */}
       <div className="text-center pb-3 border-b border-gray-100">
         <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Vista Previa</p>
       </div>
 
-      {/* Simulacion de navegador */}
       <div
         className="rounded-lg border border-gray-200 overflow-hidden"
         style={{ fontFamily: config.typography.bodyFont }}
       >
-        {/* Barra de direcciones simulada */}
         <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 border-b border-gray-200">
           <div className="flex gap-1">
             <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -35,9 +33,8 @@ const PreviewPanel = () => {
           </div>
         </div>
 
-        {/* Contenido de la mini-pagina */}
         <div
-          className="space-y-1.5 p-3"
+          className={esBoxed ? 'layout-boxed space-y-1.5 p-3' : 'space-y-1.5 p-3'}
           style={{ backgroundColor: config.colors.background }}
         >
           {config.sections
@@ -66,7 +63,6 @@ const PreviewPanel = () => {
               );
             })}
 
-          {/* Pie de pagina simulado */}
           <div
             className="h-6 rounded flex items-center justify-center text-[8px] mt-2"
             style={{ backgroundColor: config.colors.text, color: config.colors.background }}

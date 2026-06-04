@@ -80,7 +80,7 @@ export default function AdminSidebar() {
                       clsx(
                         'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
                         isActive
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[var(--color-primary)] text-white'
                           : 'text-gray-300 hover:text-white hover:bg-slate-800'
                       )
                     }

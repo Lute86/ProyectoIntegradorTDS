@@ -52,7 +52,7 @@ export default function AdminTopbar() {
         </button>
 
         <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-          <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+          <div className="w-9 h-9 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white text-sm font-bold">
             {initials}
           </div>
           <div className="hidden sm:block">
