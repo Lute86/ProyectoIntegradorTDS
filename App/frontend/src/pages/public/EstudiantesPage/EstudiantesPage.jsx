@@ -1,4 +1,9 @@
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import useCarrerasStore from '../../../stores/carrerasStore'
+import { carrerasService } from '../../../services/carrerasService'
+import { horariosService } from '../../../services/horariosService'
 import QuickLinks from './QuickLinks'
+import estudiantesBg from '../../../assets/fonts/estudiantes1.png'
 
 const portalCards = [
   {
@@ -23,20 +28,79 @@ const portalCards = [
   },
 ]
 
-const horarios = [
-  { materia: 'Programacion I', dia: 'Lunes', horario: '18:00 - 20:00', aula: 'Aula 5', profesor: 'Prof. Martinez' },
-  { materia: 'Matematica', dia: 'Lunes', horario: '20:00 - 22:00', aula: 'Aula 5', profesor: 'Prof. Rodriguez' },
-  { materia: 'Programacion II', dia: 'Miercoles', horario: '18:00 - 20:00', aula: 'Lab. Computacion', profesor: 'Prof. Garcia' },
-  { materia: 'Bases de Datos I', dia: 'Miercoles', horario: '20:00 - 22:00', aula: 'Lab. Computacion', profesor: 'Prof. Lopez' },
-  { materia: 'Ingles Tecnico I', dia: 'Viernes', horario: '18:00 - 20:00', aula: 'Aula 3', profesor: 'Prof. Smith' },
-  { materia: 'Logica Computacional', dia: 'Viernes', horario: '20:00 - 22:00', aula: 'Aula 3', profesor: 'Prof. Fernandez' },
-]
-
 export default function EstudiantesPage() {
+  const { carreras, fetchCarreras } = useCarrerasStore()
+  const [allHorarios, setAllHorarios] = useState([])
+  const [loadingHorarios, setLoadingHorarios] = useState(false)
+  const [carreraId, setCarreraId] = useState('')
+  const [comision, setComision] = useState('')
+  const [materiasDeCarrera, setMateriasDeCarrera] = useState([])
+  const [loadingCarrera, setLoadingCarrera] = useState(false)
+
+  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+
+  useEffect(() => {
+    if (!carreraId) { setMateriasDeCarrera([]); return }
+    const c = carreras.find((c) => String(c.id) === carreraId)
+    if (!c?.slug) return
+    setLoadingCarrera(true)
+    carrerasService.getBySlug(c.slug).then((res) => {
+      const data = res.data?.data || res.data
+      setMateriasDeCarrera(data?.materias || [])
+    }).catch(() => setMateriasDeCarrera([])).finally(() => setLoadingCarrera(false))
+  }, [carreraId, carreras])
+
+  const fetchTodosLosHorarios = useCallback(async () => {
+    if (allHorarios.length > 0) return
+    setLoadingHorarios(true)
+    try {
+      const res = await horariosService.getAll()
+      const data = res.data?.data || res.data || []
+      setAllHorarios(data)
+    } catch {
+      setAllHorarios([])
+    } finally {
+      setLoadingHorarios(false)
+    }
+  }, [allHorarios.length])
+
+  useEffect(() => { fetchTodosLosHorarios() }, [fetchTodosLosHorarios])
+
+  const materiaIds = useMemo(() => {
+    return new Set(materiasDeCarrera.map((m) => m.id))
+  }, [materiasDeCarrera])
+
+  const horariosDeCarrera = useMemo(() => {
+    if (materiaIds.size === 0) return []
+    return allHorarios.filter((h) => materiaIds.has(h.materia_id))
+  }, [allHorarios, materiaIds])
+
+  const comisiones = useMemo(() => {
+    const set = new Set(horariosDeCarrera.map((h) => h.comision).filter(Boolean))
+    return Array.from(set).sort()
+  }, [horariosDeCarrera])
+
+  useEffect(() => { setComision('') }, [carreraId])
+
+  const horariosFiltrados = useMemo(() => {
+    if (!comision) return []
+    return horariosDeCarrera
+      .filter((h) => h.comision === comision)
+      .sort((a, b) => {
+        const nomA = a.materia?.nombre || ''
+        const nomB = b.materia?.nombre || ''
+        if (nomA !== nomB) return nomA.localeCompare(nomB)
+        return (a.dia || '').localeCompare(b.dia || '')
+      })
+  }, [horariosDeCarrera, comision])
+
   return (
     <div className="bg-slate-50">
-      <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center">
+      <div
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${estudiantesBg})` }}
+      >
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-slate-900/50">
           <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
           <p className="text-blue-200 text-lg">Todo lo que necesitas en un solo lugar</p>
         </div>
@@ -48,10 +112,10 @@ export default function EstudiantesPage() {
             <h2 className="text-2xl font-bold text-slate-900">Accesos Rapidos</h2>
             <p className="text-slate-500 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
               <div key={card.title}
-                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md"
+                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md w-64"
               >
                 <div className={`w-20 h-20 rounded-full ${card.bg} flex items-center justify-center text-3xl mx-auto mb-4`}>
                   {card.icon}
@@ -70,34 +134,85 @@ export default function EstudiantesPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">
-            Horarios - Primer Cuatrimestre 2025
+            Horarios - Primer Cuatrimestre
           </h2>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-slate-900 text-white">
-                    <th className="text-left px-4 py-3 font-semibold">Materia</th>
-                    <th className="text-left px-4 py-3 font-semibold">Dia</th>
-                    <th className="text-left px-4 py-3 font-semibold">Horario</th>
-                    <th className="text-left px-4 py-3 font-semibold">Aula</th>
-                    <th className="text-left px-4 py-3 font-semibold">Profesor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {horarios.map((h, i) => (
-                    <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-3 font-semibold text-slate-900">{h.materia}</td>
-                      <td className="px-4 py-3 text-slate-600">{h.dia}</td>
-                      <td className="px-4 py-3 text-slate-600">{h.horario}</td>
-                      <td className="px-4 py-3 text-slate-600">{h.aula}</td>
-                      <td className="px-4 py-3 text-slate-600">{h.profesor}</td>
-                    </tr>
+
+          <div className="max-w-lg mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Carrera</label>
+                <select value={carreraId} onChange={(e) => setCarreraId(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                >
+                  <option value="">Seleccionar</option>
+                  {carreras.map((c) => (
+                    <option key={c.id} value={c.id}>{c.nombre}</option>
                   ))}
-                </tbody>
-              </table>
+                </select>
+              </div>
+
+              <div className="flex-1">
+                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
+                <select value={comision} onChange={(e) => setComision(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={comisiones.length === 0 || loadingCarrera}
+                >
+                  <option value="">Seleccionar</option>
+                  {comisiones.map((c) => (
+                    <option key={c} value={c}>Comision {c}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
+
+          {loadingHorarios ? (
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden p-8">
+              <div className="space-y-3 animate-pulse">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-4 bg-slate-200 rounded w-full" />
+                ))}
+              </div>
+            </div>
+          ) : comision && horariosFiltrados.length > 0 ? (
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-slate-900 text-white">
+                      <th className="text-center
+                       px-4 py-3 font-semibold">Materia</th>
+                      <th className="text-center px-4 py-3 font-semibold">Dia</th>
+                      <th className="text-center px-4 py-3 font-semibold">Horario</th>
+                      <th className="text-center px-4 py-3 font-semibold">Aula</th>
+                      <th className="text-center px-4 py-3 font-semibold">Profesor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {horariosFiltrados.map((h, i) => (
+                      <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.materia?.nombre || '—'}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
+                        <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-slate-400 text-sm">
+              {carreraId && loadingCarrera
+                ? 'Cargando carrera...'
+                : carreraId && comisiones.length === 0
+                  ? 'No hay horarios disponibles para esta carrera.'
+                  : carreraId && !comision
+                    ? 'Selecciona una comision para ver los horarios.'
+                    : 'Selecciona una carrera para comenzar.'}
+            </div>
+          )}
         </section>
 
         <section className="pb-12">

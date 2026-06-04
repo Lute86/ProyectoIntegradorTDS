@@ -54,7 +54,7 @@ export default function CareerCarousel({ carreras }) {
 
           <div className="overflow-hidden">
             <div className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
+              style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {carreras.map((c) => (
                 <div key={c.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>

@@ -76,21 +76,58 @@
 
 #### Módulo 8: Consultas / Contactos
 **Tareas:**
-- [ ] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
-- [ ] Crear migración de consultas
-- [ ] Controlador de Consultas:
+- [x] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
+- [x] Crear migración de consultas
+- [x] Controlador/Servicios de Consultas:
   - POST /api/consultas (público, con rate limit)
   - GET /api/consultas (auth, listado con paginación y filtros)
   - GET /api/consultas/:id (auth, detalle)
   - PUT /api/consultas/:id (auth, responder/marcar como leída)
   - DELETE /api/consultas/:id (admin, eliminar)
-- [ ] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
-- [ ] Validadores de Consulta (nombre, email, asunto, mensaje)
-- [ ] Tests de integración para todos los endpoints
-- [ ] Registrar rutas en src/routes/index.js
+- [x] Rate limit específico para POST /api/consultas (ej: 5/min por IP)
+- [x] Validadores de Consulta (nombre, email, asunto, mensaje)
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 6
+
+#### Módulo 9: Horarios
+**Tareas:**
+- [x] Implementar modelo Horario (id, materia_id, dia, horario, aula, profesor, activo)
+- [x] Crear migración de horarios
+- [x] Seeder de horarios de ejemplo
+- [x] Controlador de Horario (CRUD, filtrar por materia_id/dia)
+- [x] Rutas de Horario (GET/POST/PUT/DELETE /api/horarios)
+- [x] Validadores de Horario
+- [x] Tests de integración para todos los endpoints
+- [x] Registrar rutas en src/routes/index.js
+
+**Dependencias:** Modelo Materia (Módulo BE 2)
+**Contraparte FE:** Módulo FE 2
+
+#### Módulo 10: Unit Tests — Utils
+- [x] Mocks compartidos de Sequelize
+- [x] Tests de AppError
+- [x] Tests de token
+- [x] Tests de asyncHandler
+- [x] Tests de dbErrorHandler
+- [x] Tests de response
+
+#### Módulo 11: Unit Tests — Services
+- [x] Tests de auth.services
+- [x] Tests de user.services
+- [x] Tests de carrera.services
+- [x] Tests de materia.services
+- [x] Tests de noticia.services
+- [x] Tests de categoria.services
+- [x] Tests de evento.services
+- [x] Tests de testimonio.services
+- [x] Tests de horario.services
+- [x] Tests de consulta.services
+- [x] Tests de imagen.services
+- [x] Tests de stats.services
+- [x] Tests de siteconfig.services
 
 ---
 
@@ -115,17 +152,17 @@
 
 #### Módulo 5: Eventos y Testimonios
 **Tareas:**
-- [ ] Implementar modelo Evento (id, nombre, descripcion, fecha, ubicacion, estado)
-- [ ] Implementar modelo Testimonio (id, autor_nombre, autor_carrera, texto, visible)
-- [ ] Crear migración de eventos
-- [ ] Crear migración de testimonios
-- [ ] Seeder de eventos de ejemplo
-- [ ] Seeder de testimonios de ejemplo
-- [ ] Controlador de Evento (CRUD, filtrar por estado/fecha)
-- [ ] Controlador de Testimonio (CRUD, toggle visibilidad)
-- [ ] Rutas de Evento (GET/POST/PUT/DELETE /api/eventos)
-- [ ] Rutas de Testimonio (GET/POST/PUT/DELETE /api/testimonios)
-- [ ] Validadores de Evento y Testimonio
+- [x] Implementar modelo Evento (id, nombre, descripcion, fecha, ubicacion, estado)
+- [x] Implementar modelo Testimonio (id, autor_nombre, autor_carrera, texto, visible)
+- [x] Crear migración de eventos
+- [x] Crear migración de testimonios
+- [x] Seeder de eventos de ejemplo
+- [x] Seeder de testimonios de ejemplo
+- [x] Controlador de Evento (CRUD, filtrar por estado/fecha)
+- [x] Controlador de Testimonio (CRUD, toggle visibilidad)
+- [x] Rutas de Evento (GET/POST/PUT/DELETE /api/eventos)
+- [x] Rutas de Testimonio (GET/POST/PUT/DELETE /api/testimonios)
+- [x] Validadores de Evento y Testimonio
 
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 4
@@ -182,6 +219,13 @@
 - [x] Construir ContactoPage, ContactForm
 - [x] Construir EstudiantesPage, QuickLinks
 - [x] Implementar noticiasStore
+- [x] Agregar imagen de fondo `carrera1.png` en portada de CarrerasPage
+- [x] Agregar imagen de fondo `noticia1.png` en portada y cards de NoticiasPage
+- [x] Agregar imagen de fondo `estudiantes1.png` en portada de EstudiantesPage
+- [x] Agregar imagen de fondo `contac.png` en portada de ContactoPage
+- [x] Crear EventosSection + EventosCard (carrusel en Home)
+- [x] Crear eventosService.js con fallback a mock
+- [x] Conectar EventosSection en HomePage
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4

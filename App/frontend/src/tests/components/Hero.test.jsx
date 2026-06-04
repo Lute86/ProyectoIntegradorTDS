@@ -19,6 +19,6 @@ describe('Hero', () => {
   it('los botones linkean a las rutas correctas', () => {
     render(<MemoryRouter><Hero /></MemoryRouter>)
     expect(screen.getByText('Ver Carreras').closest('a')).toHaveAttribute('href', '/carreras')
-    expect(screen.getByText('Aula Virtual').closest('a')).toHaveAttribute('href', '/estudiantes')
+    expect(screen.getByText('Aula Virtual').closest('a')).toHaveAttribute('href', 'https://aulasvirtuales.bue.edu.ar/')
   })
 })

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import api from '../services/api';
+import { siteConfigService } from '../services/siteConfigService';
 
 export interface SiteConfig {
   siteName: string;
@@ -13,6 +13,7 @@ export interface SiteConfig {
     primary: string;
     secondary: string;
     accent: string;
+    surface: string;
     background: string;
     text: string;
   };
@@ -23,7 +24,7 @@ export interface SiteConfig {
   };
   layout: 'boxed' | 'full-width';
   themePreset: string;
-  sections: { id: string; visible: boolean }[];
+  sections: { id: string; visible: boolean; order: number }[];
   socialLinks: {
     instagram: string;
     facebook: string;
@@ -42,6 +43,7 @@ const DEFAULT_CONFIG: SiteConfig = {
     primary: '#2563eb',
     secondary: '#10b981',
     accent: '#f59e0b',
+    surface: '#1e293b',
     background: '#ffffff',
     text: '#111827',
   },
@@ -53,11 +55,15 @@ const DEFAULT_CONFIG: SiteConfig = {
   layout: 'full-width',
   themePreset: 'moderno',
   sections: [
-    { id: 'hero', visible: true },
-    { id: 'carreras', visible: true },
-    { id: 'noticias', visible: true },
-    { id: 'testimonios', visible: true },
-    { id: 'contacto', visible: true },
+    { id: 'hero', visible: true, order: 1 },
+    { id: 'statistics', visible: true, order: 2 },
+    { id: 'careers', visible: true, order: 3 },
+    { id: 'news', visible: true, order: 4 },
+    { id: 'events', visible: true, order: 5 },
+    { id: 'testimonials', visible: true, order: 6 },
+    { id: 'gallery', visible: true, order: 7 },
+    { id: 'students', visible: true, order: 8 },
+    { id: 'contact', visible: true, order: 9 },
   ],
   socialLinks: {
     instagram: 'https://instagram.com/ifts29',
@@ -68,10 +74,8 @@ const DEFAULT_CONFIG: SiteConfig = {
 interface SiteConfigState {
   config: SiteConfig;
   isLoading: boolean;
-  error: string | null;
   isDirty: boolean;
   fetchConfig: () => Promise<void>;
-  saveConfig: () => Promise<void>;
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
@@ -79,29 +83,68 @@ interface SiteConfigState {
   resetConfig: () => void;
 }
 
-export const useSiteConfigStore = create<SiteConfigState>((set, get) => ({
+export const useSiteConfigStore = create<SiteConfigState>((set) => ({
   config: DEFAULT_CONFIG,
   isLoading: false,
-  error: null,
   isDirty: false,
   fetchConfig: async () => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true })
     try {
-      const response = await api.get('/config');
-      set({ config: response.data.data, isLoading: false });
-    } catch (err: any) {
-      const mensaje = err.response?.data?.message || 'Error al cargar la configuracion';
-      set({ error: mensaje, isLoading: false });
-    }
-  },
-  saveConfig: async () => {
-    try {
-      const { config } = get();
-      await api.put('/config', config);
-      set({ isDirty: false });
-    } catch (err: any) {
-      const mensaje = err.response?.data?.message || 'Error al guardar la configuracion';
-      set({ error: mensaje });
+      const res = await siteConfigService.getConfig()
+      const data = res.data?.data || res.data
+      if (data) {
+        set({
+          config: {
+            siteName: data.site_name || DEFAULT_CONFIG.siteName,
+            siteSubtitle: data.site_subtitle || DEFAULT_CONFIG.siteSubtitle,
+            contactEmail: data.contact_email || DEFAULT_CONFIG.contactEmail,
+            contactPhone: data.contact_phone || DEFAULT_CONFIG.contactPhone,
+            address: data.address || DEFAULT_CONFIG.address,
+            seoDescription: data.seo_description || DEFAULT_CONFIG.seoDescription,
+            footerText: data.footer_text || DEFAULT_CONFIG.footerText,
+            colors: {
+              primary: data.colors?.primary || DEFAULT_CONFIG.colors.primary,
+              secondary: data.colors?.secondary || DEFAULT_CONFIG.colors.secondary,
+              accent: data.colors?.accent || DEFAULT_CONFIG.colors.accent,
+              surface: data.colors?.surface || DEFAULT_CONFIG.colors.surface,
+              background: data.colors?.background || DEFAULT_CONFIG.colors.background,
+              text: data.colors?.text || DEFAULT_CONFIG.colors.text,
+            },
+            typography: {
+              headingFont: DEFAULT_CONFIG.typography.headingFont,
+              bodyFont: DEFAULT_CONFIG.typography.bodyFont,
+              baseSize: DEFAULT_CONFIG.typography.baseSize,
+            },
+            layout: 'full-width',
+            //
+            themePreset: data.theme_preset || DEFAULT_CONFIG.themePreset,
+        //    sections: data.sections?.length
+        //      ? data.sections.map((s) => ({
+        //          id: s.id,
+        //          visible: s.visible !== undefined ? s.visible : true,
+        //          order: s.order !== undefined ? s.order : 0,
+        //        }))
+        //      : DEFAULT_CONFIG.sections,
+            sections: data.sections?.length
+              ? [
+              ...data.sections.map((s) => ({
+                id: s.id,
+                visible: s.visible !== undefined ? s.visible : true,
+                order: s.order !== undefined ? s.order : 0,
+              })),
+              ...DEFAULT_CONFIG.sections.filter(
+                (d) => !data.sections.some((s) => s.id === d.id)
+              ),
+            ]
+          : DEFAULT_CONFIG.sections, 
+        // 
+            socialLinks: DEFAULT_CONFIG.socialLinks,
+          },
+          isLoading: false,
+        })
+      }
+    } catch {
+      set({ isLoading: false })
     }
   },
   updateConfig: (data) => {

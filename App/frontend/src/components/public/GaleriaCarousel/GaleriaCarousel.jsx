@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { GALERIA_MOCK } from '../../../mocks/galeria.mock'
+import { useGaleriaStore } from '../../../stores/galeriaStore';
 
 const badgeColors = {
   Instalaciones: 'bg-blue-100 text-blue-700',
@@ -8,9 +8,11 @@ const badgeColors = {
 }
 
 export default function GaleriaCarousel() {
-  const imagenes = GALERIA_MOCK
+  const { imagenes, fetchImagenes } = useGaleriaStore()
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
+
+  useEffect(() => { fetchImagenes() }, [fetchImagenes])
 
   useEffect(() => {
     const updateVisible = () => {
@@ -59,7 +61,7 @@ export default function GaleriaCarousel() {
 
           <div className="overflow-hidden rounded-xl">
             <div className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${current * (100 / visible)}%)` }}>
+              style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {imagenes.map((img) => (
                 <div key={img.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>

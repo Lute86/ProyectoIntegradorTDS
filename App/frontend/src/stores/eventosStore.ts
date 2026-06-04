@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Evento, EVENTOS_MOCK } from '../mocks/eventos.mock';
+import { eventosService } from '../services/eventosService';
 
 interface EventosState {
   eventos: Evento[];
@@ -18,10 +19,14 @@ export const useEventosStore = create<EventosState>((set) => ({
   fetchEventos: async () => {
     set({ isLoading: true, error: null });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      set({ eventos: EVENTOS_MOCK, isLoading: false });
+      const data = await eventosService.getEventos({ estado: 'confirmado' })
+      if (data && data.length > 0) {
+        set({ eventos: data, isLoading: false })
+      } else {
+        set({ eventos: EVENTOS_MOCK.filter((e) => e.estado === 'publicado'), isLoading: false })
+      }
     } catch {
-      set({ error: 'Error al cargar los eventos', isLoading: false });
+      set({ eventos: EVENTOS_MOCK.filter((e) => e.estado === 'publicado'), isLoading: false });
     }
   },
   addEvento: (nuevoEvento) => {

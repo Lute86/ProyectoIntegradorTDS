@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
+import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 
 const gradientMap = {
   Inscripciones: 'from-blue-400 to-blue-600',
@@ -92,7 +93,10 @@ export default function NoticiaDetailPage() {
     <div className="bg-slate-50">
       <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
         <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
-          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>{noticia.categoria}</span>
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>
+            <IconoCategoria categoria={noticia.categoria} className="w-4 h-4" />
+            {noticia.categoria}
+          </span>
           <div className="flex items-center gap-4 text-blue-200 text-sm">
             <span>Por {noticia.autor}</span>
             <span className="w-1 h-1 bg-blue-300 rounded-full" />
