@@ -5,8 +5,12 @@ import { handleDbErrors } from '../utils/dbErrorHandler.js';
 export const getAll = handleDbErrors(async (filters = {}) => {
   const where = {};
 
-  if (filters.materia_id) {
-    where.materia_id = filters.materia_id;
+  if (filters.carrera_materia_id) {
+    where.carrera_materia_id = filters.carrera_materia_id;
+  }
+
+  if (filters.carrera_id) {
+    where['$carreraMateria.carrera_id$'] = filters.carrera_id;
   }
 
   if (filters.comision) {
@@ -21,9 +25,21 @@ export const getAll = handleDbErrors(async (filters = {}) => {
     where,
     include: [
       {
-        model: models.Materia,
-        as: 'materia',
-        attributes: ['id', 'nombre', 'carrera_id'],
+        model: models.CarreraMateria,
+        as: 'carreraMateria',
+        attributes: ['id', 'cuatrimestre', 'carga_horaria_semanal'],
+        include: [
+          {
+            model: models.Materia,
+            as: 'materia',
+            attributes: ['id', 'nombre'],
+          },
+          {
+            model: models.Carrera,
+            as: 'carrera',
+            attributes: ['id', 'nombre', 'slug'],
+          },
+        ],
       },
     ],
     order: [['dia', 'ASC'], ['horario', 'ASC']],
@@ -36,9 +52,21 @@ export const getById = handleDbErrors(async (id) => {
   const horario = await models.Horario.findByPk(id, {
     include: [
       {
-        model: models.Materia,
-        as: 'materia',
-        attributes: ['id', 'nombre', 'carrera_id'],
+        model: models.CarreraMateria,
+        as: 'carreraMateria',
+        attributes: ['id', 'cuatrimestre', 'carga_horaria_semanal'],
+        include: [
+          {
+            model: models.Materia,
+            as: 'materia',
+            attributes: ['id', 'nombre'],
+          },
+          {
+            model: models.Carrera,
+            as: 'carrera',
+            attributes: ['id', 'nombre', 'slug'],
+          },
+        ],
       },
     ],
   });
@@ -51,9 +79,9 @@ export const getById = handleDbErrors(async (id) => {
 });
 
 export const create = handleDbErrors(async (data) => {
-  const materia = await models.Materia.findByPk(data.materia_id);
-  if (!materia) {
-    throw new ConflictError('La materia especificada no existe');
+  const carreraMateria = await models.CarreraMateria.findByPk(data.carrera_materia_id);
+  if (!carreraMateria) {
+    throw new ConflictError('La asignación carrera-materia especificada no existe');
   }
 
   const horario = await models.Horario.create(data);
@@ -67,10 +95,10 @@ export const update = handleDbErrors(async (id, data) => {
     throw new NotFoundError('Horario no encontrado');
   }
 
-  if (data.materia_id && data.materia_id !== horario.materia_id) {
-    const materia = await models.Materia.findByPk(data.materia_id);
-    if (!materia) {
-      throw new ConflictError('La materia especificada no existe');
+  if (data.carrera_materia_id && data.carrera_materia_id !== horario.carrera_materia_id) {
+    const carreraMateria = await models.CarreraMateria.findByPk(data.carrera_materia_id);
+    if (!carreraMateria) {
+      throw new ConflictError('La asignación carrera-materia especificada no existe');
     }
   }
 

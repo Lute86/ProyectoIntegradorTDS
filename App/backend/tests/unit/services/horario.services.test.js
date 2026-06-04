@@ -4,7 +4,9 @@ import { createModelMock, createInstanceMock } from '../mocks/models.js';
 jest.unstable_mockModule('../../../src/models/index.js', () => ({
   default: {
     Horario: createModelMock(),
+    CarreraMateria: createModelMock(),
     Materia: createModelMock(),
+    Carrera: createModelMock(),
   },
 }));
 
@@ -17,9 +19,9 @@ describe('horario.services', () => {
   });
 
   describe('getAll', () => {
-    it('deberia retornar todos los horarios con materia', async () => {
+    it('deberia retornar todos los horarios con carreraMateria', async () => {
       models.Horario.findAll.mockResolvedValue([
-        createInstanceMock({ id: 1, materia_id: 1, dia: 'Lunes' }),
+        createInstanceMock({ id: 1, carrera_materia_id: 1, dia: 'Lunes' }),
       ]);
 
       const result = await getAll();
@@ -28,19 +30,19 @@ describe('horario.services', () => {
       expect(models.Horario.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
           include: expect.arrayContaining([
-            expect.objectContaining({ as: 'materia' }),
+            expect.objectContaining({ as: 'carreraMateria' }),
           ]),
         })
       );
     });
 
-    it('deberia filtrar por materia_id', async () => {
+    it('deberia filtrar por carrera_materia_id', async () => {
       models.Horario.findAll.mockResolvedValue([]);
 
-      await getAll({ materia_id: 1 });
+      await getAll({ carrera_materia_id: 1 });
 
       expect(models.Horario.findAll).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { materia_id: 1 } })
+        expect.objectContaining({ where: { carrera_materia_id: 1 } })
       );
     });
 
@@ -66,9 +68,9 @@ describe('horario.services', () => {
   });
 
   describe('getById', () => {
-    it('deberia retornar el horario con materia', async () => {
+    it('deberia retornar el horario con carreraMateria', async () => {
       models.Horario.findByPk.mockResolvedValue(
-        createInstanceMock({ id: 1, materia_id: 1 })
+        createInstanceMock({ id: 1, carrera_materia_id: 1 })
       );
 
       const result = await getById(1);
@@ -84,29 +86,29 @@ describe('horario.services', () => {
   });
 
   describe('create', () => {
-    it('deberia crear un horario si la materia existe', async () => {
-      models.Materia.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+    it('deberia crear un horario si la carrera_materia existe', async () => {
+      models.CarreraMateria.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
       models.Horario.create.mockResolvedValue(
-        createInstanceMock({ id: 1, materia_id: 1, dia: 'Lunes' })
+        createInstanceMock({ id: 1, carrera_materia_id: 1, dia: 'Lunes' })
       );
 
-      const result = await create({ materia_id: 1, dia: 'Lunes', horario: '10:00', aula: 'A1' });
+      const result = await create({ carrera_materia_id: 1, dia: 'Lunes', horario: '10:00', aula: 'A1' });
 
       expect(result.dia).toBe('Lunes');
     });
 
-    it('deberia lanzar error si la materia no existe', async () => {
-      models.Materia.findByPk.mockResolvedValue(null);
+    it('deberia lanzar error si la carrera_materia no existe', async () => {
+      models.CarreraMateria.findByPk.mockResolvedValue(null);
 
-      await expect(create({ materia_id: 999 })).rejects.toThrow(
-        'La materia especificada no existe'
+      await expect(create({ carrera_materia_id: 999 })).rejects.toThrow(
+        'La asignación carrera-materia especificada no existe'
       );
     });
   });
 
   describe('update', () => {
     it('deberia actualizar un horario existente', async () => {
-      const horario = createInstanceMock({ id: 1, materia_id: 1 });
+      const horario = createInstanceMock({ id: 1, carrera_materia_id: 1 });
       models.Horario.findByPk.mockResolvedValue(horario);
 
       await update(1, { dia: 'Martes' });
@@ -114,13 +116,13 @@ describe('horario.services', () => {
       expect(horario.update).toHaveBeenCalled();
     });
 
-    it('deberia validar materia_id si cambia', async () => {
-      const horario = createInstanceMock({ id: 1, materia_id: 1 });
+    it('deberia validar carrera_materia_id si cambia', async () => {
+      const horario = createInstanceMock({ id: 1, carrera_materia_id: 1 });
       models.Horario.findByPk.mockResolvedValue(horario);
-      models.Materia.findByPk.mockResolvedValue(null);
+      models.CarreraMateria.findByPk.mockResolvedValue(null);
 
-      await expect(update(1, { materia_id: 999 })).rejects.toThrow(
-        'La materia especificada no existe'
+      await expect(update(1, { carrera_materia_id: 999 })).rejects.toThrow(
+        'La asignación carrera-materia especificada no existe'
       );
     });
 

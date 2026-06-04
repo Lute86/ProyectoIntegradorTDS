@@ -3,9 +3,9 @@ import { body, param } from 'express-validator';
 const DIAS_VALIDOS = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
 
 export const createHorarioValidation = [
-  body('materia_id')
+  body('carrera_materia_id')
     .isInt({ min: 1 })
-    .withMessage('materia_id debe ser un entero válido'),
+    .withMessage('carrera_materia_id debe ser un entero válido'),
   body('dia')
     .notEmpty()
     .trim()
@@ -36,10 +36,10 @@ export const createHorarioValidation = [
 ];
 
 export const updateHorarioValidation = [
-  body('materia_id')
+  body('carrera_materia_id')
     .optional()
     .isInt({ min: 1 })
-    .withMessage('materia_id debe ser un entero válido'),
+    .withMessage('carrera_materia_id debe ser un entero válido'),
   body('comision')
     .optional()
     .trim()

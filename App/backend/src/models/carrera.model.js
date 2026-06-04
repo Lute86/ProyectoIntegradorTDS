@@ -58,7 +58,7 @@ export default (sequelize, DataTypes) => {
   });
 
   Carrera.associate = (models) => {
-    Carrera.hasMany(models.Materia, { foreignKey: 'carrera_id', as: 'materias' });
+    Carrera.hasMany(models.CarreraMateria, { foreignKey: 'carrera_id', as: 'carreraMaterias' });
   };
 
   return Carrera;
