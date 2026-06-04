@@ -5,6 +5,8 @@ jest.unstable_mockModule('../../../src/models/index.js', () => ({
   default: {
     Materia: createModelMock(),
     Carrera: createModelMock(),
+    CarreraMateria: createModelMock(),
+    Sequelize: { Op: { like: jest.fn((val) => ({ [Symbol.for('like')]: val })) } },
   },
 }));
 
@@ -17,9 +19,9 @@ describe('materia.services', () => {
   });
 
   describe('getAll', () => {
-    it('deberia retornar todas las materias con carrera', async () => {
+    it('deberia retornar todas las materias con carrerasMateria', async () => {
       models.Materia.findAll.mockResolvedValue([
-        createInstanceMock({ id: 1, nombre: 'TDS', carrera_id: 1 }),
+        createInstanceMock({ id: 1, nombre: 'TDS', carrerasMateria: [] }),
       ]);
 
       const result = await getAll();
@@ -28,37 +30,27 @@ describe('materia.services', () => {
       expect(models.Materia.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
           include: expect.arrayContaining([
-            expect.objectContaining({ as: 'carrera' }),
+            expect.objectContaining({ as: 'carrerasMateria' }),
           ]),
         })
       );
     });
 
-    it('deberia filtrar por carrera_id', async () => {
+    it('deberia filtrar por nombre', async () => {
       models.Materia.findAll.mockResolvedValue([]);
 
-      await getAll({ carrera_id: 1 });
+      await getAll({ nombre: 'Programacion' });
 
       expect(models.Materia.findAll).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { carrera_id: 1 } })
-      );
-    });
-
-    it('deberia filtrar por cuatrimestre', async () => {
-      models.Materia.findAll.mockResolvedValue([]);
-
-      await getAll({ cuatrimestre: 3 });
-
-      expect(models.Materia.findAll).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { cuatrimestre: 3 } })
+        expect.objectContaining({ where: expect.any(Object) })
       );
     });
   });
 
   describe('getById', () => {
-    it('deberia retornar la materia con carrera', async () => {
+    it('deberia retornar la materia con carrerasMateria', async () => {
       models.Materia.findByPk.mockResolvedValue(
-        createInstanceMock({ id: 1, nombre: 'TDS' })
+        createInstanceMock({ id: 1, nombre: 'TDS', carrerasMateria: [] })
       );
 
       const result = await getById(1);
@@ -74,44 +66,25 @@ describe('materia.services', () => {
   });
 
   describe('create', () => {
-    it('deberia crear una materia si la carrera existe', async () => {
-      models.Carrera.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+    it('deberia crear una materia', async () => {
       models.Materia.create.mockResolvedValue(
-        createInstanceMock({ id: 1, nombre: 'TDS', carrera_id: 1 })
+        createInstanceMock({ id: 1, nombre: 'TDS' })
       );
 
-      const result = await create({ nombre: 'TDS', carrera_id: 1 });
+      const result = await create({ nombre: 'TDS' });
 
       expect(result.nombre).toBe('TDS');
-    });
-
-    it('deberia lanzar error si la carrera no existe', async () => {
-      models.Carrera.findByPk.mockResolvedValue(null);
-
-      await expect(create({ nombre: 'X', carrera_id: 999 })).rejects.toThrow(
-        'La carrera especificada no existe'
-      );
     });
   });
 
   describe('update', () => {
     it('deberia actualizar una materia existente', async () => {
-      const materia = createInstanceMock({ id: 1, carrera_id: 1 });
+      const materia = createInstanceMock({ id: 1 });
       models.Materia.findByPk.mockResolvedValue(materia);
 
       await update(1, { nombre: 'Updated' });
 
       expect(materia.update).toHaveBeenCalled();
-    });
-
-    it('deberia validar carrera_id si cambia', async () => {
-      const materia = createInstanceMock({ id: 1, carrera_id: 1 });
-      models.Materia.findByPk.mockResolvedValue(materia);
-      models.Carrera.findByPk.mockResolvedValue(null);
-
-      await expect(update(1, { carrera_id: 999 })).rejects.toThrow(
-        'La carrera especificada no existe'
-      );
     });
 
     it('deberia lanzar error si no existe', async () => {
@@ -122,14 +95,22 @@ describe('materia.services', () => {
   });
 
   describe('remove', () => {
-    it('deberia eliminar una materia existente', async () => {
+    it('deberia eliminar una materia sin asignaciones', async () => {
       const materia = createInstanceMock({ id: 1 });
       models.Materia.findByPk.mockResolvedValue(materia);
+      models.CarreraMateria.count.mockResolvedValue(0);
 
       const result = await remove(1);
 
       expect(materia.destroy).toHaveBeenCalled();
       expect(result.message).toContain('eliminada');
+    });
+
+    it('deberia bloquear eliminacion si tiene asignaciones', async () => {
+      models.Materia.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+      models.CarreraMateria.count.mockResolvedValue(3);
+
+      await expect(remove(1)).rejects.toThrow('No se puede eliminar una materia que tiene asignaciones en carreras');
     });
 
     it('deberia lanzar error si no existe', async () => {

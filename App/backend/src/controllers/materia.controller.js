@@ -5,13 +5,9 @@ import { success, created, deleted, validationError } from '../utils/response.js
 
 export const getAll = asyncHandler(async (req, res) => {
   const filters = {};
-  
-  if (req.query.carrera_id) {
-    filters.carrera_id = parseInt(req.query.carrera_id);
-  }
-  
-  if (req.query.cuatrimestre) {
-    filters.cuatrimestre = parseInt(req.query.cuatrimestre);
+
+  if (req.query.nombre) {
+    filters.nombre = req.query.nombre;
   }
 
   const materias = await materiaService.getAll(filters);

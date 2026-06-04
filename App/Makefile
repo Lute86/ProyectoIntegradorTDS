@@ -13,7 +13,7 @@ RED    = \033[31m
 
 # ── PHONYs agrupados por sección ──────────────────────────────────────────────
 .PHONY: scaffold setup install install-frontend install-backend
-.PHONY: dev dev-d dev-down dev-reset
+.PHONY: dev dev-d dev-down dev-reset dev-reset-up
 .PHONY: prod prod-down prod-reset ssl
 .PHONY: logs logs-dev logs-be logs-fe
 .PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
@@ -65,6 +65,8 @@ dev-down: ## Detiene el entorno de desarrollo
 dev-reset: ## Detiene el entorno de desarrollo y borra la BD SQLite
 	@echo "$(RED)⚠  Esto eliminará la base de datos de desarrollo.$(RESET)"
 	docker compose -f docker-compose.dev.yml down -v
+
+dev-reset-up: dev-reset dev
 
 fclean: ## Remove all containers, volumes, images and node_modules
 	docker compose -f docker-compose.dev.yml down -v --rmi all --remove-orphans

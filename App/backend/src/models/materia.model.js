@@ -9,18 +9,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    carrera_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    cuatrimestre: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    carga_horaria_semanal: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     descripcion: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -29,15 +17,10 @@ export default (sequelize, DataTypes) => {
     tableName: 'materias',
     timestamps: true,
     paranoid: true,
-    indexes: [
-      {
-        fields: ['carrera_id'],
-      },
-    ],
   });
 
   Materia.associate = (models) => {
-    Materia.belongsTo(models.Carrera, { foreignKey: 'carrera_id', as: 'carrera' });
+    Materia.hasMany(models.CarreraMateria, { foreignKey: 'materia_id', as: 'carrerasMateria' });
   };
 
   return Materia;

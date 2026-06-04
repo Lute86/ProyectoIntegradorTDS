@@ -4,6 +4,7 @@ import { createModelMock, createInstanceMock } from '../mocks/models.js';
 jest.unstable_mockModule('../../../src/models/index.js', () => ({
   default: {
     Carrera: createModelMock(),
+    CarreraMateria: createModelMock(),
     Materia: createModelMock(),
   },
 }));
@@ -42,9 +43,9 @@ describe('carrera.services', () => {
   });
 
   describe('getById', () => {
-    it('deberia retornar la carrera con materias', async () => {
+    it('deberia retornar la carrera con carreraMaterias', async () => {
       models.Carrera.findByPk.mockResolvedValue(
-        createInstanceMock({ id: 1, nombre: 'TDS' })
+        createInstanceMock({ id: 1, nombre: 'TDS', carreraMaterias: [] })
       );
 
       const result = await getById(1);
@@ -54,7 +55,7 @@ describe('carrera.services', () => {
         1,
         expect.objectContaining({
           include: expect.arrayContaining([
-            expect.objectContaining({ as: 'materias' }),
+            expect.objectContaining({ as: 'carreraMaterias' }),
           ]),
         })
       );
@@ -70,7 +71,7 @@ describe('carrera.services', () => {
   describe('getBySlug', () => {
     it('deberia retornar la carrera por slug', async () => {
       models.Carrera.findOne.mockResolvedValue(
-        createInstanceMock({ id: 1, slug: 'tds' })
+        createInstanceMock({ id: 1, slug: 'tds', carreraMaterias: [] })
       );
 
       const result = await getBySlug('tds');
@@ -125,7 +126,7 @@ describe('carrera.services', () => {
     it('deberia eliminar una carrera sin materias', async () => {
       const carrera = createInstanceMock({ id: 1 });
       models.Carrera.findByPk.mockResolvedValue(carrera);
-      models.Materia.count.mockResolvedValue(0);
+      models.CarreraMateria.count.mockResolvedValue(0);
 
       const result = await remove(1);
 
@@ -135,7 +136,7 @@ describe('carrera.services', () => {
 
     it('deberia bloquear eliminacion si tiene materias', async () => {
       models.Carrera.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
-      models.Materia.count.mockResolvedValue(3);
+      models.CarreraMateria.count.mockResolvedValue(3);
 
       await expect(remove(1)).rejects.toThrow('No se puede eliminar una carrera que tiene materias asociadas');
     });
