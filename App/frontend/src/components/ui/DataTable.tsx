@@ -39,14 +39,13 @@ export const DataTable = <T extends { id?: string | number }>({
   const filtered = useMemo(() => {
     if (!search.trim()) return safeData;
     const q = search.toLowerCase();
-    return safeData.filter((item) =>
-      columns.some((col) => {
-        if (typeof col.accessor === 'function') return false;
-        const val = item[col.accessor];
-        return val != null && String(val).toLowerCase().includes(q);
-      })
-    );
-  }, [data, search, columns]);
+    return safeData.filter((item) => {
+      if (!item) return false;
+      return Object.values(item).some((val) =>
+        val != null && String(val).toLowerCase().includes(q)
+      );
+    });
+  }, [safeData, search]);
 
   const sorted = useMemo(() => {
     if (!sortKey) return filtered;
