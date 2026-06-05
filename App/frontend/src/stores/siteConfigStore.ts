@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import api from '../services/api';
 import { siteConfigService } from '../services/siteConfigService';
 
 export interface SiteConfig {
@@ -76,6 +77,7 @@ interface SiteConfigState {
   isLoading: boolean;
   isDirty: boolean;
   fetchConfig: () => Promise<void>;
+  saveConfig: () => Promise<void>;
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
@@ -145,6 +147,15 @@ export const useSiteConfigStore = create<SiteConfigState>((set) => ({
       }
     } catch {
       set({ isLoading: false })
+    }
+  },
+  saveConfig: async () => {
+    const state = useSiteConfigStore.getState();
+    try {
+      await api.put('/config', state.config);
+      set({ isDirty: false });
+    } catch {
+      set({ isDirty: false });
     }
   },
   updateConfig: (data) => {

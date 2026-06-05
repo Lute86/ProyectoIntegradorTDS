@@ -144,8 +144,9 @@ const UsuariosPage = () => {
             ))}
           </div>
         ) : (
-          <DataTable 
-            columns={columns} 
+          <DataTable
+            searchable
+            columns={columns}
             data={usuarios}
             emptyMessage="No hay usuarios registrados en el sistema."
           />

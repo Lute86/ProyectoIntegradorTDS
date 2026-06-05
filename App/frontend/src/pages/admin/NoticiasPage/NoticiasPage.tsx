@@ -127,6 +127,7 @@ const NoticiasPage = () => {
           </div>
         ) : (
           <DataTable
+            searchable
             columns={columns}
             data={noticias}
             emptyMessage="No hay noticias registradas."
