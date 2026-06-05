@@ -127,6 +127,7 @@ const EventosPage = () => {
           </div>
         ) : (
           <DataTable
+            searchable
             columns={columns}
             data={eventos}
             emptyMessage="No hay eventos registrados."
