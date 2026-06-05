@@ -70,6 +70,7 @@ const ConsultasPage = () => {
           </div>
         ) : (
           <DataTable
+            searchable
             columns={columns}
             data={consultas}
             emptyMessage="No hay consultas recibidas."
