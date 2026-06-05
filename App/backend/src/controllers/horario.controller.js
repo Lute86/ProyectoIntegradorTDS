@@ -6,8 +6,12 @@ import { success, created, deleted, validationError } from '../utils/response.js
 export const getAll = asyncHandler(async (req, res) => {
   const filters = {};
 
-  if (req.query.materia_id) {
-    filters.materia_id = parseInt(req.query.materia_id);
+  if (req.query.carrera_materia_id) {
+    filters.carrera_materia_id = parseInt(req.query.carrera_materia_id);
+  }
+
+  if (req.query.carrera_id) {
+    filters.carrera_id = parseInt(req.query.carrera_id);
   }
 
   if (req.query.comision) {

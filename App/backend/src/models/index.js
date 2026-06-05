@@ -29,6 +29,7 @@ import testimonioModel from './testimonio.model.js';
 import imagenModel from './imagen.model.js';
 import consultaModel from './consulta.model.js';
 import horarioModel from './horario.model.js';
+import carreraMateriaModel from './carreraMateria.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -58,6 +59,9 @@ models.Consulta = Consulta;
 
 const Horario = horarioModel(sequelizeInstance, DataTypes);
 models.Horario = Horario;
+
+const CarreraMateria = carreraMateriaModel(sequelizeInstance, DataTypes);
+models.CarreraMateria = CarreraMateria;
 
 const Imagen = imagenModel(sequelizeInstance, DataTypes);
 models.Imagen = Imagen;

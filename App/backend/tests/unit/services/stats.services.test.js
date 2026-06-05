@@ -4,7 +4,7 @@ import { createModelMock } from '../mocks/models.js';
 jest.unstable_mockModule('../../../src/models/index.js', () => ({
   default: {
     Carrera: createModelMock(),
-    Materia: createModelMock(),
+    CarreraMateria: createModelMock(),
     User: createModelMock(),
   },
 }));
@@ -20,7 +20,7 @@ describe('stats.services', () => {
   describe('getDashboardStats', () => {
     it('deberia retornar conteos de carreras, materias y staff', async () => {
       models.Carrera.count.mockResolvedValue(5);
-      models.Materia.count.mockResolvedValue(20);
+      models.CarreraMateria.count.mockResolvedValue(20);
       models.User.count.mockResolvedValue(10);
 
       const result = await getDashboardStats();
@@ -32,7 +32,7 @@ describe('stats.services', () => {
 
     it('deberia contar solo carreras activas', async () => {
       models.Carrera.count.mockResolvedValue(3);
-      models.Materia.count.mockResolvedValue(0);
+      models.CarreraMateria.count.mockResolvedValue(0);
       models.User.count.mockResolvedValue(0);
 
       await getDashboardStats();
@@ -42,9 +42,9 @@ describe('stats.services', () => {
       });
     });
 
-    it('deberia contar solo staff activo (admin/profesor/tutor)', async () => {
+    it('deberia contar solo staff activo', async () => {
       models.Carrera.count.mockResolvedValue(0);
-      models.Materia.count.mockResolvedValue(0);
+      models.CarreraMateria.count.mockResolvedValue(0);
       models.User.count.mockResolvedValue(5);
 
       await getDashboardStats();
@@ -59,7 +59,7 @@ describe('stats.services', () => {
 
     it('deberia retornar 0 cuando no hay datos', async () => {
       models.Carrera.count.mockResolvedValue(0);
-      models.Materia.count.mockResolvedValue(0);
+      models.CarreraMateria.count.mockResolvedValue(0);
       models.User.count.mockResolvedValue(0);
 
       const result = await getDashboardStats();

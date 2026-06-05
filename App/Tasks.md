@@ -48,8 +48,31 @@
 - [x] Rutas de Materia (GET/POST/PUT/DELETE /api/materias)
 - [x] Validadores de Carrera y Materia
 
-**Dependencias:** Ninguna (Materia solo referencia a Carrera dentro de este módulo)
+#### Módulo 12: Refactorización Carrera-Materia (Tabla Intermedia)
+**Tareas:**
+- [x] Crear modelo CarreraMateria (carreraMateria.model.js)
+- [x] Crear migración para tabla intermedia y modificar horarios/materias
+- [x] Crear servicio CarreraMateria (sub-resource de carrera)
+- [x] Crear controlador CarreraMateria
+- [x] Crear validador CarreraMateria
+- [x] Crear rutas CarreraMateria (GET/POST/PUT/DELETE /api/carreras/:carreraId/materias)
+- [x] Actualizar materia.model.js (quitar carrera_id, cuatrimestre, carga_horaria)
+- [x] Actualizar horario.model.js (materia_id → carrera_materia_id)
+- [x] Actualizar carrera.model.js (asociación con CarreraMateria)
+- [x] Actualizar services: materia, horario, carrera, stats
+- [x] Actualizar controllers: materia, horario
+- [x] Actualizar validators: materia, horario
+- [x] Crear seeder 08-carreraMateria-seeder.js
+- [x] Actualizar seeders 06 y 07
+- [x] Actualizar tests unitarios existentes (materia, horario, carrera, stats)
+- [x] Crear tests unitarios de carreraMateria.services
+- [x] Crear tests de integración carreraMateria.test.js
+- [x] Documentación PR
+
+**Dependencias:** Módulo BE 2 (Carreras y Materias), Módulo BE 9 (Horarios)
 **Contraparte FE:** Módulo FE 2
+
+**Descripción:** Se refactoriza el modelo de datos para permitir que una materia pertenezca a múltiples carreras con cuatrimestre y carga horaria independientes. Se crea una tabla intermedia `carrera_materias` que conecta Carrera con Materia (relación M:N). Los horarios ahora referencian la asignación carrera-materia en vez de la materia directamente.
 
 #### Módulo 3: Gestión de Usuarios
 **Tareas:**

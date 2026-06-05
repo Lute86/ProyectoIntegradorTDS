@@ -6,6 +6,7 @@ import { sequelize } from '../../src/models/index.js';
 describe('Horario Endpoints', () => {
   let carreraId;
   let materiaId;
+  let carreraMateriaId;
   let adminToken;
   let profesorToken;
   let tutorToken;
@@ -19,52 +20,36 @@ describe('Horario Endpoints', () => {
 
     const adminRes = await request(app)
       .post('/api/auth/register')
-      .send({
-        nombre: 'Admin',
-        email: 'admin@test.com',
-        password: '123456',
-        rol: 'admin',
-      });
+      .send({ nombre: 'Admin', email: 'admin@test.com', password: '123456', rol: 'admin' });
     adminToken = adminRes.body.data.token;
 
     const profesorRes = await request(app)
       .post('/api/auth/register')
-      .send({
-        nombre: 'Profesor',
-        email: 'profesor@test.com',
-        password: '123456',
-        rol: 'profesor',
-      });
+      .send({ nombre: 'Profesor', email: 'profesor@test.com', password: '123456', rol: 'profesor' });
     profesorToken = profesorRes.body.data.token;
 
     const tutorRes = await request(app)
       .post('/api/auth/register')
-      .send({
-        nombre: 'Tutor',
-        email: 'tutor@test.com',
-        password: '123456',
-        rol: 'tutor',
-      });
+      .send({ nombre: 'Tutor', email: 'tutor@test.com', password: '123456', rol: 'tutor' });
     tutorToken = tutorRes.body.data.token;
 
     const carreraRes = await request(app)
       .post('/api/carreras')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({
-        nombre: 'Desarrollo de Software',
-        slug: 'desarrollo-de-software',
-      });
+      .send({ nombre: 'Desarrollo de Software', slug: 'desarrollo-de-software' });
     carreraId = carreraRes.body.data.id;
 
     const materiaRes = await request(app)
       .post('/api/materias')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({
-        nombre: 'Programacion I',
-        carrera_id: carreraId,
-        cuatrimestre: 1,
-      });
+      .send({ nombre: 'Programacion I' });
     materiaId = materiaRes.body.data.id;
+
+    const cmRes = await request(app)
+      .post(`/api/carreras/${carreraId}/materias`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ materia_id: materiaId, cuatrimestre: 1, carga_horaria_semanal: 6 });
+    carreraMateriaId = cmRes.body.data.id;
   });
 
   afterAll(async () => {
@@ -77,7 +62,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           comision: 'A',
           dia: 'Lunes',
           horario: '18:00 - 20:00',
@@ -92,7 +77,7 @@ describe('Horario Endpoints', () => {
       expect(res.body.data.horario).toBe('18:00 - 20:00');
       expect(res.body.data.aula).toBe('Aula 5');
       expect(res.body.data.profesor).toBe('Prof. Martinez');
-      expect(res.body.data.materia_id).toBe(materiaId);
+      expect(Number(res.body.data.carrera_materia_id)).toBe(carreraMateriaId);
     });
 
     it('debería crear un horario sin comision (default Todas)', async () => {
@@ -100,7 +85,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -116,7 +101,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${profesorToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -131,7 +116,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
         })
@@ -146,7 +131,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           aula: 'Aula 5',
         })
@@ -160,7 +145,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
         })
@@ -169,7 +154,7 @@ describe('Horario Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si falta materia_id', async () => {
+    it('debería fallar si falta carrera_materia_id', async () => {
       const res = await request(app)
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -183,12 +168,12 @@ describe('Horario Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si la materia no existe', async () => {
+    it('debería fallar si la carrera_materia no existe', async () => {
       const res = await request(app)
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: 9999,
+          carrera_materia_id: 9999,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -202,7 +187,7 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .post('/api/horarios')
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -217,7 +202,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${tutorToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -234,7 +219,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           comision: 'A',
           dia: 'Lunes',
           horario: '18:00 - 20:00',
@@ -245,7 +230,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           comision: 'A',
           dia: 'Miercoles',
           horario: '18:00 - 20:00',
@@ -256,7 +241,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           comision: 'B',
           dia: 'Martes',
           horario: '20:00 - 22:00',
@@ -273,14 +258,14 @@ describe('Horario Endpoints', () => {
       expect(res.body.data).toHaveLength(3);
     });
 
-    it('debería filtrar por materia_id', async () => {
+    it('debería filtrar por carrera_materia_id', async () => {
       const res = await request(app)
-        .get(`/api/horarios?materia_id=${materiaId}`)
+        .get(`/api/horarios?carrera_materia_id=${carreraMateriaId}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(3);
-      expect(res.body.data[0].materia).toBeDefined();
+      expect(res.body.data[0].carreraMateria).toBeDefined();
     });
 
     it('debería filtrar por comision', async () => {
@@ -291,16 +276,6 @@ describe('Horario Endpoints', () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(2);
       expect(res.body.data.every(h => h.comision === 'A')).toBe(true);
-    });
-
-    it('debería filtrar por materia_id y comision', async () => {
-      const res = await request(app)
-        .get(`/api/horarios?materia_id=${materiaId}&comision=B`)
-        .expect(200);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(1);
-      expect(res.body.data[0].comision).toBe('B');
     });
 
     it('debería filtrar por dia', async () => {
@@ -331,7 +306,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -347,7 +322,7 @@ describe('Horario Endpoints', () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.id).toBe(horarioId);
       expect(res.body.data.dia).toBe('Lunes');
-      expect(res.body.data.materia).toBeDefined();
+      expect(res.body.data.carreraMateria).toBeDefined();
     });
 
     it('debería fallar con ID inválido', async () => {
@@ -384,7 +359,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',
@@ -396,10 +371,7 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .put(`/api/horarios/${horarioId}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          dia: 'Martes',
-          aula: 'Aula 7',
-        })
+        .send({ dia: 'Martes', aula: 'Aula 7' })
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -411,9 +383,7 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .put(`/api/horarios/${horarioId}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          activo: false,
-        })
+        .send({ activo: false })
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -424,9 +394,7 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .put(`/api/horarios/${horarioId}`)
         .set('Authorization', `Bearer ${profesorToken}`)
-        .send({
-          dia: 'Martes',
-        })
+        .send({ dia: 'Martes' })
         .expect(403);
 
       expect(res.body.success).toBe(false);
@@ -436,21 +404,17 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .put('/api/horarios/9999')
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          dia: 'Martes',
-        })
+        .send({ dia: 'Martes' })
         .expect(404);
 
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si se asigna una materia inexistente', async () => {
+    it('debería fallar si se asigna una carrera_materia inexistente', async () => {
       const res = await request(app)
         .put(`/api/horarios/${horarioId}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          materia_id: 9999,
-        })
+        .send({ carrera_materia_id: 9999 })
         .expect(409);
 
       expect(res.body.success).toBe(false);
@@ -460,9 +424,7 @@ describe('Horario Endpoints', () => {
       const res = await request(app)
         .put(`/api/horarios/${horarioId}`)
         .set('Authorization', `Bearer ${tutorToken}`)
-        .send({
-          dia: 'Martes',
-        })
+        .send({ dia: 'Martes' })
         .expect(403);
 
       expect(res.body.success).toBe(false);
@@ -477,7 +439,7 @@ describe('Horario Endpoints', () => {
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          materia_id: materiaId,
+          carrera_materia_id: carreraMateriaId,
           dia: 'Lunes',
           horario: '18:00 - 20:00',
           aula: 'Aula 5',

@@ -5,7 +5,7 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    materia_id: {
+    carrera_materia_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -43,16 +43,16 @@ export default (sequelize, DataTypes) => {
     paranoid: true,
     indexes: [
       {
-        fields: ['materia_id'],
+        fields: ['carrera_materia_id'],
       },
       {
-        fields: ['materia_id', 'comision'],
+        fields: ['carrera_materia_id', 'comision'],
       },
     ],
   });
 
   Horario.associate = (models) => {
-    Horario.belongsTo(models.Materia, { foreignKey: 'materia_id', as: 'materia' });
+    Horario.belongsTo(models.CarreraMateria, { foreignKey: 'carrera_materia_id', as: 'carreraMateria' });
   };
 
   return Horario;
