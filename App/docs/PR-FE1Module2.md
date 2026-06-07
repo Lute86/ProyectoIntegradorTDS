@@ -10,7 +10,7 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 ### CarrerasPage (listado)
 - Header con gradient, breadcrumb (Inicio / Carreras)
 - Filtros por nombre de carrera (botones tipo pill)
-- Listado de tarjetas con icono, badge duracion, modalidad, nombre, descripcion, link al detalle
+- Listado de tarjetas con badge duracion, modalidad, nombre, descripcion, link al detalle
 
 ### CarreraDetailPage
 - Breadcrumb (Inicio / Carreras / Desarrollo de Software)
@@ -52,7 +52,7 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 | `src/tests/components/Hero.test.jsx` | 3 tests (render, CTA, links) |
 | `src/tests/components/StatItem.test.jsx` | 1 test (valor + label) |
 | `src/tests/components/Stats.test.jsx` | 3 tests (items, empty, null) |
-| `src/tests/components/CareerCard.test.jsx` | 3 tests (datos, icono, link) |
+| `src/tests/components/CareerCard.test.jsx` | 2 tests (nombre en header, link) |
 | `src/tests/components/CareerCards.test.jsx` | 3 tests (titulo, items, empty) |
 | `src/tests/components/NewsCard.test.jsx` | 2 tests (datos, link) |
 | `src/tests/components/NewsSection.test.jsx` | 3 tests (titulo, 3 noticias, empty) |
@@ -73,11 +73,3 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 ### Issues
 - HomePage.test.jsx tiene solo 1 test smoke, sin cobertura de loading/error/estados vacios
 
-## Responsive — Fix completo (contenedores + grids + tipografía)
-
-**En este módulo:**
-- Contenedores: `Hero`, `Stats`, `CareerCards`, `NewsSection`, `TestimonialsCarousel`, `CarrerasPage`, `CarreraDetailPage` → `max-w-content`
-- Grids: `Stats` (xl:6), `CareerCards` (xl:4), `NewsSection` (xl:4), `CarreraDetailPage` layout (xl:4) y materias (xl:3)
-- Tipografía: Hero H1 → `text-hero`, section H2 → `text-h2`, páginas H1 → `text-h1`
-
-Ver detalle completo en `PR-FE1Module1.md`

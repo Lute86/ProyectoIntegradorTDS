@@ -22,6 +22,8 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 | EventosPage | `/admin/eventos` | EventoFormModal |
 | TestimoniosPage | `/admin/testimonios` | TestimonioFormModal |
 | GaleriaPage | `/admin/galeria` | ImageUploadModal |
+| CarrerasPage | `/admin/carreras` | CarreraFormModal, BuscarMateriaModal |
+| MateriasPage | `/admin/materias` | MateriaFormModal |
 
 ---
 
@@ -45,6 +47,8 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 | `eventosStore` | fetchEventos, addEvento, updateEvento, deleteEvento |
 | `testimoniosStore` | fetchTestimonios, addTestimonio, updateTestimonio, deleteTestimonio |
 | `galeriaStore` | fetchImagenes, addImagen, deleteImagen |
+| `carrerasStore` | fetchCarreras, fetchCarreraBySlug, addCarrera, updateCarrera, deleteCarrera |
+| `materiasStore` | fetchMaterias, createMateria, updateMateria, deleteMateria, addAsignacion, updateAsignacion, removeAsignacion |
 
 ---
 
@@ -68,6 +72,7 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 - **Galeria:** Layout con CSS Grid responsivo, overlay con info al hover, boton de eliminacion superpuesto
 - **Enrutador:** `AppRouter.tsx` con index route al Dashboard y rutas anidadas bajo `/admin`
 - **Sin emojis:** Todos los iconos reemplazados por texto simple o bloques de color Tailwind
+- **Manejo errores stores:** carrerasStore/materiasStore relanzan excepciones tras setear error; componentes muestran feedback sin cerrar modal
 
 ---
 
@@ -76,4 +81,5 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 - Integracion con API real cuando los modulos BE 4, 5 y 6 esten completos
 - Implementar `ImageUploader` con subida real al servidor
 - Agregar paginacion y busqueda en DataTable
-- Escribir tests unitarios (Vitest) para stores y componentes
+- Escribir tests unitarios (Vitest) para stores y componentes (materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin)
+

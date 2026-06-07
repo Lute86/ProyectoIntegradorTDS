@@ -147,8 +147,8 @@ export default function NoticiasPage() {
                     <Link key={n.id} to={`/noticias/${n.slug}`}
                       className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
-                        <div className={`sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center text-4xl bg-gradient-to-br from-slate-400 to-slate-600 text-white`}>
-                          NOT
+                        <div className="sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-400 to-slate-600 text-white">
+                          <IconoCategoria categoria={n.categoria} className="w-10 h-10" selected />
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700'}`}>

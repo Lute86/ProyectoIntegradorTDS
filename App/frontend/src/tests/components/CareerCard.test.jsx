@@ -10,16 +10,11 @@ const carrera = {
 }
 
 describe('CareerCard', () => {
-  it('renderiza nombre, duracion y descripcion', () => {
+  it('renderiza nombre en el header, duracion y descripcion', () => {
     render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
     expect(screen.getByText('Test Carrera')).toBeInTheDocument()
     expect(screen.getByText('2 años')).toBeInTheDocument()
     expect(screen.getByText('Descripcion de prueba')).toBeInTheDocument()
-  })
-
-  it('renderiza iniciales del nombre', () => {
-    render(<MemoryRouter><CareerCard carrera={carrera} /></MemoryRouter>)
-    expect(screen.getByText('TC')).toBeInTheDocument()
   })
 
   it('linkea a /carreras/:slug', () => {

@@ -38,9 +38,8 @@ describe('CarrerasPage', () => {
 
   it('renderiza las 3 carreras en el listado', () => {
     render(<MemoryRouter><CarrerasPage /></MemoryRouter>)
-    const cards = screen.getAllByRole('heading', { level: 3 })
-    expect(cards.map((h) => h.textContent)).toEqual(
-      expect.arrayContaining(['Desarrollo de Software', 'Seguridad Informatica', 'Analisis de Datos']),
-    )
+    expect(screen.getByText('Desarrollo de Software')).toBeInTheDocument()
+    expect(screen.getByText('Seguridad Informatica')).toBeInTheDocument()
+    expect(screen.getByText('Analisis de Datos')).toBeInTheDocument()
   })
 })

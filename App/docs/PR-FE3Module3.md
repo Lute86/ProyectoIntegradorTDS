@@ -53,7 +53,7 @@
 
 Las páginas públicas (`NoticiasPage`, `NoticiaDetailPage`) se conectan al store y usan un adaptador (`adaptNoticia`) que transforma el formato API (con `categoria.nombre`, `autor.nombre + apellido`, `fecha_publicacion` ISO) al formato mock que la UI espera. Si el store no tiene datos (API caído o vacío), caen a MOCK_NOTICIAS como fallback.
 
-## Extensiones del modulo (sesion 2 Junio 2026)
+## Extensiones
 
 ### Eventos
 
@@ -191,93 +191,24 @@ Se ejecuta en `PublicLayout.jsx` via `useThemeStyles()`.
 | `tests/pages/NoticiasPage.test.jsx` | Alta |
 | `tests/pages/NoticiaDetailPage.test.jsx` | Alta |
 | `tests/pages/EstudiantesPage.test.jsx` | Media |
+| `tests/components/Footer.test.jsx` | Media |
 
 ### Issues de implementacion
 - QuickLinks usa href="#" — todos los enlaces son placeholders sin destino real
 - adaptNoticia() duplicado en NoticiasPage.jsx y NoticiaDetailPage.jsx — extraer a util compartida
 - mockNoticias.categoria es string pero NewsSidebar espera objeto {nombre} — puede causar undefined en keys
 - Eventos y Testimonios no muestran datos reales por bug de auth en BE (evento.routes.js:9, testimonio.routes.js:9)
-- Falta saveConfig() en siteConfigStore (cambios de PersonalizarPage solo quedan en memoria) — lo implementa FE Dev 2
+- Falta saveConfig() en siteConfigStore (cambios de AjustesPage y PersonalizarPage solo quedan en memoria) — lo implementa FE Dev 2
+- `siteConfigStore.fetchConfig()` hardcodea `socialLinks: DEFAULT_CONFIG.socialLinks` — no carga Instagram/Facebook desde el backend
 
-### Issues resueltos en esta sesion
+### Issues resueltos
 - ContactForm ya envia al backend via `api.post('/consultas', data)` — resuelto
 - Secciones publicas ahora reflejan colores/tipografia de siteConfig — resuelto via `useThemeStyles` + CSS variables
 - Acceso por URL directa a secciones desactivadas redirige a `/` — resuelto via SectionGuard
 
-## Responsive — Fix completo (contenedores + grids + tipografia)
+### Footer dinamico
 
-**En este modulo:**
-- Contenedores: `NoticiasPage`, `ContactoPage`, `EstudiantesPage` → `max-w-content`
-- Grids: `NoticiasPage` layout (xl:4), `EstudiantesPage` cards (xl:5 3xl:6), `QuickLinks` (xl:4)
-- Tipografia: paginas H1 → `text-h1`
-
----
-
-### Imagenes de fondo en portadas
-
-**Archivos modificados:**
-
-| Archivo | Cambio |
-|---------|--------|
-| `src/pages/public/CarrerasPage/CarrerasPage.jsx` | Import de `carrera1.png` como fondo del header con overlay oscuro |
-| `src/pages/public/NoticiasPage/NoticiasPage.jsx` | Import de `noticia1.png` como fondo del header + thumbnail de cards |
-| `src/pages/public/EstudiantesPage/EstudiantesPage.jsx` | Import de `estudiantes1.png` como fondo del header |
-| `src/pages/public/ContactoPage/ContactoPage.jsx` | Import de `contac.png` como fondo del header |
-
-**Detalles tecnicos:**
-- Imagenes usadas: `assets/fonts/{carrera1, noticia1, estudiantes1, contac}.png`
-- Overlay: `bg-slate-900/50` sobre el contenedor del texto para legibilidad
-- Breakpoints: `py-12 md:py-16`, mismo padding que el diseno original
-- Cards de Noticias: thumbnail con `object-cover` en contenedor de 140px
-
----
-
-### Conexiones FE -> API — Estado
-
-**Stores conectados al API real (sin mock):**
-
-| Store | Endpoint | Publico | Fallback |
-|-------|----------|---------|----------|
-| `carrerasStore` | `GET /api/carreras` | SI | Ninguno |
-| `noticiasStore` | `GET /api/noticias` | SI | Ninguno |
-| `siteConfigStore` | `GET /api/config` | SI | DEFAULT_CONFIG hardcodeado |
-| `galeriaStore` | `GET /api/imagenes` | SI | Ninguno |
-| `testimoniosStore` | `GET /api/testimonios` | **NO (requiere auth)** | Ninguno |
-| `eventosStore` | `GET /api/eventos` | **NO (requiere auth)** | Ninguno |
-
-**Stores que usan mock:**
-
-| Store | Datos | Motivo |
-|-------|-------|--------|
-| Stats | `MOCK_STATS` en HomePage | No hay endpoint publico de stats |
-| Noticias (fallback) | `MOCK_NOTICIAS` en HomePage | Solo si el API devuelve array vacio |
-
-**Bugs de backend que bloquean datos publicos:**
-
-1. **Eventos** — `App/backend/src/routes/evento.routes.js:9`: `router.use(authenticate)` esta antes del GET. Moverlo despues de los GETs.
-2. **Testimonios** — `App/backend/src/routes/testimonio.routes.js:9`: mismo problema.
-
-**Modificaciones realizadas (2 Junio 2026):**
-- `galeriaStore.ts`: eliminado `GALERIA_MOCK`, llama a `api.get('/imagenes')`
-- `GaleriaCarousel.jsx`: usa `useGaleriaStore` en vez de `GALERIA_MOCK`
-- `testimoniosStore.ts`: eliminado `TESTIMONIOS_MOCK`, llama a `api.get('/testimonios')`
-- `HomePage.jsx`: usa `useTestimoniosStore`, `MOCK_TESTIMONIOS` eliminado
-- `horariosService.js` (nuevo): `GET /api/horarios` con filtro por materia_id
-- `CarreraDetailPage.jsx`: pestana Horarios fetchea horarios via API
-- `EstudiantesPage.jsx`: selects dinamicos de carrera + comision con fetch de horarios
-- `carrerasService.js`: bugfix URL de `getBySlug` (faltaba `/slug/`)
-- `CarrerasPage.jsx`: grid 2 columnas, icono academico SVG, cards compactas
-- `CarreraDetailPage.jsx`: requisitos fijos hardcodeados con checkmark
-- `EventosPage.jsx` (nuevo): pagina `/eventos` centrada con busqueda y paginacion
-- `NoticiasPage.jsx`: filtro de categoria "Evento" eliminado de las pills
-
-Ver detalle completo en `PR-FE1Module1.md`
-
----
-
-## Footer — datos dinamicos desde siteConfig (3 Junio 2026)
-
-**Motivo:** El Footer mostraba "Enlaces Rapidos" hardcodeados (Carreras, Noticias, Estudiantes, Administracion) y no cargaba datos reales de configuracion del sitio al navegar directo a una pagina (sin pasar por Home).
+**Motivo:** El Footer mostraba "Enlaces Rapidos" hardcodeados y no cargaba datos reales de configuracion al navegar directo a una pagina.
 
 **Archivos modificados:**
 
@@ -294,20 +225,48 @@ Ver detalle completo en `PR-FE1Module1.md`
 - Las redes sociales se renderizan condicionalmente: solo aparecen si tienen URL configurada en el admin (Ajustes Generales)
 - Sin dependencia de backend ni admin — solo cambios de frontend
 
-## Pendiente actualizado (3 Junio 2026)
+---
 
-### Tests faltantes
-| Archivo | Prioridad |
-|---------|-----------|
-| `tests/pages/NoticiasPage.test.jsx` | Alta |
-| `tests/pages/NoticiaDetailPage.test.jsx` | Alta |
-| `tests/pages/EstudiantesPage.test.jsx` | Media |
-| `tests/components/Footer.test.jsx` | Media — verificar render condicional de redes sociales y llamado a fetchConfig |
+### Fix guardado batch de horarios
 
-### Issues de implementacion
-- QuickLinks usa href="#" — todos los enlaces son placeholders sin destino real
-- adaptNoticia() duplicado en NoticiasPage.jsx y NoticiaDetailPage.jsx — extraer a util compartida
-- mockNoticias.categoria es string pero NewsSidebar espera objeto {nombre} — puede causar undefined en keys
-- Eventos y Testimonios no muestran datos reales por bug de auth en BE (evento.routes.js:9, testimonio.routes.js:9)
-- Falta saveConfig() en siteConfigStore (cambios de AjustesPage y PersonalizarPage solo quedan en memoria) — lo implementa FE Dev 2
-- **`siteConfigStore.fetchConfig()` linea 141 hardcodea `socialLinks: DEFAULT_CONFIG.socialLinks`** — nunca carga Instagram/Facebook desde el backend. Aunque el admin configure redes sociales, al recargar la pagina el Footer mostrara los defaults. Requiere que `fetchConfig()` mapee `data.social_links?.instagram` y `data.social_links?.facebook` desde la respuesta del backend.
+**Archivo:** `src/pages/admin/CarrerasPage/CarreraDetailAdmin.jsx`
+
+**Problemas:** `Promise.all` perdía datos en fallos parciales, notificación global lejos del botón, fail-fast cancelaba requests, useEffect reiniciaba el form tras fallos.
+
+**Soluciones:** Guardado secuencial con `for...of`, contador guardados/fallidos, formSnapshot preserva datos fallidos, notificación local junto al botón, skipFormResetRef evita reinicio.
+
+**Mensajes:** "X guardados correctamente", "Error al guardar", "X guardados, Y fallaron", "Completa al menos dia y horario".
+
+**Tests:** `CarreraDetailAdmin.test.jsx` — 4 tests (render tabs, crear comision, create con datos, error parcial).
+
+---
+
+### Roles RBAC
+
+**Archivos:** AuthContext, ProtectedRoute, AdminTopbar, AdminSidebar, AppRouter, ForbiddenPage (nuevo).
+
+**Cambios:** Mock `role` -> `rol`, ProtectedRoute con `allowedRoles`, sidebar filtra por rol, pagina 403, mapa roleAccess por rol.
+
+---
+
+### Contacto API
+
+**Archivos:** ContactoPage, ContactForm, tests.
+
+**Cambios:** `setTimeout` mock -> `api.post('/consultas', data)`, estados error/success con feedback visual, throw en catch evita reset en fallo. Tests: api.post llamado, exito, error generico, error con mensaje, loading.
+
+---
+
+### Card de carreras — titulo en header
+
+**CareerCard.jsx / CarrerasPage.jsx:** El icono/iniciales del header se reemplazaron por el nombre de la carrera con fondo de color. El titulo se eliminó del body de la card.
+
+**Tests:** CareerCard.test.jsx eliminó test de iniciales, CarrerasPage.test.jsx cambió heading role por getByText.
+
+---
+
+### Icono de categoria en NoticiasPage
+
+**NoticiasPage.jsx:** El placeholder `NOT` se reemplazó por `IconoCategoria` con el SVG de la categoria (inscripciones, examenes, etc.) en blanco.
+
+

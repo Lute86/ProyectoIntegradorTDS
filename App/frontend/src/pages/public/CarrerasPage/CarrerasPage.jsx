@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import carreraImg from '../../../assets/fonts/carrera1.png'
-import CareerIcon from '../../../components/ui/CareerIcon/CareerIcon'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 
@@ -10,14 +9,6 @@ const badgeVariant = (mod) => {
   const mapa = { presencial: 'blue', virtual: 'green', hibrida: 'amber' }
   return mapa[mod] || 'gray'
 }
-
-const IconAcademico = () => (
-  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-  </svg>
-)
 
 export default function CarrerasPage() {
   const { carreras, loading, fetchCarreras } = useCarrerasStore()
@@ -90,15 +81,12 @@ export default function CarrerasPage() {
                     className="w-full md:w-[calc(50%-12px)] max-w-lg bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
                   >
                     <div
-                      className="h-24 flex items-center justify-center text-white"
+                      className="h-24 flex items-center justify-center text-white text-base font-bold px-4 text-center leading-tight"
                       style={{ backgroundColor: c.color || '#3B82F6' }}
                     >
-                      <div className="text-white/90 group-hover:scale-110 transition-transform duration-300 w-full h-full flex items-center justify-center">
-                        {c.icono ? <CareerIcon name={c.icono} className="w-10 h-10" /> : <IconAcademico />}
-                      </div>
+                      {c.nombre}
                     </div>
                     <div className="p-4">
-                      <h3 className="text-base font-bold text-slate-900 mb-1.5">{c.nombre}</h3>
                       <p className="text-sm text-slate-500 mb-3 line-clamp-2">{c.descripcion}</p>
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                         <div className="flex items-center gap-2">

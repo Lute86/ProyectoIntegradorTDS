@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom'
-import portadaCBg from '../../../assets/fonts/carrera1.png'
-import CareerIcon from '../../ui/CareerIcon/CareerIcon'
 
 const badgeVariant = (mod) => {
   const mapa = { presencial: 'blue', virtual: 'green', hibrida: 'amber' }
@@ -14,24 +12,18 @@ const badgeStyles = {
   gray: 'bg-gray-50 text-gray-600 border-gray-100',
 }
 
-const iniciales = (nombre) => {
-  return nombre.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase()
-}
-
 export default function CareerCard({ carrera }) {
-  const { nombre, slug, duracion, descripcion, modalidad, color, icono } = carrera
+  const { nombre, slug, duracion, descripcion, modalidad, color } = carrera
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div
-        className="p-6 flex items-center justify-center text-4xl text-white"
-        style={{ backgroundImage: `url(${portadaCBg})` }}
+        className="h-24 flex items-center justify-center text-white text-lg font-bold px-4 text-center leading-tight"
+        style={{ backgroundColor: color || '#3B82F6' }}
       >
-        {icono && <CareerIcon name={icono} className="w-12 h-12 [&_svg]:w-full [&_svg]:h-full [&_svg]:fill-current" />}
-        {!icono && <span>{iniciales(nombre)}</span>}
+        {nombre}
       </div>
       <div className="p-6">
-        <h3 className="text-lg font-bold text-slate-900 mb-2">{nombre}</h3>
         <p className="text-sm text-slate-500 mb-4">{descripcion}</p>
         <div className="flex items-center justify-between">
           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeStyles[badgeVariant(modalidad)]}`}>

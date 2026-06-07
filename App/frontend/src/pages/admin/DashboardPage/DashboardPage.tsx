@@ -8,6 +8,8 @@ const QUICK_ACTIONS = [
   { label: 'Nuevo Usuario', href: '/admin/usuarios', icono: '\u{1F465}' },
   { label: 'Ir a Galeria', href: '/admin/galeria', icono: '\u{1F4F7}' },
   { label: 'Gestionar Consultas', href: '/admin/consultas', icono: '\u{1F4E8}' },
+  { label: 'Gestionar Carreras', href: '/admin/carreras', icono: '\u{1F393}' },
+  { label: 'Gestionar Materias', href: '/admin/materias', icono: '\u{1F4D6}' },
 ];
 
 const DashboardPage = () => {

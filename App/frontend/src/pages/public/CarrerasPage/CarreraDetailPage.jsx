@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { horariosService } from '../../../services/horariosService'
+import CareerIcon from '../../../components/ui/CareerIcon/CareerIcon'
+import carreraImg from '../../../assets/fonts/carrera1.png'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 
@@ -38,6 +40,7 @@ export default function CarreraDetailPage() {
   const [horarios, setHorarios] = useState([])
   const [selectedComision, setSelectedComision] = useState('')
   const [loadingHorarios, setLoadingHorarios] = useState(false)
+  const [fetchedHorarios, setFetchedHorarios] = useState(false)
 
   const carrera = useMemo(() => {
     return selectedCarrera || carreras.find((c) => c.slug === slug) || null
@@ -49,11 +52,16 @@ export default function CarreraDetailPage() {
   }, [carrera, carreras, slug])
 
   const materiasPorCuatri = useMemo(() => {
-    if (!carrera?.materias) return []
+    if (!carrera?.carreraMaterias) return []
     const grupos = {}
-    carrera.materias.forEach((m) => {
-      if (!grupos[m.cuatrimestre]) grupos[m.cuatrimestre] = []
-      grupos[m.cuatrimestre].push(m)
+    carrera.carreraMaterias.forEach((cm) => {
+      const c = cm.cuatrimestre
+      if (!grupos[c]) grupos[c] = []
+      grupos[c].push({
+        ...cm.materia,
+        cuatrimestre: cm.cuatrimestre,
+        carga_horaria_semanal: cm.carga_horaria_semanal,
+      })
     })
     return Object.entries(grupos).sort(([a], [b]) => Number(a) - Number(b))
   }, [carrera])
@@ -62,27 +70,32 @@ export default function CarreraDetailPage() {
     fetchCarreraBySlug(slug)
   }, [slug, fetchCarreraBySlug])
 
-  const fetchHorarios = useCallback(async (materias) => {
-    if (!materias || materias.length === 0) return
+  useEffect(() => {
+    setSelectedComision('')
+    setHorarios([])
+    setActiveTab('descripcion')
+    setFetchedHorarios(false)
+  }, [slug])
+
+  const fetchHorarios = useCallback(async (carreraId) => {
+    if (!carreraId) return
     setLoadingHorarios(true)
     try {
-      const results = await Promise.all(
-        materias.map((m) => horariosService.getAll({ materia_id: m.id }))
-      )
-      const todos = results.flatMap((r) => r.data?.data || r.data || [])
-      setHorarios(todos)
+      const res = await horariosService.getAll({ carrera_id: carreraId })
+      setHorarios(res.data?.data || res.data || [])
     } catch {
       setHorarios([])
     } finally {
       setLoadingHorarios(false)
+      setFetchedHorarios(true)
     }
   }, [])
 
   useEffect(() => {
-    if (activeTab === 'horarios' && carrera?.materias && horarios.length === 0 && !loadingHorarios) {
-      fetchHorarios(carrera.materias)
+    if (activeTab === 'horarios' && carrera?.id && !fetchedHorarios && !loadingHorarios) {
+      fetchHorarios(carrera.id)
     }
-  }, [activeTab, carrera, horarios.length, loadingHorarios, fetchHorarios])
+  }, [activeTab, carrera?.id, fetchedHorarios, loadingHorarios, fetchHorarios])
 
   const comisiones = useMemo(() => {
     const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
@@ -94,8 +107,8 @@ export default function CarreraDetailPage() {
     return horarios
       .filter((h) => h.comision === selectedComision)
       .sort((a, b) => {
-        const nomA = a.materia?.nombre || ''
-        const nomB = b.materia?.nombre || ''
+        const nomA = a.carreraMateria?.materia?.nombre || ''
+        const nomB = b.carreraMateria?.materia?.nombre || ''
         if (nomA !== nomB) return nomA.localeCompare(nomB)
         return (a.dia || '').localeCompare(b.dia || '')
       })
@@ -137,10 +150,28 @@ export default function CarreraDetailPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16">
-          <h1 className="text-h1 mb-2">{carrera.nombre}</h1>
-          <p className="text-blue-200">Tecnicatura en {carrera.nombre}</p>
+      <div
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${carreraImg})` }}
+      >
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 bg-slate-900/40">
+          <div className="flex items-center gap-5">
+            <div
+              className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: carrera.color || '#3B82F6' }}
+            >
+              {carrera.icono ? <CareerIcon name={carrera.icono} className="w-8 h-8 text-white" /> : (
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              )}
+            </div>
+            <div>
+              <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
+              <p className="text-blue-200">Tecnicatura en {carrera.nombre}</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -205,7 +236,7 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'horarios' && (
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Horarios por Comision</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Horarios por Comision - Primer Cuatrimestre</h3>
                 <p className="text-slate-500 text-sm mb-6">Selecciona una comision para ver los horarios de todas las materias</p>
 
                 {loadingHorarios ? (
@@ -218,6 +249,10 @@ export default function CarreraDetailPage() {
                       </div>
                     ))}
                   </div>
+                ) : comisiones.length === 0 ? (
+                  <p className="text-slate-400 text-center py-8 text-sm">
+                    Sin comisiones asignadas.
+                  </p>
                 ) : (
                   <>
                     <div className="flex flex-wrap gap-2 mb-6">
@@ -253,7 +288,7 @@ export default function CarreraDetailPage() {
                           <tbody>
                             {horariosFiltrados.map((h, i) => (
                               <tr key={i} className="border-t border-slate-100 hover:bg-slate-50">
-                                <td className="p-3 text-slate-900 font-medium">{h.materia?.nombre || '—'}</td>
+                                <td className="p-3 text-slate-900 font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
                                 <td className="p-3 text-slate-700">{h.dia}</td>
                                 <td className="p-3 text-slate-600">{h.horario}</td>
                               </tr>
