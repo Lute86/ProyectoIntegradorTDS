@@ -17,7 +17,7 @@ const DashboardPage = () => {
   const [actividades, setActividades] = useState<{ texto: string; timestamp: string }[]>([]);
 
   useEffect(() => {
-    api.get('/stats').then((res) => {
+    api.get('/stats/dashboard').then((res) => {
       const d = res.data.data || {};
       setStats([
         { label: 'Total Usuarios', value: d.usuarios ?? 0, color: 'bg-blue-500' },
@@ -26,6 +26,7 @@ const DashboardPage = () => {
         { label: 'Testimonios Recibidos', value: d.testimonios ?? 0, color: 'bg-violet-500' },
       ]);
     }).catch(() => {
+      /* silencioso */
       setStats([
         { label: 'Total Usuarios', value: 0, color: 'bg-blue-500' },
         { label: 'Noticias Publicadas', value: 0, color: 'bg-emerald-500' },

@@ -66,7 +66,7 @@ export default function HomePage() {
     return config.sections
       .filter((s) => s.visible && HOME_SECTION_IDS.includes(s.id))
       .sort((a, b) => a.order - b.order)
-      .map((s) => mapa[s.id])
+      .map((s) => <div key={s.id}>{mapa[s.id]}</div>)
       .filter(Boolean)
   }, [config.sections, carreras, noticias, eventos, testimonios])
 

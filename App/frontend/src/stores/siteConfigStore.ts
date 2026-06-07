@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import api from '../services/api';
 import { siteConfigService } from '../services/siteConfigService';
 
@@ -85,7 +86,9 @@ interface SiteConfigState {
   resetConfig: () => void;
 }
 
-export const useSiteConfigStore = create<SiteConfigState>((set) => ({
+export const useSiteConfigStore = create<SiteConfigState>()(
+  persist(
+    (set) => ({
   config: DEFAULT_CONFIG,
   isLoading: false,
   isDirty: false,
@@ -151,11 +154,27 @@ export const useSiteConfigStore = create<SiteConfigState>((set) => ({
   },
   saveConfig: async () => {
     const state = useSiteConfigStore.getState();
+    const payload = {
+      site_name: state.config.siteName,
+      site_subtitle: state.config.siteSubtitle,
+      contact_email: state.config.contactEmail,
+      contact_phone: state.config.contactPhone,
+      address: state.config.address,
+      seo_description: state.config.seoDescription,
+      footer_text: state.config.footerText,
+      colors: state.config.colors,
+      layout: { mode: state.config.layout },
+      sections: state.config.sections,
+      typography: state.config.typography,
+      theme_preset: state.config.themePreset,
+    };
     try {
-      await api.put('/config', state.config);
+      await api.put('/config', payload);
       set({ isDirty: false });
-    } catch {
+    } catch (err: any) {
+      console.error('Error del backend:', err.response?.data);
       set({ isDirty: false });
+      throw err;
     }
   },
   updateConfig: (data) => {
@@ -196,4 +215,6 @@ export const useSiteConfigStore = create<SiteConfigState>((set) => ({
   resetConfig: () => {
     set({ config: DEFAULT_CONFIG, isDirty: false });
   },
-}));
+}),
+{ name: 'site-config-storage' }
+));
