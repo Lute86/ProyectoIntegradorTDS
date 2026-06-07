@@ -63,6 +63,11 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 'default',
     },
+    social_links: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: {},
+    },
   }, {
     tableName: 'site_config',
     timestamps: true,

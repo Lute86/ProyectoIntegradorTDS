@@ -52,7 +52,8 @@ export const updateSiteConfigValidation = [
   body('sections')
     .optional()
     .custom((value) => {
-      if (value && !Array.isArray(value)) {
+      if (value === null || value === undefined) return true;
+      if (!Array.isArray(value)) {
         throw new Error('Sections debe ser un array JSON válido');
       }
       const validSections = ['hero', 'statistics', 'careers', 'news', 'events', 'testimonials', 'gallery', 'students', 'contact'];
@@ -82,4 +83,14 @@ export const updateSiteConfigValidation = [
   body('theme_preset')
     .optional()
     .isString().withMessage('El preset de tema debe ser texto'),
+
+  body('social_links')
+    .optional()
+    .custom((value) => {
+      if (value === null || value === undefined) return true;
+      if (typeof value !== 'object' || Array.isArray(value)) {
+        throw new Error('social_links debe ser un objeto JSON válido');
+      }
+      return true;
+    }),
 ];
