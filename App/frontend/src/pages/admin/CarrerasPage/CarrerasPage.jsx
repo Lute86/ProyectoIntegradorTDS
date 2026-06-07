@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useCarrerasStore from '../../../stores/carrerasStore';
 import CarreraFormModal from '../../../components/admin/CarreraFormModal';
 
@@ -16,6 +17,7 @@ const MODALIDAD_LABELS = {
 };
 
 const AdminCarrerasPage = () => {
+  const navigate = useNavigate();
   const { carreras, loading, error, fetchCarreras, deleteCarrera } = useCarrerasStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [carreraToEdit, setCarreraToEdit] = useState(null);
@@ -94,7 +96,7 @@ const AdminCarrerasPage = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {carreras.map((c) => (
-                  <tr key={c.id} className="hover:bg-blue-50/30 transition-colors duration-150 group">
+                  <tr key={c.id} onClick={() => navigate(`/admin/carreras/${c.id}`)} className="hover:bg-blue-50/30 transition-colors duration-150 group cursor-pointer">
                     <td className="px-6 py-4 text-sm text-gray-400 font-mono hidden lg:table-cell">{c.id}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -133,7 +135,7 @@ const AdminCarrerasPage = () => {
                         {c.activa ? 'Si' : 'No'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex gap-2 justify-end">
                         <button
                           onClick={() => abrirModalEditar(c)}

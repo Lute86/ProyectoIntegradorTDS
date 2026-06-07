@@ -19,9 +19,20 @@ const useCarrerasStore = create((set, get) => ({
   },
 
   fetchCarreraBySlug: async (slug) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null, selectedCarrera: null })
     try {
       const response = await api.get(`/carreras/slug/${slug}`)
+      set({ selectedCarrera: response.data.data, loading: false })
+    } catch (err) {
+      const mensaje = err.response?.data?.message || 'Error al cargar la carrera'
+      set({ error: mensaje, loading: false })
+    }
+  },
+
+  fetchCarreraById: async (id) => {
+    set({ loading: true, error: null })
+    try {
+      const response = await api.get(`/carreras/${id}`)
       set({ selectedCarrera: response.data.data, loading: false })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al cargar la carrera'
@@ -36,6 +47,7 @@ const useCarrerasStore = create((set, get) => ({
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al crear la carrera'
       set({ error: mensaje })
+      throw err
     }
   },
 
@@ -50,6 +62,7 @@ const useCarrerasStore = create((set, get) => ({
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al actualizar la carrera'
       set({ error: mensaje })
+      throw err
     }
   },
 
@@ -62,6 +75,7 @@ const useCarrerasStore = create((set, get) => ({
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la carrera'
       set({ error: mensaje })
+      throw err
     }
   },
 

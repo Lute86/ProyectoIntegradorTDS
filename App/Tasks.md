@@ -230,6 +230,7 @@
 - [x] Construir componentes: CareerCards, CareerCard, StatItem, Hero, TestimonialsCarousel
 - [x] Construir componente HorariosTable
 - [x] Implementar carrerasStore
+- [x] Rediseno cards de carreras: titulo en header con color de fondo
 
 **Dependencias:** Puede usar datos mock de carreras hasta que el Módulo BE 2 esté listo
 **Contraparte BE:** Módulo BE 2
@@ -242,13 +243,12 @@
 - [x] Construir ContactoPage, ContactForm
 - [x] Construir EstudiantesPage, QuickLinks
 - [x] Implementar noticiasStore
-- [x] Agregar imagen de fondo `carrera1.png` en portada de CarrerasPage
-- [x] Agregar imagen de fondo `noticia1.png` en portada y cards de NoticiasPage
-- [x] Agregar imagen de fondo `estudiantes1.png` en portada de EstudiantesPage
-- [x] Agregar imagen de fondo `contac.png` en portada de ContactoPage
+- [x] Agregar imagenes de fondo a las distintas secciones
 - [x] Crear EventosSection + EventosCard (carrusel en Home)
 - [x] Crear eventosService.js con fallback a mock
 - [x] Conectar EventosSection en HomePage
+- [x] Fix guardado batch de horarios: guardado secuencial, preservar datos en fallos, notificacion local
+- [x] NoticiasPage: reemplazar placeholder NOT por icono SVG de categoria
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
@@ -272,9 +272,21 @@
 - [x] Implementar testimoniosStore
 - [x] Implementar galeriaStore
 - [x] Implementar usuariosStore
+- [x] Fix persistencia stores y feedback de errores en admin
 
 **Dependencias:** Puede usar datos mock hasta que los Módulos BE 4,5,6 estén listos
 **Contraparte BE:** Módulos BE 4,5,6
+
+#### Módulo 4b: Admin Carreras, Materias, Horarios y Comisiones
+**Tareas:**
+- [x] Carreras admin: CRUD con modales y validacion
+- [x] Materias admin: CRUD con store y manejo de errores
+- [x] Horarios admin: CRUD con comisiones en detalle de carrera
+- [x] Stores carrerasStore/materiasStore: cooldown, relanzan errores
+- [x] Tests: materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin
+
+**Dependencias:** Módulo FE 4 (mismo dev), Módulo BE 12 (tabla intermedia)
+**Contraparte BE:** Módulo BE 12
 
 #### Módulo 5: Personalización y Configuración del Sitio
 **Tareas:**

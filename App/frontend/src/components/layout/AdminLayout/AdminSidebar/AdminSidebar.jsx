@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { useAuth } from '../../../../contexts/AuthContext/AuthContext';
 
 const roleAccess = {
-  admin: ['dashboard', 'noticias', 'carreras', 'eventos', 'galeria', 'testimonios', 'consultas', 'usuarios', 'personalizar', 'ajustes'],
-  profesor: ['dashboard', 'noticias', 'carreras', 'eventos', 'galeria'],
-  tutor: ['dashboard', 'noticias', 'carreras', 'eventos'],
+  admin: ['dashboard', 'noticias', 'carreras', 'materias', 'eventos', 'galeria', 'testimonios', 'consultas', 'usuarios', 'personalizar', 'ajustes'],
+  profesor: ['dashboard', 'noticias', 'carreras', 'materias', 'eventos', 'galeria'],
+  tutor: ['dashboard', 'noticias', 'carreras', 'materias', 'eventos'],
 };
 
 const sections = [
@@ -20,6 +20,7 @@ const sections = [
     items: [
       { to: '/admin/noticias', label: 'Noticias', icon: '\u{1F4F0}' },
       { to: '/admin/carreras', label: 'Carreras', icon: '\u{1F393}' },
+      { to: '/admin/materias', label: 'Materias', icon: '\u{1F4D6}' },
       { to: '/admin/eventos', label: 'Eventos', icon: '\u{1F4C5}' },
       { to: '/admin/galeria', label: 'Galeria', icon: '\u{1F4F7}' },
       { to: '/admin/testimonios', label: 'Testimonios', icon: '\u{1F4AC}' },

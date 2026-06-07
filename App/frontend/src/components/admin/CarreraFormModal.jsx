@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,6 +31,7 @@ const generarSlug = (texto) => {
 
 const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
   const { addCarrera, updateCarrera } = useCarrerasStore();
+  const [errorMsg, setErrorMsg] = useState('')
   const esEdicion = carreraToEdit !== null;
 
   const {
@@ -55,6 +56,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Cuando se edita, precarga los datos de la carrera
   useEffect(() => {
+    setErrorMsg('')
     if (carreraToEdit) {
       reset({
         nombre: carreraToEdit.nombre,
@@ -83,6 +85,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Envia los datos a la API
   const onSubmit = async (data) => {
+    setErrorMsg('')
     const body = {
       nombre: data.nombre,
       slug: data.slug,
@@ -100,8 +103,8 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
         await addCarrera(body);
       }
       onClose();
-    } catch {
-      // el store ya maneja el error
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || 'Error al guardar la carrera')
     }
   };
 
@@ -221,6 +224,12 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
               )}
             </div>
           </div>
+
+          {errorMsg && (
+            <div className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-red-50 text-red-700 border border-red-200">
+              {errorMsg}
+            </div>
+          )}
 
           {/* Botones de accion */}
           <div className="flex gap-3 pt-2">

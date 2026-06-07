@@ -1,0 +1,133 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+
+const mockUseParams = vi.hoisted(() => vi.fn(() => ({ id: '1' })))
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return { ...actual, useParams: mockUseParams }
+})
+
+const mockCarrerasStore = vi.hoisted(() => vi.fn())
+vi.mock('../../stores/carrerasStore', () => ({ default: mockCarrerasStore }))
+
+const mockMateriasStore = vi.hoisted(() => vi.fn())
+vi.mock('../../stores/materiasStore', () => ({ default: mockMateriasStore }))
+
+const mockCreate = vi.hoisted(() => vi.fn())
+const mockUpdate = vi.hoisted(() => vi.fn())
+const mockGetAll = vi.hoisted(() => vi.fn().mockResolvedValue({ data: { data: [] } }))
+vi.mock('../../services/horariosService', () => ({
+  horariosService: { getAll: mockGetAll, create: mockCreate, update: mockUpdate, delete: vi.fn() },
+}))
+
+import CarreraDetailAdmin from '../../pages/admin/CarrerasPage/CarreraDetailAdmin'
+
+const MOCK_CARRERA = {
+  id: 1, nombre: 'Desarrollo de Software', duracion: 2, modalidad: 'presencial',
+  descripcion: 'Carrera de prueba', activa: true,
+  carreraMaterias: [
+    { id: 1, cuatrimestre: 1, carga_horaria_semanal: 6, materia: { id: 1, nombre: 'Programacion I' } },
+    { id: 2, cuatrimestre: 1, carga_horaria_semanal: 4, materia: { id: 2, nombre: 'Matematica' } },
+  ],
+}
+
+function renderPage() {
+  return render(
+    <MemoryRouter initialEntries={['/admin/carreras/1']}>
+      <CarreraDetailAdmin />
+    </MemoryRouter>,
+  )
+}
+
+describe('CarreraDetailAdmin - Horarios', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseParams.mockReturnValue({ id: '1' })
+    mockCarrerasStore.mockReturnValue({
+      selectedCarrera: MOCK_CARRERA,
+      loading: false,
+      fetchCarreraById: vi.fn(),
+    })
+    mockMateriasStore.mockReturnValue({
+      materias: [], fetchMaterias: vi.fn(), addAsignacion: vi.fn(), removeAsignacion: vi.fn(),
+    })
+  })
+
+  it('renderiza las pestanas Materias y Horarios por Comision', () => {
+    renderPage()
+    expect(screen.getByText('Materias')).toBeInTheDocument()
+    expect(screen.getByText('Horarios por Comision')).toBeInTheDocument()
+  })
+
+  it('permite crear una comision desde el input', async () => {
+    renderPage()
+    fireEvent.click(screen.getByText('Horarios por Comision'))
+    const input = screen.getByPlaceholderText('Letra (ej: A)')
+    fireEvent.change(input, { target: { value: 'A' } })
+    fireEvent.click(screen.getByText('Crear Comision'))
+    await waitFor(() => {
+      expect(screen.getByText('A')).toBeInTheDocument()
+    })
+  })
+
+  it('llama a horariosService.create al cargar horarios con datos validos', async () => {
+    mockCreate.mockResolvedValue({ data: { data: { id: 101 } } })
+    renderPage()
+    fireEvent.click(screen.getByText('Horarios por Comision'))
+    fireEvent.change(screen.getByPlaceholderText('Letra (ej: A)'), { target: { value: 'A' } })
+    fireEvent.click(screen.getByText('Crear Comision'))
+    const selects = screen.getAllByRole('combobox')
+    selects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
+    const horarioInputs = screen.getAllByPlaceholderText('18:00-20:00')
+    horarioInputs.forEach((i) => fireEvent.change(i, { target: { value: '18:00-20:00' } }))
+    const aulas = screen.getAllByPlaceholderText('Ej: 201')
+    aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
+    fireEvent.click(screen.getByText('Cargar Horarios'))
+
+    await waitFor(() => {
+      expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({
+        carrera_materia_id: 1, comision: 'A', dia: 'Lunes', horario: '18:00-20:00', aula: '201',
+      }))
+    })
+  })
+
+  it('bloquea el guardado si hay campos vacios y muestra mensaje de validacion', async () => {
+    renderPage()
+    fireEvent.click(screen.getByText('Horarios por Comision'))
+    fireEvent.change(screen.getByPlaceholderText('Letra (ej: A)'), { target: { value: 'A' } })
+    fireEvent.click(screen.getByText('Crear Comision'))
+    fireEvent.click(screen.getByText('Cargar Horarios'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Corrige los campos marcados en rojo/)).toBeInTheDocument()
+    })
+  })
+
+  it('muestra mensaje placeholder si no hay comision seleccionada', () => {
+    renderPage()
+    fireEvent.click(screen.getByText('Horarios por Comision'))
+    expect(screen.getByText('Selecciona o crea una comision para gestionar horarios.')).toBeInTheDocument()
+  })
+
+  it('muestra error parcial cuando algunas filas fallan al guardar', async () => {
+    mockCreate.mockRejectedValueOnce(new Error('Error de red'))
+      .mockResolvedValueOnce({ data: { data: { id: 102 } } })
+    renderPage()
+    fireEvent.click(screen.getByText('Horarios por Comision'))
+    fireEvent.change(screen.getByPlaceholderText('Letra (ej: A)'), { target: { value: 'A' } })
+    fireEvent.click(screen.getByText('Crear Comision'))
+
+    const selects = screen.getAllByRole('combobox')
+    selects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
+    const horarioInputs = screen.getAllByPlaceholderText('18:00-20:00')
+    horarioInputs.forEach((i) => fireEvent.change(i, { target: { value: '18:00-20:00' } }))
+    const aulas = screen.getAllByPlaceholderText('Ej: 201')
+    aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
+    fireEvent.click(screen.getByText('Cargar Horarios'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/1 guardado, 1 fallaron/)).toBeInTheDocument()
+    })
+  })
+})

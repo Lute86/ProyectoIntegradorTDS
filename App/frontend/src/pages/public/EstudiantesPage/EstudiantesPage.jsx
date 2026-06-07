@@ -1,9 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
-import { carrerasService } from '../../../services/carrerasService'
 import { horariosService } from '../../../services/horariosService'
 import QuickLinks from './QuickLinks'
 import estudiantesBg from '../../../assets/fonts/estudiantes1.png'
+
+const nombresCuatri = {
+  1: 'Primer Cuatrimestre', 2: 'Segundo Cuatrimestre', 3: 'Tercer Cuatrimestre',
+  4: 'Cuarto Cuatrimestre', 5: 'Quinto Cuatrimestre', 6: 'Sexto Cuatrimestre',
+}
 
 const portalCards = [
   {
@@ -30,69 +34,59 @@ const portalCards = [
 
 export default function EstudiantesPage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
-  const [allHorarios, setAllHorarios] = useState([])
+  const [horarios, setHorarios] = useState([])
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [carreraId, setCarreraId] = useState('')
   const [comision, setComision] = useState('')
-  const [materiasDeCarrera, setMateriasDeCarrera] = useState([])
-  const [loadingCarrera, setLoadingCarrera] = useState(false)
 
   useEffect(() => { fetchCarreras() }, [fetchCarreras])
 
-  useEffect(() => {
-    if (!carreraId) { setMateriasDeCarrera([]); return }
-    const c = carreras.find((c) => String(c.id) === carreraId)
-    if (!c?.slug) return
-    setLoadingCarrera(true)
-    carrerasService.getBySlug(c.slug).then((res) => {
-      const data = res.data?.data || res.data
-      setMateriasDeCarrera(data?.materias || [])
-    }).catch(() => setMateriasDeCarrera([])).finally(() => setLoadingCarrera(false))
-  }, [carreraId, carreras])
-
-  const fetchTodosLosHorarios = useCallback(async () => {
-    if (allHorarios.length > 0) return
+  const fetchHorarios = async (id) => {
+    if (!id) { setHorarios([]); return }
     setLoadingHorarios(true)
     try {
-      const res = await horariosService.getAll()
-      const data = res.data?.data || res.data || []
-      setAllHorarios(data)
+      const res = await horariosService.getAll({ carrera_id: parseInt(id) })
+      setHorarios(res.data?.data || res.data || [])
     } catch {
-      setAllHorarios([])
+      setHorarios([])
     } finally {
       setLoadingHorarios(false)
     }
-  }, [allHorarios.length])
+  }
 
-  useEffect(() => { fetchTodosLosHorarios() }, [fetchTodosLosHorarios])
-
-  const materiaIds = useMemo(() => {
-    return new Set(materiasDeCarrera.map((m) => m.id))
-  }, [materiasDeCarrera])
-
-  const horariosDeCarrera = useMemo(() => {
-    if (materiaIds.size === 0) return []
-    return allHorarios.filter((h) => materiaIds.has(h.materia_id))
-  }, [allHorarios, materiaIds])
-
-  const comisiones = useMemo(() => {
-    const set = new Set(horariosDeCarrera.map((h) => h.comision).filter(Boolean))
-    return Array.from(set).sort()
-  }, [horariosDeCarrera])
-
-  useEffect(() => { setComision('') }, [carreraId])
+  useEffect(() => { fetchHorarios(carreraId) }, [carreraId])
 
   const horariosFiltrados = useMemo(() => {
     if (!comision) return []
-    return horariosDeCarrera
+    return horarios
       .filter((h) => h.comision === comision)
       .sort((a, b) => {
-        const nomA = a.materia?.nombre || ''
-        const nomB = b.materia?.nombre || ''
+        const cuatriA = a.carreraMateria?.cuatrimestre || 0
+        const cuatriB = b.carreraMateria?.cuatrimestre || 0
+        if (cuatriA !== cuatriB) return cuatriA - cuatriB
+        const nomA = a.carreraMateria?.materia?.nombre || ''
+        const nomB = b.carreraMateria?.materia?.nombre || ''
         if (nomA !== nomB) return nomA.localeCompare(nomB)
         return (a.dia || '').localeCompare(b.dia || '')
       })
-  }, [horariosDeCarrera, comision])
+  }, [horarios, comision])
+
+  const horariosPorCuatri = useMemo(() => {
+    const map = {}
+    horariosFiltrados.forEach((h) => {
+      const c = h.carreraMateria?.cuatrimestre || 1
+      if (!map[c]) map[c] = []
+      map[c].push(h)
+    })
+    return Object.entries(map).sort(([a], [b]) => Number(a) - Number(b))
+  }, [horariosFiltrados])
+
+  const comisiones = useMemo(() => {
+    const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
+    return Array.from(set).sort()
+  }, [horarios])
+
+  useEffect(() => { setComision('') }, [carreraId])
 
   return (
     <div className="bg-slate-50">
@@ -134,7 +128,7 @@ export default function EstudiantesPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">
-            Horarios - Primer Cuatrimestre
+            Horarios
           </h2>
 
           <div className="max-w-lg mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
@@ -155,7 +149,7 @@ export default function EstudiantesPage() {
                 <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
                 <select value={comision} onChange={(e) => setComision(e.target.value)}
                   className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={comisiones.length === 0 || loadingCarrera}
+                  disabled={comisiones.length === 0 || loadingHorarios}
                 >
                   <option value="">Seleccionar</option>
                   {comisiones.map((c) => (
@@ -175,37 +169,43 @@ export default function EstudiantesPage() {
               </div>
             </div>
           ) : comision && horariosFiltrados.length > 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-slate-900 text-white">
-                      <th className="text-center
-                       px-4 py-3 font-semibold">Materia</th>
-                      <th className="text-center px-4 py-3 font-semibold">Dia</th>
-                      <th className="text-center px-4 py-3 font-semibold">Horario</th>
-                      <th className="text-center px-4 py-3 font-semibold">Aula</th>
-                      <th className="text-center px-4 py-3 font-semibold">Profesor</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {horariosFiltrados.map((h, i) => (
-                      <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                        <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.materia?.nombre || '—'}</td>
-                        <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
-                        <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
-                        <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
-                        <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="space-y-6 max-w-4xl mx-auto px-2">
+              {horariosPorCuatri.map(([cuatri, filas]) => (
+                <div key={cuatri}>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-slate-900 text-white">
+                            <th className="text-center px-4 py-3 font-semibold">Materia</th>
+                            <th className="text-center px-4 py-3 font-semibold">Dia</th>
+                            <th className="text-center px-4 py-3 font-semibold">Horario</th>
+                            <th className="text-center px-4 py-3 font-semibold">Aula</th>
+                            <th className="text-center px-4 py-3 font-semibold">Profesor</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filas.map((h, i) => (
+                            <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                              <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                              <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
+                              <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
+                              <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
+                              <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="text-center py-8 text-slate-400 text-sm">
-              {carreraId && loadingCarrera
-                ? 'Cargando carrera...'
+              {carreraId && loadingHorarios
+                ? 'Cargando horarios...'
                 : carreraId && comisiones.length === 0
                   ? 'No hay horarios disponibles para esta carrera.'
                   : carreraId && !comision
