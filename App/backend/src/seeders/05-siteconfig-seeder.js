@@ -18,6 +18,9 @@ export async function up(queryInterface, Sequelize) {
           primary: '#3B82F6',
           secondary: '#10B981',
           accent: '#F59E0B',
+          surface: '#F3F4F6',
+          background: '#FFFFFF',
+          text: '#111827',
         }),
         layout: JSON.stringify({
           header: 'default',
@@ -34,7 +37,15 @@ export async function up(queryInterface, Sequelize) {
         ]),
         typography: JSON.stringify({
           fontFamily: 'Inter',
+          headingFont: 'Inter',
+          bodyFont: 'Inter',
           fontSize: '16px',
+          baseSize: '16px',
+        }),
+        social_links: JSON.stringify({
+          instagram: '',
+          facebook: '',
+          tiktok:'',
         }),
         theme_preset: 'default',
         createdAt: new Date(),
