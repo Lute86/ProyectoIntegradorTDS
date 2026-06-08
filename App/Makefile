@@ -14,7 +14,7 @@ RED    = \033[31m
 # ── PHONYs agrupados por sección ──────────────────────────────────────────────
 .PHONY: scaffold setup install install-frontend install-backend
 .PHONY: dev dev-d dev-down dev-reset dev-reset-up
-.PHONY: prod prod-down prod-reset ssl
+.PHONY: prod prod-down prod-reset ssl ssl-selfsigned setup-prod
 .PHONY: logs logs-dev logs-be logs-fe
 .PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
 .PHONY: check-env help fclean
@@ -78,7 +78,15 @@ fclean: ## Remove all containers, volumes, images and node_modules
 # PRODUCCIÓN
 # =============================================================================
 
-prod: check-env ## Construye y levanta producción (Nginx HTTPS + Node + PostgreSQL)
+setup-prod: ## Genera .env con secrets aleatorios (JWT_SECRET, DB_PASSWORD)
+	@echo "$(CYAN)▶ Generando .env con secrets...$(RESET)"
+	bash scripts/generate-secrets.sh
+
+ssl-selfsigned: ## Genera certificado SSL auto-firmado en docker/ssl/
+	@echo "$(CYAN)▶ Generando certificado SSL auto-firmado...$(RESET)"
+	bash scripts/generate-ssl.sh
+
+prod: check-env ssl-selfsigned ## Construye y levanta producción (Nginx HTTPS + Node + PostgreSQL)
 	@echo "$(CYAN)▶ Iniciando producción...$(RESET)"
 	docker compose up --build -d
 
@@ -165,7 +173,7 @@ lint-frontend: ## Ejecuta lint del frontend (docker)
 check-env:
 	@if [ ! -f .env ]; then \
 		echo "$(RED)✗ No existe el archivo .env$(RESET)"; \
-		echo "  Ejecutá: $(BOLD)cp .env.example .env$(RESET)"; \
+		echo "  Ejecutá: $(BOLD)make setup-prod$(RESET)"; \
 		exit 1; \
 	fi
 	@if grep -q "CAMBIA_ESTO" .env; then \
