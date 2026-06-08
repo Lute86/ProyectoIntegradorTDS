@@ -167,6 +167,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
       sections: state.config.sections,
       typography: state.config.typography,
       theme_preset: state.config.themePreset,
+      social_links: state.config.socialLinks,
     };
     try {
       await api.put('/config', payload);
