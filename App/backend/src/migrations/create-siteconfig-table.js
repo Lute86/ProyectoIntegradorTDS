@@ -56,6 +56,11 @@ export async function up(queryInterface, Sequelize) {
       allowNull: true,
       defaultValue: 'default',
     },
+    social_links: {
+      type: Sequelize.JSON,
+      allowNull: true,
+      defaultValue: {},
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
