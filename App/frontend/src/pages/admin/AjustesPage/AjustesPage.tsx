@@ -8,17 +8,17 @@ interface FormData {
   contactPhone: string;
   address: string;
   seoDescription: string;
-  instagram: string;
-  facebook: string;
+  socialLinks: Record<string, string>;
 }
 
 const AjustesPage = () => {
   const { config, isLoading, saveConfig } = useSiteConfigStore();
   const [form, setForm] = useState<FormData>({
     siteName: '', siteSubtitle: '', contactEmail: '', contactPhone: '',
-    address: '', seoDescription: '', instagram: '', facebook: '',
+    address: '', seoDescription: '', socialLinks: {},
   });
   const [guardado, setGuardado] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     if (!config) return;
@@ -26,27 +26,34 @@ const AjustesPage = () => {
       siteName: config.siteName, siteSubtitle: config.siteSubtitle,
       contactEmail: config.contactEmail, contactPhone: config.contactPhone,
       address: config.address, seoDescription: config.seoDescription,
-      instagram: config.socialLinks?.instagram || '',
-      facebook: config.socialLinks?.facebook || '',
+      socialLinks: { ...config.socialLinks },
     });
   }, [config]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name.startsWith('social-')) {
+      const key = name.slice(7);
+      setForm((prev) => ({ ...prev, socialLinks: { ...prev.socialLinks, [key]: value } }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleGuardar = async () => {
+    setErrorMsg('');
     try {
       useSiteConfigStore.getState().updateConfig({
         siteName: form.siteName, siteSubtitle: form.siteSubtitle,
         contactEmail: form.contactEmail, contactPhone: form.contactPhone,
         address: form.address, seoDescription: form.seoDescription,
-        socialLinks: { instagram: form.instagram, facebook: form.facebook },
+        socialLinks: form.socialLinks,
       });
       await saveConfig();
       setGuardado(true);
       setTimeout(() => setGuardado(false), 2500);
-    } catch {
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.message || 'Error al guardar los cambios');
       setGuardado(false);
     }
   };
@@ -77,8 +84,12 @@ const AjustesPage = () => {
 
       {guardado && (
         <div className="flex items-center gap-2 px-4 py-3 bg-green-50 border border-green-200 text-green-700 text-sm font-medium rounded-xl">
-          <span className="w-2 h-2 rounded-full bg-green-500" />
-          Cambios guardados correctamente.
+          <span className="w-2 h-2 rounded-full bg-green-500" /> Cambios guardados correctamente.
+        </div>
+      )}
+      {errorMsg && (
+        <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 text-red-700 text-sm font-medium rounded-xl">
+          <span className="w-2 h-2 rounded-full bg-red-500" /> {errorMsg}
         </div>
       )}
 
@@ -97,8 +108,9 @@ const AjustesPage = () => {
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
           <h2 className="text-base font-bold text-gray-900">Redes Sociales</h2>
           <div className="space-y-3">
-            <Campo label="Instagram (URL)" name="instagram" value={form.instagram} onChange={handleChange} />
-            <Campo label="Facebook (URL)" name="facebook" value={form.facebook} onChange={handleChange} />
+            {Object.entries(form.socialLinks).map(([key, value]) => (
+              <Campo key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} name={`social-${key}`} value={value || ''} onChange={handleChange} />
+            ))}
           </div>
         </section>
 

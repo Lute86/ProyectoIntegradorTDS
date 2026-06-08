@@ -1,10 +1,7 @@
-import { useEffect } from 'react';
 import { useSiteConfigStore } from '../../../../stores/siteConfigStore';
 
 export default function Footer() {
-  const { config, fetchConfig } = useSiteConfigStore()
-
-  useEffect(() => { fetchConfig() }, [fetchConfig])
+  const { config } = useSiteConfigStore()
 
   return (
     <footer className="mt-auto" style={{ backgroundColor: 'var(--clr-surface)' }}>
@@ -19,31 +16,27 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Contacto</h3>
             <ul className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
-              <li>{config.contactEmail}</li>
-              <li>{config.address}</li>
-              <li>{config.contactPhone}</li>
+              {config.contactEmail && <li>{config.contactEmail}</li>}
+              {config.address && <li>{config.address}</li>}
+              {config.contactPhone && <li>{config.contactPhone}</li>}
             </ul>
           </div>
           <div>
             <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Redes Sociales</h3>
             <ul className="space-y-2 text-sm">
-              {config.socialLinks?.instagram && (
-                <li>
-                  <a href={config.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    Instagram
-                  </a>
-                </li>
-              )}
-              {config.socialLinks?.facebook && (
-                <li>
-                  <a href={config.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    Facebook
-                  </a>
-                </li>
-              )}
-              {(!config.socialLinks?.instagram && !config.socialLinks?.facebook) &&
+              {Object.entries(config.socialLinks || {}).length > 0 ? (
+                Object.entries(config.socialLinks).map(([red, url]) =>
+                  url ? (
+                    <li key={red}>
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        {red.charAt(0).toUpperCase() + red.slice(1)}
+                      </a>
+                    </li>
+                  ) : null
+                )
+              ) : (
                 <li style={{ color: 'rgba(255,255,255,0.5)' }}>Sin redes configuradas</li>
-              }
+              )}
             </ul>
           </div>
         </div>
