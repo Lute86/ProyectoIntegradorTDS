@@ -17,20 +17,19 @@ const DashboardPage = () => {
   const [actividades, setActividades] = useState<{ texto: string; timestamp: string }[]>([]);
 
   useEffect(() => {
-    api.get('/stats').then((res) => {
+    api.get('/stats/dashboard').then((res) => {
       const d = res.data.data || {};
       setStats([
-        { label: 'Total Usuarios', value: d.usuarios ?? 0, color: 'bg-blue-500' },
-        { label: 'Noticias Publicadas', value: d.noticias ?? 0, color: 'bg-emerald-500' },
-        { label: 'Proximos Eventos', value: d.eventos ?? 0, color: 'bg-amber-500' },
-        { label: 'Testimonios Recibidos', value: d.testimonios ?? 0, color: 'bg-violet-500' },
+        { label: 'Carreras Activas', value: d.carreras ?? 0, color: 'bg-blue-500' },
+        { label: 'Materias Registradas', value: d.materias ?? 0, color: 'bg-emerald-500' },
+        { label: 'Staff Activo', value: d.staff ?? 0, color: 'bg-amber-500' },
       ]);
-    }).catch(() => {
+    }).catch((err) => {
+      console.error('Error en stats:', err);
       setStats([
-        { label: 'Total Usuarios', value: 0, color: 'bg-blue-500' },
-        { label: 'Noticias Publicadas', value: 0, color: 'bg-emerald-500' },
-        { label: 'Proximos Eventos', value: 0, color: 'bg-amber-500' },
-        { label: 'Testimonios Recibidos', value: 0, color: 'bg-violet-500' },
+        { label: 'Carreras Activas', value: 0, color: 'bg-blue-500' },
+        { label: 'Materias Registradas', value: 0, color: 'bg-emerald-500' },
+        { label: 'Staff Activo', value: 0, color: 'bg-amber-500' },
       ]);
     });
   }, []);

@@ -78,8 +78,9 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 
 ## Pendientes
 
-- Integracion con API real cuando los modulos BE 4, 5 y 6 esten completos
-- Implementar `ImageUploader` con subida real al servidor
-- Agregar paginacion y busqueda en DataTable
-- Escribir tests unitarios (Vitest) para stores y componentes (materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin)
+- ~~Integracion con API real~~ ✅ RESUELTO (todos los stores conectados)
+- ~~Agregar paginacion y busqueda en DataTable~~ ✅ RESUELTO
+- ~~Escribir tests unitarios de stores (consultas, usuarios, eventos, testimonios)~~ ✅ RESUELTO
+- Implementar `ImageUploader` con subida real al servidor (depende de backend con multer)
+- Escribir tests de componentes (DataTable, modales)
 

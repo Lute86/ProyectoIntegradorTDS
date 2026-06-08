@@ -16,11 +16,9 @@ const COLOR_LABELS: Record<string, string> = {
 };
 
 const PersonalizarPage = () => {
-  const { config, isLoading, isDirty, updateColors, saveConfig, fetchConfig } = useSiteConfigStore();
+  const { config, isLoading, isDirty, updateColors, saveConfig } = useSiteConfigStore();
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-
-  useEffect(() => { fetchConfig(); }, [fetchConfig]);
 
   const handleGuardar = async () => {
     setIsSaving(true);

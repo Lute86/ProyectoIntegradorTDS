@@ -70,7 +70,8 @@ Implementacion completa del motor de personalizacion visual y configuracion del 
 
 ## Pendientes
 
-- Integracion con API real del Modulo BE 3 (Site Config)
+- ~~Integracion con API real del Modulo BE 3 (Site Config)~~ ✅ RESUELTO
 - Agregar middleware `persist` de Zustand para mantener la configuracion entre sesiones
-- Implementar subida real de imagenes en ImageUploader
-- Escribir tests unitarios (Vitest) para stores y componentes de personalizacion
+- Implementar subida real de imagenes en ImageUploader (depende de backend)
+- ~~Escribir tests unitarios de stores del Modulo 4 y 6~~ ✅ RESUELTO
+- Escribir tests unitarios de personalizacion (siteConfigStore, ThemePresets, PreviewPanel)

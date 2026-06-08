@@ -10,10 +10,10 @@ describe('Button', () => {
     expect(screen.getByText('Click')).toBeInTheDocument();
   });
 
-  // Verifica que la variante por defecto aplica la clase primary (bg-blue-600)
+  // Verifica que la variante por defecto aplica la clase primary (bg-[var(--color-primary)])
   it('aplica variante primary por defecto', () => {
     render(<Button>Click</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-blue-600');
+    expect(screen.getByRole('button')).toHaveClass('bg-[var(--color-primary)]');
   });
 
   // Verifica que la variante outline aplica la clase border

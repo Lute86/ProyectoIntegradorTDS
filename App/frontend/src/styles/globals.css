@@ -9,6 +9,18 @@
   --text-h2--font-weight: 700;
   --text-hero: clamp(2rem, 5vw, 3.5rem);
   --text-hero--font-weight: 700;
+
+  --color-blue-500: var(--color-primary);
+  --color-blue-600: var(--color-primary);
+  --color-blue-700: var(--color-primary);
+  --color-green-500: var(--color-secondary);
+  --color-green-600: var(--color-secondary);
+  --color-amber-500: var(--color-accent);
+  --color-amber-600: var(--color-accent);
+  --color-violet-500: var(--color-primary);
+  --color-violet-600: var(--color-primary);
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
 }
 
 @layer base {
@@ -21,14 +33,13 @@
     --font-heading: Inter, sans-serif;
     --font-body: Inter, sans-serif;
   }
-}
 
-.bg-primary { background-color: var(--color-primary); }
-.text-primary { color: var(--color-primary); }
-.bg-secondary { background-color: var(--color-secondary); }
-.text-secondary { color: var(--color-secondary); }
-.bg-accent { background-color: var(--color-accent); }
-.text-accent { color: var(--color-accent); }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+  }
+}
 
 .layout-boxed { max-width: 1280px; margin-left: auto; margin-right: auto; }
 .layout-full { width: 100%; }
