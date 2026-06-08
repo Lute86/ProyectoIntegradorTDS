@@ -18,7 +18,7 @@ export async function up(queryInterface, Sequelize) {
           primary: '#3B82F6',
           secondary: '#10B981',
           accent: '#F59E0B',
-          surface: '#F3F4F6',
+          surface: '#1e293b',
           background: '#FFFFFF',
           text: '#111827',
         }),
