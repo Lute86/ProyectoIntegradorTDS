@@ -13,7 +13,7 @@ export async function up(queryInterface, Sequelize) {
       { replacements: [cat.slug], type: Sequelize.QueryTypes.SELECT },
     );
 
-    if (existing.count === 0) {
+    if (Number(existing.count) === 0) {
       await queryInterface.bulkInsert('categorias', [
         {
           ...cat,

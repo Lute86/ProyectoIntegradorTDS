@@ -13,7 +13,7 @@ export async function up(queryInterface, Sequelize) {
       { replacements: [user.email], type: Sequelize.QueryTypes.SELECT }
     );
 
-    if (existing.count === 0) {
+    if (Number(existing.count) === 0) {
       const passwordHash = await bcrypt.hash(user.password, 10);
       await queryInterface.bulkInsert('users', [
         {
