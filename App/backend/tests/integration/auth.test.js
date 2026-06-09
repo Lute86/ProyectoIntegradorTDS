@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterAll, beforeAll } from '@jest/globals';
 import request from 'supertest';
+import bcrypt from 'bcryptjs';
 import app from '../../src/app.js';
 import { sequelize } from '../../src/models/index.js';
 
@@ -17,66 +18,28 @@ describe('Auth Endpoints', () => {
   });
 
   describe('POST /api/auth/register', () => {
-    it('debería registrar un usuario con datos válidos', async () => {
-      const res = await request(app)
-        .post('/api/auth/register')
-        .send({
-          nombre: 'Juan',
-          apellido: 'Pérez',
-          email: 'juan@test.com',
-          password: '123456',
-          rol: 'profesor',
-        })
-        .expect(201);
-
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.token).toBeDefined();
-      expect(res.body.data.user.email).toBe('juan@test.com');
-    });
-
-    it('debería fallar si falta el email', async () => {
-      const res = await request(app)
-        .post('/api/auth/register')
-        .send({
-          nombre: 'Juan',
-          password: '123456',
-        })
-        .expect(400);
-
-      expect(res.body.errors).toBeDefined();
-    });
-
-    it('debería fallar si el email ya está registrado', async () => {
+    it('debería retornar 404 porque la ruta fue eliminada', async () => {
       await request(app)
         .post('/api/auth/register')
         .send({
           nombre: 'Juan',
           email: 'juan@test.com',
-          password: '123456',
-        });
-
-      const res = await request(app)
-        .post('/api/auth/register')
-        .send({
-          nombre: 'Pedro',
-          email: 'juan@test.com',
-          password: '123456',
+          password: '12345678',
         })
-        .expect(409);
-
-      expect(res.body.success).toBe(false);
+        .expect(404);
     });
   });
 
   describe('POST /api/auth/login', () => {
     beforeEach(async () => {
-      await request(app)
-        .post('/api/auth/register')
-        .send({
-          nombre: 'Juan',
-          email: 'juan@test.com',
-          password: '123456',
-        });
+      const passwordHash = await bcrypt.hash('testpass123', 10);
+      await sequelize.models.User.create({
+        nombre: 'Juan',
+        email: 'juan@test.com',
+        password_hash: passwordHash,
+        rol: 'profesor',
+        activo: true,
+      });
     });
 
     it('debería loguear con credenciales válidas', async () => {
@@ -84,7 +47,7 @@ describe('Auth Endpoints', () => {
         .post('/api/auth/login')
         .send({
           email: 'juan@test.com',
-          password: '123456',
+          password: 'testpass123',
         })
         .expect(200);
 
@@ -107,15 +70,20 @@ describe('Auth Endpoints', () => {
 
   describe('GET /api/auth/profile', () => {
     it('debería obtener el perfil con token válido', async () => {
-      const registerRes = await request(app)
-        .post('/api/auth/register')
-        .send({
-          nombre: 'Juan',
-          email: 'juan@test.com',
-          password: '123456',
-        });
+      const passwordHash = await bcrypt.hash('testpass123', 10);
+      const user = await sequelize.models.User.create({
+        nombre: 'Juan',
+        email: 'juan@test.com',
+        password_hash: passwordHash,
+        rol: 'profesor',
+        activo: true,
+      });
 
-      const token = registerRes.body.data.token;
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ email: 'juan@test.com', password: 'testpass123' });
+
+      const token = loginRes.body.data.token;
 
       const res = await request(app)
         .get('/api/auth/profile')

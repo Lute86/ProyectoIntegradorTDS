@@ -4,7 +4,7 @@ export async function up(queryInterface, Sequelize) {
     { type: Sequelize.QueryTypes.SELECT }
   );
 
-  if (existing.count === 0) {
+  if (Number(existing.count) === 0) {
     await queryInterface.bulkInsert('site_config', [
       {
         site_name: 'IFTS 29',

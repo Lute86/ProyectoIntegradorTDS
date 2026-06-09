@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from '@jest/glo
 import request from 'supertest';
 import app from '../../src/app.js';
 import { sequelize } from '../../src/models/index.js';
+import { createAndLogin } from '../helpers/helpers.js';
 
 describe('Testimonio Endpoints', () => {
   let adminToken;
@@ -15,35 +16,9 @@ describe('Testimonio Endpoints', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
 
-    const adminRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Admin',
-        email: 'admin@test.com',
-        password: '123456',
-        rol: 'admin',
-      });
-    adminToken = adminRes.body.data.token;
-
-    const profesorRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Profesor',
-        email: 'profesor@test.com',
-        password: '123456',
-        rol: 'profesor',
-      });
-    profesorToken = profesorRes.body.data.token;
-
-    const tutorRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Tutor',
-        email: 'tutor@test.com',
-        password: '123456',
-        rol: 'tutor',
-      });
-    tutorToken = tutorRes.body.data.token;
+    ({ token: adminToken } = await createAndLogin({ nombre: 'Admin', email: 'admin@test.com', rol: 'admin' }));
+    ({ token: profesorToken } = await createAndLogin({ nombre: 'Profesor', email: 'profesor@test.com', rol: 'profesor' }));
+    ({ token: tutorToken } = await createAndLogin({ nombre: 'Tutor', email: 'tutor@test.com', rol: 'tutor' }));
   });
 
   afterAll(async () => {
