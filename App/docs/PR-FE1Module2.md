@@ -5,7 +5,9 @@
 Se implementa la HomePage completa y las paginas de Carreras (listado + detalle con tabs).
 
 ### HomePage
-5 secciones: Hero, Stats, CareerCards, NewsSection, TestimonialsCarousel (con auto-play cada 5s).
+8 secciones configurables: Hero, Stats, CareerCards, NewsSection, EventosSection, TestimonialsCarousel, GaleriaCarousel.
+- `EventosSection`: carrusel de hasta 6 eventos (3 visibles en desktop), auto-advance cada 6s, siempre visible (si no hay eventos, muestra mensaje "No hay eventos proximos por ahora").
+- `EventosSection` pasada a recibir `eventos` desde `useEventosStore()` via HomePage.
 
 ### CarrerasPage (listado)
 - Header con gradient, breadcrumb (Inicio / Carreras)
@@ -19,7 +21,8 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
   - Descripcion: texto largo + info cards (duracion, modalidad, titulo)
   - Materias: agrupadas por cuatrimestre con border-left color
   - Requisitos: lista con bullet points
-  - Horarios: tabla con HorariosTable component
+  - Horarios: tabla inline con boton "Todas" + comisiones individuales (A, B, C...), columna "Comision" visible solo en modo "Todas"
+  - Filtro por cuatrimestre en pestaña Horarios (tabs: "Todos los cuatrimestres", "1°", "2°"...)
 - Sidebar: otras carreras + card de contacto
 - 404 handling si el slug no existe
 
@@ -41,9 +44,11 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 | `src/components/public/TestimonialsCarousel/TestimonialsCarousel.jsx` | Nuevo | Carrusel con auto-play 5s, dots, controles |
 | `src/components/public/TestimonialsCarousel/TestimonialSlide.jsx` | Nuevo | Slide con comilla, avatar, nombre |
 | `src/components/public/HorariosTable/HorariosTable.jsx` | Nuevo | Tabla de horarios con thead/tbody |
-| `src/pages/public/HomePage/HomePage.jsx` | Modificado | Reemplazado placeholder por 5 secciones |
+| `src/pages/public/HomePage/HomePage.jsx` | Modificado | Reemplazado placeholder por 8 secciones configurables |
 | `src/pages/public/CarrerasPage/CarrerasPage.jsx` | Modificado | Listado completo con filtros |
-| `src/pages/public/CarrerasPage/CarreraDetailPage.jsx` | Nuevo | Detalle con 4 tabs + sidebar |
+| `src/pages/public/CarrerasPage/CarreraDetailPage.jsx` | Modificado | Horarios: boton "Todas", filtro cuatrimestre, columna comision condicional |
+| `src/components/public/EventosSection/EventosSection.jsx` | Modificado | Siempre visible aunque no haya eventos |
+| `src/components/public/EventosSection/EventosCard.jsx` | Modificado | Adaptacion dual mock/API, "Ver detalle" abre modal |
 | `src/AppRouter.jsx` | Modificado | Ruta /carreras/:slug agregada |
 
 ### Tests
@@ -62,6 +67,19 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 | `src/tests/pages/HomePage.test.jsx` | 1 test (5 secciones renderizan) |
 | `src/tests/pages/CarrerasPage.test.jsx` | 3 tests (h1, filtro, 3 carreras) |
 | `src/tests/pages/CarreraDetailPage.test.jsx` | 4 tests (h1, tabs, sidebar, 404) |
+
+### Horarios tab — mensajes condicionales
+
+**Archivo:** `src/pages/public/CarrerasPage/CarreraDetailPage.jsx`
+
+**Problema:** El subtitulo "Selecciona una comision y/o cuatrimestre para ver los horarios" se mostraba siempre, incluso cuando no habia comisiones disponibles para la carrera. Luego abajo aparecia "Sin horarios disponibles para esta carrera."
+
+**Solucion:**
+- Se elimino el subtitulo fijo.
+- Cuando `comisiones.length > 0`: se muestra un info card (`bg-slate-50/80 border border-slate-200 rounded-xl p-5 text-center`) con el mensaje de seleccion, consistente con el diseno de la pagina.
+- Cuando `comisiones.length === 0`: se muestra directamente "Sin horarios disponibles para esta carrera." sin mensaje previo.
+
+---
 
 ## Pendiente
 

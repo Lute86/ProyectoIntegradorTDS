@@ -249,6 +249,11 @@
 - [x] Conectar EventosSection en HomePage
 - [x] Fix guardado batch de horarios: guardado secuencial, preservar datos en fallos, notificacion local
 - [x] NoticiasPage: reemplazar placeholder NOT por icono SVG de categoria
+- [x] Horarios: agregar opcion "Todas" en comisiones + filtro por cuatrimestre en CarreraDetailPage y EstudiantesPage
+- [x] Eventos: EventosSection siempre visible en Home (titulo + mensaje si vacio)
+- [x] Eventos: EventosCard adaptado a campos dual mock/API
+- [x] EventosPage: campos adaptados, descripcion truncada a 2 lineas, card clickeable abre modal
+- [x] EventoDetailModal: nuevo componente modal flotante con info completa del evento
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
@@ -284,6 +289,8 @@
 - [x] Horarios admin: CRUD con comisiones en detalle de carrera
 - [x] Stores carrerasStore/materiasStore: cooldown, relanzan errores
 - [x] Tests: materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin
+- [x] Boton "Plan" en admin Carreras (navega a detalle/plan)
+- [x] Boton "Asignar carrera" en admin Materias con modal inline (selecciona carrera + cuatrimestre)
 
 **Dependencias:** Módulo FE 4 (mismo dev), Módulo BE 12 (tabla intermedia)
 **Contraparte BE:** Módulo BE 12

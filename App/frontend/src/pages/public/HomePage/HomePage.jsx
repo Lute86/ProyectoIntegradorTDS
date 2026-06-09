@@ -5,7 +5,8 @@ import NewsSection from '../../../components/public/NewsSection/NewsSection'
 import GaleriaCarousel from '../../../components/public/GaleriaCarousel/GaleriaCarousel'
 import TestimonialsCarousel from '../../../components/public/TestimonialsCarousel/TestimonialsCarousel'
 import EventosSection from '../../../components/public/EventosSection/EventosSection'
-import { useEffect, useMemo } from 'react'
+import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
+import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
@@ -35,6 +36,7 @@ function adaptNoticia(n) {
 
 export default function HomePage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
+  const [selectedEvento, setSelectedEvento] = useState(null)
   const { noticias: storeNoticias, fetchNoticias } = useNoticiasStore()
   const { config, fetchConfig } = useSiteConfigStore()
   const { eventos, fetchEventos } = useEventosStore()
@@ -58,7 +60,7 @@ export default function HomePage() {
       statistics:  <Stats items={MOCK_STATS} />,
       careers:     <CareerCarousel carreras={carreras} />,
       news:        <NewsSection noticias={noticias} />,
-      events:      <EventosSection eventos={eventos} />,
+      events:      <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
       testimonials:<TestimonialsCarousel testimonios={testimonios} />,
       gallery:     <GaleriaCarousel />,
     }
@@ -70,5 +72,15 @@ export default function HomePage() {
       .filter(Boolean)
   }, [config.sections, carreras, noticias, eventos, testimonios])
 
-  return <>{secciones}</>
+  return (
+    <>
+      {secciones}
+      {selectedEvento && (
+        <EventoDetailModal
+          evento={selectedEvento}
+          onClose={() => setSelectedEvento(null)}
+        />
+      )}
+    </>
+  )
 }

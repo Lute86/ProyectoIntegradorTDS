@@ -39,6 +39,7 @@ export default function CarreraDetailPage() {
   const [activeTab, setActiveTab] = useState('descripcion')
   const [horarios, setHorarios] = useState([])
   const [selectedComision, setSelectedComision] = useState('')
+  const [cuatriFilter, setCuatriFilter] = useState('')
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [fetchedHorarios, setFetchedHorarios] = useState(false)
 
@@ -72,6 +73,7 @@ export default function CarreraDetailPage() {
 
   useEffect(() => {
     setSelectedComision('')
+    setCuatriFilter('')
     setHorarios([])
     setActiveTab('descripcion')
     setFetchedHorarios(false)
@@ -102,17 +104,31 @@ export default function CarreraDetailPage() {
     return Array.from(set).sort()
   }, [horarios])
 
+  const cuatrimestres = useMemo(() => {
+    const set = new Set(
+      horarios.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
+    )
+    return Array.from(set).sort((a, b) => a - b)
+  }, [horarios])
+
   const horariosFiltrados = useMemo(() => {
     if (!selectedComision) return []
-    return horarios
-      .filter((h) => h.comision === selectedComision)
-      .sort((a, b) => {
-        const nomA = a.carreraMateria?.materia?.nombre || ''
-        const nomB = b.carreraMateria?.materia?.nombre || ''
-        if (nomA !== nomB) return nomA.localeCompare(nomB)
-        return (a.dia || '').localeCompare(b.dia || '')
-      })
-  }, [horarios, selectedComision])
+    let filtrados = horarios
+    if (selectedComision !== 'Todas') {
+      filtrados = filtrados.filter((h) => h.comision === selectedComision)
+    }
+    if (cuatriFilter) {
+      filtrados = filtrados.filter(
+        (h) => h.carreraMateria?.cuatrimestre === cuatriFilter
+      )
+    }
+    return filtrados.sort((a, b) => {
+      const nomA = a.carreraMateria?.materia?.nombre || ''
+      const nomB = b.carreraMateria?.materia?.nombre || ''
+      if (nomA !== nomB) return nomA.localeCompare(nomB)
+      return (a.dia || '').localeCompare(b.dia || '')
+    })
+  }, [horarios, selectedComision, cuatriFilter])
 
   if (loading && !carrera) {
     return (
@@ -144,8 +160,8 @@ export default function CarreraDetailPage() {
   const infoCards = [
     { label: 'Duracion', valor: carrera.duracion ? `${carrera.duracion} anos` : '—' },
     { label: 'Modalidad', valor: carrera.modalidad ? capitalizar(carrera.modalidad) : '—' },
-    // FALTA: titulo_oficial no existe en BD
-    { label: 'Titulo', valor: `Tecnicatura en ${carrera.nombre}` },
+    // 
+  //  { label: 'Titulo', valor: `Tecnicatura en ${carrera.nombre}` },
   ]
 
   return (
@@ -236,8 +252,14 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'horarios' && (
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Horarios por Comision - Primer Cuatrimestre</h3>
-                <p className="text-slate-500 text-sm mb-6">Selecciona una comision para ver los horarios de todas las materias</p>
+                {comisiones.length > 0 ? (
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-xl font-bold text-slate-900">Horarios</h3>
+                    <p className="text-slate-500 text-xs">Selecciona una comision y/o cuatrimestre para ver los horarios</p>
+                  </div>
+                ) : (
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">Horarios</h3>
+                )}
 
                 {loadingHorarios ? (
                   <div className="space-y-4">
@@ -251,11 +273,39 @@ export default function CarreraDetailPage() {
                   </div>
                 ) : comisiones.length === 0 ? (
                   <p className="text-slate-400 text-center py-8 text-sm">
-                    Sin comisiones asignadas.
+                    Sin horarios disponibles para esta carrera.
                   </p>
                 ) : (
                   <>
+                    {cuatrimestres.length > 1 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <button onClick={() => setCuatriFilter('')}
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                            !cuatriFilter
+                              ? 'bg-slate-800 text-white shadow-sm'
+                              : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                          }`}
+                        >Todos los cuatrimestres</button>
+                        {cuatrimestres.map((c) => (
+                          <button key={c} onClick={() => setCuatriFilter(c)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                              cuatriFilter === c
+                                ? 'bg-slate-800 text-white shadow-sm'
+                                : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                            }`}
+                          >{nombresCuatri[c] || `Cuatrimestre ${c}`}</button>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 mb-6">
+                      <button onClick={() => setSelectedComision('Todas')}
+                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                          selectedComision === 'Todas'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >Todas</button>
                       {comisiones.map((com) => (
                         <button key={com} onClick={() => setSelectedComision(com)}
                           className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
@@ -267,13 +317,9 @@ export default function CarreraDetailPage() {
                       ))}
                     </div>
 
-                    {!selectedComision ? (
+                    {!selectedComision ? null : horariosFiltrados.length === 0 ? (
                       <p className="text-slate-400 text-center py-8 text-sm">
-                        Selecciona una comision para ver los horarios.
-                      </p>
-                    ) : horariosFiltrados.length === 0 ? (
-                      <p className="text-slate-400 text-center py-8 text-sm">
-                        No hay horarios disponibles para esta comision.
+                        No hay horarios disponibles para esta seleccion.
                       </p>
                     ) : (
                       <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -281,6 +327,9 @@ export default function CarreraDetailPage() {
                           <thead>
                             <tr className="bg-slate-50">
                               <th className="p-3 text-left font-semibold text-slate-600">Materia</th>
+                              {selectedComision === 'Todas' && (
+                                <th className="p-3 text-left font-semibold text-slate-600">Comision</th>
+                              )}
                               <th className="p-3 text-left font-semibold text-slate-600">Dia</th>
                               <th className="p-3 text-left font-semibold text-slate-600">Horario</th>
                             </tr>
@@ -289,6 +338,9 @@ export default function CarreraDetailPage() {
                             {horariosFiltrados.map((h, i) => (
                               <tr key={i} className="border-t border-slate-100 hover:bg-slate-50">
                                 <td className="p-3 text-slate-900 font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                                {selectedComision === 'Todas' && (
+                                  <td className="p-3 text-slate-600 font-semibold">Comision {h.comision}</td>
+                                )}
                                 <td className="p-3 text-slate-700">{h.dia}</td>
                                 <td className="p-3 text-slate-600">{h.horario}</td>
                               </tr>

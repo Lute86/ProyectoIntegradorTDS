@@ -38,6 +38,7 @@ export default function EstudiantesPage() {
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [carreraId, setCarreraId] = useState('')
   const [comision, setComision] = useState('')
+  const [cuatriFilter, setCuatriFilter] = useState('')
 
   useEffect(() => { fetchCarreras() }, [fetchCarreras])
 
@@ -58,18 +59,25 @@ export default function EstudiantesPage() {
 
   const horariosFiltrados = useMemo(() => {
     if (!comision) return []
-    return horarios
-      .filter((h) => h.comision === comision)
-      .sort((a, b) => {
-        const cuatriA = a.carreraMateria?.cuatrimestre || 0
-        const cuatriB = b.carreraMateria?.cuatrimestre || 0
-        if (cuatriA !== cuatriB) return cuatriA - cuatriB
-        const nomA = a.carreraMateria?.materia?.nombre || ''
-        const nomB = b.carreraMateria?.materia?.nombre || ''
-        if (nomA !== nomB) return nomA.localeCompare(nomB)
-        return (a.dia || '').localeCompare(b.dia || '')
-      })
-  }, [horarios, comision])
+    let filtrados = horarios
+    if (comision !== 'Todas') {
+      filtrados = filtrados.filter((h) => h.comision === comision)
+    }
+    if (cuatriFilter) {
+      filtrados = filtrados.filter(
+        (h) => h.carreraMateria?.cuatrimestre === cuatriFilter
+      )
+    }
+    return filtrados.sort((a, b) => {
+      const cuatriA = a.carreraMateria?.cuatrimestre || 0
+      const cuatriB = b.carreraMateria?.cuatrimestre || 0
+      if (cuatriA !== cuatriB) return cuatriA - cuatriB
+      const nomA = a.carreraMateria?.materia?.nombre || ''
+      const nomB = b.carreraMateria?.materia?.nombre || ''
+      if (nomA !== nomB) return nomA.localeCompare(nomB)
+      return (a.dia || '').localeCompare(b.dia || '')
+    })
+  }, [horarios, comision, cuatriFilter])
 
   const horariosPorCuatri = useMemo(() => {
     const map = {}
@@ -86,7 +94,14 @@ export default function EstudiantesPage() {
     return Array.from(set).sort()
   }, [horarios])
 
-  useEffect(() => { setComision('') }, [carreraId])
+  const cuatrimestres = useMemo(() => {
+    const set = new Set(
+      horarios.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
+    )
+    return Array.from(set).sort((a, b) => a - b)
+  }, [horarios])
+
+  useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
 
   return (
     <div className="bg-slate-50">
@@ -131,7 +146,7 @@ export default function EstudiantesPage() {
             Horarios
           </h2>
 
-          <div className="max-w-lg mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+          <div className="max-w-2xl mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Carrera</label>
@@ -145,18 +160,34 @@ export default function EstudiantesPage() {
                 </select>
               </div>
 
-              <div className="flex-1">
-                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
-                <select value={comision} onChange={(e) => setComision(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={comisiones.length === 0 || loadingHorarios}
-                >
-                  <option value="">Seleccionar</option>
-                  {comisiones.map((c) => (
-                    <option key={c} value={c}>Comision {c}</option>
-                  ))}
-                </select>
-              </div>
+              {carreraId && comisiones.length > 0 && (
+                <div className="flex-1 animate-in fade-in duration-300">
+                  <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
+                  <select value={comision} onChange={(e) => setComision(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="Todas">Todas las comisiones</option>
+                    {comisiones.map((c) => (
+                      <option key={c} value={c}>Comision {c}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {comision && cuatrimestres.length > 0 && (
+                <div className="flex-1 animate-in fade-in duration-300">
+                  <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Cuatrimestre</label>
+                  <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
+                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  >
+                    <option value="">Todos los cuatrimestres</option>
+                    {cuatrimestres.map((c) => (
+                      <option key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 
@@ -179,6 +210,9 @@ export default function EstudiantesPage() {
                         <thead>
                           <tr className="bg-slate-900 text-white">
                             <th className="text-center px-4 py-3 font-semibold">Materia</th>
+                            {comision === 'Todas' && (
+                              <th className="text-center px-4 py-3 font-semibold">Comision</th>
+                            )}
                             <th className="text-center px-4 py-3 font-semibold">Dia</th>
                             <th className="text-center px-4 py-3 font-semibold">Horario</th>
                             <th className="text-center px-4 py-3 font-semibold">Aula</th>
@@ -189,6 +223,9 @@ export default function EstudiantesPage() {
                           {filas.map((h, i) => (
                             <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                               <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                              {comision === 'Todas' && (
+                                <td className="text-center px-4 py-3 font-semibold text-blue-600">Comision {h.comision}</td>
+                              )}
                               <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
                               <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
                               <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
@@ -204,13 +241,13 @@ export default function EstudiantesPage() {
             </div>
           ) : (
             <div className="text-center py-8 text-slate-400 text-sm">
-              {carreraId && loadingHorarios
-                ? 'Cargando horarios...'
-                : carreraId && comisiones.length === 0
+              {!carreraId
+                ? 'Selecciona una carrera para comenzar.'
+                : comisiones.length === 0
                   ? 'No hay horarios disponibles para esta carrera.'
-                  : carreraId && !comision
-                    ? 'Selecciona una comision para ver los horarios.'
-                    : 'Selecciona una carrera para comenzar.'}
+                  : !comision
+                    ? 'Selecciona una comision o Todas para ver los horarios.'
+                    : 'No hay horarios disponibles para esta seleccion.'}
             </div>
           )}
         </section>

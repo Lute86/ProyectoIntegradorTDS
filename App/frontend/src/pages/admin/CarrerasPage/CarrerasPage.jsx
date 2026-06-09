@@ -138,6 +138,12 @@ const AdminCarrerasPage = () => {
                     <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex gap-2 justify-end">
                         <button
+                          onClick={() => navigate(`/admin/carreras/${c.id}`)}
+                          className="px-3 py-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                        >
+                          Plan
+                        </button>
+                        <button
                           onClick={() => abrirModalEditar(c)}
                           className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
                         >
