@@ -24,7 +24,7 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>Redes Sociales</h3>
             <ul className="space-y-2 text-sm">
-              {Object.entries(config.socialLinks || {}).length > 0 ? (
+              {Object.entries(config.socialLinks || {}).filter(([, url]) => url).length > 0 ? (
                 Object.entries(config.socialLinks).map(([red, url]) =>
                   url ? (
                     <li key={red}>
