@@ -143,7 +143,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
             ]
           : DEFAULT_CONFIG.sections, 
         // 
-            socialLinks: DEFAULT_CONFIG.socialLinks,
+            socialLinks: data.social_links || DEFAULT_CONFIG.socialLinks,
           },
           isLoading: false,
         })
@@ -154,21 +154,22 @@ export const useSiteConfigStore = create<SiteConfigState>()(
   },
   saveConfig: async () => {
     const state = useSiteConfigStore.getState();
-    const payload = {
-      site_name: state.config.siteName,
-      site_subtitle: state.config.siteSubtitle,
-      contact_email: state.config.contactEmail,
-      contact_phone: state.config.contactPhone,
-      address: state.config.address,
-      seo_description: state.config.seoDescription,
-      footer_text: state.config.footerText,
-      colors: state.config.colors,
-      layout: { mode: state.config.layout },
-      sections: state.config.sections,
-      typography: state.config.typography,
-      theme_preset: state.config.themePreset,
-      social_links: state.config.socialLinks,
+    const cfg = state.config;
+    const payload: Record<string, unknown> = {
+      site_name: cfg.siteName || 'IFTS 29',
+      site_subtitle: cfg.siteSubtitle || '',
+      address: cfg.address || '',
+      footer_text: cfg.footerText || '',
+      colors: cfg.colors,
+      layout: { mode: cfg.layout },
+      sections: cfg.sections,
+      typography: cfg.typography,
+      theme_preset: cfg.themePreset || 'default',
+      social_links: cfg.socialLinks,
     };
+    if (cfg.contactEmail) payload.contact_email = cfg.contactEmail;
+    if (cfg.contactPhone) payload.contact_phone = cfg.contactPhone;
+    if (cfg.seoDescription) payload.seo_description = cfg.seoDescription;
     try {
       await api.put('/config', payload);
       set({ isDirty: false });

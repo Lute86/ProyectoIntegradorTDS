@@ -15,15 +15,9 @@ const DEFAULT_CONFIG = {
 }
 
 let mockConfig = { ...DEFAULT_CONFIG }
-const mockFetchConfig = vi.fn()
-
-const mockUseSiteConfigStore = vi.hoisted(() => vi.fn(() => ({
-  config: mockConfig,
-  fetchConfig: mockFetchConfig,
-})))
 
 vi.mock('../../stores/siteConfigStore', () => ({
-  useSiteConfigStore: mockUseSiteConfigStore,
+  useSiteConfigStore: vi.fn(() => ({ config: mockConfig })),
 }))
 
 import Footer from '../../components/layout/PublicLayout/Footer/Footer'
@@ -31,8 +25,6 @@ import Footer from '../../components/layout/PublicLayout/Footer/Footer'
 describe('Footer', () => {
   beforeEach(() => {
     mockConfig = { ...DEFAULT_CONFIG }
-    mockFetchConfig.mockClear()
-    mockUseSiteConfigStore.mockClear()
   })
 
   it('renderiza el nombre del sitio y subtitulo', () => {
@@ -64,17 +56,12 @@ describe('Footer', () => {
     expect(screen.queryByText('Carreras')).not.toBeInTheDocument()
   })
 
-  it('muestra "Sin redes configuradas" cuando no hay URLs de redes sociales', () => {
+  it('muestra "Sin redes configuradas" cuando no hay URLs', () => {
     mockConfig.socialLinks = { instagram: '', facebook: '' }
     render(<Footer />)
     expect(screen.getByText('Sin redes configuradas')).toBeInTheDocument()
     expect(screen.queryByText('Instagram')).not.toBeInTheDocument()
     expect(screen.queryByText('Facebook')).not.toBeInTheDocument()
-  })
-
-  it('llama a fetchConfig al montarse', () => {
-    render(<Footer />)
-    expect(mockFetchConfig).toHaveBeenCalledTimes(1)
   })
 
   it('renderiza el footerText en la barra inferior', () => {

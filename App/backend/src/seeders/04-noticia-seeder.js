@@ -79,7 +79,7 @@ export async function up(queryInterface, Sequelize) {
       { replacements: [noticia.slug], type: Sequelize.QueryTypes.SELECT },
     );
 
-    if (existing.count === 0) {
+    if (Number(existing.count) === 0) {
       await queryInterface.bulkInsert('noticias', [
         {
           ...noticia,

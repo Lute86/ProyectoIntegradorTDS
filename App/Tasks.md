@@ -74,6 +74,48 @@
 
 **Descripción:** Se refactoriza el modelo de datos para permitir que una materia pertenezca a múltiples carreras con cuatrimestre y carga horaria independientes. Se crea una tabla intermedia `carrera_materias` que conecta Carrera con Materia (relación M:N). Los horarios ahora referencian la asignación carrera-materia en vez de la materia directamente.
 
+#### Módulo 13: Configuración Backend Producción
+**Tareas:**
+- [x] Habilitar SSL en PostgreSQL para producción (database.js)
+- [x] Crear archivo .env.prod (template de variables de entorno — commiteado)
+- [x] Limpiar variable CORS no utilizada en .env, reemplazar por FRONTEND_URL
+- [x] Health check `/api/health` valida conexión a DB con `sequelize.authenticate()`
+- [x] Crear Dockerfile.frontend (nginx:alpine) y Dockerfile.backend (Node 22 Alpine)
+- [x] Crear configuraciones nginx: ssl.conf, frontend.conf, backend.conf
+- [x] Crear docker-compose.yml para producción (PostgreSQL + Node + Nginx HTTPS)
+- [x] Crear scripts: generate-secrets.sh, generate-ssl.sh
+- [x] Agregar security headers en nginx (HSTS, CSP, X-Frame-Options, etc.)
+- [x] HTTP→HTTPS redirect en nginx
+- [x] Frontend API URL usa window.location.origin (dev y prod)
+- [x] Agregar targets Makefile: prod-first, prod, prod-down, prod-reset, setup-prod, ssl-selfsigned
+- [x] Documentación PR
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Ninguna
+
+**Descripción:** Stack de producción completo: Dockerfiles multi-stage optimizados, nginx con TLS 1.2/1.3 y security headers, PostgreSQL con healthchecks, scripts de generación de secrets y certificados SSL, y despliegue con un solo comando (`make prod-first`). `.env.prod` es el template commiteado; `.env` se genera automáticamente con secrets aleatorios.
+
+#### Módulo 14: Seguridad Backend
+**Tareas:**
+- [x] Eliminar fallback hardcoded de JWT_SECRET (crash si falta env var) — CRIT-01
+- [x] Eliminar ruta pública POST /api/auth/register — CRIT-02
+- [x] Eliminar handler, servicio y validator de registro — CRIT-02
+- [x] Cambiar CORS fallback de '*' a 'https://localhost' — HIGH-02
+- [x] Generar passwords aleatorios en seeder con crypto.randomBytes — HIGH-04
+- [x] Reducir rate limit global de 200 a 100 req/min — MED-01
+- [x] Agregar loginLimiter (10 intentos/15min) — MED-01
+- [x] Eliminar envío de stack traces al cliente — MED-03
+- [x] Aumentar mínimo de contraseña de 6 a 8 caracteres — MED-07
+- [x] Crear tests/helpers.js con createUser, generateToken, createAndLogin
+- [x] Refactorizar 13 archivos de test de integración (reemplazar register → createAndLogin)
+- [x] Actualizar auth.test.js y auth.services.test.js
+- [x] Documentación PR
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Ninguna
+
+**Descripción:** Correcciones de seguridad críticas y medias al backend basadas en el security audit del 2026-06-08. Se eliminan vulnerabilidades de autenticación (JWT fallback, registro público), se endurece la configuración (CORS, rate limiting, passwords), y se refactorizan todos los tests de integración para usar un helper compartido en vez del endpoint de registro eliminado. 480 tests pasan (33 suites).
+
 #### Módulo 3: Gestión de Usuarios
 **Tareas:**
 - [x] Controlador de User (CRUD, asignación de roles)

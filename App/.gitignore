@@ -13,6 +13,9 @@ backend/node_modules/
 frontend/dist/
 frontend/.vite/
 
+# ── SSL certificates ────────────────────────────────────────────────────────
+docker/ssl/
+
 # ── Base de datos y uploads (dev) ──────────────────────────────────────────
 backend/data/
 backend/uploads/
@@ -32,8 +35,6 @@ Thumbs.db
 
 # ── Docker (producción) ─────────────────────────────────────────────────
 docker-compose.dev.yml
-docker/Dockerfile.backend
-docker/Dockerfile.frontend
 
 # ── Scripts  ────────────────────────────────────────────────────────────
 AGENTS.md
@@ -45,3 +46,5 @@ GUIA_COLOQUIO_FEDEV2.md
 GUIA_CONEXION_BACKEND.md
 AUDITORIA_RBAC.md
 AUDITORIA_INTEGRACION_API.md
+AUDITORIA_DEUDA_TECNICA.md
+GUIA_TESTS_UNITARIOS.md
