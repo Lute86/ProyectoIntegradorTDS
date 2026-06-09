@@ -16,7 +16,7 @@ RED    = \033[31m
 .PHONY: dev dev-d dev-down dev-reset dev-reset-up
 .PHONY: prod prod-down prod-reset ssl ssl-selfsigned setup-prod
 .PHONY: logs logs-dev logs-be logs-fe
-.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
+.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev seed seed-user-dev seed-user db-count db-count-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
 .PHONY: check-env help fclean
 
 # =============================================================================
@@ -58,7 +58,9 @@ dev: ## Levanta el entorno de desarrollo con hot-reload (Vite + Nodemon + SQLite
 
 dev-d: ## Igual que dev pero en background (detached)
 	docker compose -f docker-compose.dev.yml up --build -d
-
+	@echo "$(YELLOW)  Frontend → http://localhost:5173$(RESET)"
+	@echo "$(YELLOW)  Backend  → http://localhost:3000/api$(RESET)"
+	
 dev-down: ## Detiene el entorno de desarrollo
 	docker compose -f docker-compose.dev.yml down
 
@@ -98,6 +100,7 @@ prod-first: ## Primera vez: genera .env, SSL y levanta producción
 	@echo ""
 	@echo "$(GREEN)✔ Producción lista$(RESET)"
 	@echo "  HTTPS → https://localhost"
+	@echo "  Para cargar datos: make migrate && make seed && make seed-user"
 
 prod-down: ## Detiene producción
 	docker compose down
@@ -144,6 +147,21 @@ migrate-dev: ## Ejecuta migraciones en desarrollo
 
 seed-dev: ## Carga los seeders en desarrollo
 	docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:seed:all
+
+seed: ## Carga los seeders en producción
+	docker compose exec backend npx sequelize-cli db:seed:all
+
+seed-user-dev: ## Crea/actualiza un usuario en desarrollo. Uso: make seed-user-dev [EMAIL=...] [PASSWORD=...] [ROL=...]
+	docker compose -f docker-compose.dev.yml exec backend node scripts/create-user.js
+
+seed-user: ## Crea/actualiza un usuario en producción. Uso: make seed-user [EMAIL=...] [PASSWORD=...] [ROL=...]
+	docker compose exec backend node scripts/create-user.js
+
+db-count: ## Muestra cantidad de filas por tabla (producción)
+	docker compose exec backend node scripts/db-count.js
+
+db-count-dev: ## Muestra cantidad de filas por tabla (desarrollo)
+	docker compose -f docker-compose.dev.yml exec backend node scripts/db-count.js
 
 tests-back: ## Ejecuta tests del backend (docker). Uso: make tests-back | make tests-back arg=consulta
 ifdef arg

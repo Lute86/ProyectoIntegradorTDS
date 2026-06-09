@@ -15,6 +15,11 @@ import routes from './routes/index.js';
 
 const app = express();
 
+// ── Trust proxy (solo producción, detrás de nginx) ──────────────────────
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // ── Seguridad y utilidades ──────────────────────────────────────────────
 app.use(helmet());
 app.use(compression());

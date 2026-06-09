@@ -26,11 +26,11 @@ export default {
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     logging: false,
-    dialectOptions: {
+    dialectOptions: process.env.DB_SSL === 'true' ? {
       ssl: {
         require: true,
         rejectUnauthorized: false,
       },
-    },
+    } : {},
   },
 };
