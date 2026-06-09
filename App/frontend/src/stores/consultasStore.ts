@@ -33,7 +33,8 @@ export const useConsultasStore = create<ConsultasState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await api.get('/consultas');
-      const apiData = response.data?.data || response.data || [];
+      const raw = response.data?.data;
+      const apiData = raw?.data ?? raw ?? [];
       set({ consultas: Array.isArray(apiData) ? apiData : [], isLoading: false });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar las consultas';
