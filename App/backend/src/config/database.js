@@ -27,7 +27,10 @@ export default {
     password: process.env.DB_PASSWORD,
     logging: false,
     dialectOptions: {
-      ssl: false,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
   },
 };

@@ -1,10 +1,15 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+
+function generatePassword() {
+  return crypto.randomBytes(12).toString('base64url');
+}
 
 export async function up(queryInterface, Sequelize) {
   const users = [
-    { email: 'admin@ifts29.edu.ar', nombre: 'Admin', rol: 'admin', password: 'admin1234' },
-    { email: 'profesor@ifts29.edu.ar', nombre: 'Profesor', rol: 'profesor', password: 'profesor123' },
-    { email: 'tutor@ifts29.edu.ar', nombre: 'Tutor', rol: 'tutor', password: 'tutor123' },
+    { email: 'admin@ifts29.edu.ar', nombre: 'Admin', rol: 'admin' },
+    { email: 'profesor@ifts29.edu.ar', nombre: 'Profesor', rol: 'profesor' },
+    { email: 'tutor@ifts29.edu.ar', nombre: 'Tutor', rol: 'tutor' },
   ];
 
   for (const user of users) {
@@ -14,7 +19,8 @@ export async function up(queryInterface, Sequelize) {
     );
 
     if (Number(existing.count) === 0) {
-      const passwordHash = await bcrypt.hash(user.password, 10);
+      const password = generatePassword();
+      const passwordHash = await bcrypt.hash(password, 10);
       await queryInterface.bulkInsert('users', [
         {
           nombre: user.nombre,
@@ -27,6 +33,7 @@ export async function up(queryInterface, Sequelize) {
           updatedAt: new Date(),
         },
       ]);
+      console.log(`  ${user.rol}: ${user.email} / ${password}`);
     }
   }
 }

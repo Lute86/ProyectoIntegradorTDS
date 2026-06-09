@@ -2,10 +2,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import models from '../models/index.js';
 import logger from '../utils/logger.js';
-import { UnauthorizedError, ForbiddenError, ConflictError } from '../utils/AppError.js';
+import { UnauthorizedError, ForbiddenError } from '../utils/AppError.js';
 import { handleDbErrors } from '../utils/dbErrorHandler.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_in_production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET no está definido en las variables de entorno');
+}
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 
 export const login = handleDbErrors(async (email, password) => {
@@ -33,44 +36,6 @@ export const login = handleDbErrors(async (email, password) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
   await user.update({ ultimo_acceso: new Date() });
-
-  return {
-    token,
-    user: {
-      id: user.id,
-      nombre: user.nombre,
-      apellido: user.apellido,
-      email: user.email,
-      rol: user.rol,
-      avatar_url: user.avatar_url,
-    },
-  };
-});
-
-export const register = handleDbErrors(async ({ nombre, apellido, email, password, rol = 'profesor' }) => {
-  const existingUser = await models.User.findOne({ where: { email } });
-  if (existingUser) {
-    throw new ConflictError('El email ya está registrado');
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const user = await models.User.create({
-    nombre,
-    apellido,
-    email,
-    password_hash: passwordHash,
-    rol,
-    activo: true,
-  });
-
-  const payload = {
-    id: user.id,
-    email: user.email,
-    rol: user.rol,
-  };
-
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
   return {
     token,

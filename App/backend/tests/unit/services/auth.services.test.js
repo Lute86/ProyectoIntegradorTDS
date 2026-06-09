@@ -26,58 +26,11 @@ jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
 const bcrypt = (await import('bcryptjs')).default;
 const jwt = (await import('jsonwebtoken')).default;
 const models = (await import('../../../src/models/index.js')).default;
-const { login, register, refreshToken, hashPassword } = await import('../../../src/services/auth.services.js');
+const { login, refreshToken, hashPassword } = await import('../../../src/services/auth.services.js');
 
 describe('auth.services', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe('register', () => {
-    it('deberia crear un usuario y retornar token', async () => {
-      const userData = {
-        nombre: 'Juan',
-        apellido: 'Perez',
-        email: 'juan@test.com',
-        password: '123456',
-        rol: 'profesor',
-      };
-
-      models.User.findOne.mockResolvedValue(null);
-      models.User.create.mockResolvedValue(
-        createInstanceMock({
-          id: 1,
-          nombre: 'Juan',
-          apellido: 'Perez',
-          email: 'juan@test.com',
-          rol: 'profesor',
-          avatar_url: null,
-        })
-      );
-
-      const result = await register(userData);
-
-      expect(bcrypt.hash).toHaveBeenCalledWith('123456', 10);
-      expect(models.User.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          nombre: 'Juan',
-          email: 'juan@test.com',
-          password_hash: 'hashed-password',
-          activo: true,
-        })
-      );
-      expect(result.token).toBe('fake-jwt-token');
-      expect(result.user.email).toBe('juan@test.com');
-      expect(result.user).not.toHaveProperty('password_hash');
-    });
-
-    it('deberia lanzar error si el email ya existe', async () => {
-      models.User.findOne.mockResolvedValue({ id: 1, email: 'juan@test.com' });
-
-      await expect(
-        register({ email: 'juan@test.com', password: '123456', nombre: 'Juan' })
-      ).rejects.toThrow('El email ya está registrado');
-    });
   });
 
   describe('login', () => {

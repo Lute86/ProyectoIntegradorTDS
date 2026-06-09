@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import logger from './utils/logger.js';
+import models from './models/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { notFound } from './utils/response.js';
 import routes from './routes/index.js';
@@ -23,7 +24,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', {
 
 // ── CORS ──────────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: process.env.FRONTEND_URL || 'https://localhost',
   credentials: true,
 }));
 
@@ -31,7 +32,7 @@ app.use(cors({
 if (process.env.NODE_ENV !== 'test') {
   app.use('/api/', rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 200,
+    max: 100,
     standardHeaders: true,
     legacyHeaders: false,
   }));
@@ -45,8 +46,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(process.env.UPLOAD_DIR || './uploads'));
 
 // ── Health check ────────────────────────────────────────────────────────
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', env: process.env.NODE_ENV });
+app.get('/api/health', async (_req, res) => {
+  try {
+    await models.sequelize.authenticate();
+    res.json({ status: 'ok', db: 'connected', env: process.env.NODE_ENV });
+  } catch {
+    res.status(503).json({ status: 'error', db: 'disconnected', env: process.env.NODE_ENV });
+  }
 });
 
 // ── Rutas ───────────────────────────────────────────────────────────────

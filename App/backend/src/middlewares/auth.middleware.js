@@ -3,7 +3,10 @@ import models from '../models/index.js';
 import logger from '../utils/logger.js';
 import { unauthorized, serverError } from '../utils/response.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_in_production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET no está definido en las variables de entorno');
+}
 
 export async function authenticate(req, res, next) {
   try {

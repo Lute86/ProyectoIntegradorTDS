@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator';
 import * as authService from '../services/auth.services.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { success, created, validationError } from '../utils/response.js';
+import { success, validationError } from '../utils/response.js';
 
 export const login = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -13,24 +13,6 @@ export const login = asyncHandler(async (req, res) => {
   const result = await authService.login(email, password);
 
   return success(res, result, 'Login exitoso');
-});
-
-export const register = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return validationError(res, errors.array());
-  }
-
-  const { nombre, apellido, email, password, rol } = req.body;
-  const result = await authService.register({
-    nombre,
-    apellido,
-    email,
-    password,
-    rol,
-  });
-
-  return created(res, result, 'Registro exitoso');
 });
 
 export const refresh = asyncHandler(async (req, res) => {

@@ -90,6 +90,15 @@ prod: check-env ssl-selfsigned ## Construye y levanta producción (Nginx HTTPS +
 	@echo "$(CYAN)▶ Iniciando producción...$(RESET)"
 	docker compose up --build -d
 
+prod-first: ## Primera vez: genera .env, SSL y levanta producción
+	@echo "$(CYAN)▶ Configuración inicial de producción...$(RESET)"
+	@$(MAKE) setup-prod
+	@$(MAKE) ssl-selfsigned
+	@$(MAKE) prod
+	@echo ""
+	@echo "$(GREEN)✔ Producción lista$(RESET)"
+	@echo "  HTTPS → https://localhost"
+
 prod-down: ## Detiene producción
 	docker compose down
 

@@ -22,7 +22,7 @@ FROM nginx:1.27-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copiar config de Nginx (incluye proxy /api → backend)
-COPY docker/nginx.prod.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443
 
