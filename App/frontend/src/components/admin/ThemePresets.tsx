@@ -1,5 +1,5 @@
-import { useSiteConfigStore } from '../../stores/siteConfigStore';
-import { clsx } from 'clsx';
+import { useSiteConfigStore } from "../../stores/siteConfigStore";
+import { clsx } from "clsx";
 
 interface Tema {
   id: string;
@@ -9,6 +9,7 @@ interface Tema {
     primary: string;
     secondary: string;
     accent: string;
+    surface: string;
     background: string;
     text: string;
   };
@@ -17,28 +18,28 @@ interface Tema {
 /* Paletas de colores predefinidas para cada tema */
 const TEMAS: Tema[] = [
   {
-    id: 'moderno',
-    nombre: 'Moderno',
-    descripcion: 'Azul y esmeralda, estilo corporativo',
-    colores: { primary: '#2563eb', secondary: '#10b981', accent: '#f59e0b', background: '#ffffff', text: '#111827' },
+    id: "moderno",
+    nombre: "Moderno",
+    descripcion: "Azul y esmeralda, estilo corporativo",
+    colores: { primary: "#2563eb", secondary: "#10b981", accent: "#f59e0b", surface: "#1e293b", background: "#ffffff", text: "#111827" },
   },
   {
-    id: 'clasico',
-    nombre: 'Clasico',
-    descripcion: 'Rojo y azul marino, estilo tradicional',
-    colores: { primary: '#1e3a5f', secondary: '#dc2626', accent: '#d97706', background: '#f8fafc', text: '#1e293b' },
+    id: "clasico",
+    nombre: "Clasico",
+    descripcion: "Rojo y azul marino, estilo tradicional",
+    colores: { primary: "#1e3a5f", secondary: "#dc2626", accent: "#d97706", surface: "#1e293b", background: "#f8fafc", text: "#1e293b" },
   },
   {
-    id: 'oscuro',
-    nombre: 'Oscuro',
-    descripcion: 'Fondo oscuro, ideal para portafolios',
-    colores: { primary: '#6366f1', secondary: '#22d3ee', accent: '#fbbf24', background: '#0f172a', text: '#f1f5f9' },
+    id: "oscuro",
+    nombre: "Oscuro",
+    descripcion: "Fondo oscuro, ideal para portafolios",
+    colores: { primary: "#6366f1", secondary: "#22d3ee", accent: "#fbbf24", surface: "#0f172a", background: "#0f172a", text: "#f1f5f9" },
   },
   {
-    id: 'vibrante',
-    nombre: 'Vibrante',
-    descripcion: 'Colores vivos y llamativos',
-    colores: { primary: '#e11d48', secondary: '#8b5cf6', accent: '#06b6d4', background: '#fff7ed', text: '#1c1917' },
+    id: "vibrante",
+    nombre: "Vibrante",
+    descripcion: "Colores vivos y llamativos",
+    colores: { primary: "#e11d48", secondary: "#8b5cf6", accent: "#06b6d4", surface: "#1e293b", background: "#fff7ed", text: "#1c1917" },
   },
 ];
 
@@ -58,10 +59,10 @@ const ThemePresets = () => {
               useSiteConfigStore.getState().updateConfig({ themePreset: tema.id });
             }}
             className={clsx(
-              'text-left p-4 rounded-xl border-2 transition-all',
+              "text-left p-4 rounded-xl border-2 transition-all",
               activo
-                ? 'border-blue-500 bg-blue-50 shadow-md'
-                : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                ? "border-blue-500 bg-blue-50 shadow-md"
+                : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
             )}
           >
             <h3 className="text-sm font-bold text-gray-900 mb-1">{tema.nombre}</h3>
@@ -75,7 +76,7 @@ const ThemePresets = () => {
             </div>
 
             <p className="text-[10px] text-gray-400 mt-2 font-mono">
-              {Object.values(tema.colores).join(' | ')}
+              {Object.values(tema.colores).join(" | ")}
             </p>
           </button>
         );

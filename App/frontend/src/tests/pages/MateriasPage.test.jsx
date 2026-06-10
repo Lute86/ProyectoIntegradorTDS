@@ -4,8 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 
 const mockMateriasStore = vi.hoisted(() => vi.fn())
 const mockCarrerasStore = vi.hoisted(() => vi.fn())
+const mockApiGet = vi.hoisted(() => vi.fn())
 vi.mock('../../stores/materiasStore', () => ({ default: mockMateriasStore }))
 vi.mock('../../stores/carrerasStore', () => ({ default: mockCarrerasStore }))
+vi.mock('../../services/api', () => ({ default: { get: mockApiGet } }))
 
 import AdminMateriasPage from '../../pages/admin/MateriasPage/MateriasPage'
 
@@ -22,6 +24,7 @@ const MOCK_CARRERAS = [
 describe('AdminMateriasPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockApiGet.mockResolvedValue({ data: { data: {} } })
     mockMateriasStore.mockReturnValue({
       materias: MOCK_MATERIAS,
       loading: false,
@@ -85,16 +88,16 @@ describe('AdminMateriasPage', () => {
   it('abre el modal de asignacion al hacer click en Asignar carrera', () => {
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
     fireEvent.click(screen.getAllByText('Asignar carrera')[0])
-    expect(screen.getByText('Asignar carrera a: Programacion I')).toBeInTheDocument()
+    expect(screen.getByText('Asignar materia a carrera')).toBeInTheDocument()
   })
 
   it('cierra el modal al hacer click en Cancelar', async () => {
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
     fireEvent.click(screen.getAllByText('Asignar carrera')[0])
-    expect(screen.getByText('Asignar carrera a: Programacion I')).toBeInTheDocument()
+    expect(screen.getByText('Asignar materia a carrera')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Cancelar'))
     await waitFor(() => {
-      expect(screen.queryByText('Asignar carrera a: Programacion I')).not.toBeInTheDocument()
+      expect(screen.queryByText('Asignar materia a carrera')).not.toBeInTheDocument()
     })
   })
 
@@ -109,7 +112,7 @@ describe('AdminMateriasPage', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByText('Asignar'))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
     await waitFor(() => {
       expect(addAsignacion).toHaveBeenCalledWith('1', {
         materia_id: 1,
@@ -130,9 +133,9 @@ describe('AdminMateriasPage', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByText('Asignar'))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
     await waitFor(() => {
-      expect(screen.getByText('Materia asignada correctamente')).toBeInTheDocument()
+      expect(screen.getByText('1 materia asignada correctamente.')).toBeInTheDocument()
     })
   })
 
@@ -149,7 +152,7 @@ describe('AdminMateriasPage', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByText('Asignar'))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
     await waitFor(() => {
       expect(screen.getByText('La materia ya esta asignada a esta carrera')).toBeInTheDocument()
     })

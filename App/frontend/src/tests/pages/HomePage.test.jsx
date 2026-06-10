@@ -8,6 +8,10 @@ const MOCK_CARRERAS = [
   { id: 3, slug: 'analisis-de-datos', nombre: 'Analisis de Datos', duracion: 2, modalidad: 'hibrida', descripcion: 'Datos.', color: '#D97706' },
 ]
 
+const MOCK_NOTICIAS = [
+  { id: 1, titulo: 'Noticia 1', slug: 'noticia-1', contenido: '<p>Contenido</p>', categoria: { id: 1, nombre: 'Novedades', slug: 'novedades' }, autor: { id: 1, nombre: 'Admin', apellido: 'User' }, fecha_publicacion: '2026-01-01', estado: 'publicado' },
+]
+
 const MOCK_TESTIMONIOS = [
   { id: 1, texto: 'Testimonio 1', autor_nombre: 'Ana', autor_carrera: 'DS', iniciales: 'AN' },
 ]
@@ -18,6 +22,7 @@ const mockTestimoniosStore = vi.hoisted(() => vi.fn())
 vi.mock('../../stores/carrerasStore', () => ({ default: mockCarrerasStore }))
 vi.mock('../../stores/testimoniosStore', () => ({ useTestimoniosStore: mockTestimoniosStore }))
 
+import { useNoticiasStore } from '../../stores/noticiasStore'
 import HomePage from '../../pages/public/HomePage/HomePage'
 
 describe('HomePage', () => {
@@ -32,6 +37,7 @@ describe('HomePage', () => {
       testimonios: MOCK_TESTIMONIOS,
       fetchTestimonios: vi.fn(),
     })
+    useNoticiasStore.setState({ noticias: MOCK_NOTICIAS, fetchNoticias: vi.fn(), isLoading: false })
   })
 
   it('renderiza todas las secciones', () => {

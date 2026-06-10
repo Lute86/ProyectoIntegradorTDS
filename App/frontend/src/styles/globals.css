@@ -38,8 +38,9 @@
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-body);
+    font-size: var(--font-base-size, 16px);
   }
 }
 
-.layout-boxed { max-width: 1280px; margin-left: auto; margin-right: auto; }
-.layout-full { width: 100%; }
+.layout-boxed { --content-width: 1280px; }
+.layout-full { --content-width: 100%; }

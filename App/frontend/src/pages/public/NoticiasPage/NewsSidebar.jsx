@@ -10,7 +10,7 @@ export default function NewsSidebar({
 }) {
   return (
     <aside className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+      <div className="rounded-xl shadow-sm p-5 border border-slate-100" style={{ backgroundColor: 'var(--clr-card)' }}>
         <h3 className="text-sm font-bold text-slate-900 mb-3 pb-2 border-b-2 border-blue-600">
           Categorias
         </h3>
@@ -48,7 +48,7 @@ export default function NewsSidebar({
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+      <div className="rounded-xl shadow-sm p-5 border border-slate-100" style={{ backgroundColor: 'var(--clr-card)' }}>
         <h3 className="text-sm font-bold text-slate-900 mb-3 pb-2 border-b-2 border-blue-600">
           Noticias Destacadas
         </h3>

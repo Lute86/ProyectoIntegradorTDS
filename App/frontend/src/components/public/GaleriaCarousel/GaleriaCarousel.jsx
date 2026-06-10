@@ -43,7 +43,7 @@ export default function GaleriaCarousel() {
   }, [goNext, total, visible])
 
   return (
-    <section className="py-16 bg-slate-50">
+    <section className="py-16" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-h2 text-slate-900">Galeria del Instituto</h2>
@@ -65,7 +65,7 @@ export default function GaleriaCarousel() {
               {imagenes.map((img) => (
                 <div key={img.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="rounded-xl shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--clr-card)' }}>
                     <div className="aspect-[4/3] overflow-hidden">
                       <img src={img.url} alt={img.titulo}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />

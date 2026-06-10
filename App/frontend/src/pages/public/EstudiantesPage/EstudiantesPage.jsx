@@ -104,7 +104,7 @@ export default function EstudiantesPage() {
   useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
 
   return (
-    <div className="bg-slate-50">
+    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${estudiantesBg})` }}

@@ -333,6 +333,11 @@
 - [x] Tests: materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin
 - [x] Boton "Plan" en admin Carreras (navega a detalle/plan)
 - [x] Boton "Asignar carrera" en admin Materias con modal inline (selecciona carrera + cuatrimestre)
+- [x] DataTable: prop `selectable` con columna de checkbox y select-all
+- [x] CarrerasPage: tabla reemplazada por DataTable searchable
+- [x] MateriasPage: DataTable searchable + selectable + bulk "Asignar a carrera"
+- [x] AsignarCarreraModal inline con materias agrupadas por cuatrimestre
+- [x] CarreraDetailAdmin: validacion omite filas sin dia/horario, permite guardar solo materias con datos
 
 **Dependencias:** Módulo FE 4 (mismo dev), Módulo BE 12 (tabla intermedia)
 **Contraparte BE:** Módulo BE 12
@@ -357,6 +362,7 @@
 - [x] Implementar consultasStore (listar, responder, eliminar)
 - [x] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
 - [x] Agregar ruta /admin/consultas en AppRouter
+- [x] Campana navega a /admin/consultas y resetea contador al hacer clic
 
 **Dependencias:** Módulo BE 8
 **Contraparte BE:** Módulo BE 8

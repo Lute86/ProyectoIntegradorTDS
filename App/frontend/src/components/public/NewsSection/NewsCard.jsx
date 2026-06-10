@@ -14,7 +14,7 @@ export default function NewsCard({ noticia }) {
   const { titulo, slug, categoria, resumen, fecha } = noticia
 
   return (
-    <Link to={`/noticias/${slug}`} className="block bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+    <Link to={`/noticias/${slug}`} className="block border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden" style={{ backgroundColor: 'var(--clr-card)' }}>
       <div className="p-6">
         <Badge variant={badgeMap[categoria] || 'gray'}>
           <IconoCategoria categoria={categoria} className="w-3.5 h-3.5 mr-1" />

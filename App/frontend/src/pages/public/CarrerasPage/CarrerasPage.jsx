@@ -27,7 +27,7 @@ export default function CarrerasPage() {
   }, [carreras, selectedFilter])
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
@@ -78,7 +78,7 @@ export default function CarrerasPage() {
                   <Link
                     key={c.id}
                     to={`/carreras/${c.slug}`}
-                    className="w-full md:w-[calc(50%-12px)] max-w-lg bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
+                    className="w-full md:w-[calc(50%-12px)] max-w-lg border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group" style={{ backgroundColor: 'var(--clr-card)' }}
                   >
                     <div
                       className="h-24 flex items-center justify-center text-white text-base font-bold px-4 text-center leading-tight"

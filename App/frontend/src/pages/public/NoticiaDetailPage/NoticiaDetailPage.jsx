@@ -1,6 +1,15 @@
 import { useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
+const BADGE_COLORS = {
+  Inscripciones: 'bg-blue-100 text-blue-700',
+  'Exámenes': 'bg-emerald-100 text-emerald-700',
+  Examenes: 'bg-emerald-100 text-emerald-700',
+  Evento: 'bg-amber-100 text-amber-700',
+  Tecnología: 'bg-purple-100 text-purple-700',
+  Tecnologia: 'bg-purple-100 text-purple-700',
+  Becas: 'bg-rose-100 text-rose-700',
+}
+import noticiaBg from '../../../assets/fonts/noticia1.png'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 
@@ -46,13 +55,15 @@ export default function NoticiaDetailPage() {
     const storeHit = lista.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug))
       || selectedNoticia
     if (storeHit) return adaptNoticia(storeHit)
-    return MOCK_NOTICIAS.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug)) || null
+    return null
   }, [slug, noticias, selectedNoticia])
 
   if (isLoading && !noticia) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
+        <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+          style={{ backgroundImage: `url(${noticiaBg})` }}
+        >
           <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
             <div className="h-6 bg-blue-300/30 rounded w-24 mb-4 animate-pulse" />
             <div className="h-10 bg-blue-300/30 rounded w-2/3 mb-4 animate-pulse" />
@@ -90,8 +101,11 @@ export default function NoticiaDetailPage() {
   const badgeColor = BADGE_COLORS[noticia.categoria] || 'bg-gray-100 text-gray-700'
 
   return (
-    <div className="bg-slate-50">
-      <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
+    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
+      <div
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${noticiaBg})` }}
+      >
         <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>
             <IconoCategoria categoria={noticia.categoria} className="w-4 h-4" />
@@ -106,13 +120,13 @@ export default function NoticiaDetailPage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
-        <div className={`h-56 md:h-72 rounded-xl bg-gradient-to-br ${gradientMap[noticia.categoria] || 'from-blue-500 to-purple-600'} flex flex-col items-center justify-center text-white shadow-lg`}>
+        <div className={`h-40 md:h-48 rounded-xl bg-gradient-to-br ${gradientMap[noticia.categoria] || 'from-blue-500 to-purple-600'} flex flex-col items-center justify-center text-white shadow-lg`}>
           <h1 className="text-2xl md:text-3xl font-bold px-6 text-center leading-tight">{noticia.titulo}</h1>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pb-16">
-        <article className="bg-white rounded-xl shadow-sm p-6 md:p-10">
+        <article className="rounded-xl shadow-sm p-6 md:p-10" style={{ backgroundColor: 'var(--clr-card)' }}>
           <div className="font-serif text-lg md:text-xl leading-loose text-slate-800 prose prose-slate max-w-none"
             dangerouslySetInnerHTML={{ __html: noticia.contenido }} />
         </article>

@@ -16,7 +16,7 @@ export default function CareerCard({ carrera }) {
   const { nombre, slug, duracion, descripcion, modalidad, color } = carrera
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+    <div className="border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow" style={{ backgroundColor: 'var(--clr-card)' }}>
       <div
         className="h-24 flex items-center justify-center text-white text-lg font-bold px-4 text-center leading-tight"
         style={{ backgroundColor: color || '#3B82F6' }}

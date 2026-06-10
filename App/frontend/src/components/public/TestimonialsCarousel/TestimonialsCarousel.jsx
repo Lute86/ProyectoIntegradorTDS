@@ -24,7 +24,7 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-h2 text-slate-900">Lo que dicen nuestros estudiantes</h2>

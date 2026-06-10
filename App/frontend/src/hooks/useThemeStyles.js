@@ -13,6 +13,7 @@ export default function useThemeStyles() {
   --clr-accent: ${config.colors.accent};
   --clr-surface: ${config.colors.surface};
   --clr-bg: ${config.colors.background};
+  --clr-card: ${config.colors.card || '#ffffff'};
   --clr-text: ${config.colors.text};
   --font-heading: ${config.typography.headingFont};
   --font-body: ${config.typography.bodyFont};

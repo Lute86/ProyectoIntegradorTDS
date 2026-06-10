@@ -11,6 +11,7 @@ const COLOR_LABELS: Record<string, string> = {
   primary: 'Color Principal',
   secondary: 'Color Secundario',
   accent: 'Color de Acento',
+  surface: 'Superficie',
   background: 'Fondo',
   text: 'Texto',
 };

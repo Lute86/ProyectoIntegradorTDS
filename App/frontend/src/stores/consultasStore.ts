@@ -20,6 +20,7 @@ interface ConsultasState {
   error: string | null;
   fetchConsultas: () => Promise<void>;
   fetchUnreadCount: () => Promise<void>;
+  setUnreadCount: (count: number) => void;
   responderConsulta: (id: number, respuesta: string) => Promise<void>;
   eliminarConsulta: (id: number) => Promise<void>;
 }
@@ -41,6 +42,7 @@ export const useConsultasStore = create<ConsultasState>((set) => ({
       set({ error: mensaje, isLoading: false });
     }
   },
+  setUnreadCount: (count) => set({ unreadCount: count }),
   fetchUnreadCount: async () => {
     try {
       const response = await api.get('/consultas/unread/count');

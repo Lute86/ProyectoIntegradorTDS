@@ -11,7 +11,7 @@ export default function EventosCard({ evento, onVerDetalle }) {
   const modalidad = evento.modalidad || (evento.ubicacion ? 'presencial' : '')
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow h-full">
+    <div className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow h-full" style={{ backgroundColor: 'var(--clr-card)' }}>
       <div className="p-6 flex flex-col h-full">
         <h3 className="text-lg font-bold text-slate-900 mb-3">{titulo}</h3>
         <p className="text-sm text-slate-500 mb-4 line-clamp-2 flex-1">{descripcion}</p>

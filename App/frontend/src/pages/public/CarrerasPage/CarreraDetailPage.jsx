@@ -132,7 +132,7 @@ export default function CarreraDetailPage() {
 
   if (loading && !carrera) {
     return (
-      <div className="bg-slate-50 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
         <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
           <div className="max-w-content mx-auto px-4 py-12 md:py-16 animate-pulse">
             <div className="h-8 bg-blue-300/30 rounded w-2/3 mb-2" />
@@ -148,7 +148,7 @@ export default function CarreraDetailPage() {
 
   if (!carrera) {
     return (
-      <div className="bg-slate-50 min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--clr-bg)' }}>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Carrera no encontrada</h1>
           <Link to="/carreras" className="text-blue-600 hover:underline">Volver a carreras</Link>
@@ -165,7 +165,7 @@ export default function CarreraDetailPage() {
   ]
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
@@ -217,7 +217,7 @@ export default function CarreraDetailPage() {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {infoCards.map((item, i) => (
-                    <div key={i} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                    <div key={i} className="p-4 rounded-lg shadow-sm text-center" style={{ backgroundColor: 'var(--clr-card)' }}>
                       <h4 className="text-blue-600 font-bold text-sm mb-1">{item.label}</h4>
                       <p className="text-slate-700 text-sm">{item.valor}</p>
                     </div>
@@ -368,7 +368,7 @@ export default function CarreraDetailPage() {
                         {materias.map((m, i) => (
                           <div
                             key={i}
-                            className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600"
+                            className="p-4 rounded-lg shadow-sm border-l-4 border-blue-600" style={{ backgroundColor: 'var(--clr-card)' }}
                           >
                             <h5 className="font-semibold text-slate-900 text-sm">{m.nombre}</h5>
                             {m.carga_horaria_semanal && (
@@ -385,7 +385,7 @@ export default function CarreraDetailPage() {
           </div>
 
           <aside className="space-y-6">
-            <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="p-5 rounded-xl shadow-sm" style={{ backgroundColor: 'var(--clr-card)' }}>
               <h4 className="font-bold text-slate-900 mb-3">Otras Carreras</h4>
               {otrasCarreras.length === 0 ? (
                 <p className="text-sm text-slate-400">No hay otras carreras.</p>

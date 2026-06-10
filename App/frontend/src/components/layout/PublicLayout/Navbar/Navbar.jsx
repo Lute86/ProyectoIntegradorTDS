@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
 import logo from '../../../../assets/images/logo.jpeg';
@@ -13,10 +13,8 @@ const NAV_MAP = {
 }
 
 export default function Navbar() {
-  const { config, fetchConfig } = useSiteConfigStore()
+  const { config } = useSiteConfigStore()
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => { fetchConfig() }, [fetchConfig])
 
   const links = useMemo(() => {
     return config.sections

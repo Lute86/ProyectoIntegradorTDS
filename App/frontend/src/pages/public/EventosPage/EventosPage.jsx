@@ -78,7 +78,7 @@ export default function EventosPage() {
   )
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
@@ -91,7 +91,7 @@ export default function EventosPage() {
 
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-8">
+          <div className="rounded-xl shadow-sm p-5 mb-8" style={{ backgroundColor: 'var(--clr-card)' }}>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
                 <input
@@ -154,7 +154,7 @@ export default function EventosPage() {
                   return (
                     <div key={e.id}
                       onClick={() => setSelectedEvento(e)}
-                      className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 ${accent} border border-gray-200 overflow-hidden cursor-pointer`}
+                      className={`rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 ${accent} border border-gray-200 overflow-hidden cursor-pointer`} style={{ backgroundColor: 'var(--clr-card)' }}
                     >
                       <div className="p-6 md:p-8">
                         <div className="flex gap-5">

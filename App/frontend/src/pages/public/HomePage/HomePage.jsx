@@ -6,15 +6,13 @@ import GaleriaCarousel from '../../../components/public/GaleriaCarousel/GaleriaC
 import TestimonialsCarousel from '../../../components/public/TestimonialsCarousel/TestimonialsCarousel'
 import EventosSection from '../../../components/public/EventosSection/EventosSection'
 import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
+import { MOCK_STATS } from '../../../data/mockStats'
 import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import { useEventosStore } from '../../../stores/eventosStore'
 import { useTestimoniosStore } from '../../../stores/testimoniosStore'
-import { MOCK_NOTICIAS } from '../../../data/mockNoticias'
-import { MOCK_STATS } from '../../../data/mockStats'
-
 const HOME_SECTION_IDS = ['hero', 'statistics', 'careers', 'news', 'events', 'testimonials', 'gallery']
 
 function adaptNoticia(n) {
@@ -38,20 +36,19 @@ export default function HomePage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
   const [selectedEvento, setSelectedEvento] = useState(null)
   const { noticias: storeNoticias, fetchNoticias } = useNoticiasStore()
-  const { config, fetchConfig } = useSiteConfigStore()
+  const { config } = useSiteConfigStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
   const { eventos, fetchEventos } = useEventosStore()
   const { testimonios, fetchTestimonios } = useTestimoniosStore()
 
   useEffect(() => { fetchCarreras() }, [fetchCarreras])
   useEffect(() => { fetchNoticias({ estado: 'publicado' }) }, [fetchNoticias])
-  useEffect(() => { fetchConfig() }, [fetchConfig])
   useEffect(() => { fetchEventos() }, [fetchEventos])
   useEffect(() => { fetchTestimonios() }, [fetchTestimonios])
 
   const noticias = useMemo(() => {
     const lista = Array.isArray(storeNoticias) ? storeNoticias : []
-    if (lista.length > 0) return lista.map(adaptNoticia)
-    return MOCK_NOTICIAS
+    return lista.map(adaptNoticia)
   }, [storeNoticias])
 
   const secciones = useMemo(() => {
@@ -65,22 +62,31 @@ export default function HomePage() {
       gallery:     <GaleriaCarousel />,
     }
 
-    return config.sections
+    const visibleItems = config.sections
       .filter((s) => s.visible && HOME_SECTION_IDS.includes(s.id))
       .sort((a, b) => a.order - b.order)
-      .map((s) => <div key={s.id}>{mapa[s.id]}</div>)
-      .filter(Boolean)
+
+    const heroSection = visibleItems.find(s => s.id === 'hero')
+    const otrasSecciones = visibleItems.filter(s => s.id !== 'hero')
+
+    return {
+      hero: heroSection ? <div key="hero">{mapa['hero']}</div> : null,
+      otras: otrasSecciones.map((s) => <div key={s.id}>{mapa[s.id]}</div>).filter(Boolean),
+    }
   }, [config.sections, carreras, noticias, eventos, testimonios])
 
   return (
-    <>
-      {secciones}
+    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
+      {secciones.hero}
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto px-4 w-full' : ''}>
+        {secciones.otras}
+      </div>
       {selectedEvento && (
         <EventoDetailModal
           evento={selectedEvento}
           onClose={() => setSelectedEvento(null)}
         />
       )}
-    </>
+    </div>
   )
 }

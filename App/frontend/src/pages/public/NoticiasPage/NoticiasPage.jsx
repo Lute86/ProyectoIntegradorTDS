@@ -1,6 +1,14 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { MOCK_NOTICIAS, BADGE_COLORS } from '../../../data/mockNoticias'
+const BADGE_COLORS = {
+  Inscripciones: 'bg-blue-100 text-blue-700',
+  'Exámenes': 'bg-emerald-100 text-emerald-700',
+  Examenes: 'bg-emerald-100 text-emerald-700',
+  Evento: 'bg-amber-100 text-amber-700',
+  Tecnología: 'bg-purple-100 text-purple-700',
+  Tecnologia: 'bg-purple-100 text-purple-700',
+  Becas: 'bg-rose-100 text-rose-700',
+}
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 import NewsSidebar from './NewsSidebar'
@@ -48,8 +56,7 @@ export default function NoticiasPage() {
 
   const displayNoticias = useMemo(() => {
     const lista = Array.isArray(storeNoticias) ? storeNoticias : []
-    if (lista.length > 0) return lista.map(adaptNoticia)
-    return MOCK_NOTICIAS
+    return lista.map(adaptNoticia)
   }, [storeNoticias])
 
   const categorias = useMemo(() => {
@@ -82,7 +89,7 @@ export default function NoticiasPage() {
   const handleCategoryFilter = (cat) => { setSelectedCategory(cat === selectedCategory ? '' : cat); setCurrentPage(1) }
 
   return (
-    <div className="bg-slate-50 overflow-x-hidden">
+    <div className="overflow-x-hidden" style={{ backgroundColor: 'var(--clr-bg)' }}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
