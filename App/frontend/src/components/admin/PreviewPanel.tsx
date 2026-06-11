@@ -34,7 +34,7 @@ const PreviewPanel = () => {
         </div>
 
         <div
-          className={esBoxed ? 'layout-boxed space-y-1.5 p-3' : 'space-y-1.5 p-3'}
+          className={esBoxed ? 'max-w-[1280px] mx-auto space-y-1.5 p-3' : 'space-y-1.5 p-3'}
           style={{ backgroundColor: config.colors.background }}
         >
           {config.sections

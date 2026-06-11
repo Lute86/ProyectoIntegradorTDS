@@ -84,3 +84,36 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 - Implementar `ImageUploader` con subida real al servidor (depende de backend con multer)
 - Escribir tests de componentes (DataTable, modales)
 
+---
+
+## Actualizaciones Posteriores
+
+### DataTable — prop `selectable`
+**Archivo:** `src/components/ui/DataTable.tsx`
+- Nuevas props: `selectable` (boolean), `selectedIds` (Set), `onSelectionChange` (callback)
+- Columna de checkbox en cada fila + checkbox select-all en header (solo pagina actual)
+- Tipado generico `<T>` compatible con columnas existentes
+
+### CarrerasPage — DataTable searchable
+**Archivo:** `src/pages/admin/CarrerasPage/CarrerasPage.jsx`
+- Tabla manual reemplazada por `<DataTable searchable />`
+- Columnas: Nombre (bolita de color + descripcion), Modalidad (badge), Duracion, Activa (badge), Acciones
+- Busqueda textual + paginacion automatica
+- Columna ID removida para simplificar vista
+
+### MateriasPage — DataTable searchable + selectable + bulk
+**Archivo:** `src/pages/admin/MateriasPage/MateriasPage.jsx`
+- Tabla manual reemplazada por `<DataTable searchable selectable />`
+- Columna ID removida, boton "Asignar carrera" por fila removido
+- Barra de accion bulk siempre visible: muestra "Selecciona una o mas materias..." con boton "Asignar a carrera" deshabilitado hasta que se seleccionan items. Boton "Limpiar seleccion" aparece solo con seleccion activa
+- Feedback de exito/error auto-descarta tras 5 segundos
+- Modal inline `AsignarCarreraModal`: muestra materias a asignar (chips), selector de carrera, al seleccionar fetchea materias existentes agrupadas por cuatrimestre, inputs cuatrimestre + carga horaria, asignacion en lote con feedback por materia
+- Captura y muestra mensaje de error de API si todas fallan
+
+### CarreraDetailAdmin — validacion opcional en Horarios
+**Archivo:** `src/pages/admin/CarrerasPage/CarreraDetailAdmin.jsx`
+- `validarTodo()`: salta filas sin `dia` ni `horario` (no las exige)
+- `handleBlur()`: mismo criterio, no valida filas vacias al perder foco
+- `cargarHorarios()` ya ignora filas sin dia/horario (`continue`)
+- Permite guardar horarios solo para las materias que tienen datos, dejando el resto vacias
+

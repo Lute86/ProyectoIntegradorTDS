@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../contexts/AuthContext/AuthContext';
 import AdminBreadcrumbs from '../AdminBreadcrumbs/AdminBreadcrumbs';
 import { useConsultasStore } from '../../../../stores/consultasStore';
@@ -19,6 +19,7 @@ const titles = {
 
 export default function AdminTopbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const segment = pathname.split('/')[1] || 'dashboard';
   const title = titles[segment] || 'Dashboard';
@@ -42,7 +43,14 @@ export default function AdminTopbar() {
 
       <div className="flex items-center gap-4">
         <button className="text-gray-400 hover:text-gray-600 text-lg" title="Buscar">{'\u{1F50D}'}</button>
-        <button className="text-gray-400 hover:text-gray-600 text-lg relative" title="Notificaciones">
+        <button
+          onClick={() => {
+            navigate('/admin/consultas');
+            useConsultasStore.getState().setUnreadCount(0);
+          }}
+          className="text-gray-400 hover:text-gray-600 text-lg relative"
+          title="Notificaciones"
+        >
           {'\u{1F514}'}
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 leading-none">

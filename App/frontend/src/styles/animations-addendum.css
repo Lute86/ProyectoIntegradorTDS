@@ -1,60 +1,12 @@
-@import "tailwindcss";
-@variant dark (&:where(.dark, .dark *));
+/* ===================================================
+   ADDENDUM: Animaciones, transiciones y accesibilidad
+   Copiar este contenido al final de globals.css
+   =================================================== */
 
-@theme {
-  --breakpoint-3xl: 1920px;
-  --width-content: 90rem;
-  --width-content-narrow: 81rem;
-  --text-h1: clamp(1.875rem, 4vw, 3rem);
-  --text-h1--font-weight: 700;
-  --text-h2: clamp(1.5rem, 3vw, 2.25rem);
-  --text-h2--font-weight: 700;
-  --text-hero: clamp(2rem, 5vw, 3.5rem);
-  --text-hero--font-weight: 700;
-
-  --color-blue-500: var(--color-primary);
-  --color-blue-600: var(--color-primary);
-  --color-blue-700: var(--color-primary);
-  --color-green-500: var(--color-secondary);
-  --color-green-600: var(--color-secondary);
-  --color-amber-500: var(--color-accent);
-  --color-amber-600: var(--color-accent);
-  --color-violet-500: var(--color-primary);
-  --color-violet-600: var(--color-primary);
-  --color-red-500: #ef4444;
-  --color-red-600: #dc2626;
-
-  --color-surface: var(--clr-surface);
-  /* --color-card-bg: var(--clr-card);  // descomentar si se restaura color card desde admin */
-  --color-body: var(--clr-text);
-  --color-site-bg: var(--clr-bg);
-}
-
-@layer base {
-  :root {
-    --color-primary: #2563eb;
-    --color-secondary: #10b981;
-    --color-accent: #f59e0b;
-    --color-bg: #ffffff;
-    --color-text: #111827;
-    --font-heading: Inter, sans-serif;
-    --font-body: Inter, sans-serif;
-  }
-
-  body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--font-body);
-    font-size: var(--font-base-size, 16px);
-  }
-
-  .dark body {
-    background-color: #0f172a;
-  }
-}
-
-.layout-boxed { --content-width: 1280px; }
-.layout-full { --content-width: 100%; }
+/* --- Content width narrow --- */
+/* Agregar dentro de @theme {} en globals.css:
+   --width-content-narrow: 81rem;
+*/
 
 /* --- Transicion global de tema --- */
 * {

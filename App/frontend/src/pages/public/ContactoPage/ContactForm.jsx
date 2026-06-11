@@ -30,47 +30,34 @@ export default function ContactForm({ onSubmit, isLoading }) {
 
   const inputClass = (hasError) =>
     clsx(
-      'w-full px-4 py-2.5 border-2 rounded-lg text-sm transition-colors outline-none',
-      hasError ? 'border-red-400' : '',
+      'w-full px-4 py-2.5 border-2 rounded-lg text-sm transition-colors outline-none bg-white dark:bg-white/5 dark:text-white',
+      hasError ? 'border-red-400' : 'border-blue-200 dark:border-blue-400/30 focus:border-blue-500 dark:focus:border-blue-400',
     )
-
-  const focusStyle = {
-    boxShadow: '0 0 0 2px var(--clr-primary)',
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmitWrapper)} className="space-y-5">
       <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--clr-text)' }}>Nombre completo</label>
+        <label className="block text-sm font-semibold mb-1.5 text-body dark:text-white/90">Nombre completo</label>
         <input
           type="text" {...register('nombre')} placeholder="Tu nombre"
           className={inputClass(!!errors.nombre)}
-          style={{ borderColor: errors.nombre ? undefined : 'var(--clr-primary)' }}
-          onFocus={(e) => { if (!errors.nombre) Object.assign(e.target.style, focusStyle) }}
-          onBlur={(e) => { if (!errors.nombre) e.target.style.boxShadow = 'none' }}
         />
         {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--clr-text)' }}>Email</label>
+        <label className="block text-sm font-semibold mb-1.5 text-body dark:text-white/90">Email</label>
         <input
           type="email" {...register('email')} placeholder="tu@email.com"
           className={inputClass(!!errors.email)}
-          style={{ borderColor: errors.email ? undefined : 'var(--clr-primary)' }}
-          onFocus={(e) => { if (!errors.email) Object.assign(e.target.style, focusStyle) }}
-          onBlur={(e) => { if (!errors.email) e.target.style.boxShadow = 'none' }}
         />
         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--clr-text)' }}>Asunto</label>
+        <label className="block text-sm font-semibold mb-1.5 text-body dark:text-white/90">Asunto</label>
         <select {...register('asunto')}
           className={inputClass(!!errors.asunto)}
-          style={{ borderColor: errors.asunto ? undefined : 'var(--clr-primary)' }}
-          onFocus={(e) => { if (!errors.asunto) Object.assign(e.target.style, focusStyle) }}
-          onBlur={(e) => { if (!errors.asunto) e.target.style.boxShadow = 'none' }}
         >
           <option value="">Seleccione un asunto</option>
           {asuntos.map((a) => <option key={a} value={a}>{a}</option>)}
@@ -79,19 +66,15 @@ export default function ContactForm({ onSubmit, isLoading }) {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--clr-text)' }}>Mensaje</label>
+        <label className="block text-sm font-semibold mb-1.5 text-body dark:text-white/90">Mensaje</label>
         <textarea rows="5" {...register('mensaje')} placeholder="Escribi tu mensaje..."
           className={clsx(inputClass(!!errors.mensaje), 'resize-vertical')}
-          style={{ borderColor: errors.mensaje ? undefined : 'var(--clr-primary)' }}
-          onFocus={(e) => { if (!errors.mensaje) Object.assign(e.target.style, focusStyle) }}
-          onBlur={(e) => { if (!errors.mensaje) e.target.style.boxShadow = 'none' }}
         />
         {errors.mensaje && <p className="text-red-500 text-xs mt-1">{errors.mensaje.message}</p>}
       </div>
 
       <button type="submit" disabled={isLoading}
-        className="w-full py-3 text-white rounded-lg font-semibold disabled:brightness-50 disabled:cursor-not-allowed transition-colors"
-        style={{ backgroundColor: 'var(--clr-primary)' }}
+        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold disabled:brightness-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? 'Enviando...' : 'Enviar mensaje'}
       </button>

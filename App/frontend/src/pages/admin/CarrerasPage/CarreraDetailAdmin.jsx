@@ -199,6 +199,7 @@ const CarreraDetailAdmin = () => {
     const nuevos = {}
     let ok = true
     Object.entries(batchForm).forEach(([cmId, row]) => {
+      if (!row.dia && !row.horario) return
       const errs = validarFila(cmId, row)
       if (Object.keys(errs).length > 0) {
         nuevos[cmId] = errs
@@ -228,6 +229,7 @@ const CarreraDetailAdmin = () => {
   const handleBlur = useCallback((cmId) => {
     const row = batchForm[cmId]
     if (!row) return
+    if (!row.dia && !row.horario) return
     const errs = validarFila(cmId, row)
     setErrores((prev) => {
       if (Object.keys(errs).length === 0) {
@@ -553,11 +555,19 @@ const CarreraDetailAdmin = () => {
                                 {errores[cm.id]?.dia && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].dia}</p>}
                               </td>
                               <td className="px-3 py-2">
-                                <input value={row.horario} onChange={(e) => actualizarBatchField(cm.id, 'horario', e.target.value)}
-                                  onBlur={() => handleBlur(cm.id)}
-                                  className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
-                                  placeholder="18:00-20:00"
-                                />
+                                <div className="flex items-center gap-1">
+                                  <input type="time" value={row.horario?.split('-')[0] || ''}
+                                    onChange={(e) => actualizarBatchField(cm.id, 'horario', `${e.target.value}-${row.horario?.split('-')[1] || ''}`)}
+                                    onBlur={() => handleBlur(cm.id)}
+                                    className={`flex-1 min-w-0 px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
+                                  />
+                                  <span className="text-gray-400 text-xs font-bold">-</span>
+                                  <input type="time" value={row.horario?.split('-')[1] || ''}
+                                    onChange={(e) => actualizarBatchField(cm.id, 'horario', `${row.horario?.split('-')[0] || ''}-${e.target.value}`)}
+                                    onBlur={() => handleBlur(cm.id)}
+                                    className={`flex-1 min-w-0 px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
+                                  />
+                                </div>
                                 {errores[cm.id]?.horario && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].horario}</p>}
                               </td>
                               {!esVirtual && (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { horariosService } from '../../../services/horariosService'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import QuickLinks from './QuickLinks'
 import estudiantesBg from '../../../assets/fonts/estudiantes1.png'
 
@@ -34,10 +35,12 @@ const portalCards = [
 
 export default function EstudiantesPage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
   const [horarios, setHorarios] = useState([])
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [carreraId, setCarreraId] = useState('')
   const [comision, setComision] = useState('')
+  const [cuatriFilter, setCuatriFilter] = useState('')
 
   useEffect(() => { fetchCarreras() }, [fetchCarreras])
 
@@ -58,18 +61,25 @@ export default function EstudiantesPage() {
 
   const horariosFiltrados = useMemo(() => {
     if (!comision) return []
-    return horarios
-      .filter((h) => h.comision === comision)
-      .sort((a, b) => {
-        const cuatriA = a.carreraMateria?.cuatrimestre || 0
-        const cuatriB = b.carreraMateria?.cuatrimestre || 0
-        if (cuatriA !== cuatriB) return cuatriA - cuatriB
-        const nomA = a.carreraMateria?.materia?.nombre || ''
-        const nomB = b.carreraMateria?.materia?.nombre || ''
-        if (nomA !== nomB) return nomA.localeCompare(nomB)
-        return (a.dia || '').localeCompare(b.dia || '')
-      })
-  }, [horarios, comision])
+    let filtrados = horarios
+    if (comision !== 'Todas') {
+      filtrados = filtrados.filter((h) => h.comision === comision)
+    }
+    if (cuatriFilter) {
+      filtrados = filtrados.filter(
+        (h) => h.carreraMateria?.cuatrimestre === cuatriFilter
+      )
+    }
+    return filtrados.sort((a, b) => {
+      const cuatriA = a.carreraMateria?.cuatrimestre || 0
+      const cuatriB = b.carreraMateria?.cuatrimestre || 0
+      if (cuatriA !== cuatriB) return cuatriA - cuatriB
+      const nomA = a.carreraMateria?.materia?.nombre || ''
+      const nomB = b.carreraMateria?.materia?.nombre || ''
+      if (nomA !== nomB) return nomA.localeCompare(nomB)
+      return (a.dia || '').localeCompare(b.dia || '')
+    })
+  }, [horarios, comision, cuatriFilter])
 
   const horariosPorCuatri = useMemo(() => {
     const map = {}
@@ -86,36 +96,44 @@ export default function EstudiantesPage() {
     return Array.from(set).sort()
   }, [horarios])
 
-  useEffect(() => { setComision('') }, [carreraId])
+  const cuatrimestres = useMemo(() => {
+    const set = new Set(
+      horarios.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
+    )
+    return Array.from(set).sort((a, b) => a - b)
+  }, [horarios])
+
+  useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
 
   return (
-    <div className="bg-slate-50">
+    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${estudiantesBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-slate-900/50">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
           <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
           <p className="text-blue-200 text-lg">Todo lo que necesitas en un solo lugar</p>
         </div>
       </div>
 
-      <div className="max-w-content mx-auto px-4 py-8 space-y-12">
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8 space-y-12`}>
         <section>
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Accesos Rapidos</h2>
-            <p className="text-slate-500 mt-1">Herramientas y recursos para estudiantes</p>
+            <h2 className="text-2xl font-bold text-body dark:text-white">Accesos Rapidos</h2>
+            <p className="text-body/70 dark:text-white/70 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
-              <div key={card.title}
-                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md w-64"
+                <div key={card.title}
+                  className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-64"
               >
                 <div className={`w-20 h-20 rounded-full ${card.bg} flex items-center justify-center text-3xl mx-auto mb-4`}>
                   {card.icon}
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{card.title}</h3>
-                <p className="text-sm text-slate-500 mb-4">{card.desc}</p>
+                <h3 className="text-lg font-bold text-body dark:text-white mb-2">{card.title}</h3>
+                <p className="text-sm text-body/70 dark:text-white/70 mb-4">{card.desc}</p>
                 <a href={card.href}
                   className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
                 >
@@ -127,44 +145,60 @@ export default function EstudiantesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">
+          <h2 className="text-2xl font-bold text-center text-body dark:text-white mb-6">
             Horarios
           </h2>
 
-          <div className="max-w-lg mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+          <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
-                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Carrera</label>
+                <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Carrera</label>
                 <select value={carreraId} onChange={(e) => setCarreraId(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
                 >
-                  <option value="">Seleccionar</option>
+                  <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
                   {carreras.map((c) => (
-                    <option key={c.id} value={c.id}>{c.nombre}</option>
+                    <option className="dark:bg-slate-800 dark:text-white" key={c.id} value={c.id}>{c.nombre}</option>
                   ))}
                 </select>
               </div>
 
-              <div className="flex-1">
-                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
-                <select value={comision} onChange={(e) => setComision(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={comisiones.length === 0 || loadingHorarios}
-                >
-                  <option value="">Seleccionar</option>
-                  {comisiones.map((c) => (
-                    <option key={c} value={c}>Comision {c}</option>
-                  ))}
-                </select>
-              </div>
+              {carreraId && comisiones.length > 0 && (
+                <div className="flex-1 animate-in fade-in duration-300">
+                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
+                  <select value={comision} onChange={(e) => setComision(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                  >
+                    <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
+                    <option className="dark:bg-slate-800 dark:text-white" value="Todas">Todas las comisiones</option>
+                    {comisiones.map((c) => (
+                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>Comision {c}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {comision && cuatrimestres.length > 0 && (
+                <div className="flex-1 animate-in fade-in duration-300">
+                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Cuatrimestre</label>
+                  <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                  >
+                    <option className="dark:bg-slate-800 dark:text-white" value="">Todos los cuatrimestres</option>
+                    {cuatrimestres.map((c) => (
+                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 
           {loadingHorarios ? (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden p-8">
+            <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden p-8">
               <div className="space-y-3 animate-pulse">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-slate-200 rounded w-full" />
+                  <div key={i} className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-full" />
                 ))}
               </div>
             </div>
@@ -172,13 +206,16 @@ export default function EstudiantesPage() {
             <div className="space-y-6 max-w-4xl mx-auto px-2">
               {horariosPorCuatri.map(([cuatri, filas]) => (
                 <div key={cuatri}>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                  <h3 className="text-lg font-bold text-body dark:text-white mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
+                  <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-slate-900 text-white">
+                          <tr className="bg-surface text-white">
                             <th className="text-center px-4 py-3 font-semibold">Materia</th>
+                            {comision === 'Todas' && (
+                              <th className="text-center px-4 py-3 font-semibold">Comision</th>
+                            )}
                             <th className="text-center px-4 py-3 font-semibold">Dia</th>
                             <th className="text-center px-4 py-3 font-semibold">Horario</th>
                             <th className="text-center px-4 py-3 font-semibold">Aula</th>
@@ -187,12 +224,15 @@ export default function EstudiantesPage() {
                         </thead>
                         <tbody>
                           {filas.map((h, i) => (
-                            <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                              <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.carreraMateria?.materia?.nombre || '—'}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
+                            <tr key={i} className="border-b border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                              <td className="text-center px-4 py-3 font-semibold text-body dark:text-white">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                              {comision === 'Todas' && (
+                                <td className="text-center px-4 py-3 font-semibold text-blue-600 dark:text-blue-400">Comision {h.comision}</td>
+                              )}
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.dia}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.horario}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.aula}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.profesor || '—'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -203,14 +243,14 @@ export default function EstudiantesPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 text-sm">
-              {carreraId && loadingHorarios
-                ? 'Cargando horarios...'
-                : carreraId && comisiones.length === 0
+            <div className="text-center py-8 text-body/50 dark:text-white/50 text-sm">
+              {!carreraId
+                ? 'Selecciona una carrera para comenzar.'
+                : comisiones.length === 0
                   ? 'No hay horarios disponibles para esta carrera.'
-                  : carreraId && !comision
-                    ? 'Selecciona una comision para ver los horarios.'
-                    : 'Selecciona una carrera para comenzar.'}
+                  : !comision
+                    ? 'Selecciona una comision o Todas para ver los horarios.'
+                    : 'No hay horarios disponibles para esta seleccion.'}
             </div>
           )}
         </section>
@@ -218,6 +258,7 @@ export default function EstudiantesPage() {
         <section className="pb-12">
           <QuickLinks />
         </section>
+      </div>
       </div>
     </div>
   )
