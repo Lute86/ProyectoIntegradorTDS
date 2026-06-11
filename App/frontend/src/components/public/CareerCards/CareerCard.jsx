@@ -24,7 +24,7 @@ export default function CareerCard({ carrera }) {
         {nombre}
       </div>
       <div className="p-6">
-        <p className="text-sm text-slate-500 dark:text-white/70 mb-4">{descripcion}</p>
+        <p className="text-sm text-body/70 dark:text-white/70 mb-4">{descripcion}</p>
         <div className="flex items-center justify-between">
           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeStyles[badgeVariant(modalidad)]}`}>
             {duracion ? `${duracion} años` : ''}

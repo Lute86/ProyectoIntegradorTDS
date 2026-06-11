@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 const BADGE_COLORS = {
   Inscripciones: 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300',
   'Exámenes': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300',
@@ -42,6 +43,7 @@ function adaptNoticia(n) {
 export default function NoticiaDetailPage() {
   const { slug } = useParams()
   const { noticias, selectedNoticia, isLoading, fetchNoticiaBySlug } = useNoticiasStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
 
   useEffect(() => {
     const fromCache = noticias.find((n) => n.slug === slug || n.slug === decodeURIComponent(slug))
@@ -60,7 +62,8 @@ export default function NoticiaDetailPage() {
 
   if (isLoading && !noticia) {
     return (
-      <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+      <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+        <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
           style={{ backgroundImage: `url(${noticiaBg})` }}
         >
@@ -81,19 +84,22 @@ export default function NoticiaDetailPage() {
           </div>
         </div>
       </div>
+      </div>
     )
   }
 
   if (!noticia) {
     return (
-      <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg flex items-center justify-center">
+        <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="text-center">
           <h1 className="text-4xl font-bold text-body dark:text-white mb-4">Noticia no encontrada</h1>
-          <p className="text-slate-500 dark:text-white/70 mb-6">La noticia que buscas no existe o ha sido eliminada.</p>
+          <p className="text-body/70 dark:text-white/70 mb-6">La noticia que buscas no existe o ha sido eliminada.</p>
           <Link to="/noticias" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
             ← Volver a Noticias
           </Link>
         </div>
+      </div>
       </div>
     )
   }
@@ -101,7 +107,8 @@ export default function NoticiaDetailPage() {
   const badgeColor = BADGE_COLORS[noticia.categoria] || 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300'
 
   return (
-    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
@@ -135,6 +142,7 @@ export default function NoticiaDetailPage() {
             ← Volver a todas las noticias
           </Link>
         </div>
+      </div>
       </div>
     </div>
   )

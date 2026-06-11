@@ -76,9 +76,11 @@ export default function HomePage() {
   }, [config.sections, carreras, noticias, eventos, testimonios])
 
   return (
-    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
-      {secciones.hero}
-      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto px-4 w-full' : ''}>
+    <div className={`dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg`}>
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
+        {secciones.hero}
+      </div>
+      <div className={`${layout === 'boxed' ? 'max-w-[1280px] mx-auto px-4' : ''}`}>
         {secciones.otras}
       </div>
       {selectedEvento && (

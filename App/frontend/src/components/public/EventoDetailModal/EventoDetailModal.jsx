@@ -57,7 +57,7 @@ export default function EventoDetailModal({ evento, onClose }) {
           <button onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0"
           >
-            <svg className="w-5 h-5 text-slate-400 dark:text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-body/50 dark:text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -65,7 +65,7 @@ export default function EventoDetailModal({ evento, onClose }) {
 
         <div className="px-6 py-5 space-y-5">
           <div className="flex flex-wrap gap-3">
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-white/70">
+            <div className="flex items-center gap-2 text-sm text-body/70 dark:text-white/70">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -73,7 +73,7 @@ export default function EventoDetailModal({ evento, onClose }) {
             </div>
 
             {hora && (
-              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-white/70">
+              <div className="flex items-center gap-2 text-sm text-body/70 dark:text-white/70">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -82,7 +82,7 @@ export default function EventoDetailModal({ evento, onClose }) {
             )}
 
             {ubicacion && (
-              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-white/70">
+              <div className="flex items-center gap-2 text-sm text-body/70 dark:text-white/70">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -107,8 +107,8 @@ export default function EventoDetailModal({ evento, onClose }) {
 
           {descripcion && (
             <div className="pt-2">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-white/80 mb-2">Descripcion</h3>
-              <div className="text-sm text-slate-600 dark:text-white/70 leading-relaxed"
+              <h3 className="text-sm font-bold text-body dark:text-white/80 mb-2">Descripcion</h3>
+              <div className="text-sm text-body dark:text-white/70 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: descripcion }}
               />
             </div>

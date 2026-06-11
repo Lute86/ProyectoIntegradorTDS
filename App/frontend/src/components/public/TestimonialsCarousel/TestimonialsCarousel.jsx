@@ -26,11 +26,11 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-16 bg-gradient-to-b dark:from-slate-500 dark:to-slate-400 from-slate-50 to-slate-100 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-500 dark:to-slate-400 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-h2 text-body dark:text-white">Lo que dicen nuestros estudiantes</h2>
-          <p className="text-slate-500 dark:text-white/70 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
+          <p className="text-body/70 dark:text-white/70 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
         </div>
 
         <div className="max-w-2xl mx-auto">
@@ -41,14 +41,14 @@ export default function TestimonialsCarousel({ testimonios }) {
               <div className="flex items-center justify-center gap-4 mt-8">
                 <button
                   onClick={goPrev}
-                  className="w-12 h-12 flex items-center justify-center bg-white/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-white/20 dark:hover:bg-white/20 text-white dark:text-white transition-all"
+                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
                   aria-label="Anterior"
                 >
                   ◀
                 </button>
                 <button
                   onClick={goNext}
-                  className="w-12 h-12 flex items-center justify-center bg-white/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-white/20 dark:hover:bg-white/20 text-white dark:text-white transition-all"
+                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
                   aria-label="Siguiente"
                 >
                   ▶
@@ -59,7 +59,7 @@ export default function TestimonialsCarousel({ testimonios }) {
                   <button
                     key={i}
                     onClick={() => goTo(i)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all ${i === current ? 'bg-white w-6' : 'bg-white/30 hover:bg-white/50'}`}
+                    className={`w-2.5 h-2.5 rounded-full transition-all ${i === current ? 'bg-body w-6 dark:bg-white' : 'bg-body/30 hover:bg-body/50 dark:bg-white/30 dark:hover:bg-white/50'}`}
                     aria-label={`Ir al testimonio ${i + 1}`}
                   />
                 ))}

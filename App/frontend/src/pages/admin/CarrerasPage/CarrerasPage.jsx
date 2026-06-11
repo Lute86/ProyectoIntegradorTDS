@@ -19,11 +19,17 @@ const MODALIDAD_LABELS = {
 
 const AdminCarrerasPage = () => {
   const navigate = useNavigate();
-  const { carreras, loading, error, fetchCarreras, deleteCarrera } = useCarrerasStore();
+  const { carreras, loading, error, fetchCarreras, deleteCarrera, clearError } = useCarrerasStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [carreraToEdit, setCarreraToEdit] = useState(null);
 
   useEffect(() => { fetchCarreras(); }, [fetchCarreras]);
+
+  useEffect(() => {
+    if (!error) return
+    const timer = setTimeout(() => clearError(), 5000)
+    return () => clearTimeout(timer)
+  }, [error, clearError])
 
   const abrirModalCrear = () => {
     setCarreraToEdit(null);

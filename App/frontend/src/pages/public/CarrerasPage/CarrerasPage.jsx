@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import carreraImg from '../../../assets/fonts/carrera1.png'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
@@ -12,6 +13,7 @@ const badgeVariant = (mod) => {
 
 export default function CarrerasPage() {
   const { carreras, loading, fetchCarreras } = useCarrerasStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
   const [selectedFilter, setSelectedFilter] = useState('Todas')
 
   useEffect(() => { fetchCarreras() }, [fetchCarreras])
@@ -27,18 +29,19 @@ export default function CarrerasPage() {
   }, [carreras, selectedFilter])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-surface/50">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
           <h1 className="text-h1 mb-3">Carreras</h1>
           <p className="text-blue-200 text-lg">Explora nuestras ofertas academicas</p>
         </div>
       </div>
 
-      <div className="max-w-content mx-auto px-4 py-8">
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2, 3, 4].map((i) => (
@@ -62,7 +65,7 @@ export default function CarrerasPage() {
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                     selectedFilter === m
                       ? 'bg-blue-600 text-white'
-                      : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-slate-600 dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
+                      : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                   }`}
                 >
                   {m}
@@ -71,7 +74,7 @@ export default function CarrerasPage() {
             </div>
 
             {filtradas.length === 0 ? (
-              <p className="text-slate-500 dark:text-white/50 text-center py-12">No se encontraron carreras.</p>
+              <p className="text-body/70 dark:text-white/50 text-center py-12">No se encontraron carreras.</p>
             ) : (
               <div className="flex flex-wrap gap-6 justify-center items-stretch">
                 {filtradas.map((c) => (
@@ -87,7 +90,7 @@ export default function CarrerasPage() {
                       {c.nombre}
                     </div>
                     <div className="p-4">
-                      <p className="text-sm text-slate-500 dark:text-white/70 mb-3 line-clamp-2">{c.descripcion}</p>
+                      <p className="text-sm text-body/70 dark:text-white/70 mb-3 line-clamp-2">{c.descripcion}</p>
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/10">
                         <div className="flex items-center gap-2">
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
@@ -99,7 +102,7 @@ export default function CarrerasPage() {
                             {c.duracion ? `${c.duracion} años` : ''}
                           </span>
                           {c.modalidad && (
-                            <span className="text-xs text-slate-400 dark:text-white/50">{capitalizar(c.modalidad)}</span>
+                            <span className="text-xs text-body/50 dark:text-white/50">{capitalizar(c.modalidad)}</span>
                           )}
                         </div>
                         <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm group-hover:underline">Ver carrera →</span>
@@ -111,6 +114,7 @@ export default function CarrerasPage() {
             )}
           </>
         )}
+      </div>
       </div>
     </div>
   )

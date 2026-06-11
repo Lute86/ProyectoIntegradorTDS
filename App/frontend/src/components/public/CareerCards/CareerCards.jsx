@@ -8,7 +8,7 @@ export default function CareerCards({ carreras }) {
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-h2 text-body dark:text-white">Nuestras Carreras</h2>
-          <p className="text-slate-500 dark:text-white/70 mt-2">Formacion tecnica de calidad con salida laboral inmediata</p>
+          <p className="text-body/70 dark:text-white/70 mt-2">Formacion tecnica de calidad con salida laboral inmediata</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
           {carreras.map((c) => (

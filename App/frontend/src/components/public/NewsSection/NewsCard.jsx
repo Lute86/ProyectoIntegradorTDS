@@ -21,8 +21,8 @@ export default function NewsCard({ noticia }) {
           {categoria}
         </Badge>
         <h3 className="text-lg font-bold text-body dark:text-white mt-3 mb-2 line-clamp-2">{titulo}</h3>
-        <p className="text-sm text-slate-500 dark:text-white/70 mb-4 line-clamp-2">{resumen}</p>
-        <div className="flex items-center justify-between text-xs text-slate-400 dark:text-white/50">
+        <p className="text-sm text-body/70 dark:text-white/70 mb-4 line-clamp-2">{resumen}</p>
+        <div className="flex items-center justify-between text-xs text-body/50 dark:text-white/50">
           <span>{fecha}</span>
           <span className="text-blue-600 dark:text-blue-400 font-semibold">Leer más →</span>
         </div>

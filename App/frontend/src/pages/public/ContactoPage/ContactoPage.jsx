@@ -10,6 +10,7 @@ export default function ContactoPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const { config } = useSiteConfigStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
 
   const infoCards = [
     { icon: '📍', title: 'Direccion', text: config.address || 'Buenos Aires, Argentina' },
@@ -34,7 +35,8 @@ export default function ContactoPage() {
   }
 
   return (
-    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${contacBg})` }}
@@ -45,7 +47,7 @@ export default function ContactoPage() {
         </div>
       </div>
 
-      <div className="max-w-content mx-auto px-4 py-8">
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 md:p-8">
             <h2 className="text-xl font-bold mb-6 text-body dark:text-white">Envia tu consulta</h2>
@@ -64,7 +66,7 @@ export default function ContactoPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-body dark:text-white">{card.title}</h3>
-                  <p className="text-sm mt-0.5 text-slate-500 dark:text-white/50">{card.text}</p>
+                  <p className="text-sm mt-0.5 text-body/70 dark:text-white/50">{card.text}</p>
                 </div>
               </div>
             ))}
@@ -83,6 +85,7 @@ export default function ContactoPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )

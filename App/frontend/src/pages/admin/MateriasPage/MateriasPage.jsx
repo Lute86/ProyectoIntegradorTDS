@@ -15,7 +15,7 @@ const nombresCuatri = {
 }
 
 const AdminMateriasPage = () => {
-  const { materias, loading, error, fetchMaterias, deleteMateria } = useMateriasStore()
+  const { materias, loading, error, fetchMaterias, deleteMateria, clearError } = useMateriasStore()
   const { carreras, fetchCarreras } = useCarrerasStore()
   const [materiaModalOpen, setMateriaModalOpen] = useState(false)
   const [materiaToEdit, setMateriaToEdit] = useState(null)
@@ -41,6 +41,12 @@ const AdminMateriasPage = () => {
     const timer = setTimeout(() => setDeleteError(''), 5000)
     return () => clearTimeout(timer)
   }, [deleteError])
+
+  useEffect(() => {
+    if (!error) return
+    const timer = setTimeout(() => clearError(), 5000)
+    return () => clearTimeout(timer)
+  }, [error, clearError])
 
   const cerrarMateriaModal = () => {
     setMateriaModalOpen(false)
@@ -190,12 +196,6 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
     }
   }, [isOpen])
 
-  useEffect(() => {
-    if (!feedback) return
-    const timer = setTimeout(() => setFeedback(null), 5000)
-    return () => clearTimeout(timer)
-  }, [feedback])
-
   const handleCarreraChange = async (carreraId) => {
     setSelectedCarreraId(carreraId)
     if (!carreraId) { setCarreraMaterias(null); return }
@@ -261,8 +261,10 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
       setTimeout(() => onClose(), 1500)
     } else if (exito === 0 && ultimoError) {
       setFeedback({ type: 'error', message: ultimoError })
+      setTimeout(() => onClose(), 3000)
     } else {
       setFeedback({ type: 'error', message: `${exito} asignada${exito !== 1 ? 's' : ''}, ${fallo} fallaron.` })
+      setTimeout(() => onClose(), 3000)
     }
   }
 

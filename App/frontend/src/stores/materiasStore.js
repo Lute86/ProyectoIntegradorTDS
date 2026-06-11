@@ -101,6 +101,8 @@ const useMateriasStore = create((set, get) => ({
     }
   },
 
+  clearError: () => set({ error: null }),
+
   removeAsignacion: async (carreraId, id) => {
     try {
       await api.delete(`/carreras/${carreraId}/materias/${id}`)

@@ -47,6 +47,10 @@
     font-family: var(--font-body);
     font-size: var(--font-base-size, 16px);
   }
+
+  .dark body {
+    background-color: #0f172a;
+  }
 }
 
 .layout-boxed { --content-width: 1280px; }

@@ -20,7 +20,7 @@ export default function QuickLinks({ links = LINKS }) {
             className="flex items-center gap-4 px-5 py-4 bg-white dark:bg-white/10 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-white/20 shadow-sm transition-all hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white group"
           >
             <span className="text-2xl">{link.icon}</span>
-            <span className="text-base font-medium text-slate-700 dark:text-white/80 group-hover:text-white">{link.label}</span>
+            <span className="text-base font-medium text-body dark:text-white/80 group-hover:text-white">{link.label}</span>
           </a>
         ))}
       </div>

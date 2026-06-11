@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useEventosStore } from '../../../stores/eventosStore'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
 import noticiaBg from '../../../assets/fonts/noticia1.png'
 
@@ -43,7 +44,7 @@ function formatFecha(fechaStr) {
   return (
     <div className="flex flex-col items-center">
       <span className="text-2xl font-bold text-body dark:text-white leading-none">{parseInt(d)}</span>
-      <span className="text-xs text-slate-400 dark:text-white/50 uppercase tracking-wider whitespace-nowrap">{meses[parseInt(m) - 1]} {y}</span>
+      <span className="text-xs text-body/50 dark:text-white/50 uppercase tracking-wider whitespace-nowrap">{meses[parseInt(m) - 1]} {y}</span>
     </div>
   )
 }
@@ -77,19 +78,22 @@ export default function EventosPage() {
     currentPage * ITEMS_PER_PAGE,
   )
 
+  const layout = useSiteConfigStore((s) => s.config.layout)
+
   return (
-    <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-surface/50">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
           <h1 className="text-h1 mb-3">Eventos</h1>
           <p className="text-blue-200 text-lg">Actividades y novedades del instituto</p>
         </div>
       </div>
 
-      <div className="max-w-content mx-auto px-4 py-8">
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         <div className="max-w-3xl mx-auto">
           <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5 mb-8">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -97,15 +101,15 @@ export default function EventosPage() {
                 <input
                   type="text" placeholder="Buscar eventos..." value={search}
                   onChange={(e) => { setSearch(e.target.value); setCurrentPage(1) }}
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm bg-white dark:bg-white/10 text-body dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400 dark:placeholder:text-white/40"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm bg-white dark:bg-white/10 text-body dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-body/50 dark:placeholder:text-white/40"
                 />
-                <svg className="absolute left-3 top-3 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute left-3 top-3 w-4 h-4 text-body/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
               {search && (
                 <button onClick={() => { setSearch(''); setCurrentPage(1) }}
-                  className="px-4 py-2.5 text-sm text-slate-600 dark:text-white/70 border border-slate-300 dark:border-white/30 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 transition-colors"
+                  className="px-4 py-2.5 text-sm text-body dark:text-white/70 border border-slate-300 dark:border-white/30 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 transition-colors"
                 >Limpiar filtros</button>
               )}
             </div>
@@ -134,8 +138,8 @@ export default function EventosPage() {
               <svg className="w-16 h-16 text-slate-300 dark:text-white/30 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-slate-500 dark:text-white/70 text-lg font-medium">No se encontraron eventos</p>
-              <p className="text-slate-400 dark:text-white/50 text-sm mt-1">Proba con otros terminos de busqueda</p>
+              <p className="text-body/70 dark:text-white/70 text-lg font-medium">No se encontraron eventos</p>
+              <p className="text-body/50 dark:text-white/50 text-sm mt-1">Proba con otros terminos de busqueda</p>
             </div>
           ) : (
             <>
@@ -149,7 +153,7 @@ export default function EventosPage() {
                   const estado = e.estado || ''
                   const ubicacion = e.ubicacion || ''
                   const accent = modalidad ? (modalidadAccentMap[modalidad] || 'border-l-slate-300 dark:border-l-slate-500') : 'border-l-slate-300 dark:border-l-slate-500'
-                  const badge = modalidad ? (modalidadBadgeMap[modalidad] || 'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-400/30') : null
+                  const badge = modalidad ? (modalidadBadgeMap[modalidad] || 'bg-slate-50 text-body border-slate-200 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-400/30') : null
                   const icon = modalidad ? (modalidadIconMap[modalidad] || null) : null
                   return (
                     <div key={e.id}
@@ -163,12 +167,12 @@ export default function EventosPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-xl font-bold text-body dark:text-white mb-3 leading-snug">{titulo}</h3>
-                            <p className="text-sm text-slate-500 dark:text-white/70 mb-5 leading-relaxed line-clamp-2"
+                            <p className="text-sm text-body/70 dark:text-white/70 mb-5 leading-relaxed line-clamp-2"
                               dangerouslySetInnerHTML={{ __html: descripcion }}
                             />
                             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-100 dark:border-white/10">
                               {badge && icon && (
-                                <div className="flex items-center gap-2 text-sm text-slate-400 dark:text-white/50">
+                                <div className="flex items-center gap-2 text-sm text-body/50 dark:text-white/50">
                                   {icon}
                                   <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${badge}`}>
                                     {modalidad}
@@ -176,12 +180,12 @@ export default function EventosPage() {
                                 </div>
                               )}
                               {estado && (
-                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadgeMap[estado] || 'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-400/30'}`}>
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadgeMap[estado] || 'bg-slate-50 text-body border-slate-200 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-400/30'}`}>
                                   {estado.charAt(0).toUpperCase() + estado.slice(1)}
                                 </span>
                               )}
                               {ubicacion && (
-                                <span className="text-sm text-slate-400 dark:text-white/50 flex items-center gap-1">
+                                <span className="text-sm text-body/50 dark:text-white/50 flex items-center gap-1">
                                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -189,7 +193,7 @@ export default function EventosPage() {
                                   {ubicacion}
                                 </span>
                               )}
-                              <span className="text-sm text-slate-400 dark:text-white/50">
+                              <span className="text-sm text-body/50 dark:text-white/50">
                                 {hora && `${hora} hs`}
                               </span>
                             </div>
@@ -227,6 +231,7 @@ export default function EventosPage() {
           onClose={() => setSelectedEvento(null)}
         />
       )}
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { horariosService } from '../../../services/horariosService'
+import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import QuickLinks from './QuickLinks'
 import estudiantesBg from '../../../assets/fonts/estudiantes1.png'
 
@@ -34,6 +35,7 @@ const portalCards = [
 
 export default function EstudiantesPage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
+  const layout = useSiteConfigStore((s) => s.config.layout)
   const [horarios, setHorarios] = useState([])
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [carreraId, setCarreraId] = useState('')
@@ -104,22 +106,23 @@ export default function EstudiantesPage() {
   useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
 
   return (
-    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
+    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${estudiantesBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-surface/50">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
           <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
           <p className="text-blue-200 text-lg">Todo lo que necesitas en un solo lugar</p>
         </div>
       </div>
 
-      <div className="max-w-content mx-auto px-4 py-8 space-y-12">
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8 space-y-12`}>
         <section>
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-body dark:text-white">Accesos Rapidos</h2>
-            <p className="text-slate-500 dark:text-white/70 mt-1">Herramientas y recursos para estudiantes</p>
+            <p className="text-body/70 dark:text-white/70 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
@@ -130,7 +133,7 @@ export default function EstudiantesPage() {
                   {card.icon}
                 </div>
                 <h3 className="text-lg font-bold text-body dark:text-white mb-2">{card.title}</h3>
-                <p className="text-sm text-slate-500 dark:text-white/70 mb-4">{card.desc}</p>
+                <p className="text-sm text-body/70 dark:text-white/70 mb-4">{card.desc}</p>
                 <a href={card.href}
                   className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
                 >
@@ -151,11 +154,11 @@ export default function EstudiantesPage() {
               <div className="flex-1">
                 <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Carrera</label>
                 <select value={carreraId} onChange={(e) => setCarreraId(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
+                  className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
                 >
-                  <option value="">Seleccionar</option>
+                  <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
                   {carreras.map((c) => (
-                    <option key={c.id} value={c.id}>{c.nombre}</option>
+                    <option className="dark:bg-slate-800 dark:text-white" key={c.id} value={c.id}>{c.nombre}</option>
                   ))}
                 </select>
               </div>
@@ -164,12 +167,12 @@ export default function EstudiantesPage() {
                 <div className="flex-1 animate-in fade-in duration-300">
                   <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
                   <select value={comision} onChange={(e) => setComision(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
                   >
-                    <option value="">Seleccionar</option>
-                    <option value="Todas">Todas las comisiones</option>
+                    <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
+                    <option className="dark:bg-slate-800 dark:text-white" value="Todas">Todas las comisiones</option>
                     {comisiones.map((c) => (
-                      <option key={c} value={c}>Comision {c}</option>
+                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>Comision {c}</option>
                     ))}
                   </select>
                 </div>
@@ -179,11 +182,11 @@ export default function EstudiantesPage() {
                 <div className="flex-1 animate-in fade-in duration-300">
                   <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Cuatrimestre</label>
                   <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
-                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
                   >
-                    <option value="">Todos los cuatrimestres</option>
+                    <option className="dark:bg-slate-800 dark:text-white" value="">Todos los cuatrimestres</option>
                     {cuatrimestres.map((c) => (
-                      <option key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
+                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
                     ))}
                   </select>
                 </div>
@@ -226,10 +229,10 @@ export default function EstudiantesPage() {
                               {comision === 'Todas' && (
                                 <td className="text-center px-4 py-3 font-semibold text-blue-600 dark:text-blue-400">Comision {h.comision}</td>
                               )}
-                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.dia}</td>
-                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.horario}</td>
-                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.aula}</td>
-                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.profesor || '—'}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.dia}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.horario}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.aula}</td>
+                              <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.profesor || '—'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -240,7 +243,7 @@ export default function EstudiantesPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 dark:text-white/50 text-sm">
+            <div className="text-center py-8 text-body/50 dark:text-white/50 text-sm">
               {!carreraId
                 ? 'Selecciona una carrera para comenzar.'
                 : comisiones.length === 0
@@ -255,6 +258,7 @@ export default function EstudiantesPage() {
         <section className="pb-12">
           <QuickLinks />
         </section>
+      </div>
       </div>
     </div>
   )
