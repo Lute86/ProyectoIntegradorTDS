@@ -79,21 +79,23 @@ describe('AdminMateriasPage', () => {
     })
   })
 
-  it('muestra el boton Asignar carrera en cada materia', () => {
+  it('muestra la toolbar de seleccion con boton deshabilitado por defecto', () => {
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    const buttons = screen.getAllByText('Asignar carrera')
-    expect(buttons).toHaveLength(2)
+    expect(screen.getByText('Selecciona una o mas materias para asignar a carrera')).toBeInTheDocument()
+    expect(screen.getByText('Asignar a carrera')).toBeDisabled()
   })
 
-  it('abre el modal de asignacion al hacer click en Asignar carrera', () => {
+  it('abre el modal de asignacion al seleccionar materias', () => {
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    fireEvent.click(screen.getAllByText('Asignar carrera')[0])
+    fireEvent.click(screen.getAllByRole('checkbox')[1])
+    fireEvent.click(screen.getByText('Asignar a carrera'))
     expect(screen.getByText('Asignar materia a carrera')).toBeInTheDocument()
   })
 
   it('cierra el modal al hacer click en Cancelar', async () => {
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    fireEvent.click(screen.getAllByText('Asignar carrera')[0])
+    fireEvent.click(screen.getAllByRole('checkbox')[1])
+    fireEvent.click(screen.getByText('Asignar a carrera'))
     expect(screen.getByText('Asignar materia a carrera')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Cancelar'))
     await waitFor(() => {
@@ -108,11 +110,12 @@ describe('AdminMateriasPage', () => {
       fetchMaterias: vi.fn(), deleteMateria: vi.fn(), addAsignacion,
     })
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    fireEvent.click(screen.getAllByText('Asignar carrera')[0])
+    fireEvent.click(screen.getAllByRole('checkbox')[1])
+    fireEvent.click(screen.getByText('Asignar a carrera'))
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a desarrollo/i }))
     await waitFor(() => {
       expect(addAsignacion).toHaveBeenCalledWith('1', {
         materia_id: 1,
@@ -129,11 +132,12 @@ describe('AdminMateriasPage', () => {
       fetchMaterias: vi.fn(), deleteMateria: vi.fn(), addAsignacion,
     })
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    fireEvent.click(screen.getAllByText('Asignar carrera')[0])
+    fireEvent.click(screen.getAllByRole('checkbox')[1])
+    fireEvent.click(screen.getByText('Asignar a carrera'))
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a desarrollo/i }))
     await waitFor(() => {
       expect(screen.getByText('1 materia asignada correctamente.')).toBeInTheDocument()
     })
@@ -148,11 +152,12 @@ describe('AdminMateriasPage', () => {
       fetchMaterias: vi.fn(), deleteMateria: vi.fn(), addAsignacion,
     })
     render(<MemoryRouter><AdminMateriasPage /></MemoryRouter>)
-    fireEvent.click(screen.getAllByText('Asignar carrera')[0])
+    fireEvent.click(screen.getAllByRole('checkbox')[1])
+    fireEvent.click(screen.getByText('Asignar a carrera'))
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } })
     fireEvent.change(screen.getByPlaceholderText('1'), { target: { value: '2' } })
     fireEvent.change(screen.getAllByPlaceholderText('4')[0], { target: { value: '6' } })
-    fireEvent.click(screen.getByRole('button', { name: /asignar a/i }))
+    fireEvent.click(screen.getByRole('button', { name: /asignar a desarrollo/i }))
     await waitFor(() => {
       expect(screen.getByText('La materia ya esta asignada a esta carrera')).toBeInTheDocument()
     })

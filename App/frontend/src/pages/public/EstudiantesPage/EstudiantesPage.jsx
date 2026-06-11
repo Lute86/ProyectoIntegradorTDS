@@ -104,12 +104,12 @@ export default function EstudiantesPage() {
   useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
 
   return (
-    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
+    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${estudiantesBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-slate-900/50">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-surface/50">
           <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
           <p className="text-blue-200 text-lg">Todo lo que necesitas en un solo lugar</p>
         </div>
@@ -118,19 +118,19 @@ export default function EstudiantesPage() {
       <div className="max-w-content mx-auto px-4 py-8 space-y-12">
         <section>
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Accesos Rapidos</h2>
-            <p className="text-slate-500 mt-1">Herramientas y recursos para estudiantes</p>
+            <h2 className="text-2xl font-bold text-body dark:text-white">Accesos Rapidos</h2>
+            <p className="text-slate-500 dark:text-white/70 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
-              <div key={card.title}
-                className="bg-white rounded-xl shadow-sm p-6 text-center border border-slate-100 transition-shadow hover:shadow-md w-64"
+                <div key={card.title}
+                  className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-64"
               >
                 <div className={`w-20 h-20 rounded-full ${card.bg} flex items-center justify-center text-3xl mx-auto mb-4`}>
                   {card.icon}
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{card.title}</h3>
-                <p className="text-sm text-slate-500 mb-4">{card.desc}</p>
+                <h3 className="text-lg font-bold text-body dark:text-white mb-2">{card.title}</h3>
+                <p className="text-sm text-slate-500 dark:text-white/70 mb-4">{card.desc}</p>
                 <a href={card.href}
                   className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
                 >
@@ -142,16 +142,16 @@ export default function EstudiantesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">
+          <h2 className="text-2xl font-bold text-center text-body dark:text-white mb-6">
             Horarios
           </h2>
 
-          <div className="max-w-2xl mx-auto mb-6 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+          <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
-                <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Carrera</label>
+                <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Carrera</label>
                 <select value={carreraId} onChange={(e) => setCarreraId(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
                 >
                   <option value="">Seleccionar</option>
                   {carreras.map((c) => (
@@ -162,9 +162,9 @@ export default function EstudiantesPage() {
 
               {carreraId && comisiones.length > 0 && (
                 <div className="flex-1 animate-in fade-in duration-300">
-                  <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Comision</label>
+                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
                   <select value={comision} onChange={(e) => setComision(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
                   >
                     <option value="">Seleccionar</option>
                     <option value="Todas">Todas las comisiones</option>
@@ -177,9 +177,9 @@ export default function EstudiantesPage() {
 
               {comision && cuatrimestres.length > 0 && (
                 <div className="flex-1 animate-in fade-in duration-300">
-                  <label className="block text-center text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Cuatrimestre</label>
+                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Cuatrimestre</label>
                   <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
-                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white/10 text-body dark:text-white"
                   >
                     <option value="">Todos los cuatrimestres</option>
                     {cuatrimestres.map((c) => (
@@ -192,10 +192,10 @@ export default function EstudiantesPage() {
           </div>
 
           {loadingHorarios ? (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden p-8">
+            <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden p-8">
               <div className="space-y-3 animate-pulse">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-slate-200 rounded w-full" />
+                  <div key={i} className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-full" />
                 ))}
               </div>
             </div>
@@ -203,12 +203,12 @@ export default function EstudiantesPage() {
             <div className="space-y-6 max-w-4xl mx-auto px-2">
               {horariosPorCuatri.map(([cuatri, filas]) => (
                 <div key={cuatri}>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                  <h3 className="text-lg font-bold text-body dark:text-white mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
+                  <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-slate-900 text-white">
+                          <tr className="bg-surface text-white">
                             <th className="text-center px-4 py-3 font-semibold">Materia</th>
                             {comision === 'Todas' && (
                               <th className="text-center px-4 py-3 font-semibold">Comision</th>
@@ -221,15 +221,15 @@ export default function EstudiantesPage() {
                         </thead>
                         <tbody>
                           {filas.map((h, i) => (
-                            <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                              <td className="text-center px-4 py-3 font-semibold text-slate-900">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                            <tr key={i} className="border-b border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                              <td className="text-center px-4 py-3 font-semibold text-body dark:text-white">{h.carreraMateria?.materia?.nombre || '—'}</td>
                               {comision === 'Todas' && (
-                                <td className="text-center px-4 py-3 font-semibold text-blue-600">Comision {h.comision}</td>
+                                <td className="text-center px-4 py-3 font-semibold text-blue-600 dark:text-blue-400">Comision {h.comision}</td>
                               )}
-                              <td className="text-center px-4 py-3 text-slate-600">{h.dia}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.horario}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.aula}</td>
-                              <td className="text-center px-4 py-3 text-slate-600">{h.profesor || '—'}</td>
+                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.dia}</td>
+                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.horario}</td>
+                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.aula}</td>
+                              <td className="text-center px-4 py-3 text-slate-600 dark:text-white/70">{h.profesor || '—'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -240,7 +240,7 @@ export default function EstudiantesPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 text-sm">
+            <div className="text-center py-8 text-slate-400 dark:text-white/50 text-sm">
               {!carreraId
                 ? 'Selecciona una carrera para comenzar.'
                 : comisiones.length === 0

@@ -42,11 +42,6 @@ const AdminCarrerasPage = () => {
 
   const columns = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Nombre',
       accessor: (c) => (
         <div className="flex items-center gap-3">

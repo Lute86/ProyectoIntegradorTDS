@@ -386,3 +386,60 @@
 | FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
 | FE 5 | BE 7, FE 4 | BE 4 |
 | FE 6 | BE 8 | Módulo BE 8 |
+
+---
+
+## Modulo FE 7: Nuevo Sistema de Estilos (Directiva Critica)
+
+**Lider:** Lucas
+**Prioridad:** CRITICA - sin margen de error
+**Estimacion:** 2-3 horas
+**Archivo de referencia:** `App/frontend/new-styles.md` (plan detallado con fases)
+
+### Fase 1: Infraestructura (archivos nuevos)
+- [ ] Agregar keyframes + animaciones + prefers-reduced-motion + transicion global a globals.css
+- [ ] Agregar --width-content-narrow a @theme en globals.css
+- [ ] Hook useScrollReveal.js (archivo ya creado, listo para usar)
+
+### Fase 2: Theme Toggle en Navbar
+- [ ] Agregar boton theme toggle (sol/luna) en Navbar.jsx
+- [ ] Agregar boton theme toggle en MobileMenu.jsx
+
+### Fase 3: Componentes Publicos
+- [ ] Badge.jsx - dark: variants en colores
+- [ ] Hero.jsx - botones rounded-xl + shadow + scale hover
+- [ ] Stats.jsx + StatItem.jsx - dark: text + animacion scroll reveal
+- [ ] CareerCard.jsx - glass/light card pattern + dark: text
+- [ ] CareerCards.jsx - bg gradient + dark:
+- [ ] CareerCarousel.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] NewsCard.jsx - glass/light card + dark: text
+- [ ] NewsSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] EventosCard.jsx - glass/light card + dark: text
+- [ ] EventosSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] TestimonialSlide.jsx - dark: text colors
+- [ ] TestimonialsCarousel.jsx - bg gradient + botones + dark: + scroll reveal
+- [ ] GaleriaCarousel.jsx - glass/light card + bg gradient + botones + dark: + scroll reveal
+- [ ] Footer.jsx - gradient bg (ya es oscuro, ajustes menores)
+
+### Fase 4: Paginas Publicas
+- [ ] CarrerasPage.jsx - bg gradient + dark:
+- [ ] CarreraDetailPage.jsx - bg gradient + dark:
+- [ ] NoticiasPage.jsx - bg gradient + dark:
+- [ ] NoticiaDetailPage.jsx - dark:
+- [ ] EventosPage.jsx - bg gradient + dark:
+- [ ] ContactoPage.jsx - bg gradient + dark:
+- [ ] EstudiantesPage.jsx - bg gradient + dark:
+
+### Fase 5: Verificacion
+- [ ] Build sin errores (`npm run build`)
+- [ ] Verificar modo claro en homepage y todas las paginas
+- [ ] Verificar modo oscuro en homepage y todas las paginas
+- [ ] Verificar prefers-reduced-motion
+- [ ] Verificar que admin sigue funcionando sin cambios
+- [ ] Ejecutar tests existentes (make tests-frontend)
+
+### Componentes que NO se tocan
+- Todo `components/admin/` (CarreraFormModal, NoticiaFormModal, etc.)
+- Todo `pages/admin/` (DashboardPage, PersonalizarPage, etc.)
+- Todo `components/ui/` excepto Badge
+- Stores, services, contexts (ya implementan el sistema de tema)

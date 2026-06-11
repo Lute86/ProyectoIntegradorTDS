@@ -97,13 +97,16 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 ### CarrerasPage — DataTable searchable
 **Archivo:** `src/pages/admin/CarrerasPage/CarrerasPage.jsx`
 - Tabla manual reemplazada por `<DataTable searchable />`
-- Columnas: ID, Nombre (bolita de color + descripcion), Modalidad (badge), Duracion, Activa (badge), Acciones
+- Columnas: Nombre (bolita de color + descripcion), Modalidad (badge), Duracion, Activa (badge), Acciones
 - Busqueda textual + paginacion automatica
+- Columna ID removida para simplificar vista
 
 ### MateriasPage — DataTable searchable + selectable + bulk
 **Archivo:** `src/pages/admin/MateriasPage/MateriasPage.jsx`
 - Tabla manual reemplazada por `<DataTable searchable selectable />`
-- Barra de accion bulk ("Asignar a carrera" + "Limpiar seleccion") cuando hay materias seleccionadas
+- Columna ID removida, boton "Asignar carrera" por fila removido
+- Barra de accion bulk siempre visible: muestra "Selecciona una o mas materias..." con boton "Asignar a carrera" deshabilitado hasta que se seleccionan items. Boton "Limpiar seleccion" aparece solo con seleccion activa
+- Feedback de exito/error auto-descarta tras 5 segundos
 - Modal inline `AsignarCarreraModal`: muestra materias a asignar (chips), selector de carrera, al seleccionar fetchea materias existentes agrupadas por cuatrimestre, inputs cuatrimestre + carga horaria, asignacion en lote con feedback por materia
 - Captura y muestra mensaje de error de API si todas fallan
 

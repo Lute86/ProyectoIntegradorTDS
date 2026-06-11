@@ -20,10 +20,10 @@ const badgeVariant = (mod) => {
 }
 
 const badgeStyles = {
-  blue: 'bg-blue-50 text-blue-600 border-blue-100',
-  green: 'bg-green-50 text-green-600 border-green-100',
-  amber: 'bg-amber-50 text-amber-600 border-amber-100',
-  gray: 'bg-gray-50 text-gray-600 border-gray-100',
+  blue: 'bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-400/20',
+  green: 'bg-green-50 dark:bg-green-400/10 text-green-600 dark:text-green-400 border-green-100 dark:border-green-400/20',
+  amber: 'bg-amber-50 dark:bg-amber-400/10 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-400/20',
+  gray: 'bg-gray-50 dark:bg-gray-400/10 text-gray-600 dark:text-gray-400 border-gray-100 dark:border-gray-400/20',
 }
 
 const nombresCuatri = {
@@ -132,7 +132,7 @@ export default function CarreraDetailPage() {
 
   if (loading && !carrera) {
     return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
+    <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
         <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
           <div className="max-w-content mx-auto px-4 py-12 md:py-16 animate-pulse">
             <div className="h-8 bg-blue-300/30 rounded w-2/3 mb-2" />
@@ -148,9 +148,9 @@ export default function CarreraDetailPage() {
 
   if (!carrera) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--clr-bg)' }}>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Carrera no encontrada</h1>
+          <h1 className="text-2xl font-bold text-body dark:text-white mb-4">Carrera no encontrada</h1>
           <Link to="/carreras" className="text-blue-600 hover:underline">Volver a carreras</Link>
         </div>
       </div>
@@ -165,12 +165,12 @@ export default function CarreraDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg)' }}>
+    <div className="min-h-screen bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
       <div
         className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 bg-slate-900/40">
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 bg-surface/40">
           <div className="flex items-center gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
@@ -202,7 +202,7 @@ export default function CarreraDetailPage() {
                   className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
                     activeTab === tab.id
                       ? 'text-blue-600 border-blue-600'
-                      : 'text-slate-500 border-transparent hover:text-slate-700'
+                      : 'text-slate-500 dark:text-white/70 border-transparent hover:text-slate-700'
                   }`}
                 >
                   {tab.label}
@@ -212,14 +212,14 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'descripcion' && (
               <div>
-                <p className="text-slate-700 leading-relaxed mb-6">
+                <p className="text-slate-700 dark:text-white/80 leading-relaxed mb-6">
                   {carrera.descripcion || 'Sin descripcion disponible.'}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {infoCards.map((item, i) => (
-                    <div key={i} className="p-4 rounded-lg shadow-sm text-center" style={{ backgroundColor: 'var(--clr-card)' }}>
-                      <h4 className="text-blue-600 font-bold text-sm mb-1">{item.label}</h4>
-                      <p className="text-slate-700 text-sm">{item.valor}</p>
+                    <div key={i} className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm text-center">
+                      <h4 className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">{item.label}</h4>
+                      <p className="text-slate-700 dark:text-white/80 text-sm">{item.valor}</p>
                     </div>
                   ))}
                 </div>
@@ -228,8 +228,8 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'requisitos' && (
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Requisitos de Inscripcion</h3>
-                <p className="text-slate-500 text-sm mb-6">Documentacion necesaria para todas las carreras</p>
+                <h3 className="text-xl font-bold text-body dark:text-white mb-2">Requisitos de Inscripcion</h3>
+                <p className="text-slate-500 dark:text-white/70 text-sm mb-6">Documentacion necesaria para todas las carreras</p>
                 <ul className="space-y-3 max-w-xl">
                   {[
                     'Titulo secundario completo',
@@ -239,7 +239,7 @@ export default function CarreraDetailPage() {
                     '2 fotos 4x4',
                     'Constancia de CUIL',
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-slate-700">
+                    <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-white/80">
                       <svg className="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
@@ -254,25 +254,25 @@ export default function CarreraDetailPage() {
               <div>
                 {comisiones.length > 0 ? (
                   <div className="flex items-center gap-3 mb-4">
-                    <h3 className="text-xl font-bold text-slate-900">Horarios</h3>
-                    <p className="text-slate-500 text-xs">Selecciona una comision y/o cuatrimestre para ver los horarios</p>
+                    <h3 className="text-xl font-bold text-body dark:text-white">Horarios</h3>
+                    <p className="text-slate-500 dark:text-white/70 text-xs">Selecciona una comision y/o cuatrimestre para ver los horarios</p>
                   </div>
                 ) : (
-                  <h3 className="text-xl font-bold text-slate-900 mb-4">Horarios</h3>
+                  <h3 className="text-xl font-bold text-body dark:text-white mb-4">Horarios</h3>
                 )}
 
                 {loadingHorarios ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="bg-white rounded-xl shadow-sm p-5 animate-pulse">
-                        <div className="h-5 bg-slate-200 rounded w-1/3 mb-4" />
-                        <div className="h-4 bg-slate-100 rounded w-full mb-2" />
-                        <div className="h-4 bg-slate-100 rounded w-3/4" />
+                      <div key={i} className="bg-white dark:bg-white/10 rounded-xl shadow-sm p-5 animate-pulse">
+                        <div className="h-5 bg-slate-200 dark:bg-slate-600 rounded w-1/3 mb-4" />
+                        <div className="h-4 bg-slate-100 dark:bg-slate-700 rounded w-full mb-2" />
+                        <div className="h-4 bg-slate-100 dark:bg-slate-700 rounded w-3/4" />
                       </div>
                     ))}
                   </div>
                 ) : comisiones.length === 0 ? (
-                  <p className="text-slate-400 text-center py-8 text-sm">
+                  <p className="text-slate-400 dark:text-white/50 text-center py-8 text-sm">
                     Sin horarios disponibles para esta carrera.
                   </p>
                 ) : (
@@ -283,7 +283,7 @@ export default function CarreraDetailPage() {
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                             !cuatriFilter
                               ? 'bg-slate-800 text-white shadow-sm'
-                              : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                              : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-slate-600 dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                           }`}
                         >Todos los cuatrimestres</button>
                         {cuatrimestres.map((c) => (
@@ -291,7 +291,7 @@ export default function CarreraDetailPage() {
                             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                               cuatriFilter === c
                                 ? 'bg-slate-800 text-white shadow-sm'
-                                : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                                : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-slate-600 dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                             }`}
                           >{nombresCuatri[c] || `Cuatrimestre ${c}`}</button>
                         ))}
@@ -303,7 +303,7 @@ export default function CarreraDetailPage() {
                         className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                           selectedComision === 'Todas'
                             ? 'bg-blue-600 text-white shadow-sm'
-                            : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                            : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-slate-600 dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                         }`}
                       >Todas</button>
                       {comisiones.map((com) => (
@@ -311,38 +311,38 @@ export default function CarreraDetailPage() {
                           className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                             selectedComision === com
                               ? 'bg-blue-600 text-white shadow-sm'
-                              : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                              : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-slate-600 dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                           }`}
                         >Comision {com}</button>
                       ))}
                     </div>
 
                     {!selectedComision ? null : horariosFiltrados.length === 0 ? (
-                      <p className="text-slate-400 text-center py-8 text-sm">
-                        No hay horarios disponibles para esta seleccion.
-                      </p>
+                    <p className="text-slate-400 dark:text-white/50 text-center py-8 text-sm">
+                      No hay horarios disponibles para esta seleccion.
+                    </p>
                     ) : (
-                      <div className="overflow-x-auto rounded-xl border border-slate-200">
+                      <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
                         <table className="w-full border-collapse text-sm">
                           <thead>
-                            <tr className="bg-slate-50">
-                              <th className="p-3 text-left font-semibold text-slate-600">Materia</th>
+                            <tr className="bg-slate-50 dark:bg-slate-800">
+                              <th className="p-3 text-left font-semibold text-slate-600 dark:text-white/70">Materia</th>
                               {selectedComision === 'Todas' && (
-                                <th className="p-3 text-left font-semibold text-slate-600">Comision</th>
+                                <th className="p-3 text-left font-semibold text-slate-600 dark:text-white/70">Comision</th>
                               )}
-                              <th className="p-3 text-left font-semibold text-slate-600">Dia</th>
-                              <th className="p-3 text-left font-semibold text-slate-600">Horario</th>
+                              <th className="p-3 text-left font-semibold text-slate-600 dark:text-white/70">Dia</th>
+                              <th className="p-3 text-left font-semibold text-slate-600 dark:text-white/70">Horario</th>
                             </tr>
                           </thead>
                           <tbody>
                             {horariosFiltrados.map((h, i) => (
-                              <tr key={i} className="border-t border-slate-100 hover:bg-slate-50">
-                                <td className="p-3 text-slate-900 font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
+                              <tr key={i} className="border-t border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5">
+                                <td className="p-3 text-body dark:text-white font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
                                 {selectedComision === 'Todas' && (
-                                  <td className="p-3 text-slate-600 font-semibold">Comision {h.comision}</td>
+                                  <td className="p-3 text-slate-600 dark:text-white/70 font-semibold">Comision {h.comision}</td>
                                 )}
-                                <td className="p-3 text-slate-700">{h.dia}</td>
-                                <td className="p-3 text-slate-600">{h.horario}</td>
+                                <td className="p-3 text-slate-700 dark:text-white/80">{h.dia}</td>
+                                <td className="p-3 text-slate-600 dark:text-white/70">{h.horario}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -357,7 +357,7 @@ export default function CarreraDetailPage() {
             {activeTab === 'materias' && (
               <div>
                 {materiasPorCuatri.length === 0 ? (
-                  <p className="text-slate-500 text-center py-8">Sin materias registradas.</p>
+                  <p className="text-slate-500 dark:text-white/70 text-center py-8">Sin materias registradas.</p>
                 ) : (
                   materiasPorCuatri.map(([cuatri, materias]) => (
                     <div key={cuatri} className="mb-6">
@@ -368,11 +368,11 @@ export default function CarreraDetailPage() {
                         {materias.map((m, i) => (
                           <div
                             key={i}
-                            className="p-4 rounded-lg shadow-sm border-l-4 border-blue-600" style={{ backgroundColor: 'var(--clr-card)' }}
+                            className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm border-l-4 border-blue-600"
                           >
-                            <h5 className="font-semibold text-slate-900 text-sm">{m.nombre}</h5>
+                            <h5 className="font-semibold text-body dark:text-white text-sm">{m.nombre}</h5>
                             {m.carga_horaria_semanal && (
-                              <p className="text-xs text-slate-500 mt-1">{m.carga_horaria_semanal}hs semanales</p>
+                              <p className="text-xs text-slate-500 dark:text-white/70 mt-1">{m.carga_horaria_semanal}hs semanales</p>
                             )}
                           </div>
                         ))}
@@ -385,17 +385,17 @@ export default function CarreraDetailPage() {
           </div>
 
           <aside className="space-y-6">
-            <div className="p-5 rounded-xl shadow-sm" style={{ backgroundColor: 'var(--clr-card)' }}>
-              <h4 className="font-bold text-slate-900 mb-3">Otras Carreras</h4>
+            <div className="p-5 bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm">
+              <h4 className="font-bold text-body dark:text-white mb-3">Otras Carreras</h4>
               {otrasCarreras.length === 0 ? (
-                <p className="text-sm text-slate-400">No hay otras carreras.</p>
+                <p className="text-sm text-slate-400 dark:text-white/50">No hay otras carreras.</p>
               ) : (
                 <ul className="space-y-3">
                   {otrasCarreras.map((oc) => (
                     <li key={oc.id} className="flex items-center justify-between">
                       <Link
                         to={`/carreras/${oc.slug}`}
-                        className="text-sm font-medium text-slate-700 hover:text-blue-600"
+                        className="text-sm font-medium text-slate-700 dark:text-white/80 hover:text-blue-600 dark:hover:text-blue-400"
                       >
                         {oc.nombre}
                       </Link>

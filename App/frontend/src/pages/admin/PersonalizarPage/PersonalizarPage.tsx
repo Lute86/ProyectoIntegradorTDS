@@ -116,7 +116,7 @@ const PersonalizarPage = () => {
               <p className="text-xs text-gray-500">Ajuste cada color de forma individual.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {Object.entries(config.colors).map(([key, value]) => (
+              {Object.entries(config.colors).filter(([key]) => key !== 'card').map(([key, value]) => (
                 <ColorPicker
                   key={key}
                   label={COLOR_LABELS[key] || key}

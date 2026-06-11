@@ -36,6 +36,12 @@ const AdminMateriasPage = () => {
 
   const [deleteError, setDeleteError] = useState('')
 
+  useEffect(() => {
+    if (!deleteError) return
+    const timer = setTimeout(() => setDeleteError(''), 5000)
+    return () => clearTimeout(timer)
+  }, [deleteError])
+
   const cerrarMateriaModal = () => {
     setMateriaModalOpen(false)
     setMateriaToEdit(null)
@@ -53,11 +59,6 @@ const AdminMateriasPage = () => {
 
   const columns = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Nombre',
       accessor: (m) => (
         <div className="flex flex-col">
@@ -72,9 +73,6 @@ const AdminMateriasPage = () => {
       header: 'Acciones',
       accessor: (m) => (
         <div className="flex gap-2 justify-end">
-          <button onClick={() => setAsignarModalData({ materias: [m] })}
-            className="px-3 py-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
-          >Asignar carrera</button>
           <button onClick={() => abrirEditar(m)}
             className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
           >Editar</button>
@@ -116,22 +114,32 @@ const AdminMateriasPage = () => {
           </div>
         )}
 
-        {selectedIds.size > 0 && (
-          <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3">
-            <span className="text-sm text-gray-600">
-              {selectedIds.size} materia{selectedIds.size !== 1 ? 's' : ''} seleccionada{selectedIds.size !== 1 ? 's' : ''}
-            </span>
-            <button onClick={() => {
+        <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3 bg-gray-50/50">
+          <span className={`text-sm whitespace-nowrap ${selectedIds.size > 0 ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
+            {selectedIds.size > 0
+              ? `${selectedIds.size} materia${selectedIds.size !== 1 ? 's' : ''} seleccionada${selectedIds.size !== 1 ? 's' : ''}`
+              : 'Selecciona una o mas materias para asignar a carrera'}
+          </span>
+          <span className="w-px h-5 bg-gray-200" />
+          <button
+            disabled={selectedIds.size === 0}
+            onClick={() => {
+              if (selectedIds.size === 0) return
               const seleccionadas = materias.filter((m) => selectedIds.has(m.id))
               setAsignarModalData({ materias: seleccionadas })
             }}
-              className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition shadow-sm"
-            >Asignar a carrera</button>
+            className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all shadow-sm ${
+              selectedIds.size > 0
+                ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-95'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            }`}
+          >Asignar a carrera</button>
+          {selectedIds.size > 0 && (
             <button onClick={() => setSelectedIds(new Set())}
-              className="px-3 py-1.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+              className="px-3 py-1.5 text-xs font-semibold text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
             >Limpiar seleccion</button>
-          </div>
-        )}
+          )}
+        </div>
 
         <DataTable
           searchable
@@ -181,6 +189,12 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
       setFeedback(null)
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (!feedback) return
+    const timer = setTimeout(() => setFeedback(null), 5000)
+    return () => clearTimeout(timer)
+  }, [feedback])
 
   const handleCarreraChange = async (carreraId) => {
     setSelectedCarreraId(carreraId)

@@ -34,21 +34,21 @@ export default function ContactoPage() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--clr-bg)' }}>
+    <div className="bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-slate-50">
       <div
         className="text-white bg-cover bg-center"
         style={{ backgroundImage: `url(${contacBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
-          <h1 className="text-h1 mb-3" style={{ color: '#fff' }}>Contacto</h1>
-          <p style={{ color: 'rgba(255,255,255,0.8)' }} className="text-lg">Estamos para ayudarte</p>
+        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
+          <h1 className="text-h1 mb-3 text-white">Contacto</h1>
+          <p className="text-white/80 text-lg">Estamos para ayudarte</p>
         </div>
       </div>
 
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="rounded-xl shadow-sm p-6 md:p-8 border" style={{ backgroundColor: '#fff', borderColor: 'var(--clr-primary)' }}>
-            <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--clr-text)' }}>Envia tu consulta</h2>
+          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 md:p-8">
+            <h2 className="text-xl font-bold mb-6 text-body dark:text-white">Envia tu consulta</h2>
             <ContactForm onSubmit={handleSubmit} isLoading={isLoading} />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             {success && <p className="text-green-600 text-sm mt-2">Consulta enviada exitosamente</p>}
@@ -57,18 +57,18 @@ export default function ContactoPage() {
           <div className="space-y-4">
             {infoCards.map((card) => (
               <div key={card.title}
-                className="rounded-xl shadow-sm p-5 flex gap-4 items-start border" style={{ backgroundColor: '#fff', borderColor: 'var(--clr-primary)' }}
+                className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5 flex gap-4 items-start"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: 'var(--clr-primary)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 bg-blue-100 dark:bg-blue-500/20">
                   {card.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold" style={{ color: 'var(--clr-text)' }}>{card.title}</h3>
-                  <p className="text-sm mt-0.5" style={{ color: 'rgba(0,0,0,0.5)' }}>{card.text}</p>
+                  <h3 className="font-semibold text-body dark:text-white">{card.title}</h3>
+                  <p className="text-sm mt-0.5 text-slate-500 dark:text-white/50">{card.text}</p>
                 </div>
               </div>
             ))}
-            <div className="h-64 rounded-xl overflow-hidden border shadow-sm" style={{ borderColor: 'var(--clr-primary)' }}>
+            <div className="h-64 rounded-xl overflow-hidden border border-gray-100 dark:border-white/20 shadow-sm">
               <iframe
                 src="https://www.google.com/maps?q=-34.602693,-58.371193&output=embed&z=16"
                 width="100%"

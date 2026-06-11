@@ -18,11 +18,11 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/carreras"
-            className="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 bg-white text-slate-800 font-semibold rounded-xl hover:bg-blue-50 hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             Ver Carreras
           </Link>
-          <a href="https://aulasvirtuales.bue.edu.ar/" target="_blank" rel="noopener noreferrer"className="inline-flex items-center justify-center px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"   >
+          <a href="https://aulasvirtuales.bue.edu.ar/" target="_blank" rel="noopener noreferrer"className="inline-flex items-center justify-center px-6 py-3 border-2 border-white/80 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-white/15 hover:border-white hover:shadow-lg transition-all duration-300"   >
            Aula Virtual
           </a>
         </div>

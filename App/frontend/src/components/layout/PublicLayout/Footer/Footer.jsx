@@ -4,7 +4,7 @@ export default function Footer() {
   const { config } = useSiteConfigStore()
 
   return (
-    <footer className="mt-auto" style={{ backgroundColor: 'var(--clr-surface)' }}>
+    <footer className="mt-auto bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-content mx-auto px-5 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ color: 'rgba(255,255,255,0.8)' }}>
           <div>

@@ -18,7 +18,7 @@ export interface SiteConfig {
     surface: string;
     background: string;
     text: string;
-    card: string;
+    card: string;       /*预留: descomentar en PersonalizarPage COLOR_LABELS si se restaura */
   };
   typography: {
     headingFont: string;
