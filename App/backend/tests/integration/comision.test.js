@@ -4,12 +4,10 @@ import app from '../../src/app.js';
 import { sequelize } from '../../src/models/index.js';
 import { createAndLogin } from '../helpers/helpers.js';
 
-describe('Horario Endpoints', () => {
+describe('Comision Endpoints', () => {
   let carreraId;
   let materiaId;
   let carreraMateriaId;
-  let comisionAId;
-  let comisionBId;
   let adminToken;
   let profesorToken;
   let tutorToken;
@@ -42,145 +40,145 @@ describe('Horario Endpoints', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .send({ materia_id: materiaId, cuatrimestre: 1, carga_horaria_semanal: 6 });
     carreraMateriaId = cmRes.body.data.id;
-
-    const comisionARes = await request(app)
-      .post('/api/comisiones')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .send({
-        carrera_materia_id: carreraMateriaId,
-        nombre: 'A',
-        anio_lectivo: 2026,
-        semestre: 1,
-      });
-    comisionAId = comisionARes.body.data.id;
-
-    const comisionBRes = await request(app)
-      .post('/api/comisiones')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .send({
-        carrera_materia_id: carreraMateriaId,
-        nombre: 'B',
-        anio_lectivo: 2026,
-        semestre: 1,
-      });
-    comisionBId = comisionBRes.body.data.id;
   });
 
   afterAll(async () => {
     await sequelize.close();
   });
 
-  describe('POST /api/horarios', () => {
-    it('debería crear un horario con datos válidos (admin)', async () => {
+  describe('POST /api/comisiones', () => {
+    it('debería crear una comisión con datos válidos (admin)', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
-          profesor: 'Prof. Martinez',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(201);
 
       expect(res.body.success).toBe(true);
-      expect(Number(res.body.data.comision_id)).toBe(comisionAId);
-      expect(res.body.data.dia).toBe('Lunes');
-      expect(res.body.data.horario).toBe('18:00 - 20:00');
-      expect(res.body.data.aula).toBe('Aula 5');
-      expect(res.body.data.profesor).toBe('Prof. Martinez');
-      expect(Number(res.body.data.carrera_materia_id)).toBe(carreraMateriaId);
+      expect(res.body.data.nombre).toBe('A');
+      expect(res.body.data.anio_lectivo).toBe(2026);
+      expect(res.body.data.semestre).toBe(1);
+      expect(res.body.data.activo).toBe(true);
     });
 
-    it('debería fallar al crear horario con token de profesor (solo admin)', async () => {
+    it('debería crear una comisión con nombre numérico', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: '1',
+          anio_lectivo: 2026,
+          semestre: 1,
+        })
+        .expect(201);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.nombre).toBe('1');
+    });
+
+    it('debería crear una comisión con nombre mixto', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: 'MAÑANA',
+          anio_lectivo: 2026,
+          semestre: 1,
+        })
+        .expect(201);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.nombre).toBe('MAÑANA');
+    });
+
+    it('debería fallar al crear comisión con token de profesor (solo admin)', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${profesorToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(403);
 
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si falta comision_id', async () => {
+    it('debería fallar si falta nombre', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(400);
 
       expect(res.body.success).toBe(false);
       expect(res.body.errors).toBeDefined();
-    });
-
-    it('debería fallar si falta dia', async () => {
-      const res = await request(app)
-        .post('/api/horarios')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
-        })
-        .expect(400);
-
-      expect(res.body.success).toBe(false);
-      expect(res.body.errors).toBeDefined();
-    });
-
-    it('debería fallar si falta horario', async () => {
-      const res = await request(app)
-        .post('/api/horarios')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          aula: 'Aula 5',
-        })
-        .expect(400);
-
-      expect(res.body.success).toBe(false);
-    });
-
-    it('debería fallar si falta aula', async () => {
-      const res = await request(app)
-        .post('/api/horarios')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-        })
-        .expect(400);
-
-      expect(res.body.success).toBe(false);
     });
 
     it('debería fallar si falta carrera_materia_id', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
+        })
+        .expect(400);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar si falta anio_lectivo', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: 'A',
+          semestre: 1,
+        })
+        .expect(400);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar si falta semestre', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+        })
+        .expect(400);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar si semestre es inválido', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 3,
         })
         .expect(400);
 
@@ -189,30 +187,13 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar si la carrera_materia no existe', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: 9999,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
-        })
-        .expect(409);
-
-      expect(res.body.success).toBe(false);
-    });
-
-    it('debería fallar si la comision no existe', async () => {
-      const res = await request(app)
-        .post('/api/horarios')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          carrera_materia_id: carreraMateriaId,
-          comision_id: 9999,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(409);
 
@@ -221,13 +202,12 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar sin token', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(401);
 
@@ -236,99 +216,116 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar con token de tutor (no admin)', async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${tutorToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         })
         .expect(403);
 
       expect(res.body.success).toBe(false);
     });
+
+    it('debería fallar si el nombre excede 20 caracteres', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          nombre: 'A'.repeat(21),
+          anio_lectivo: 2026,
+          semestre: 1,
+        })
+        .expect(400);
+
+      expect(res.body.success).toBe(false);
+    });
   });
 
-  describe('GET /api/horarios', () => {
+  describe('GET /api/comisiones', () => {
     beforeEach(async () => {
       await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         });
 
       await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Miercoles',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'B',
+          anio_lectivo: 2026,
+          semestre: 1,
         });
 
       await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionBId,
-          dia: 'Martes',
-          horario: '20:00 - 22:00',
-          aula: 'Aula 7',
+          nombre: '1',
+          anio_lectivo: 2026,
+          semestre: 2,
         });
     });
 
-    it('debería obtener todos los horarios (público)', async () => {
+    it('debería obtener todas las comisiones (público)', async () => {
       const res = await request(app)
-        .get('/api/horarios')
+        .get('/api/comisiones')
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(3);
     });
 
-    it('debería filtrar por carrera_materia_id', async () => {
+    it('debería filtrar por carrera_id', async () => {
       const res = await request(app)
-        .get(`/api/horarios?carrera_materia_id=${carreraMateriaId}`)
+        .get(`/api/comisiones?carrera_id=${carreraId}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(3);
-      expect(res.body.data[0].carreraMateria).toBeDefined();
     });
 
-    it('debería filtrar por comision_id', async () => {
+    it('debería filtrar por anio_lectivo', async () => {
       const res = await request(app)
-        .get(`/api/horarios?comision_id=${comisionAId}`)
+        .get('/api/comisiones?anio_lectivo=2026')
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data).toHaveLength(3);
+    });
+
+    it('debería filtrar por semestre', async () => {
+      const res = await request(app)
+        .get('/api/comisiones?semestre=1')
         .expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(2);
-      expect(res.body.data.every(h => Number(h.comision_id) === comisionAId)).toBe(true);
     });
 
-    it('debería filtrar por dia', async () => {
+    it('debería filtrar por carrera_materia_id', async () => {
       const res = await request(app)
-        .get('/api/horarios?dia=Lunes')
+        .get(`/api/comisiones?carrera_materia_id=${carreraMateriaId}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(1);
-      expect(res.body.data[0].dia).toBe('Lunes');
+      expect(res.body.data).toHaveLength(3);
     });
 
-    it('debería obtener horarios sin token (público)', async () => {
+    it('debería obtener comisiones sin token (público)', async () => {
       const res = await request(app)
-        .get('/api/horarios')
+        .get('/api/comisiones')
         .expect(200);
 
       expect(res.body.success).toBe(true);
@@ -336,93 +333,99 @@ describe('Horario Endpoints', () => {
     });
   });
 
-  describe('GET /api/horarios/:id', () => {
-    let horarioId;
+  describe('GET /api/comisiones/:id', () => {
+    let comisionId;
 
     beforeEach(async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         });
-      horarioId = res.body.data.id;
+      comisionId = res.body.data.id;
     });
 
-    it('debería obtener un horario por ID (público)', async () => {
+    it('debería obtener una comisión por ID (público)', async () => {
       const res = await request(app)
-        .get(`/api/horarios/${horarioId}`)
+        .get(`/api/comisiones/${comisionId}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(horarioId);
-      expect(res.body.data.dia).toBe('Lunes');
+      expect(res.body.data.id).toBe(comisionId);
+      expect(res.body.data.nombre).toBe('A');
       expect(res.body.data.carreraMateria).toBeDefined();
-      expect(res.body.data.comisionInfo).toBeDefined();
+    });
+
+    it('debería incluir horarios vacíos al inicio', async () => {
+      const res = await request(app)
+        .get(`/api/comisiones/${comisionId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.horarios).toBeDefined();
+      expect(res.body.data.horarios).toHaveLength(0);
     });
 
     it('debería fallar con ID inválido', async () => {
       const res = await request(app)
-        .get('/api/horarios/invalid')
+        .get('/api/comisiones/invalid')
         .expect(400);
 
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si el horario no existe', async () => {
+    it('debería fallar si la comisión no existe', async () => {
       const res = await request(app)
-        .get('/api/horarios/9999')
+        .get('/api/comisiones/9999')
         .expect(404);
 
       expect(res.body.success).toBe(false);
     });
 
-    it('debería obtener un horario por ID sin token (público)', async () => {
+    it('debería obtener una comisión por ID sin token (público)', async () => {
       const res = await request(app)
-        .get(`/api/horarios/${horarioId}`)
+        .get(`/api/comisiones/${comisionId}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(horarioId);
+      expect(res.body.data.id).toBe(comisionId);
     });
   });
 
-  describe('PUT /api/horarios/:id', () => {
-    let horarioId;
+  describe('PUT /api/comisiones/:id', () => {
+    let comisionId;
 
     beforeEach(async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         });
-      horarioId = res.body.data.id;
+      comisionId = res.body.data.id;
     });
 
-    it('debería actualizar un horario (admin)', async () => {
+    it('debería actualizar una comisión (admin)', async () => {
       const res = await request(app)
-        .put(`/api/horarios/${horarioId}`)
+        .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ dia: 'Martes', aula: 'Aula 7' })
+        .send({ nombre: 'B' })
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.dia).toBe('Martes');
-      expect(res.body.data.aula).toBe('Aula 7');
+      expect(res.body.data.nombre).toBe('B');
     });
 
     it('debería actualizar el campo activo', async () => {
       const res = await request(app)
-        .put(`/api/horarios/${horarioId}`)
+        .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .send({ activo: false })
         .expect(200);
@@ -431,21 +434,32 @@ describe('Horario Endpoints', () => {
       expect(res.body.data.activo).toBe(false);
     });
 
-    it('debería fallar al actualizar horario con token de profesor (solo admin)', async () => {
+    it('debería actualizar el semestre', async () => {
       const res = await request(app)
-        .put(`/api/horarios/${horarioId}`)
+        .put(`/api/comisiones/${comisionId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ semestre: 2 })
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.semestre).toBe(2);
+    });
+
+    it('debería fallar al actualizar comisión con token de profesor (solo admin)', async () => {
+      const res = await request(app)
+        .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${profesorToken}`)
-        .send({ dia: 'Martes' })
+        .send({ nombre: 'B' })
         .expect(403);
 
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si el horario no existe', async () => {
+    it('debería fallar si la comisión no existe', async () => {
       const res = await request(app)
-        .put('/api/horarios/9999')
+        .put('/api/comisiones/9999')
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ dia: 'Martes' })
+        .send({ nombre: 'B' })
         .expect(404);
 
       expect(res.body.success).toBe(false);
@@ -453,7 +467,7 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar si se asigna una carrera_materia inexistente', async () => {
       const res = await request(app)
-        .put(`/api/horarios/${horarioId}`)
+        .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .send({ carrera_materia_id: 9999 })
         .expect(409);
@@ -463,49 +477,48 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar con token de tutor (no admin)', async () => {
       const res = await request(app)
-        .put(`/api/horarios/${horarioId}`)
+        .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${tutorToken}`)
-        .send({ dia: 'Martes' })
+        .send({ nombre: 'B' })
         .expect(403);
 
       expect(res.body.success).toBe(false);
     });
   });
 
-  describe('DELETE /api/horarios/:id', () => {
-    let horarioId;
+  describe('DELETE /api/comisiones/:id', () => {
+    let comisionId;
 
     beforeEach(async () => {
       const res = await request(app)
-        .post('/api/horarios')
+        .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           carrera_materia_id: carreraMateriaId,
-          comision_id: comisionAId,
-          dia: 'Lunes',
-          horario: '18:00 - 20:00',
-          aula: 'Aula 5',
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
         });
-      horarioId = res.body.data.id;
+      comisionId = res.body.data.id;
     });
 
-    it('debería eliminar un horario (admin)', async () => {
+    it('debería eliminar una comisión sin horarios (admin)', async () => {
       const res = await request(app)
-        .delete(`/api/horarios/${horarioId}`)
+        .delete(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
 
       await request(app)
-        .get(`/api/horarios/${horarioId}`)
+        .get(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(404);
     });
 
-    it('debería fallar si el horario no existe', async () => {
+    it('debería fallar si la comisión no existe', async () => {
       const res = await request(app)
-        .delete('/api/horarios/9999')
+        .delete('/api/comisiones/9999')
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(404);
 
@@ -514,7 +527,7 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar con token de profesor (no admin)', async () => {
       const res = await request(app)
-        .delete(`/api/horarios/${horarioId}`)
+        .delete(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${profesorToken}`)
         .expect(403);
 
@@ -523,9 +536,29 @@ describe('Horario Endpoints', () => {
 
     it('debería fallar con token de tutor (no admin)', async () => {
       const res = await request(app)
-        .delete(`/api/horarios/${horarioId}`)
+        .delete(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${tutorToken}`)
         .expect(403);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar al eliminar comisión con horarios asociados', async () => {
+      await request(app)
+        .post('/api/horarios')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_materia_id: carreraMateriaId,
+          comision_id: comisionId,
+          dia: 'Lunes',
+          horario: '18:00 - 20:00',
+          aula: 'Aula 5',
+        });
+
+      const res = await request(app)
+        .delete(`/api/comisiones/${comisionId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(409);
 
       expect(res.body.success).toBe(false);
     });
