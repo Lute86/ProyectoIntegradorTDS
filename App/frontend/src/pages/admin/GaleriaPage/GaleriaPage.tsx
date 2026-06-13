@@ -2,10 +2,6 @@ import { useEffect, useState } from 'react';
 import { GaleriaImagen, useGaleriaStore } from '../../../stores/galeriaStore';
 import ImageUploadModal from '../../../components/admin/ImageUploadModal';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
-
-const imgUrl = (url: string) => url?.startsWith('/') ? `${API_BASE}${url}` : url;
-
 const GaleriaPage = () => {
   const { imagenes, isLoading, error, fetchImagenes, deleteImagen } = useGaleriaStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +54,7 @@ const GaleriaPage = () => {
           {imagenes.map((img) => (
             <div key={img.id} className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 shadow-sm border border-gray-200">
               <img
-                src={imgUrl(img.url)}
+                src={img.url}
                 alt={img.titulo}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
