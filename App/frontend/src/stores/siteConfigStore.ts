@@ -18,6 +18,7 @@ export interface SiteConfig {
     surface: string;
     background: string;
     text: string;
+    card: string;       /*预留: descomentar en PersonalizarPage COLOR_LABELS si se restaura */
   };
   typography: {
     headingFont: string;
@@ -48,6 +49,7 @@ const DEFAULT_CONFIG: SiteConfig = {
     surface: '#1e293b',
     background: '#ffffff',
     text: '#111827',
+    card: '#ffffff',
   },
   typography: {
     headingFont: 'Inter',
@@ -114,22 +116,15 @@ export const useSiteConfigStore = create<SiteConfigState>()(
               surface: data.colors?.surface || DEFAULT_CONFIG.colors.surface,
               background: data.colors?.background || DEFAULT_CONFIG.colors.background,
               text: data.colors?.text || DEFAULT_CONFIG.colors.text,
+              card: data.colors?.card || DEFAULT_CONFIG.colors.card,
             },
             typography: {
-              headingFont: DEFAULT_CONFIG.typography.headingFont,
-              bodyFont: DEFAULT_CONFIG.typography.bodyFont,
-              baseSize: DEFAULT_CONFIG.typography.baseSize,
+              headingFont: data.typography?.headingFont || DEFAULT_CONFIG.typography.headingFont,
+              bodyFont: data.typography?.bodyFont || DEFAULT_CONFIG.typography.bodyFont,
+              baseSize: data.typography?.baseSize || DEFAULT_CONFIG.typography.baseSize,
             },
-            layout: 'full-width',
-            //
+            layout: data.layout?.mode || DEFAULT_CONFIG.layout,
             themePreset: data.theme_preset || DEFAULT_CONFIG.themePreset,
-        //    sections: data.sections?.length
-        //      ? data.sections.map((s) => ({
-        //          id: s.id,
-        //          visible: s.visible !== undefined ? s.visible : true,
-        //          order: s.order !== undefined ? s.order : 0,
-        //        }))
-        //      : DEFAULT_CONFIG.sections,
             sections: data.sections?.length
               ? [
               ...data.sections.map((s) => ({
@@ -141,8 +136,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
                 (d) => !data.sections.some((s) => s.id === d.id)
               ),
             ]
-          : DEFAULT_CONFIG.sections, 
-        // 
+          : DEFAULT_CONFIG.sections,
             socialLinks: data.social_links || DEFAULT_CONFIG.socialLinks,
           },
           isLoading: false,
@@ -218,5 +212,19 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     set({ config: DEFAULT_CONFIG, isDirty: false });
   },
 }),
-{ name: 'site-config-storage' }
+{
+  name: 'site-config-storage',
+  merge: (persisted, current) => ({
+    ...current,
+    ...persisted,
+    config: {
+      ...current.config,
+      ...(persisted?.config || {}),
+      colors: {
+        ...current.config.colors,
+        ...(persisted?.config?.colors || {}),
+      },
+    },
+  }),
+}
 ));

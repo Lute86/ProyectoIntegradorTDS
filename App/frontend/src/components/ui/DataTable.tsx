@@ -17,6 +17,9 @@ interface DataTableProps<T> {
   className?: string;
   searchable?: boolean;
   pageSize?: number;
+  selectable?: boolean;
+  selectedIds?: Set<number | string>;
+  onSelectionChange?: (ids: Set<number | string>) => void;
 }
 
 export const DataTable = <T extends { id?: string | number }>({
@@ -28,7 +31,13 @@ export const DataTable = <T extends { id?: string | number }>({
   className,
   searchable = false,
   pageSize = 10,
+  selectable = false,
+  selectedIds: externalSelectedIds,
+  onSelectionChange,
 }: DataTableProps<T>) => {
+  const [internalSelectedIds, setInternalSelectedIds] = useState<Set<number | string>>(new Set());
+  const selectedIds = externalSelectedIds ?? internalSelectedIds;
+  const setSelectedIds = onSelectionChange ?? setInternalSelectedIds;
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -68,6 +77,24 @@ export const DataTable = <T extends { id?: string | number }>({
     }
   };
 
+  const toggleSelectAll = () => {
+    const allSelected = paginated.every((item) => item.id != null && selectedIds.has(item.id));
+    const next = new Set(selectedIds);
+    paginated.forEach((item) => {
+      if (item.id == null) return;
+      if (allSelected) next.delete(item.id);
+      else next.add(item.id);
+    });
+    setSelectedIds(next);
+  };
+
+  const toggleSelect = (id: number | string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
+  };
+
   if (isLoading) {
     return (
       <div className="w-full animate-pulse border border-gray-100 rounded-lg overflow-hidden">
@@ -98,6 +125,16 @@ export const DataTable = <T extends { id?: string | number }>({
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-50/80 border-b border-gray-200">
             <tr>
+              {selectable && (
+                <th className="px-4 py-4 w-10">
+                  <input
+                    type="checkbox"
+                    checked={paginated.length > 0 && paginated.every((item) => item.id != null && selectedIds.has(item.id))}
+                    onChange={toggleSelectAll}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                </th>
+              )}
               {columns.map((col, index) => (
                 <th
                   key={index}
@@ -130,6 +167,16 @@ export const DataTable = <T extends { id?: string | number }>({
                   key={item.id ?? rowIndex}
                   className="hover:bg-blue-50/30 transition-colors duration-150 group"
                 >
+                  {selectable && (
+                    <td className="px-4 py-4 w-10" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={item.id != null && selectedIds.has(item.id)}
+                        onChange={() => item.id != null && toggleSelect(item.id)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      />
+                    </td>
+                  )}
                   {columns.map((col, colIndex) => (
                     <td
                       key={colIndex}
@@ -149,7 +196,7 @@ export const DataTable = <T extends { id?: string | number }>({
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-gray-400 italic text-sm">
+                <td colSpan={columns.length + (actions ? 1 : 0) + (selectable ? 1 : 0)} className="px-6 py-12 text-center text-gray-400 italic text-sm">
                   {search ? 'No se encontraron resultados para la busqueda.' : emptyMessage}
                 </td>
               </tr>

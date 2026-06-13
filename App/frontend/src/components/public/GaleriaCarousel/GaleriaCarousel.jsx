@@ -1,16 +1,18 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useGaleriaStore } from '../../../stores/galeriaStore';
+import useScrollReveal from '../../../hooks/useScrollReveal'
 
 const badgeColors = {
-  Instalaciones: 'bg-blue-100 text-blue-700',
-  Eventos: 'bg-amber-100 text-amber-700',
-  Alumnos: 'bg-green-100 text-green-700',
+  Instalaciones: 'bg-blue-500 text-white',
+  Eventos: 'bg-amber-500 text-white',
+  Alumnos: 'bg-emerald-500 text-white',
 }
 
 export default function GaleriaCarousel() {
   const { imagenes, fetchImagenes } = useGaleriaStore()
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
+  const { ref, isVisible } = useScrollReveal()
 
   useEffect(() => { fetchImagenes() }, [fetchImagenes])
 
@@ -43,38 +45,38 @@ export default function GaleriaCarousel() {
   }, [goNext, total, visible])
 
   return (
-    <section className="py-16 bg-slate-50">
+    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-400 dark:to-slate-300 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       <div className="max-w-content mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-slate-900">Galeria del Instituto</h2>
-          <p className="text-slate-500 mt-2">Imagenes de nuestras instalaciones, eventos y alumnos</p>
+          <h2 className="text-h2 text-body dark:text-white">Galeria del Instituto</h2>
+          <p className="text-body/70 dark:text-white/70 mt-2">Imagenes de nuestras instalaciones, eventos y alumnos</p>
         </div>
 
         <div className="relative">
           {total > visible && current > 0 && (
             <button onClick={goPrev}
-              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white border border-slate-300 rounded-full shadow-sm hover:bg-slate-100 text-sm transition-colors"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white text-sm transition-all"
               aria-label="Anterior">
               ◀
             </button>
           )}
 
-          <div className="overflow-hidden rounded-xl">
+          <div className="overflow-hidden rounded-2xl">
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {imagenes.map((img) => (
                 <div key={img.id} className="px-2 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-white/10 dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden group">
                     <div className="aspect-[4/3] overflow-hidden">
                       <img src={img.url} alt={img.titulo}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     <div className="p-4">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${badgeColors[img.categoria] || 'bg-gray-100 text-gray-700'}`}>
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${badgeColors[img.categoria] || 'bg-gray-500 text-white'}`}>
                         {img.categoria}
                       </span>
-                      <h3 className="text-sm font-bold text-slate-900">{img.titulo}</h3>
+                      <h3 className="text-sm font-bold text-body dark:text-white">{img.titulo}</h3>
                     </div>
                   </div>
                 </div>
@@ -84,7 +86,7 @@ export default function GaleriaCarousel() {
 
           {total > visible && current < maxIndex && (
             <button onClick={goNext}
-              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white border border-slate-300 rounded-full shadow-sm hover:bg-slate-100 text-sm transition-colors"
+              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white text-sm transition-all"
               aria-label="Siguiente">
               ▶
             </button>
@@ -95,7 +97,7 @@ export default function GaleriaCarousel() {
           <div className="flex items-center justify-center gap-2 mt-6">
             {Array.from({ length: maxIndex + 1 }, (_, i) => (
               <button key={i} onClick={() => goTo(i)}
-                className={`w-2.5 h-2.5 rounded-full transition-colors ${i === current ? 'bg-blue-600' : 'bg-slate-300'}`}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${i === current ? 'bg-body w-6 dark:bg-white' : 'bg-body/30 hover:bg-body/50 dark:bg-white/30 dark:hover:bg-white/50'}`}
                 aria-label={`Ir a la imagen ${i + 1}`} />
             ))}
           </div>

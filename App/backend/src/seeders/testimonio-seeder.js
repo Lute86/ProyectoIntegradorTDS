@@ -32,7 +32,7 @@ export async function up(queryInterface, Sequelize) {
       { replacements: [testimonio.autor_nombre, testimonio.texto], type: Sequelize.QueryTypes.SELECT },
     );
 
-    if (existing.count === 0) {
+    if (Number(existing.count) === 0) {
       await queryInterface.bulkInsert('testimonios', [
         {
           ...testimonio,

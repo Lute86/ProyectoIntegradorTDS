@@ -4,7 +4,7 @@ export async function up(queryInterface, Sequelize) {
     'SELECT COUNT(*) as count FROM carreras WHERE slug = ?',
     { replacements: [slug], type: Sequelize.QueryTypes.SELECT }
   );
-  if (existing.count === 0) {
+  if (Number(existing.count) === 0) {
     await queryInterface.bulkInsert('carreras', [
       {
         nombre: 'Desarrollo de Software (a distancia)',

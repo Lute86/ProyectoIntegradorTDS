@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import PublicLayout from './components/layout/PublicLayout/PublicLayout'
 import HomePage from './pages/public/HomePage/HomePage'
 import CarrerasPage from './pages/public/CarrerasPage/CarrerasPage'
@@ -25,6 +26,12 @@ import { useAuth } from './contexts/AuthContext/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import SectionGuard from './components/SectionGuard'
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
+
 export default function AppRouter() {
   const { user, loading } = useAuth()
 
@@ -32,6 +39,7 @@ export default function AppRouter() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />

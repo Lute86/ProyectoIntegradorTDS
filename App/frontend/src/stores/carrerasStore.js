@@ -79,6 +79,8 @@ const useCarrerasStore = create((set, get) => ({
     }
   },
 
+  clearError: () => set({ error: null }),
+
   setSelectedCarrera: (carrera) => set({ selectedCarrera: carrera }),
 }))
 

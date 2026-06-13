@@ -74,6 +74,48 @@
 
 **Descripción:** Se refactoriza el modelo de datos para permitir que una materia pertenezca a múltiples carreras con cuatrimestre y carga horaria independientes. Se crea una tabla intermedia `carrera_materias` que conecta Carrera con Materia (relación M:N). Los horarios ahora referencian la asignación carrera-materia en vez de la materia directamente.
 
+#### Módulo 13: Configuración Backend Producción
+**Tareas:**
+- [x] Habilitar SSL en PostgreSQL para producción (database.js)
+- [x] Crear archivo .env.prod (template de variables de entorno — commiteado)
+- [x] Limpiar variable CORS no utilizada en .env, reemplazar por FRONTEND_URL
+- [x] Health check `/api/health` valida conexión a DB con `sequelize.authenticate()`
+- [x] Crear Dockerfile.frontend (nginx:alpine) y Dockerfile.backend (Node 22 Alpine)
+- [x] Crear configuraciones nginx: ssl.conf, frontend.conf, backend.conf
+- [x] Crear docker-compose.yml para producción (PostgreSQL + Node + Nginx HTTPS)
+- [x] Crear scripts: generate-secrets.sh, generate-ssl.sh
+- [x] Agregar security headers en nginx (HSTS, CSP, X-Frame-Options, etc.)
+- [x] HTTP→HTTPS redirect en nginx
+- [x] Frontend API URL usa window.location.origin (dev y prod)
+- [x] Agregar targets Makefile: prod-first, prod, prod-down, prod-reset, setup-prod, ssl-selfsigned
+- [x] Documentación PR
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Ninguna
+
+**Descripción:** Stack de producción completo: Dockerfiles multi-stage optimizados, nginx con TLS 1.2/1.3 y security headers, PostgreSQL con healthchecks, scripts de generación de secrets y certificados SSL, y despliegue con un solo comando (`make prod-first`). `.env.prod` es el template commiteado; `.env` se genera automáticamente con secrets aleatorios.
+
+#### Módulo 14: Seguridad Backend
+**Tareas:**
+- [x] Eliminar fallback hardcoded de JWT_SECRET (crash si falta env var) — CRIT-01
+- [x] Eliminar ruta pública POST /api/auth/register — CRIT-02
+- [x] Eliminar handler, servicio y validator de registro — CRIT-02
+- [x] Cambiar CORS fallback de '*' a 'https://localhost' — HIGH-02
+- [x] Generar passwords aleatorios en seeder con crypto.randomBytes — HIGH-04
+- [x] Reducir rate limit global de 200 a 100 req/min — MED-01
+- [x] Agregar loginLimiter (10 intentos/15min) — MED-01
+- [x] Eliminar envío de stack traces al cliente — MED-03
+- [x] Aumentar mínimo de contraseña de 6 a 8 caracteres — MED-07
+- [x] Crear tests/helpers.js con createUser, generateToken, createAndLogin
+- [x] Refactorizar 13 archivos de test de integración (reemplazar register → createAndLogin)
+- [x] Actualizar auth.test.js y auth.services.test.js
+- [x] Documentación PR
+
+**Dependencias:** Ninguna
+**Contraparte FE:** Ninguna
+
+**Descripción:** Correcciones de seguridad críticas y medias al backend basadas en el security audit del 2026-06-08. Se eliminan vulnerabilidades de autenticación (JWT fallback, registro público), se endurece la configuración (CORS, rate limiting, passwords), y se refactorizan todos los tests de integración para usar un helper compartido en vez del endpoint de registro eliminado. 480 tests pasan (33 suites).
+
 #### Módulo 3: Gestión de Usuarios
 **Tareas:**
 - [x] Controlador de User (CRUD, asignación de roles)
@@ -249,6 +291,11 @@
 - [x] Conectar EventosSection en HomePage
 - [x] Fix guardado batch de horarios: guardado secuencial, preservar datos en fallos, notificacion local
 - [x] NoticiasPage: reemplazar placeholder NOT por icono SVG de categoria
+- [x] Horarios: agregar opcion "Todas" en comisiones + filtro por cuatrimestre en CarreraDetailPage y EstudiantesPage
+- [x] Eventos: EventosSection siempre visible en Home (titulo + mensaje si vacio)
+- [x] Eventos: EventosCard adaptado a campos dual mock/API
+- [x] EventosPage: campos adaptados, descripcion truncada a 2 lineas, card clickeable abre modal
+- [x] EventoDetailModal: nuevo componente modal flotante con info completa del evento
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
@@ -284,6 +331,13 @@
 - [x] Horarios admin: CRUD con comisiones en detalle de carrera
 - [x] Stores carrerasStore/materiasStore: cooldown, relanzan errores
 - [x] Tests: materiasStore, MateriasPage, EstudiantesPage, CarreraDetailAdmin
+- [x] Boton "Plan" en admin Carreras (navega a detalle/plan)
+- [x] Boton "Asignar carrera" en admin Materias con modal inline (selecciona carrera + cuatrimestre)
+- [x] DataTable: prop `selectable` con columna de checkbox y select-all
+- [x] CarrerasPage: tabla reemplazada por DataTable searchable
+- [x] MateriasPage: DataTable searchable + selectable + bulk "Asignar a carrera"
+- [x] AsignarCarreraModal inline con materias agrupadas por cuatrimestre
+- [x] CarreraDetailAdmin: validacion omite filas sin dia/horario, permite guardar solo materias con datos
 
 **Dependencias:** Módulo FE 4 (mismo dev), Módulo BE 12 (tabla intermedia)
 **Contraparte BE:** Módulo BE 12
@@ -308,6 +362,7 @@
 - [x] Implementar consultasStore (listar, responder, eliminar)
 - [x] Agregar badge de notificación en AdminTopbar (count de mensajes sin leer)
 - [x] Agregar ruta /admin/consultas en AppRouter
+- [x] Campana navega a /admin/consultas y resetea contador al hacer clic
 
 **Dependencias:** Módulo BE 8
 **Contraparte BE:** Módulo BE 8
@@ -331,3 +386,60 @@
 | FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
 | FE 5 | BE 7, FE 4 | BE 4 |
 | FE 6 | BE 8 | Módulo BE 8 |
+
+---
+
+## Modulo FE 7: Nuevo Sistema de Estilos (Directiva Critica)
+
+**Lider:** Lucas
+**Prioridad:** CRITICA - sin margen de error
+**Estimacion:** 2-3 horas
+**Archivo de referencia:** `App/frontend/new-styles.md` (plan detallado con fases)
+
+### Fase 1: Infraestructura (archivos nuevos)
+- [ ] Agregar keyframes + animaciones + prefers-reduced-motion + transicion global a globals.css
+- [ ] Agregar --width-content-narrow a @theme en globals.css
+- [ ] Hook useScrollReveal.js (archivo ya creado, listo para usar)
+
+### Fase 2: Theme Toggle en Navbar
+- [ ] Agregar boton theme toggle (sol/luna) en Navbar.jsx
+- [ ] Agregar boton theme toggle en MobileMenu.jsx
+
+### Fase 3: Componentes Publicos
+- [ ] Badge.jsx - dark: variants en colores
+- [ ] Hero.jsx - botones rounded-xl + shadow + scale hover
+- [ ] Stats.jsx + StatItem.jsx - dark: text + animacion scroll reveal
+- [ ] CareerCard.jsx - glass/light card pattern + dark: text
+- [ ] CareerCards.jsx - bg gradient + dark:
+- [ ] CareerCarousel.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] NewsCard.jsx - glass/light card + dark: text
+- [ ] NewsSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] EventosCard.jsx - glass/light card + dark: text
+- [ ] EventosSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [ ] TestimonialSlide.jsx - dark: text colors
+- [ ] TestimonialsCarousel.jsx - bg gradient + botones + dark: + scroll reveal
+- [ ] GaleriaCarousel.jsx - glass/light card + bg gradient + botones + dark: + scroll reveal
+- [ ] Footer.jsx - gradient bg (ya es oscuro, ajustes menores)
+
+### Fase 4: Paginas Publicas
+- [ ] CarrerasPage.jsx - bg gradient + dark:
+- [ ] CarreraDetailPage.jsx - bg gradient + dark:
+- [ ] NoticiasPage.jsx - bg gradient + dark:
+- [ ] NoticiaDetailPage.jsx - dark:
+- [ ] EventosPage.jsx - bg gradient + dark:
+- [ ] ContactoPage.jsx - bg gradient + dark:
+- [ ] EstudiantesPage.jsx - bg gradient + dark:
+
+### Fase 5: Verificacion
+- [ ] Build sin errores (`npm run build`)
+- [ ] Verificar modo claro en homepage y todas las paginas
+- [ ] Verificar modo oscuro en homepage y todas las paginas
+- [ ] Verificar prefers-reduced-motion
+- [ ] Verificar que admin sigue funcionando sin cambios
+- [ ] Ejecutar tests existentes (make tests-frontend)
+
+### Componentes que NO se tocan
+- Todo `components/admin/` (CarreraFormModal, NoticiaFormModal, etc.)
+- Todo `pages/admin/` (DashboardPage, PersonalizarPage, etc.)
+- Todo `components/ui/` excepto Badge
+- Stores, services, contexts (ya implementan el sistema de tema)

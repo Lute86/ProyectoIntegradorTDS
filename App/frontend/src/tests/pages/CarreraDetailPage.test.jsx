@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
 const MOCK_CARRERAS = [
@@ -10,6 +10,11 @@ const MOCK_CARRERAS = [
 
 const mockStore = vi.hoisted(() => vi.fn())
 vi.mock('../../stores/carrerasStore', () => ({ default: mockStore }))
+
+const mockHorariosGetAll = vi.hoisted(() => vi.fn())
+vi.mock('../../services/horariosService', () => ({
+  horariosService: { getAll: mockHorariosGetAll },
+}))
 
 import CarreraDetailPage from '../../pages/public/CarrerasPage/CarreraDetailPage'
 
@@ -38,7 +43,7 @@ describe('CarreraDetailPage', () => {
   it('renderiza el titulo h1 y el nombre oficial', () => {
     renderWithRoute('desarrollo-de-software')
     expect(screen.getByRole('heading', { level: 1, name: 'Desarrollo de Software' })).toBeInTheDocument()
-    expect(screen.getAllByText('Tecnicatura en Desarrollo de Software').length).toBe(2)
+    expect(screen.getByText('Tecnicatura en Desarrollo de Software')).toBeInTheDocument()
   })
 
   it('renderiza las tabs', () => {
@@ -59,5 +64,25 @@ describe('CarreraDetailPage', () => {
   it('muestra mensaje si la carrera no existe', () => {
     renderWithRoute('carrera-inexistente')
     expect(screen.getByText('Carrera no encontrada')).toBeInTheDocument()
+  })
+
+  it('muestra "Sin horarios disponibles" en pestana Horarios cuando no hay comisiones', async () => {
+    mockHorariosGetAll.mockRejectedValue(new Error('sin datos'))
+    renderWithRoute('desarrollo-de-software')
+    fireEvent.click(screen.getByText('Horarios'))
+    await waitFor(() => {
+      expect(screen.getByText('Sin horarios disponibles para esta carrera.')).toBeInTheDocument()
+    })
+  })
+
+  it('muestra info card de seleccion en pestana Horarios cuando hay comisiones', async () => {
+    mockHorariosGetAll.mockResolvedValue({
+      data: { data: [{ id: 1, comision: 'A', carreraMateria: { cuatrimestre: 1, materia: { nombre: 'Prog I' } }, dia: 'Lunes', horario: '18:00', aula: '201', profesor: 'Juan' }] },
+    })
+    renderWithRoute('desarrollo-de-software')
+    fireEvent.click(screen.getByText('Horarios'))
+    await waitFor(() => {
+      expect(screen.getByText('Selecciona una comision y/o cuatrimestre para ver los horarios')).toBeInTheDocument()
+    })
   })
 })

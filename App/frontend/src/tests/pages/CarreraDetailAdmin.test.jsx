@@ -79,8 +79,8 @@ describe('CarreraDetailAdmin - Horarios', () => {
     fireEvent.click(screen.getByText('Crear Comision'))
     const selects = screen.getAllByRole('combobox')
     selects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
-    const horarioInputs = screen.getAllByPlaceholderText('18:00-20:00')
-    horarioInputs.forEach((i) => fireEvent.change(i, { target: { value: '18:00-20:00' } }))
+    const timeInputs = document.querySelectorAll('input[type="time"]')
+    timeInputs.forEach((i, idx) => fireEvent.change(i, { target: { value: idx % 2 === 0 ? '18:00' : '20:00' } }))
     const aulas = screen.getAllByPlaceholderText('Ej: 201')
     aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
     fireEvent.click(screen.getByText('Cargar Horarios'))
@@ -92,7 +92,7 @@ describe('CarreraDetailAdmin - Horarios', () => {
     })
   })
 
-  it('bloquea el guardado si hay campos vacios y muestra mensaje de validacion', async () => {
+  it('permite guardar aunque haya filas vacias y muestra mensaje informativo', async () => {
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
     fireEvent.change(screen.getByPlaceholderText('Letra (ej: A)'), { target: { value: 'A' } })
@@ -100,7 +100,7 @@ describe('CarreraDetailAdmin - Horarios', () => {
     fireEvent.click(screen.getByText('Cargar Horarios'))
 
     await waitFor(() => {
-      expect(screen.getByText(/Corrige los campos marcados en rojo/)).toBeInTheDocument()
+      expect(screen.getByText(/Completa al menos dia y horario/)).toBeInTheDocument()
     })
   })
 
@@ -120,8 +120,8 @@ describe('CarreraDetailAdmin - Horarios', () => {
 
     const selects = screen.getAllByRole('combobox')
     selects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
-    const horarioInputs = screen.getAllByPlaceholderText('18:00-20:00')
-    horarioInputs.forEach((i) => fireEvent.change(i, { target: { value: '18:00-20:00' } }))
+    const timeInputs = document.querySelectorAll('input[type="time"]')
+    timeInputs.forEach((i, idx) => fireEvent.change(i, { target: { value: idx % 2 === 0 ? '18:00' : '20:00' } }))
     const aulas = screen.getAllByPlaceholderText('Ej: 201')
     aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
     fireEvent.click(screen.getByText('Cargar Horarios'))
