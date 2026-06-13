@@ -1,9 +1,17 @@
 import { body, param } from 'express-validator';
 
 export const createComisionValidation = [
-  body('carrera_materia_id')
+  body('carrera_id')
     .isInt({ min: 1 })
-    .withMessage('carrera_materia_id debe ser un entero válido'),
+    .withMessage('carrera_id debe ser un entero válido'),
+  body('carrera_materias_ids')
+    .optional()
+    .isArray()
+    .withMessage('carrera_materias_ids debe ser un arreglo'),
+  body('carrera_materias_ids.*')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Cada carrera_materia_id debe ser un entero válido'),
   body('nombre')
     .notEmpty()
     .trim()
@@ -29,10 +37,18 @@ export const updateComisionValidation = [
   param('id')
     .isInt()
     .withMessage('ID inválido'),
-  body('carrera_materia_id')
+  body('carrera_id')
     .optional()
     .isInt({ min: 1 })
-    .withMessage('carrera_materia_id debe ser un entero válido'),
+    .withMessage('carrera_id debe ser un entero válido'),
+  body('carrera_materias_ids')
+    .optional()
+    .isArray()
+    .withMessage('carrera_materias_ids debe ser un arreglo'),
+  body('carrera_materias_ids.*')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Cada carrera_materia_id debe ser un entero válido'),
   body('nombre')
     .optional()
     .trim()
@@ -56,8 +72,29 @@ export const updateComisionValidation = [
     .withMessage('Activo debe ser un valor booleano'),
 ];
 
+export const assignMateriasValidation = [
+  param('id')
+    .isInt()
+    .withMessage('ID inválido'),
+  body('carrera_materias_ids')
+    .isArray({ min: 1 })
+    .withMessage('carrera_materias_ids debe ser un arreglo con al menos un elemento'),
+  body('carrera_materias_ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Cada carrera_materia_id debe ser un entero válido'),
+];
+
 export const idParamValidation = [
   param('id')
     .isInt()
     .withMessage('ID inválido'),
+];
+
+export const materiaParamValidation = [
+  param('id')
+    .isInt()
+    .withMessage('ID inválido'),
+  param('carreraMateriaId')
+    .isInt()
+    .withMessage('carreraMateriaId inválido'),
 ];

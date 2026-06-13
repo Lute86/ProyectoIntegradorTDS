@@ -5,7 +5,7 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    carrera_materia_id: {
+    carrera_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -46,15 +46,21 @@ export default (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['carrera_materia_id', 'nombre', 'anio_lectivo', 'semestre'],
+        fields: ['carrera_id', 'nombre', 'anio_lectivo', 'semestre'],
       },
     ],
   });
 
   Comision.associate = (models) => {
-    Comision.belongsTo(models.CarreraMateria, { foreignKey: 'carrera_materia_id', as: 'carreraMateria' });
+    Comision.belongsTo(models.Carrera, { foreignKey: 'carrera_id', as: 'carrera' });
     Comision.belongsTo(models.User, { foreignKey: 'encargado_id', as: 'encargado' });
     Comision.hasMany(models.Horario, { foreignKey: 'comision_id', as: 'horarios' });
+    Comision.belongsToMany(models.CarreraMateria, {
+      through: models.ComisionCarreraMateria,
+      foreignKey: 'comision_id',
+      otherKey: 'carrera_materia_id',
+      as: 'carrerasMaterias',
+    });
   };
 
   return Comision;
