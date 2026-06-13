@@ -5,7 +5,7 @@ import useScrollReveal from '../../../hooks/useScrollReveal'
 export default function CareerCarousel({ carreras }) {
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 100 })
 
   useEffect(() => {
     const updateVisible = () => {
@@ -38,8 +38,8 @@ export default function CareerCarousel({ carreras }) {
   if (total === 0) return null
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-      <div className="max-w-content mx-auto px-6">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
           <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
             Nuestras Carreras
@@ -60,7 +60,7 @@ export default function CareerCarousel({ carreras }) {
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {carreras.map((c) => (
-                <div key={c.id} className="px-2 shrink-0"
+                <div key={c.id} className="px-3 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
                   <CareerCard carrera={c} />
                 </div>

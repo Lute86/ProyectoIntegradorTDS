@@ -12,7 +12,7 @@ export default function GaleriaCarousel() {
   const { imagenes, fetchImagenes } = useGaleriaStore()
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 500 })
 
   useEffect(() => { fetchImagenes() }, [fetchImagenes])
 
@@ -45,8 +45,8 @@ export default function GaleriaCarousel() {
   }, [goNext, total, visible])
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-      <div className="max-w-content mx-auto px-6">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
           <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
             Galeria del Instituto
@@ -67,7 +67,7 @@ export default function GaleriaCarousel() {
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {imagenes.map((img) => (
-                <div key={img.id} className="px-2 shrink-0"
+                <div key={img.id} className="px-3 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
                   <div className="bg-white/10 dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden group">
                     <div className="aspect-[4/3] overflow-hidden">

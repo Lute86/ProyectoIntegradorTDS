@@ -4,7 +4,7 @@ import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function TestimonialsCarousel({ testimonios }) {
   const [current, setCurrent] = useState(0)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 200 })
 
   const total = testimonios?.length || 0
 
@@ -26,8 +26,8 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-      <div className="max-w-content mx-auto px-6">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
           <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
             Lo que dicen nuestros estudiantes

@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="mt-auto bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-content mx-auto px-5 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white/80">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white/80 text-center">
           <div>
             <h3 className="font-bold text-lg mb-3 text-white">{config.siteName}</h3>
             <p className="text-sm leading-relaxed text-white/65">
