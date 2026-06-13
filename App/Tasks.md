@@ -94,6 +94,26 @@
 
 **Descripción:** Se crea el módulo de Comisiones como entidad independiente para gestionar comisiones de forma flexibles (nombres con letras, números o mixtos, encargado opcional). Se reemplaza el campo string `comision` en horarios por una FK `comision_id` que referencia la tabla `comisiones`. Esto permite un CRUD de comisiones independiente y filtrado de horarios por comisión. Breaking change en la API de horarios: el campo `comision` (string) se reemplaza por `comision_id` (integer) y `comisionInfo` (objeto con datos de la comisión).
 
+#### Módulo 16: Refactor Comisiones — N:M con CarreraMaterias
+**Tareas:**
+- [x] Crear migración 16-refactor-comisiones-many-materias.js (add carrera_id, drop carrera_materia_id, create junction table, migrate data)
+- [x] Crear modelo comisionCarreraMateria.model.js
+- [x] Actualizar comision.model.js (add carrera_id, belongsToMany CarreraMateria, remove single FK)
+- [x] Registrar nuevo modelo en models/index.js
+- [x] Actualizar comision.services.js (create/update/getAll/getAll con N:M)
+- [x] Actualizar comision.validator.js (carrera_id required, carrera_materias_ids optional array)
+- [x] Actualizar comision.controller.js (remove carrera_materia_id filter, add carrera_id direct filter)
+- [x] Actualizar comision.routes.js (add POST /:id/materias, DELETE /:id/materias/:cmId)
+- [x] Actualizar horario.services.js (validate comision+carrera_materia pair exists in junction)
+- [x] Actualizar tests comision.test.js
+- [x] Actualizar tests horario.test.js
+- [x] Documentación PR (docs/PR-BE1Module16.md) con breaking changes y guía frontend
+
+**Dependencias:** Módulo BE 12 (CarreraMateria), Módulo BE 15 (Comisiones)
+**Contraparte FE:** Pendiente
+
+**Descripción:** Se refactoriza el módulo de Comisiones para permitir que una comisión tenga múltiples materias. Se elimina la FK directa `carrera_materia_id` y se crea una tabla intermedia `comision_carrera_materias` (N:M). Se agrega `carrera_id` a comisiones para scopear por carrera. Una comisión puede crearse sin materias y asignarlas después. Breaking change en la API de comisiones: `carrera_materia_id` se reemplaza por `carrera_id` + `carrera_materias_ids`.
+
 #### Módulo 13: Configuración Backend Producción
 **Tareas:**
 - [x] Habilitar SSL en PostgreSQL para producción (database.js)

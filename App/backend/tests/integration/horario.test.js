@@ -47,7 +47,7 @@ describe('Horario Endpoints', () => {
       .post('/api/comisiones')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
-        carrera_materia_id: carreraMateriaId,
+        carrera_id: carreraId,
         nombre: 'A',
         anio_lectivo: 2026,
         semestre: 1,
@@ -58,12 +58,22 @@ describe('Horario Endpoints', () => {
       .post('/api/comisiones')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
-        carrera_materia_id: carreraMateriaId,
+        carrera_id: carreraId,
         nombre: 'B',
         anio_lectivo: 2026,
         semestre: 1,
       });
     comisionBId = comisionBRes.body.data.id;
+
+    await request(app)
+      .post(`/api/comisiones/${comisionAId}/materias`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ carrera_materias_ids: [carreraMateriaId] });
+
+    await request(app)
+      .post(`/api/comisiones/${comisionBId}/materias`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ carrera_materias_ids: [carreraMateriaId] });
   });
 
   afterAll(async () => {
