@@ -36,7 +36,7 @@ const PersonalizarPage = () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 animate-pulse space-y-6">
+      <div className="p-4 md:p-8 animate-pulse space-y-6 min-h-screen">
         <div className="h-8 bg-gray-200 rounded w-1/3" />
         <div className="h-4 bg-gray-100 rounded w-1/4" />
         <div className="h-96 bg-gray-100 rounded-xl" />
@@ -47,7 +47,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 animate-in fade-in duration-500">
+    <div className="p-4 md:p-8 pb-16 animate-in fade-in duration-500 min-h-screen">
       {/* Header de la pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
