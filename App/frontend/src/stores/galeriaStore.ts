@@ -31,9 +31,11 @@ export const useGaleriaStore = create<GaleriaState>((set) => ({
       set({ error: mensaje, isLoading: false });
     }
   },
-  addImagen: async (nuevaImagen) => {
+  addImagen: async (formData: FormData) => {
     try {
-      const response = await api.post('/imagenes', nuevaImagen);
+      const response = await api.post('/imagenes', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       set((state) => ({ imagenes: [...state.imagenes, response.data.data] }));
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al subir la imagen';

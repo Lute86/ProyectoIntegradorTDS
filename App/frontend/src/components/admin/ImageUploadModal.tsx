@@ -47,11 +47,13 @@ const ImageUploadModal = ({ isOpen, onClose }: ImageUploadModalProps) => {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const onSubmit = (data: ImagenFormData) => {
-    addImagen({
-      ...data,
-      url: previewUrl || 'https://picsum.photos/seed/default/400/300',
-    });
+  const onSubmit = async (data: ImagenFormData) => {
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append('imagen', selectedFile);
+    formData.append('titulo', data.titulo);
+    formData.append('categoria', data.categoria);
+    await addImagen(formData);
     onClose();
   };
 
