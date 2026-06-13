@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import * as horarioService from '../services/horario.services.js';
+import * as comisionService from '../services/comision.services.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { success, created, deleted, validationError } from '../utils/response.js';
 
@@ -14,16 +14,24 @@ export const getAll = asyncHandler(async (req, res) => {
     filters.carrera_id = parseInt(req.query.carrera_id);
   }
 
-  if (req.query.comision_id) {
-    filters.comision_id = parseInt(req.query.comision_id);
+  if (req.query.anio_lectivo) {
+    filters.anio_lectivo = parseInt(req.query.anio_lectivo);
   }
 
-  if (req.query.dia) {
-    filters.dia = req.query.dia;
+  if (req.query.semestre) {
+    filters.semestre = parseInt(req.query.semestre);
   }
 
-  const horarios = await horarioService.getAll(filters);
-  return success(res, horarios, 'Horarios obtenidos exitosamente');
+  if (req.query.encargado_id) {
+    filters.encargado_id = parseInt(req.query.encargado_id);
+  }
+
+  if (req.query.activo !== undefined) {
+    filters.activo = req.query.activo === 'true';
+  }
+
+  const comisiones = await comisionService.getAll(filters);
+  return success(res, comisiones, 'Comisiones obtenidas exitosamente');
 });
 
 export const getById = asyncHandler(async (req, res) => {
@@ -33,8 +41,8 @@ export const getById = asyncHandler(async (req, res) => {
   }
 
   const { id } = req.params;
-  const horario = await horarioService.getById(id);
-  return success(res, horario, 'Horario obtenido exitosamente');
+  const comision = await comisionService.getById(id);
+  return success(res, comision, 'Comisión obtenida exitosamente');
 });
 
 export const create = asyncHandler(async (req, res) => {
@@ -43,8 +51,8 @@ export const create = asyncHandler(async (req, res) => {
     return validationError(res, errors.array());
   }
 
-  const horario = await horarioService.create(req.body);
-  return created(res, horario, 'Horario creado exitosamente');
+  const comision = await comisionService.create(req.body);
+  return created(res, comision, 'Comisión creada exitosamente');
 });
 
 export const update = asyncHandler(async (req, res) => {
@@ -54,8 +62,8 @@ export const update = asyncHandler(async (req, res) => {
   }
 
   const { id } = req.params;
-  const horario = await horarioService.update(id, req.body);
-  return success(res, horario, 'Horario actualizado exitosamente');
+  const comision = await comisionService.update(id, req.body);
+  return success(res, comision, 'Comisión actualizada exitosamente');
 });
 
 export const remove = asyncHandler(async (req, res) => {
@@ -65,6 +73,6 @@ export const remove = asyncHandler(async (req, res) => {
   }
 
   const { id } = req.params;
-  await horarioService.remove(id);
-  return deleted(res, 'Horario eliminado exitosamente');
+  await comisionService.remove(id);
+  return deleted(res, 'Comisión eliminada exitosamente');
 });

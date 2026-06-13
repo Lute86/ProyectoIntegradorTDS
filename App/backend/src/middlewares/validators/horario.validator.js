@@ -6,6 +6,9 @@ export const createHorarioValidation = [
   body('carrera_materia_id')
     .isInt({ min: 1 })
     .withMessage('carrera_materia_id debe ser un entero válido'),
+  body('comision_id')
+    .isInt({ min: 1 })
+    .withMessage('comision_id debe ser un entero válido'),
   body('dia')
     .notEmpty()
     .trim()
@@ -24,11 +27,6 @@ export const createHorarioValidation = [
   body('profesor')
     .optional()
     .trim(),
-  body('comision')
-    .optional()
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage('Comision debe tener al menos 1 caracter'),
   body('activo')
     .optional()
     .isBoolean()
@@ -40,11 +38,10 @@ export const updateHorarioValidation = [
     .optional()
     .isInt({ min: 1 })
     .withMessage('carrera_materia_id debe ser un entero válido'),
-  body('comision')
+  body('comision_id')
     .optional()
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage('Comision debe tener al menos 1 caracter'),
+    .isInt({ min: 1 })
+    .withMessage('comision_id debe ser un entero válido'),
   body('dia')
     .optional()
     .trim()
