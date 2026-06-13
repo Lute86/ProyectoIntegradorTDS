@@ -175,6 +175,19 @@ describe('User Endpoints', () => {
 
       expect(res.body.success).toBe(false);
     });
+
+    it('no debería permitir cambio de rol a usuario no admin', async () => {
+      const res = await request(app)
+        .put(`/api/usuarios/${createdUserId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          rol: 'admin',
+        })
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.rol).toBe('profesor');
+    });
   });
 
   describe('DELETE /api/usuarios/:id', () => {

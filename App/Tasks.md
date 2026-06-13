@@ -74,6 +74,26 @@
 
 **Descripción:** Se refactoriza el modelo de datos para permitir que una materia pertenezca a múltiples carreras con cuatrimestre y carga horaria independientes. Se crea una tabla intermedia `carrera_materias` que conecta Carrera con Materia (relación M:N). Los horarios ahora referencian la asignación carrera-materia en vez de la materia directamente.
 
+#### Módulo 15: Comisiones
+**Tareas:**
+- [x] Implementar modelo Comision (id, carrera_materia_id, nombre, anio_lectivo, semestre, encargado_id, activo, timestamps, paranoid)
+- [x] Crear migración de comisiones (14-create-comisiones-table.js)
+- [x] Crear migración que agrega comision_id FK a horarios y elimina columna string (15-add-comision-id-to-horarios.js)
+- [x] Registrar modelo Comision en models/index.js
+- [x] Crear validadores comision.validator.js (create, update, idParam)
+- [x] Implementar servicio comision.services.js (getAll con filtros, getById, create, update, remove)
+- [x] Implementar controlador comision.controller.js (CRUD HTTP)
+- [x] Crear rutas comision.routes.js (GET público, POST/PUT/DELETE admin)
+- [x] Registrar rutas en routes/index.js (/api/comisiones)
+- [x] Crear seeder 09-comision-seeder.js
+- [x] Crear tests de integración comision.test.js (27 tests)
+- [x] Documentación PR (docs/PR-BE1Module15.md) con breaking changes y guía frontend
+
+**Dependencias:** Módulo BE 12 (CarreraMateria), Módulo BE 9 (Horarios)
+**Contraparte FE:** Módulo FE 2
+
+**Descripción:** Se crea el módulo de Comisiones como entidad independiente para gestionar comisiones de forma flexibles (nombres con letras, números o mixtos, encargado opcional). Se reemplaza el campo string `comision` en horarios por una FK `comision_id` que referencia la tabla `comisiones`. Esto permite un CRUD de comisiones independiente y filtrado de horarios por comisión. Breaking change en la API de horarios: el campo `comision` (string) se reemplaza por `comision_id` (integer) y `comisionInfo` (objeto con datos de la comisión).
+
 #### Módulo 13: Configuración Backend Producción
 **Tareas:**
 - [x] Habilitar SSL en PostgreSQL para producción (database.js)
