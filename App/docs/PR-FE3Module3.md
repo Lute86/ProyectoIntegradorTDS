@@ -207,6 +207,35 @@ Se ejecuta en `PublicLayout.jsx` via `useThemeStyles()`.
 - Falta saveConfig() en siteConfigStore (cambios de AjustesPage y PersonalizarPage solo quedan en memoria) — lo implementa FE Dev 2
 - `siteConfigStore.fetchConfig()` hardcodea `socialLinks: DEFAULT_CONFIG.socialLinks` — no carga Instagram/Facebook desde el backend
 
+---
+
+## Post-Implementation Fixes (11 Jun 2026)
+
+### Dropdowns modo oscuro
+- `EstudiantesPage.jsx`: `<select>` filtros cambiaron de `dark:bg-white/10` (casi transparente) a `dark:bg-slate-800` (solido). Los `<option>` ahora tienen `className="dark:bg-slate-800 dark:text-white"` para que el popup nativo del navegador sea legible en modo oscuro.
+
+### Hero overlay
+- `CarrerasPage.jsx`, `CarreraDetailPage.jsx`, `NoticiasPage.jsx`, `EventosPage.jsx`, `EstudiantesPage.jsx`: `bg-surface/50` (semi-transparente con color del menu) reemplazado por `bg-black/40` (filtro oscuro neutro, como ya usaba ContactoPage).
+
+### Personalizacion admin en modo claro
+- Reemplazo masivo de `text-slate-500`/`text-slate-600`/`text-slate-700` por `text-body/70`, `text-body`, `text-body/50` en los ~25 archivos de paginas y componentes publicos. Ahora los textos secundarios usan `--clr-text` con opacidad en vez de gris fijo.
+- Reemplazo de `bg-slate-50` por `bg-site-bg` en las 8 pages publicas. Ahora el fondo de pagina respeta el color elegido por el admin.
+
+### overflow-x-hidden
+- `NoticiasPage.jsx`: removido `overflow-x-hidden` del wrapper principal para prevenir recortes de layout.
+
+### CarreraDetailPage fondo
+- `CarreraDetailPage.jsx:168`: `bg-slate-50` → `bg-site-bg`. Los estados loading y not-found ya estaban correctos.
+
+### Layout boxed/full-width (7 pages)
+**Problema:** Solo HomePage.jsx leia `config.layout`. Las otras 7 pages publicas usaban `max-w-content` (1440px) fijo, ignorando si el admin seleccionaba layout "boxed" o "full-width".
+
+**Fix:** Cada pagina importa `useSiteConfigStore`, lee `layout`, y condiciona:
+- Wrapper: `max-w-[1280px] mx-auto` en boxed mode
+- Contenido interior: sin `max-w-content` en boxed (hereda del wrapper), con `max-w-content` en full-width
+
+**Archivos:** CarrerasPage, CarreraDetailPage, NoticiasPage, NoticiaDetailPage, EventosPage, ContactoPage, EstudiantesPage.
+
 ### Issues resueltos
 - ContactForm ya envia al backend via `api.post('/consultas', data)` — resuelto
 - Secciones publicas ahora reflejan colores/tipografia de siteConfig — resuelto via `useThemeStyles` + CSS variables

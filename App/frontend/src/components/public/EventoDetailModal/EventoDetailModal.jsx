@@ -117,12 +117,12 @@ export default function EventoDetailModal({ evento, onClose }) {
 
         <div className="sticky bottom-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between rounded-b-2xl">
           <Link to="/eventos" onClick={onClose}
-            className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             Ver eventos
           </Link>
           <button onClick={onClose}
-            className="px-5 py-2 bg-slate-800 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-5 py-2.5 bg-slate-800 text-white text-sm font-semibold rounded-xl hover:bg-slate-700 hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             Cerrar
           </button>

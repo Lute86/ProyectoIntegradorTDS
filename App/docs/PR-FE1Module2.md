@@ -91,3 +91,22 @@ Se implementa la HomePage completa y las paginas de Carreras (listado + detalle 
 ### Issues
 - HomePage.test.jsx tiene solo 1 test smoke, sin cobertura de loading/error/estados vacios
 
+---
+
+## Post-Implementation Fixes (11 Jun 2026)
+
+### Hero overlay
+- `CarrerasPage.jsx`, `CarreraDetailPage.jsx`: `bg-surface/50` → `bg-black/40` para overlay neutro consistente con ContactoPage.
+
+### CarreraDetailPage fondo
+- `CarreraDetailPage.jsx`: `bg-slate-50` → `bg-site-bg` en render principal (loading y not-found ya estaban correctos).
+
+### Home secciones fondo
+- `CareerCarousel.jsx`: gradientes light mode reemplazados por `bg-site-bg` para respetar configuracion admin.
+
+### Carruseles modo claro
+- `CareerCarousel.jsx`, `NewsSection.jsx`, `TestimonialsCarousel.jsx`: botones nav `bg-white/10` → `bg-black/10`, dots `bg-white` → `bg-body` con `dark:bg-white` para visibilidad en modo claro.
+
+### Layout boxed/full-width
+- `CarrerasPage.jsx`, `CarreraDetailPage.jsx`: ahora leen `config.layout` y condicionan el wrapper (`max-w-[1280px] mx-auto` en boxed, `max-w-content` en full-width).
+

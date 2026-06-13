@@ -167,9 +167,9 @@ export default function EventosPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-xl font-bold text-body dark:text-white mb-3 leading-snug">{titulo}</h3>
-                            <p className="text-sm text-body/70 dark:text-white/70 mb-5 leading-relaxed line-clamp-2"
-                              dangerouslySetInnerHTML={{ __html: descripcion }}
-                            />
+                            <p className="text-sm text-body/70 dark:text-white/70 mb-5 leading-relaxed line-clamp-2">
+                              {descripcion?.replace(/<[^>]*>/g, '')}
+                            </p>
                             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-100 dark:border-white/10">
                               {badge && icon && (
                                 <div className="flex items-center gap-2 text-sm text-body/50 dark:text-white/50">

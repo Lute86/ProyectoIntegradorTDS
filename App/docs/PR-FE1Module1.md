@@ -83,3 +83,13 @@ Se implementa la capa base del frontend: sistema de diseno UI completo, capa de 
 
 ### Issues
 
+---
+
+## Post-Implementation Fixes (11 Jun 2026)
+
+### Select dark mode
+- `Select/Select.jsx`: se agregaron `dark:` variants faltantes (`dark:bg-slate-800`, `dark:text-white`, `dark:border-white/30`) para que funcione correctamente en modo oscuro.
+
+### Footer personalization
+- `Footer/Footer.jsx`: se reemplazaron todos los `style={{ color: 'rgba(...)' }}` por clases Tailwind (`text-white/80`, `text-white/65`, `text-white/50`) y se agregaron `dark:` variants inline. Ahora respeta el sistema de tema.
+

@@ -74,7 +74,7 @@ export default function ContactForm({ onSubmit, isLoading }) {
       </div>
 
       <button type="submit" disabled={isLoading}
-        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold disabled:brightness-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 disabled:brightness-50 disabled:cursor-not-allowed"
       >
         {isLoading ? 'Enviando...' : 'Enviar mensaje'}
       </button>

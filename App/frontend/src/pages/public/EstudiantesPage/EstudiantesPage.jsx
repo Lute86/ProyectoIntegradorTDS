@@ -121,6 +121,9 @@ export default function EstudiantesPage() {
       <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8 space-y-12`}>
         <section>
           <div className="text-center mb-8">
+            <span className="inline-block px-4 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] dark:bg-white/10 dark:text-blue-300 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+              Portal
+            </span>
             <h2 className="text-2xl font-bold text-body dark:text-white">Accesos Rapidos</h2>
             <p className="text-body/70 dark:text-white/70 mt-1">Herramientas y recursos para estudiantes</p>
           </div>
@@ -145,9 +148,14 @@ export default function EstudiantesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-center text-body dark:text-white mb-6">
-            Horarios
-          </h2>
+          <div className="text-center mb-6">
+            <span className="inline-block px-4 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] dark:bg-white/10 dark:text-blue-300 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+              Horarios
+            </span>
+            <h2 className="text-2xl font-bold text-body dark:text-white">
+              Horarios de Cursada
+            </h2>
+          </div>
 
           <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
             <div className="flex flex-col sm:flex-row gap-4">

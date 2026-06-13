@@ -26,10 +26,12 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-500 dark:to-slate-400 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="max-w-content mx-auto px-4">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+      <div className="max-w-content mx-auto px-6">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-body dark:text-white">Lo que dicen nuestros estudiantes</h2>
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+            Lo que dicen nuestros estudiantes
+          </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
         </div>
 

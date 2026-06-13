@@ -45,10 +45,12 @@ export default function GaleriaCarousel() {
   }, [goNext, total, visible])
 
   return (
-    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-400 dark:to-slate-300 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="max-w-content mx-auto px-4">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+      <div className="max-w-content mx-auto px-6">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-body dark:text-white">Galeria del Instituto</h2>
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+            Galeria del Instituto
+          </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">Imagenes de nuestras instalaciones, eventos y alumnos</p>
         </div>
 

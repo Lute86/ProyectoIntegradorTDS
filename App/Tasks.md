@@ -261,6 +261,8 @@
 - [x] Construir PublicLayout (Navbar, Footer, MobileMenu)
 - [x] Construir LoginPage
 - [x] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
+- [x] Post-FE7: Select/Select.jsx — dark: variants agregadas
+- [x] Post-FE7: Footer.jsx — style={{ color }} → clases Tailwind
 
 **Dependencias:** Puede usar datos mock de auth hasta que el Módulo BE 1 esté listo
 
@@ -273,6 +275,11 @@
 - [x] Construir componente HorariosTable
 - [x] Implementar carrerasStore
 - [x] Rediseno cards de carreras: titulo en header con color de fondo
+- [x] Post-FE7: Hero overlay bg-surface/50 → bg-black/40 en CarrerasPage y CarreraDetailPage
+- [x] Post-FE7: CarreraDetailPage bg-slate-50 → bg-site-bg
+- [x] Post-FE7: CareerCarousel gradiente light mode → bg-site-bg
+- [x] Post-FE7: Carruseles modo claro — botones/dots en CareerCarousel, NewsSection, TestimonialsCarousel
+- [x] Post-FE7: Layout boxed/full-width en CarrerasPage y CarreraDetailPage
 
 **Dependencias:** Puede usar datos mock de carreras hasta que el Módulo BE 2 esté listo
 **Contraparte BE:** Módulo BE 2
@@ -296,9 +303,22 @@
 - [x] Eventos: EventosCard adaptado a campos dual mock/API
 - [x] EventosPage: campos adaptados, descripcion truncada a 2 lineas, card clickeable abre modal
 - [x] EventoDetailModal: nuevo componente modal flotante con info completa del evento
+- [x] Post-FE7: Dropdowns dark mode — EstudiantesPage <select> dark:bg-slate-800
+- [x] Post-FE7: Hero overlay bg-surface/50 → bg-black/40 en NoticiasPage, EventosPage, EstudiantesPage
+- [x] Post-FE7: text-slate-500/600/700 → text-body y bg-slate-50 → bg-site-bg en paginas publicas
+- [x] Post-FE7: NoticiasPage overflow-x-hidden removido
+- [x] Post-FE7: Carruseles modo claro — botones/dots en EventosSection y GaleriaCarousel
+- [x] Post-FE7: Layout boxed/full-width en NoticiasPage, NoticiaDetailPage, EventosPage, ContactoPage, EstudiantesPage
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
+
+### Issues conocidos (pendientes)
+- Cards usan bg-white fijo (token card-bg comentado)
+- Hero boton "Ver Carreras" usa text-slate-800 hardcodeado
+- Navbar dropdown usa bg-slate-800 hardcodeado
+- Footer gradiente fijo from-slate-900
+- layout-boxed/layout-full CSS muerto (--content-width no referenciado)
 
 ---
 
@@ -397,49 +417,50 @@
 **Archivo de referencia:** `App/frontend/new-styles.md` (plan detallado con fases)
 
 ### Fase 1: Infraestructura (archivos nuevos)
-- [ ] Agregar keyframes + animaciones + prefers-reduced-motion + transicion global a globals.css
-- [ ] Agregar --width-content-narrow a @theme en globals.css
-- [ ] Hook useScrollReveal.js (archivo ya creado, listo para usar)
+- [x] Agregar keyframes + animaciones + prefers-reduced-motion + transicion global a globals.css
+- [x] Agregar --width-content-narrow a @theme en globals.css
+- [x] Hook useScrollReveal.js (archivo ya creado, listo para usar)
 
 ### Fase 2: Theme Toggle en Navbar
-- [ ] Agregar boton theme toggle (sol/luna) en Navbar.jsx
-- [ ] Agregar boton theme toggle en MobileMenu.jsx
+- [x] Agregar boton theme toggle (sol/luna) en Navbar.jsx
+- [x] Agregar boton theme toggle en MobileMenu.jsx
 
 ### Fase 3: Componentes Publicos
-- [ ] Badge.jsx - dark: variants en colores
-- [ ] Hero.jsx - botones rounded-xl + shadow + scale hover
-- [ ] Stats.jsx + StatItem.jsx - dark: text + animacion scroll reveal
-- [ ] CareerCard.jsx - glass/light card pattern + dark: text
-- [ ] CareerCards.jsx - bg gradient + dark:
-- [ ] CareerCarousel.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [ ] NewsCard.jsx - glass/light card + dark: text
-- [ ] NewsSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [ ] EventosCard.jsx - glass/light card + dark: text
-- [ ] EventosSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [ ] TestimonialSlide.jsx - dark: text colors
-- [ ] TestimonialsCarousel.jsx - bg gradient + botones + dark: + scroll reveal
-- [ ] GaleriaCarousel.jsx - glass/light card + bg gradient + botones + dark: + scroll reveal
-- [ ] Footer.jsx - gradient bg (ya es oscuro, ajustes menores)
+- [x] Badge.jsx - dark: variants en colores
+- [x] Hero.jsx - botones rounded-xl + shadow + scale hover
+- [x] Stats.jsx + StatItem.jsx - dark: text + animacion scroll reveal
+- [x] CareerCard.jsx - glass/light card pattern + dark: text
+- [x] CareerCards.jsx - bg gradient + dark:
+- [x] CareerCarousel.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [x] NewsCard.jsx - glass/light card + dark: text
+- [x] NewsSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [x] EventosCard.jsx - glass/light card + dark: text
+- [x] EventosSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
+- [x] TestimonialSlide.jsx - dark: text colors
+- [x] TestimonialsCarousel.jsx - bg gradient + botones + dark: + scroll reveal
+- [x] GaleriaCarousel.jsx - glass/light card + bg gradient + botones + dark: + scroll reveal
+- [x] Footer.jsx - gradient bg (ya es oscuro, ajustes menores)
 
 ### Fase 4: Paginas Publicas
-- [ ] CarrerasPage.jsx - bg gradient + dark:
-- [ ] CarreraDetailPage.jsx - bg gradient + dark:
-- [ ] NoticiasPage.jsx - bg gradient + dark:
-- [ ] NoticiaDetailPage.jsx - dark:
-- [ ] EventosPage.jsx - bg gradient + dark:
-- [ ] ContactoPage.jsx - bg gradient + dark:
-- [ ] EstudiantesPage.jsx - bg gradient + dark:
+- [x] CarrerasPage.jsx - bg gradient + dark:
+- [x] CarreraDetailPage.jsx - bg gradient + dark:
+- [x] NoticiasPage.jsx - bg gradient + dark:
+- [x] NoticiaDetailPage.jsx - dark:
+- [x] EventosPage.jsx - bg gradient + dark:
+- [x] ContactoPage.jsx - bg gradient + dark:
+- [x] EstudiantesPage.jsx - bg gradient + dark:
 
 ### Fase 5: Verificacion
-- [ ] Build sin errores (`npm run build`)
-- [ ] Verificar modo claro en homepage y todas las paginas
-- [ ] Verificar modo oscuro en homepage y todas las paginas
-- [ ] Verificar prefers-reduced-motion
-- [ ] Verificar que admin sigue funcionando sin cambios
-- [ ] Ejecutar tests existentes (make tests-frontend)
+- [x] Build sin errores (`npm run build`)
+- [x] Verificar modo claro en homepage y todas las paginas
+- [x] Verificar modo oscuro en homepage y todas las paginas
+- [x] Verificar prefers-reduced-motion
+- [x] Verificar que admin sigue funcionando sin cambios
+- [x] Ejecutar tests existentes (make tests-frontend)
 
 ### Componentes que NO se tocan
 - Todo `components/admin/` (CarreraFormModal, NoticiaFormModal, etc.)
 - Todo `pages/admin/` (DashboardPage, PersonalizarPage, etc.)
 - Todo `components/ui/` excepto Badge
 - Stores, services, contexts (ya implementan el sistema de tema)
+
