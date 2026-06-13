@@ -13,8 +13,8 @@ export const getAll = handleDbErrors(async (filters = {}) => {
     where['$carreraMateria.carrera_id$'] = filters.carrera_id;
   }
 
-  if (filters.comision) {
-    where.comision = filters.comision;
+  if (filters.comision_id) {
+    where.comision_id = filters.comision_id;
   }
 
   if (filters.dia) {
@@ -40,6 +40,11 @@ export const getAll = handleDbErrors(async (filters = {}) => {
             attributes: ['id', 'nombre', 'slug'],
           },
         ],
+      },
+      {
+        model: models.Comision,
+        as: 'comisionInfo',
+        attributes: ['id', 'nombre', 'anio_lectivo', 'semestre'],
       },
     ],
     order: [['dia', 'ASC'], ['horario', 'ASC']],
@@ -68,6 +73,11 @@ export const getById = handleDbErrors(async (id) => {
           },
         ],
       },
+      {
+        model: models.Comision,
+        as: 'comisionInfo',
+        attributes: ['id', 'nombre', 'anio_lectivo', 'semestre'],
+      },
     ],
   });
 
@@ -82,6 +92,13 @@ export const create = handleDbErrors(async (data) => {
   const carreraMateria = await models.CarreraMateria.findByPk(data.carrera_materia_id);
   if (!carreraMateria) {
     throw new ConflictError('La asignación carrera-materia especificada no existe');
+  }
+
+  if (data.comision_id) {
+    const comision = await models.Comision.findByPk(data.comision_id);
+    if (!comision) {
+      throw new ConflictError('La comisión especificada no existe');
+    }
   }
 
   const horario = await models.Horario.create(data);
@@ -99,6 +116,13 @@ export const update = handleDbErrors(async (id, data) => {
     const carreraMateria = await models.CarreraMateria.findByPk(data.carrera_materia_id);
     if (!carreraMateria) {
       throw new ConflictError('La asignación carrera-materia especificada no existe');
+    }
+  }
+
+  if (data.comision_id && data.comision_id !== horario.comision_id) {
+    const comision = await models.Comision.findByPk(data.comision_id);
+    if (!comision) {
+      throw new ConflictError('La comisión especificada no existe');
     }
   }
 

@@ -9,10 +9,9 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    comision: {
-      type: DataTypes.STRING,
+    comision_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 'Todas',
     },
     dia: {
       type: DataTypes.STRING,
@@ -46,13 +45,14 @@ export default (sequelize, DataTypes) => {
         fields: ['carrera_materia_id'],
       },
       {
-        fields: ['carrera_materia_id', 'comision'],
+        fields: ['comision_id'],
       },
     ],
   });
 
   Horario.associate = (models) => {
     Horario.belongsTo(models.CarreraMateria, { foreignKey: 'carrera_materia_id', as: 'carreraMateria' });
+    Horario.belongsTo(models.Comision, { foreignKey: 'comision_id', as: 'comisionInfo' });
   };
 
   return Horario;
