@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GaleriaImagen } from '../../../mocks/galeria.mock';
-import { useGaleriaStore } from '../../../stores/galeriaStore';
+import { GaleriaImagen, useGaleriaStore } from '../../../stores/galeriaStore';
 import ImageUploadModal from '../../../components/admin/ImageUploadModal';
 
 const GaleriaPage = () => {

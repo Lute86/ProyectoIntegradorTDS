@@ -7,8 +7,17 @@ const ConsultasPage = () => {
   const { consultas, isLoading, error, fetchConsultas, eliminarConsulta } = useConsultasStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [consultaActiva, setConsultaActiva] = useState<Consulta | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => { fetchConsultas(); }, []);
+
+  const filtradas = consultas.filter((c) => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase();
+    return c.nombre.toLowerCase().includes(q)
+      || c.email.toLowerCase().includes(q)
+      || c.asunto.toLowerCase().includes(q);
+  });
 
   const abrirDetalle = (consulta: Consulta) => {
     setConsultaActiva(consulta);
@@ -48,6 +57,13 @@ const ConsultasPage = () => {
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Consultas</h1>
           <p className="text-sm text-gray-500">Consulta y responde los mensajes recibidos desde el formulario de contacto.</p>
         </div>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar por nombre, email o asunto..."
+          className="w-full sm:w-72 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+        />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -72,7 +88,7 @@ const ConsultasPage = () => {
           <DataTable
             searchable
             columns={columns}
-            data={consultas}
+            data={filtradas}
             emptyMessage="No hay consultas recibidas."
             actions={(c) => (
               <div className="flex gap-2 justify-end">
