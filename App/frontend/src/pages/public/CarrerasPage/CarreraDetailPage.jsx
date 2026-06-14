@@ -174,10 +174,10 @@ export default function CarreraDetailPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-12 md:py-16 bg-black/40`}>
+        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
           <div className="flex items-center gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
@@ -192,7 +192,7 @@ export default function CarreraDetailPage() {
             </div>
             <div>
               <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
-              <p className="text-blue-200">Tecnicatura en {carrera.nombre}</p>
+              <p className="text-white">Tecnicatura en {carrera.nombre}</p>
             </div>
           </div>
         </div>

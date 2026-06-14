@@ -110,17 +110,17 @@ export default function NoticiaDetailPage() {
     <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 py-16 md:py-24">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>
             <IconoCategoria categoria={noticia.categoria} className="w-4 h-4" />
             {noticia.categoria}
           </span>
-          <div className="flex items-center gap-4 text-blue-200 text-sm">
+          <div className="flex items-center gap-4 text-white/80 text-base">
             <span>Por {noticia.autor}</span>
-            <span className="w-1 h-1 bg-blue-300 rounded-full" />
+            <span className="w-1 h-1 bg-white/60 rounded-full" />
             <span>{noticia.fecha}</span>
           </div>
         </div>

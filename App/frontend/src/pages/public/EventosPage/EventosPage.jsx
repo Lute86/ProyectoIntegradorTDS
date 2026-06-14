@@ -84,12 +84,12 @@ export default function EventosPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
+        <div className="max-w-content mx-auto px-4 py-16 md:py-24 text-center">
           <h1 className="text-h1 mb-3">Eventos</h1>
-          <p className="text-blue-200 text-lg">Actividades y novedades del instituto</p>
+          <p className="text-white text-xl">Actividades y novedades del instituto</p>
         </div>
       </div>
 
