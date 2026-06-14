@@ -89,14 +89,19 @@ const ConsultaDetailModal = ({ isOpen, onClose, consulta }: ConsultaDetailModalP
           <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">
             {consulta.respondido ? 'Respuesta enviada' : 'Redactar respuesta'}
           </p>
-          <textarea
-            value={respuesta}
-            onChange={(e) => setRespuesta(e.target.value)}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
-            placeholder={consulta.respondido ? '' : 'Escriba la respuesta aqui...'}
-            disabled={consulta.respondido}
-          />
+          {consulta.respondido ? (
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 whitespace-pre-wrap">
+              {consulta.respuesta || 'Sin respuesta registrada.'}
+            </div>
+          ) : (
+            <textarea
+              value={respuesta}
+              onChange={(e) => setRespuesta(e.target.value)}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
+              placeholder="Escriba la respuesta aqui..."
+            />
+          )}
         </div>
 
         {/* Botones de accion */}

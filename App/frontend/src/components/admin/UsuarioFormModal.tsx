@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -32,6 +32,7 @@ interface UsuarioFormModalProps {
 const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalProps) => {
   const { addUsuario, updateUsuario } = useUsuariosStore();
   const esEdicion = usuarioToEdit !== null;
+  const [errorMsg, setErrorMsg] = useState('');
 
   const {
     register,
@@ -63,14 +64,21 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
     }
   }, [usuarioToEdit, reset]);
 
-  const onSubmit = (data: UsuarioFormData) => {
-    if (esEdicion && usuarioToEdit) {
-      const { password, ...datosLimpios } = data;
-      updateUsuario(usuarioToEdit.id, datosLimpios);
-    } else {
-      addUsuario({ ...data, activo: true } as any);
+  const onSubmit = async (data: UsuarioFormData) => {
+    setErrorMsg('');
+    try {
+      if (esEdicion && usuarioToEdit) {
+        const { password, ...datosLimpios } = data;
+        await updateUsuario(usuarioToEdit.id, datosLimpios);
+      } else {
+        await addUsuario({ ...data, activo: true } as any);
+      }
+      onClose();
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Error al guardar el usuario';
+      setErrorMsg(msg);
+      setTimeout(() => setErrorMsg(''), 6000);
     }
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -146,6 +154,13 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
               {errors.password && (
                 <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
               )}
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 text-red-700 text-sm font-medium rounded-xl">
+              <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+              {errorMsg}
             </div>
           )}
 
