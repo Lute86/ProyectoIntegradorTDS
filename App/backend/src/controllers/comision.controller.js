@@ -6,10 +6,6 @@ import { success, created, deleted, validationError } from '../utils/response.js
 export const getAll = asyncHandler(async (req, res) => {
   const filters = {};
 
-  if (req.query.carrera_materia_id) {
-    filters.carrera_materia_id = parseInt(req.query.carrera_materia_id);
-  }
-
   if (req.query.carrera_id) {
     filters.carrera_id = parseInt(req.query.carrera_id);
   }
@@ -75,4 +71,27 @@ export const remove = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await comisionService.remove(id);
   return deleted(res, 'Comisión eliminada exitosamente');
+});
+
+export const assignMaterias = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return validationError(res, errors.array());
+  }
+
+  const { id } = req.params;
+  const { carrera_materias_ids } = req.body;
+  const comision = await comisionService.assignMaterias(id, carrera_materias_ids);
+  return success(res, comision, 'Materias asignadas exitosamente');
+});
+
+export const removeMateria = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return validationError(res, errors.array());
+  }
+
+  const { id, carreraMateriaId } = req.params;
+  await comisionService.removeMateria(id, parseInt(carreraMateriaId));
+  return deleted(res, 'Materia removida de la comisión exitosamente');
 });
