@@ -117,3 +117,12 @@ Implementacion completa del panel de administracion de contenido del IFTS 29. Se
 - `cargarHorarios()` ya ignora filas sin dia/horario (`continue`)
 - Permite guardar horarios solo para las materias que tienen datos, dejando el resto vacias
 
+### CarreraDetailAdmin — Conexion Comisiones API (N:M)
+**Archivo:** `src/pages/admin/CarrerasPage/CarreraDetailAdmin.jsx`
+- Pestana Horarios refactorizada: comisiones como entidades (no strings) con `comisionInfo.nombre` y `comision_id` FK
+- Creacion de comisiones via `POST /api/comisiones` con carrera_id, nombre, anio_lectivo, semestre
+- Asignacion N:M de materias via `POST/DELETE /api/comisiones/:id/materias`
+- Semestre auto-detectado: `semestre = ((cuatriActivo - 1) % 2) + 1`
+- Batch form usa `comision_id` en vez de `comision` string
+- Servicio `src/services/comisionesService.js` con CRUD + assignMaterias + removeMateria
+

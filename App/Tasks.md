@@ -301,9 +301,6 @@
 - [x] Construir PublicLayout (Navbar, Footer, MobileMenu)
 - [x] Construir LoginPage
 - [x] Construir AdminLayout (AdminSidebar, AdminTopbar, Breadcrumbs)
-- [x] Post-FE7: Select/Select.jsx — dark: variants agregadas
-- [x] Post-FE7: Footer.jsx — style={{ color }} → clases Tailwind
-
 **Dependencias:** Puede usar datos mock de auth hasta que el Módulo BE 1 esté listo
 
 #### Módulo 2: Inicio y Carreras Públicas
@@ -315,43 +312,33 @@
 - [x] Construir componente HorariosTable
 - [x] Implementar carrerasStore
 - [x] Rediseno cards de carreras: titulo en header con color de fondo
-- [x] Post-FE7: Hero overlay bg-surface/50 → bg-black/40 en CarrerasPage y CarreraDetailPage
-- [x] Post-FE7: CarreraDetailPage bg-slate-50 → bg-site-bg
-- [x] Post-FE7: CareerCarousel gradiente light mode → bg-site-bg
-- [x] Post-FE7: Carruseles modo claro — botones/dots en CareerCarousel, NewsSection, TestimonialsCarousel
-- [x] Post-FE7: Layout boxed/full-width en CarrerasPage y CarreraDetailPage
 
 **Dependencias:** Puede usar datos mock de carreras hasta que el Módulo BE 2 esté listo
 **Contraparte BE:** Módulo BE 2
 
-#### Módulo 3: Noticias y Contacto Público
+#### Módulo 3: Noticias, Contacto y Portal Estudiante
 **Tareas:**
-- [x] Construir NoticiasPage (listado con filtros, búsqueda, paginación)
-- [x] Construir NoticiaDetailPage
-- [x] Construir componentes: NewsCard, NewsSidebar
-- [x] Construir ContactoPage, ContactForm
-- [x] Construir EstudiantesPage, QuickLinks
-- [x] Implementar noticiasStore
-- [x] Agregar imagenes de fondo a las distintas secciones
-- [x] Crear EventosSection + EventosCard (carrusel en Home)
-- [x] Crear eventosService.js con fallback a mock
-- [x] Conectar EventosSection en HomePage
-- [x] Fix guardado batch de horarios: guardado secuencial, preservar datos en fallos, notificacion local
-- [x] NoticiasPage: reemplazar placeholder NOT por icono SVG de categoria
-- [x] Horarios: agregar opcion "Todas" en comisiones + filtro por cuatrimestre en CarreraDetailPage y EstudiantesPage
-- [x] Eventos: EventosSection siempre visible en Home (titulo + mensaje si vacio)
-- [x] Eventos: EventosCard adaptado a campos dual mock/API
-- [x] EventosPage: campos adaptados, descripcion truncada a 2 lineas, card clickeable abre modal
-- [x] EventoDetailModal: nuevo componente modal flotante con info completa del evento
-- [x] Post-FE7: Dropdowns dark mode — EstudiantesPage <select> dark:bg-slate-800
-- [x] Post-FE7: Hero overlay bg-surface/50 → bg-black/40 en NoticiasPage, EventosPage, EstudiantesPage
-- [x] Post-FE7: text-slate-500/600/700 → text-body y bg-slate-50 → bg-site-bg en paginas publicas
-- [x] Post-FE7: NoticiasPage overflow-x-hidden removido
-- [x] Post-FE7: Carruseles modo claro — botones/dots en EventosSection y GaleriaCarousel
-- [x] Post-FE7: Layout boxed/full-width en NoticiasPage, NoticiaDetailPage, EventosPage, ContactoPage, EstudiantesPage
+- [x] NoticiasPage + NoticiaDetailPage + NewsSidebar
+- [x] ContactoPage + ContactForm
+- [x] EstudiantesPage + QuickLinks + horarios
+- [x] noticiasStore con TTL y fallback a mock
+- [x] EventosPage + EventoDetailModal
+- [x] HomePage: conectar EventosSection + galería
+- [x] SectionGuard para secciones públicas
+- [x] Navbar/Footer con colores dinámicos desde siteConfig
 
 **Dependencias:** Puede usar datos mock de noticias hasta que el Módulo BE 4 esté listo
 **Contraparte BE:** Módulo BE 4
+
+#### Módulo 7: Sistema de Estilos (Dark Mode + Scroll)
+**Tareas:**
+- [x] Animaciones globales, prefers-reduced-motion, hook useScrollReveal
+- [x] Theme toggle sol/luna en Navbar y MobileMenu
+- [x] dark: variants + scroll reveal en componentes y páginas públicas
+- [x] Layout boxed/full-width en páginas públicas
+- [x] Build OK, lint 0 warnings, tests 214/214
+
+**Lider:** Lucas
 
 ### Issues conocidos (pendientes)
 - Cards usan bg-white fijo (token card-bg comentado)
@@ -446,61 +433,6 @@
 | FE 4 | BE 3, BE 5, BE 6, BE 7, FE 5 | Ninguno (usar mocks) |
 | FE 5 | BE 7, FE 4 | BE 4 |
 | FE 6 | BE 8 | Módulo BE 8 |
+| FE 7 | Ninguno | Ninguno |
 
----
-
-## Modulo FE 7: Nuevo Sistema de Estilos (Directiva Critica)
-
-**Lider:** Lucas
-**Prioridad:** CRITICA - sin margen de error
-**Estimacion:** 2-3 horas
-**Archivo de referencia:** `App/frontend/new-styles.md` (plan detallado con fases)
-
-### Fase 1: Infraestructura (archivos nuevos)
-- [x] Agregar keyframes + animaciones + prefers-reduced-motion + transicion global a globals.css
-- [x] Agregar --width-content-narrow a @theme en globals.css
-- [x] Hook useScrollReveal.js (archivo ya creado, listo para usar)
-
-### Fase 2: Theme Toggle en Navbar
-- [x] Agregar boton theme toggle (sol/luna) en Navbar.jsx
-- [x] Agregar boton theme toggle en MobileMenu.jsx
-
-### Fase 3: Componentes Publicos
-- [x] Badge.jsx - dark: variants en colores
-- [x] Hero.jsx - botones rounded-xl + shadow + scale hover
-- [x] Stats.jsx + StatItem.jsx - dark: text + animacion scroll reveal
-- [x] CareerCard.jsx - glass/light card pattern + dark: text
-- [x] CareerCards.jsx - bg gradient + dark:
-- [x] CareerCarousel.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [x] NewsCard.jsx - glass/light card + dark: text
-- [x] NewsSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [x] EventosCard.jsx - glass/light card + dark: text
-- [x] EventosSection.jsx - bg gradient + botones carousel + dark: + scroll reveal
-- [x] TestimonialSlide.jsx - dark: text colors
-- [x] TestimonialsCarousel.jsx - bg gradient + botones + dark: + scroll reveal
-- [x] GaleriaCarousel.jsx - glass/light card + bg gradient + botones + dark: + scroll reveal
-- [x] Footer.jsx - gradient bg (ya es oscuro, ajustes menores)
-
-### Fase 4: Paginas Publicas
-- [x] CarrerasPage.jsx - bg gradient + dark:
-- [x] CarreraDetailPage.jsx - bg gradient + dark:
-- [x] NoticiasPage.jsx - bg gradient + dark:
-- [x] NoticiaDetailPage.jsx - dark:
-- [x] EventosPage.jsx - bg gradient + dark:
-- [x] ContactoPage.jsx - bg gradient + dark:
-- [x] EstudiantesPage.jsx - bg gradient + dark:
-
-### Fase 5: Verificacion
-- [x] Build sin errores (`npm run build`)
-- [x] Verificar modo claro en homepage y todas las paginas
-- [x] Verificar modo oscuro en homepage y todas las paginas
-- [x] Verificar prefers-reduced-motion
-- [x] Verificar que admin sigue funcionando sin cambios
-- [x] Ejecutar tests existentes (make tests-frontend)
-
-### Componentes que NO se tocan
-- Todo `components/admin/` (CarreraFormModal, NoticiaFormModal, etc.)
-- Todo `pages/admin/` (DashboardPage, PersonalizarPage, etc.)
-- Todo `components/ui/` excepto Badge
-- Stores, services, contexts (ya implementan el sistema de tema)
 

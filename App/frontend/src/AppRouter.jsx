@@ -20,6 +20,7 @@ import AdminNoticiasPage from './pages/admin/NoticiasPage/NoticiasPage.tsx'
 import AdminCarrerasPage from './pages/admin/CarrerasPage/CarrerasPage'
 import CarreraDetailAdmin from './pages/admin/CarrerasPage/CarreraDetailAdmin'
 import AdminMateriasPage from './pages/admin/MateriasPage/MateriasPage'
+import AdminComisionesPage from './pages/admin/ComisionesPage/ComisionesPage'
 import AjustesPage from './pages/admin/AjustesPage/AjustesPage.tsx'
 import ConsultasPage from './pages/admin/ConsultasPage/ConsultasPage'
 import { useAuth } from './contexts/AuthContext/AuthContext'
@@ -61,6 +62,7 @@ export default function AppRouter() {
           <Route path="carreras" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminCarrerasPage /></ProtectedRoute>} />
           <Route path="carreras/:id" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><CarreraDetailAdmin /></ProtectedRoute>} />
           <Route path="materias" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminMateriasPage /></ProtectedRoute>} />
+          <Route path="comisiones" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminComisionesPage /></ProtectedRoute>} />
           <Route path="eventos" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor', 'tutor']}><AdminEventosPage /></ProtectedRoute>} />
           <Route path="galeria" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin', 'profesor']}><GaleriaPage /></ProtectedRoute>} />
           <Route path="testimonios" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><TestimoniosPage /></ProtectedRoute>} />

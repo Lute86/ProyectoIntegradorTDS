@@ -2,8 +2,11 @@ import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import useMateriasStore from '../../../stores/materiasStore'
+import { useUsuariosStore } from '../../../stores/usuariosStore'
 import { horariosService } from '../../../services/horariosService'
+import { comisionesService } from '../../../services/comisionesService'
 import BuscarMateriaModal from './BuscarMateriaModal'
+import Modal from '../../../components/ui/Modal/Modal'
 
 const TABS = [
   { id: 'materias', label: 'Materias' },
@@ -22,6 +25,8 @@ const nombresCuatri = {
 const DIAS = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
 const HORARIO_REGEX = /^\d{2}:\d{2}-\d{2}:\d{2}$/
 
+const semestreDeCuatri = (cuatri) => ((cuatri - 1) % 2) + 1
+
 const CarreraDetailAdmin = () => {
   const { id } = useParams()
   const { selectedCarrera, loading, fetchCarreraById } = useCarrerasStore()
@@ -33,9 +38,13 @@ const CarreraDetailAdmin = () => {
   const [loadingHorarios, setLoadingHorarios] = useState(false)
 
   const [cuatriActivo, setCuatriActivo] = useState(1)
-  const [comisionActiva, setComisionActiva] = useState('')
-  const [nuevaComision, setNuevaComision] = useState('')
-  const [comisionEditando, setComisionEditando] = useState(null)
+  const [comisiones, setComisiones] = useState([])
+  const [comisionesLoading, setComisionesLoading] = useState(false)
+  const [comisionActiva, setComisionActiva] = useState(null)
+  const [selectedComisionIds, setSelectedComisionIds] = useState([])
+  const [comisionFormOpen, setComisionFormOpen] = useState(false)
+  const [comisionFormData, setComisionFormData] = useState({ nombre: '', anio_lectivo: new Date().getFullYear(), semestre: 1, encargado_id: '' })
+  const [filtroAnioLectivo, setFiltroAnioLectivo] = useState(new Date().getFullYear().toString())
   const [batchForm, setBatchForm] = useState({})
   const [errores, setErrores] = useState({})
   const [guardandoBatch, setGuardandoBatch] = useState(false)
@@ -45,9 +54,17 @@ const CarreraDetailAdmin = () => {
   const batchTimer = useRef(null)
   const skipFormResetRef = useRef(false)
 
+  const { usuarios, fetchUsuarios } = useUsuariosStore()
+
   useEffect(() => {
     if (id) fetchCarreraById(id)
   }, [id, fetchCarreraById])
+
+  useEffect(() => {
+    if (activeTab === 'horarios') {
+      fetchUsuarios()
+    }
+  }, [activeTab, fetchUsuarios])
 
   const fetchHorarios = useCallback(async () => {
     if (!id) return
@@ -62,9 +79,96 @@ const CarreraDetailAdmin = () => {
     }
   }, [id])
 
+  const fetchComisiones = useCallback(async () => {
+    if (!id) return
+    setComisionesLoading(true)
+    try {
+      const res = await comisionesService.getAll({ carrera_id: parseInt(id) })
+      const data = res.data?.data || res.data || []
+      setComisiones(data)
+      const idsDisponibles = new Set(data.map((c) => c.id))
+      setComisionActiva((prev) => {
+        if (!prev) return null
+        return idsDisponibles.has(prev.id) ? prev : null
+      })
+      setSelectedComisionIds((prev) => prev.filter((id) => idsDisponibles.has(id)))
+    } catch {
+      setComisiones([])
+    } finally {
+      setComisionesLoading(false)
+    }
+  }, [id])
+
   useEffect(() => {
-    if (activeTab === 'horarios' && id) fetchHorarios()
-  }, [activeTab, id, fetchHorarios])
+    if (activeTab === 'horarios' && id) {
+      fetchHorarios()
+      fetchComisiones()
+    }
+  }, [activeTab, id, fetchHorarios, fetchComisiones])
+
+  const toggleComisionSelection = (comisionId) => {
+    setSelectedComisionIds((prev) =>
+      prev.includes(comisionId)
+        ? prev.filter((id) => id !== comisionId)
+        : [...prev, comisionId]
+    )
+  }
+
+  const handleComisionClick = (com) => {
+    setComisionActiva(com)
+    if (!selectedComisionIds.includes(com.id)) {
+      setSelectedComisionIds((prev) => [...prev, com.id])
+    }
+  }
+
+  const cohortYear = useMemo(() => {
+    const viewYear = parseInt(filtroAnioLectivo) || new Date().getFullYear()
+    const planYear = Math.ceil(cuatriActivo / 2)
+    return viewYear - planYear + 1
+  }, [cuatriActivo, filtroAnioLectivo])
+
+  const openComisionForm = () => {
+    setComisionFormData({
+      nombre: '',
+      anio_lectivo: cohortYear,
+      semestre: semestreDeCuatri(cuatriActivo),
+      encargado_id: '',
+    })
+    setComisionFormOpen(true)
+  }
+
+  const handleCreateComision = async () => {
+    const { nombre, anio_lectivo, semestre, encargado_id } = comisionFormData
+    const nombres = nombre
+      .split(',')
+      .map((n) => n.trim().toUpperCase())
+      .filter((n) => n.length > 0)
+    const uniqueNombres = [...new Set(nombres)]
+    if (uniqueNombres.length === 0) return
+    const basePayload = {
+      carrera_id: parseInt(id),
+      anio_lectivo: parseInt(anio_lectivo),
+      semestre: parseInt(semestre),
+    }
+    if (encargado_id) basePayload.encargado_id = parseInt(encargado_id)
+    let creadas = 0
+    let fallaron = 0
+    for (const n of uniqueNombres) {
+      try {
+        await comisionesService.create({ ...basePayload, nombre: n })
+        creadas++
+      } catch {
+        fallaron++
+      }
+    }
+    setComisionFormOpen(false)
+    await fetchComisiones()
+    if (fallaron === 0) {
+      mostrarExito(`${creadas} comision${creadas !== 1 ? 'es' : ''} creada${creadas !== 1 ? 's' : ''}.`)
+    } else {
+      mostrarExito(`${creadas} creada${creadas !== 1 ? 's' : ''}, ${fallaron} fallaron (pueden existir ya).`)
+    }
+  }
 
   const mostrarExito = useCallback((msg) => {
     setSuccessMsg(msg)
@@ -118,36 +222,81 @@ const CarreraDetailAdmin = () => {
     return carrera?.carreraMaterias?.filter((cm) => (cm.cuatrimestre || 1) === cuatriActivo) || []
   }, [carrera, cuatriActivo])
 
+  const materiaIdsCuatriActual = useMemo(() => {
+    return new Set(materiasCuatriActual.map((cm) => cm.id))
+  }, [materiasCuatriActual])
+
   const horariosCuatriActual = useMemo(() => {
-    const materiaIds = new Set(materiasCuatriActual.map((cm) => cm.id))
-    return horarios.filter((h) => materiaIds.has(h.carrera_materia_id))
-  }, [horarios, materiasCuatriActual])
+    return horarios.filter((h) => materiaIdsCuatriActual.has(h.carrera_materia_id))
+  }, [horarios, materiaIdsCuatriActual])
 
-  const comisiones = useMemo(() => {
-    const set = new Set(horariosCuatriActual.map((h) => h.comision).filter(Boolean))
-    return Array.from(set).sort()
-  }, [horariosCuatriActual])
+  const aniosDisponibles = useMemo(() => {
+    const set = new Set()
+    const maxPlanYears = carrera?.duracion || 3
+    comisiones.forEach((c) => {
+      for (let i = 0; i < maxPlanYears; i++) {
+        set.add(c.anio_lectivo + i)
+      }
+    })
+    if (set.size === 0) set.add(new Date().getFullYear())
+    return Array.from(set).sort((a, b) => b - a)
+  }, [comisiones, carrera])
 
-  const comisionesDisplay = useMemo(() => {
-    const todas = new Set(comisiones)
-    if (comisionActiva) todas.add(comisionActiva)
-    return Array.from(todas).sort()
-  }, [comisiones, comisionActiva])
+  const comisionesCuatriActual = useMemo(() => {
+    const semestre = semestreDeCuatri(cuatriActivo)
+    const planYear = Math.ceil(cuatriActivo / 2)
+    return comisiones.filter((c) => {
+      if (c.semestre !== semestre) return false
+      const anioCursando = c.anio_lectivo + planYear - 1
+      if (filtroAnioLectivo && anioCursando !== parseInt(filtroAnioLectivo)) return false
+      return true
+    })
+  }, [comisiones, cuatriActivo, filtroAnioLectivo])
 
-  const initBatchForm = useCallback((horariosExistentes = []) => {
+  const comisionesSeleccionadas = useMemo(() => {
+    return comisiones.filter((c) => selectedComisionIds.includes(c.id))
+  }, [comisiones, selectedComisionIds])
+
+  const materiasAsignadasComisionActiva = useMemo(() => {
+    if (comisionesSeleccionadas.length === 0 && !comisionActiva) return []
+    const target = comisionesSeleccionadas.length > 0 ? comisionesSeleccionadas : (comisionActiva ? [comisionActiva] : [])
+    const materiaSet = new Map()
+    target.forEach((com) => {
+      (com.carrerasMaterias || []).forEach((cm) => {
+        if (materiaIdsCuatriActual.has(cm.id)) {
+          materiaSet.set(cm.id, cm)
+        }
+      })
+    })
+    return Array.from(materiaSet.values())
+  }, [comisionActiva, comisionesSeleccionadas, materiaIdsCuatriActual])
+
+  const materiaIdsAsignadas = useMemo(() => {
+    return new Set(materiasAsignadasComisionActiva.map((cm) => cm.id))
+  }, [materiasAsignadasComisionActiva])
+
+  const targetComisionIds = useMemo(() => {
+    if (selectedComisionIds.length > 0) return selectedComisionIds
+    if (comisionActiva) return [comisionActiva.id]
+    return []
+  }, [selectedComisionIds, comisionActiva])
+
+  const initBatchForm = useCallback(() => {
     const inicial = {}
+    const targetId = targetComisionIds[0]
     materiasCuatriActual.forEach((cm) => {
-      const existente = horariosExistentes.find(h => h.carrera_materia_id === cm.id)
+      const existente = targetId ? horarios.find(
+        (h) => h.carrera_materia_id === cm.id && h.comision_id === targetId
+      ) : null
       inicial[cm.id] = {
         dia: existente?.dia || '',
         horario: existente?.horario || '',
         aula: existente?.aula || '',
         profesor: existente?.profesor || '',
-        _id: existente?.id || null,
       }
     })
     setBatchForm(inicial)
-  }, [materiasCuatriActual])
+  }, [materiasCuatriActual, targetComisionIds, horarios])
 
   useEffect(() => {
     if (skipFormResetRef.current) {
@@ -155,31 +304,47 @@ const CarreraDetailAdmin = () => {
       return
     }
     setErrores({})
-    if (comisionActiva) {
-      const existentes = horariosCuatriActual.filter((h) => h.comision === comisionActiva)
-      initBatchForm(existentes)
+    if (comisionesSeleccionadas.length > 0 || comisionActiva) {
+      initBatchForm()
     } else {
       setBatchForm({})
     }
-  }, [comisionActiva, initBatchForm, horariosCuatriActual])
+  }, [comisionActiva, comisionesSeleccionadas, initBatchForm])
 
-  const agregarComision = () => {
-    const letra = nuevaComision.trim().toUpperCase()
-    if (!letra || letra.length !== 1) return
-    setComisionActiva(letra)
-    setNuevaComision('')
-    setComisionEditando(null)
+  const eliminarComision = async (comisionId, comisionNombre) => {
+    if (!confirm(`Eliminar comision ${comisionNombre} y todos sus horarios?`)) return
+    try {
+      await comisionesService.delete(comisionId)
+      if (comisionActiva?.id === comisionId) setComisionActiva(null)
+      setSelectedComisionIds((prev) => prev.filter((id) => id !== comisionId))
+      mostrarExito('Comision eliminada.')
+      await fetchComisiones()
+      await fetchHorarios()
+    } catch (err) {
+      mostrarExito(err.response?.data?.message || 'Error al eliminar comision.')
+    }
   }
 
-  const eliminarComision = async () => {
-    if (!confirm(`Eliminar comision ${comisionActiva} y todos sus horarios?`)) return
-    const horariosAEliminar = horariosCuatriActual.filter((h) => h.comision === comisionActiva)
-    for (const h of horariosAEliminar) {
-      try { await horariosService.delete(h.id) } catch {}
+  const asignarMateria = async (cmId) => {
+    if (!comisionActiva) return
+    try {
+      await comisionesService.assignMaterias(comisionActiva.id, [cmId])
+      await fetchComisiones()
+      mostrarExito('Materia asignada a la comision.')
+    } catch (err) {
+      mostrarExito(err.response?.data?.message || 'Error al asignar materia.')
     }
-    setComisionActiva('')
-    mostrarExito('Comision eliminada.')
-    await fetchHorarios()
+  }
+
+  const removerMateria = async (cmId) => {
+    if (!comisionActiva) return
+    try {
+      await comisionesService.removeMateria(comisionActiva.id, cmId)
+      await fetchComisiones()
+      mostrarExito('Materia removida de la comision.')
+    } catch (err) {
+      mostrarExito(err.response?.data?.message || 'Error al remover materia.')
+    }
   }
 
   const validarFila = useCallback((cmId, row) => {
@@ -242,7 +407,7 @@ const CarreraDetailAdmin = () => {
   }, [batchForm, validarFila])
 
   const cargarHorarios = async () => {
-    if (!comisionActiva) {
+    if (targetComisionIds.length === 0) {
       mostrarBatchMsg('Selecciona o crea una comision primero.')
       return
     }
@@ -253,66 +418,83 @@ const CarreraDetailAdmin = () => {
     }
 
     setGuardandoBatch(true)
-    const guardados = []
-    const fallidos = []
-    const formSnapshot = {}
 
-    for (const [cmId, row] of Object.entries(batchForm)) {
-      const { dia, horario, aula, profesor, _id } = row
-      const payload = {
-        carrera_materia_id: Number(cmId),
-        comision: comisionActiva,
-        dia,
-        horario,
-        aula: esVirtual ? 'Virtual' : aula,
-        profesor: profesor || undefined,
+    // Auto-asignar materias a comisiones antes de guardar horarios
+    for (const comisionId of targetComisionIds) {
+      const com = comisiones.find((c) => c.id === comisionId)
+      const assignedIds = new Set((com?.carrerasMaterias || []).map((cm) => cm.id))
+      const neededIds = []
+      for (const [cmId, row] of Object.entries(batchForm)) {
+        if (!row.dia || !row.horario) continue
+        if (!assignedIds.has(Number(cmId))) neededIds.push(Number(cmId))
       }
-      if (!dia || !horario) continue
-      try {
-        if (_id) {
-          await horariosService.update(_id, payload)
-          guardados.push({ cmId, id: _id })
-        } else {
-          const res = await horariosService.create(payload)
-          const newId = res.data?.data?.id
-          guardados.push({ cmId, id: newId })
+      if (neededIds.length > 0) {
+        try {
+          await comisionesService.assignMaterias(comisionId, neededIds)
+        } catch {
+          /* si falla la asignacion, el create del horario fallara despues */
         }
-      } catch {
-        fallidos.push(cmId)
-        formSnapshot[cmId] = { ...row }
       }
     }
 
-    if (guardados.length === 0 && fallidos.length === 0) {
+    let totalGuardados = 0
+    let totalFallidos = 0
+    const formSnapshot = {}
+
+    for (const comisionId of targetComisionIds) {
+      for (const [cmId, row] of Object.entries(batchForm)) {
+        const { dia, horario, aula, profesor } = row
+        if (!dia || !horario) continue
+        const payload = {
+          carrera_materia_id: Number(cmId),
+          comision_id: comisionId,
+          dia,
+          horario,
+          aula: esVirtual ? 'Virtual' : aula,
+          profesor: profesor || undefined,
+        }
+        try {
+          const existente = horarios.find(
+            (h) => h.comision_id === comisionId && h.carrera_materia_id === Number(cmId)
+          )
+          if (existente) {
+            await horariosService.update(existente.id, payload)
+          } else {
+            await horariosService.create(payload)
+          }
+          totalGuardados++
+        } catch {
+          totalFallidos++
+          formSnapshot[cmId] = { ...row }
+        }
+      }
+    }
+
+    if (totalGuardados === 0 && totalFallidos === 0) {
       setGuardandoBatch(false)
       mostrarBatchMsg('Completa al menos dia y horario en alguna materia.')
       return
     }
 
-    if (fallidos.length > 0) {
-      setBatchForm((prev) => {
-        const next = { ...prev }
-        guardados.forEach(({ cmId, id }) => {
-          if (next[cmId]) next[cmId] = { ...next[cmId], _id: id }
-        })
-        fallidos.forEach((cmId) => {
-          if (formSnapshot[cmId]) next[cmId] = { ...formSnapshot[cmId] }
-        })
-        return next
-      })
+    if (totalFallidos > 0 && Object.keys(formSnapshot).length > 0) {
       skipFormResetRef.current = true
     }
 
-    if (fallidos.length === 0) {
-      mostrarBatchMsg(`${guardados.length} horario${guardados.length !== 1 ? 's' : ''} guardado${guardados.length !== 1 ? 's' : ''} correctamente.`)
-    } else if (guardados.length === 0) {
-      mostrarBatchMsg(`Error al guardar los horarios. Revisa los datos e intenta de nuevo.`)
+    if (totalFallidos === 0) {
+      mostrarBatchMsg(`${totalGuardados} horario${totalGuardados !== 1 ? 's' : ''} guardado${totalGuardados !== 1 ? 's' : ''} correctamente.`)
+    } else if (totalGuardados === 0) {
+      mostrarBatchMsg('Error al guardar los horarios. Revisa los datos e intenta de nuevo.')
     } else {
-      mostrarBatchMsg(`${guardados.length} guardado${guardados.length !== 1 ? 's' : ''}, ${fallidos.length} fallaron. Revisa los datos en las filas sin cambios.`)
+      mostrarBatchMsg(`${totalGuardados} guardado${totalGuardados !== 1 ? 's' : ''}, ${totalFallidos} fallaron. Revisa los datos en las filas sin cambios.`)
     }
 
     setGuardandoBatch(false)
     await fetchHorarios()
+  }
+
+  const limpiarSeleccion = () => {
+    setSelectedComisionIds([])
+    setComisionActiva(null)
   }
 
   const abrirModalConCuatri = (c) => {
@@ -460,6 +642,66 @@ const CarreraDetailAdmin = () => {
         </div>
       )}
 
+      <Modal open={comisionFormOpen} onClose={() => setComisionFormOpen(false)}
+        title="Nueva Comision" size="sm"
+        footer={
+          <>
+            <button onClick={() => setComisionFormOpen(false)}
+              className="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >Cancelar</button>
+            <button onClick={handleCreateComision}
+              className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            >Crear</button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Nombre</label>
+            <input value={comisionFormData.nombre}
+              onChange={(e) => setComisionFormData({ ...comisionFormData, nombre: e.target.value.toUpperCase().slice(0, 20) })}
+              placeholder="Ej: A, B, 1, Mixta"
+              maxLength={20}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Año de ingreso</label>
+              <input type="number" value={comisionFormData.anio_lectivo}
+                onChange={(e) => setComisionFormData({ ...comisionFormData, anio_lectivo: e.target.value })}
+                min={2020} max={2030}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Semestre de ingreso</label>
+              <select value={comisionFormData.semestre}
+                onChange={(e) => setComisionFormData({ ...comisionFormData, semestre: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value={1}>Primer semestre</option>
+                <option value={2}>Segundo semestre</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">
+              Tutor <span className="text-gray-400 font-normal">(opcional)</span>
+            </label>
+            <select value={comisionFormData.encargado_id}
+              onChange={(e) => setComisionFormData({ ...comisionFormData, encargado_id: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Sin tutor</option>
+              {usuarios.map((u) => (
+                <option key={u.id} value={u.id}>{u.nombre} {u.apellido} ({u.rol})</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </Modal>
+
       {activeTab === 'horarios' && (
         <div className="space-y-4">
           {cuatrimestresDisponibles.length === 0 ? (
@@ -471,7 +713,7 @@ const CarreraDetailAdmin = () => {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <div className="flex items-center gap-1 flex-wrap">
                   {cuatrimestresDisponibles.map((c) => (
-                    <button key={c} onClick={() => { setCuatriActivo(c); setComisionActiva(''); setComisionEditando(null) }}
+                    <button key={c} onClick={() => { setCuatriActivo(c); setComisionActiva(null); setSelectedComisionIds([]) }}
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
                         cuatriActivo === c
                           ? 'bg-blue-600 text-white'
@@ -485,131 +727,192 @@ const CarreraDetailAdmin = () => {
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                <h3 className="text-sm font-bold text-gray-700 mb-3">Comisiones del {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
-                <div className="flex flex-wrap items-center gap-2 mb-4">
-                  {comisionesDisplay.map((com) => (
-                    <button key={com} onClick={() => { setComisionActiva(com); setComisionEditando(null) }}
-                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all ${
-                        comisionActiva === com
-                          ? 'bg-blue-600 text-white shadow'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >{com}</button>
-                  ))}
-                </div>
-                <div className="flex items-center gap-2">
-                  <input value={nuevaComision} onChange={(e) => setNuevaComision(e.target.value.toUpperCase().slice(0, 1))}
-                    placeholder="Letra (ej: A)"
-                    maxLength={1}
-                    className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-32 uppercase"
-                    onKeyDown={(e) => { if (e.key === 'Enter') agregarComision() }}
-                  />
-                  <button onClick={agregarComision}
-                    className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700"
-                  >Crear Comision</button>
-                </div>
+                {comisionesLoading ? (
+                  <div className="flex gap-2">
+                    {[1,2,3].map((i) => (
+                      <div key={i} className="w-9 h-9 rounded-full bg-gray-200 animate-pulse" />
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-bold text-gray-700">Comisiones</h3>
+                      <div className="flex items-center gap-2">
+                        <select value={filtroAnioLectivo} onChange={(e) => setFiltroAnioLectivo(e.target.value)}
+                          className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          {aniosDisponibles.map((a) => (
+                            <option key={a} value={a}>{a}</option>
+                          ))}
+                        </select>
+                        <button onClick={openComisionForm}
+                          className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700"
+                        >+ Nueva Comision</button>
+                        {selectedComisionIds.length > 0 && (
+                          <button onClick={limpiarSeleccion}
+                            className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
+                          >Limpiar seleccion</button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {comisionesCuatriActual.map((com) => {
+                        const isSelected = selectedComisionIds.includes(com.id)
+                        const isActive = comisionActiva?.id === com.id
+                        return (
+                          <div key={com.id} className="flex items-center gap-1">
+                            <input type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleComisionSelection(com.id)}
+                              className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                            <button onClick={() => handleComisionClick(com)}
+                              className={`w-9 h-9 rounded-full text-sm font-bold transition-all ${
+                                isActive
+                                  ? 'bg-blue-600 text-white shadow'
+                                  : isSelected
+                                    ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-300'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                              title={`Comision ${com.nombre}${com.encargado ? ` — Tutor: ${com.encargado.nombre} ${com.encargado.apellido}` : ''}`}
+                            >{com.nombre}</button>
+                            <button onClick={() => eliminarComision(com.id, com.nombre)}
+                              className="text-red-400 hover:text-red-600 text-xs font-bold ml-0.5"
+                              title="Eliminar comision"
+                            >&times;</button>
+                          </div>
+                        )
+                      })}
+                      {comisionesCuatriActual.length === 0 && (
+                        <span className="text-xs text-gray-400">No hay comisiones para este semestre.</span>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
 
-              {comisionActiva ? (
+              {comisionesSeleccionadas.length > 0 || comisionActiva ? (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold text-gray-700">
-                      Materias - {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`} - Comision {comisionActiva}
+                      Materias — Cuatrimestre {cuatriActivo}
+                      {comisionesSeleccionadas.length > 0
+                        ? ` — ${comisionesSeleccionadas.length} comision${comisionesSeleccionadas.length !== 1 ? 'es' : ''}`
+                        : ` — Comision ${comisionActiva.nombre}`
+                      }
                     </h3>
-                    <button onClick={eliminarComision}
-                      className="px-2.5 py-1 text-[10px] font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded transition-colors"
-                    >Eliminar comision</button>
+                    {targetComisionIds.length > 1 && (
+                      <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-1 rounded font-semibold">
+                        Guardando en {targetComisionIds.length} comisiones
+                      </span>
+                    )}
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-gray-200">
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Dia</th>
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Horario</th>
-                          {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {materiasCuatriActual.map((cm) => {
-                          const row = batchForm[cm.id] || { dia: '', horario: '', aula: '', profesor: '', _id: null }
-                          return (
-                            <tr key={cm.id} className="border-b border-gray-100 bg-white">
-                              <td className="px-3 py-2">
-                                <span className="text-sm font-medium text-gray-800">{cm.materia?.nombre}</span>
-                                {cm.carga_horaria_semanal && (
-                                  <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
-                                )}
-                              </td>
-                              <td className="px-3 py-2">
-                                <select value={row.dia} onChange={(e) => actualizarBatchField(cm.id, 'dia', e.target.value)}
-                                  onBlur={() => handleBlur(cm.id)}
-                                  className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
-                                >
-                                  <option value="">—</option>
-                                  {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
-                                </select>
-                                {errores[cm.id]?.dia && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].dia}</p>}
-                              </td>
-                              <td className="px-3 py-2">
-                                <div className="flex items-center gap-1">
-                                  <input type="time" value={row.horario?.split('-')[0] || ''}
-                                    onChange={(e) => actualizarBatchField(cm.id, 'horario', `${e.target.value}-${row.horario?.split('-')[1] || ''}`)}
-                                    onBlur={() => handleBlur(cm.id)}
-                                    className={`flex-1 min-w-0 px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
-                                  />
-                                  <span className="text-gray-400 text-xs font-bold">-</span>
-                                  <input type="time" value={row.horario?.split('-')[1] || ''}
-                                    onChange={(e) => actualizarBatchField(cm.id, 'horario', `${row.horario?.split('-')[0] || ''}-${e.target.value}`)}
-                                    onBlur={() => handleBlur(cm.id)}
-                                    className={`flex-1 min-w-0 px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
-                                  />
-                                </div>
-                                {errores[cm.id]?.horario && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].horario}</p>}
-                              </td>
-                              {!esVirtual && (
-                                <td className="px-3 py-2">
-                                  <input value={row.aula} onChange={(e) => actualizarBatchField(cm.id, 'aula', e.target.value)}
-                                    onBlur={() => handleBlur(cm.id)}
-                                    className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
-                                    placeholder="Ej: 201"
-                                  />
-                                  {errores[cm.id]?.aula && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].aula}</p>}
-                                </td>
-                              )}
-                              <td className="px-3 py-2">
-                                <input value={row.profesor} onChange={(e) => actualizarBatchField(cm.id, 'profesor', e.target.value)}
-                                  onBlur={() => handleBlur(cm.id)}
-                                  className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
-                                  placeholder="Opcional"
-                                />
-                                {errores[cm.id]?.profesor && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].profesor}</p>}
-                              </td>
-                              <td className="px-3 py-2"></td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {batchMsg && (
-                    <div className={`mb-3 px-4 py-2.5 rounded-lg text-sm font-semibold ${
-                      batchMsg.includes('fallaron') || batchMsg.startsWith('Error')
-                        ? 'bg-red-50 text-red-700 border border-red-200'
-                        : 'bg-green-50 text-green-700 border border-green-200'
-                    }`}>
-                      {batchMsg}
+                  {materiasCuatriActual.length === 0 && (
+                    <div className="p-6 text-center">
+                      <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
                     </div>
                   )}
-                  <div className="flex justify-end mt-4">
-                    <button onClick={cargarHorarios} disabled={guardandoBatch}
-                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg transition"
-                    >{guardandoBatch ? 'Cargando...' : 'Cargar Horarios'}</button>
-                  </div>
+
+                  {materiasCuatriActual.length > 0 ? (
+                    <>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="border-b border-gray-200">
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Dia</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Horario</th>
+                              {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {materiasCuatriActual.map((cm) => {
+                              const row = batchForm[cm.id] || { dia: '', horario: '', aula: '', profesor: '', _id: null }
+                              const isAssigned = materiaIdsAsignadas.has(cm.id)
+                              return (
+                                <tr key={cm.id} className={`border-b border-gray-100 ${isAssigned ? 'bg-white' : 'bg-gray-50/50'}`}>
+                                  <td className="px-3 py-2">
+                                    <div className="flex items-center gap-1">
+                                      <span className={`text-sm font-medium ${isAssigned ? 'text-gray-800' : 'text-gray-500'}`}>
+                                        {isAssigned ? '' : '(Sin asignar) '}{cm.materia?.nombre}
+                                      </span>
+                                      {cm.carga_horaria_semanal && (
+                                        <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
+                                      )}
+                                      {isAssigned && (
+                                        <button onClick={() => removerMateria(cm.id)}
+                                          className="ml-1 text-red-400 hover:text-red-600 text-xs"
+                                          title="Remover de esta comision"
+                                        >&times;</button>
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <select value={row.dia} onChange={(e) => actualizarBatchField(cm.id, 'dia', e.target.value)}
+                                      onBlur={() => handleBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
+                                    >
+                                      <option value="">—</option>
+                                      {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
+                                    </select>
+                                    {errores[cm.id]?.dia && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].dia}</p>}
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <input value={row.horario} onChange={(e) => actualizarBatchField(cm.id, 'horario', e.target.value)}
+                                      onBlur={() => handleBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.horario ? 'border-red-400' : 'border-gray-300'}`}
+                                      placeholder="18:00-20:00"
+                                    />
+                                    {errores[cm.id]?.horario && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].horario}</p>}
+                                  </td>
+                                  {!esVirtual && (
+                                    <td className="px-3 py-2">
+                                      <input value={row.aula} onChange={(e) => actualizarBatchField(cm.id, 'aula', e.target.value)}
+                                        onBlur={() => handleBlur(cm.id)}
+                                        className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
+                                        placeholder="Ej: 201"
+                                      />
+                                      {errores[cm.id]?.aula && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].aula}</p>}
+                                    </td>
+                                  )}
+                                  <td className="px-3 py-2">
+                                    <input value={row.profesor} onChange={(e) => actualizarBatchField(cm.id, 'profesor', e.target.value)}
+                                      onBlur={() => handleBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
+                                      placeholder="Opcional"
+                                    />
+                                    {errores[cm.id]?.profesor && <p className="text-[10px] text-red-500 mt-0.5">{errores[cm.id].profesor}</p>}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {batchMsg && (
+                        <div className={`mb-3 px-4 py-2.5 rounded-lg text-sm font-semibold ${
+                          batchMsg.includes('fallaron') || batchMsg.startsWith('Error')
+                            ? 'bg-red-50 text-red-700 border border-red-200'
+                            : 'bg-green-50 text-green-700 border border-green-200'
+                        }`}>
+                          {batchMsg}
+                        </div>
+                      )}
+                      <div className="flex justify-end mt-4">
+                        <button onClick={cargarHorarios} disabled={guardandoBatch}
+                          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg transition"
+                        >{guardandoBatch ? 'Cargando...' : 'Cargar Horarios'}</button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-6 text-center bg-gray-50 rounded-lg">
+                      <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">

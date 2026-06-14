@@ -174,10 +174,11 @@ export default function CarreraDetailPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
+        <div className="absolute inset-0 bg-black/50" />
+        <div className={`relative z-10 ${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
           <div className="flex items-center gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"

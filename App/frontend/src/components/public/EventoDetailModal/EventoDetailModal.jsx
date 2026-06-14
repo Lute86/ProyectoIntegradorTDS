@@ -49,7 +49,7 @@ export default function EventoDetailModal({ evento, onClose }) {
     >
       <div className="fixed inset-0 bg-black/60" />
 
-      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200"
+      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full sm:min-w-[36rem] max-w-4xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between rounded-t-2xl">
