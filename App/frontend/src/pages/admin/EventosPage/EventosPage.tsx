@@ -33,11 +33,6 @@ const EventosPage = () => {
 
   const columns: Column<Evento>[] = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Nombre',
       accessor: (e) => (
         <span className="font-semibold text-gray-800 text-sm">{e.nombre}</span>
@@ -45,7 +40,11 @@ const EventosPage = () => {
     },
     {
       header: 'Fecha',
-      accessor: (e) => <span className="text-sm">{e.fecha}</span>,
+      accessor: (e) => {
+        const d = new Date(e.fecha);
+        const f = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        return <span className="whitespace-nowrap text-sm">{f}</span>;
+      },
     },
     {
       header: 'Ubicacion',
@@ -85,7 +84,7 @@ const EventosPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: 'w-32 text-right',
     },
   ];
 

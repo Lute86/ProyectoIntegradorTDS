@@ -115,21 +115,14 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-5">
-        {/* Header del modal */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between shrink-0">
           <h2 className="text-lg font-bold text-gray-900">
             {esEdicion ? 'Editar Noticia' : 'Nueva Noticia'}
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
-          >
-            X
-          </button>
+          <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors">X</button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[65vh] pr-1">
           {/* Campo: Titulo */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Titulo</label>
