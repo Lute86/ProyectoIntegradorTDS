@@ -59,7 +59,7 @@ const DashboardPage = () => {
       </div>
 
       <section>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat) => (
             <div key={stat.label} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-3">
               <div className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center text-white font-bold text-sm`}>
