@@ -33,11 +33,6 @@ const EventosPage = () => {
 
   const columns: Column<Evento>[] = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Nombre',
       accessor: (e) => (
         <span className="font-semibold text-gray-800 text-sm">{e.nombre}</span>

@@ -64,7 +64,7 @@ const TestimonioFormModal = ({ isOpen, onClose, testimonioToEdit }: TestimonioFo
           <h2 className="text-lg font-bold text-gray-900">{esEdicion ? 'Editar Testimonio' : 'Nuevo Testimonio'}</h2>
           <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors">X</button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[65vh] pr-1">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre del autor</label>
             <input {...register('autor_nombre')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Nombre del autor" />

@@ -33,11 +33,6 @@ const TestimoniosPage = () => {
 
   const columns: Column<Testimonio>[] = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Autor',
       accessor: (t) => (
         <div className="flex flex-col">

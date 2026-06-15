@@ -36,11 +36,6 @@ const UsuariosPage = () => {
   // Definición de columnas alineada con el modelo de Backend y Wireframe
   const columns: Column<User>[] = [
     { 
-      header: 'ID', 
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell'
-    },
-    {
       header: 'Usuario',
       accessor: (user) => (
         <div className="flex items-center gap-3">
