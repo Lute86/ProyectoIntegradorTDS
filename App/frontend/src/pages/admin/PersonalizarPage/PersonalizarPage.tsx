@@ -47,7 +47,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 pb-16 animate-in fade-in duration-500 min-h-screen">
+    <div className="p-4 md:p-8 pb-16 animate-in fade-in duration-500 h-full overflow-y-auto">
       {/* Header de la pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
