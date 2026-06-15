@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSiteConfigStore } from "../../stores/siteConfigStore";
 import { clsx } from "clsx";
 import ColorPicker from "../ui/ColorPicker";
@@ -54,6 +55,7 @@ const TEMAS: Tema[] = [
 
 const ThemePresets = () => {
   const { config, updateColors } = useSiteConfigStore();
+  const [mostrarAjustes, setMostrarAjustes] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -89,21 +91,27 @@ const ThemePresets = () => {
         })}
       </div>
 
-      {/* Selectores de color individuales */}
+      {/* Selectores de color individuales (acordeon) */}
       <div className="border-t border-gray-200 pt-4">
-        <p className="text-xs text-gray-500 mb-4">Ajuste fino de colores:</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Object.entries(config.colors)
-            .filter(([key]) => key !== "card")
-            .map(([key, value]) => (
-              <ColorPicker
-                key={key}
-                label={COLOR_LABELS[key] || key}
-                value={value}
-                onChange={(color) => updateColors({ [key]: color })}
-              />
-            ))}
-        </div>
+        <button type="button" onClick={() => setMostrarAjustes(!mostrarAjustes)}
+          className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+          <span className="text-lg font-mono">{mostrarAjustes ? '-' : '+'}</span>
+          Ajuste fino de colores
+        </button>
+        {mostrarAjustes && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            {Object.entries(config.colors)
+              .filter(([key]) => key !== "card")
+              .map(([key, value]) => (
+                <ColorPicker
+                  key={key}
+                  label={COLOR_LABELS[key] || key}
+                  value={value}
+                  onChange={(color) => updateColors({ [key]: color })}
+                />
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

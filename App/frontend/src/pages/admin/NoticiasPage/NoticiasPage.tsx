@@ -30,11 +30,11 @@ const NoticiasPage = () => {
     {
       header: 'Titulo',
       accessor: (n) => (
-        <div className="flex flex-col">
-          <span className="font-semibold text-gray-800 text-sm">{n.titulo}</span>
+        <div className="flex flex-col truncate">
+          <span className="font-semibold text-gray-800 text-sm truncate">{n.titulo}</span>
         </div>
       ),
-      className: 'w-1/2',
+      className: 'w-1/2 max-w-[200px]',
     },
     {
       header: 'Categoria',
@@ -82,7 +82,7 @@ const NoticiasPage = () => {
           </button>
         </div>
       ),
-      className: 'w-32 text-right',
+      className: 'w-28 min-w-[7rem] text-right',
     },
   ];
 

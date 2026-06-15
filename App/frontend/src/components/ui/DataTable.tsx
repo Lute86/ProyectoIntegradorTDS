@@ -121,7 +121,7 @@ export const DataTable = <T extends { id?: string | number }>({
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      <div className="w-full overflow-x-auto block">
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-50/80 border-b border-gray-200">
             <tr>

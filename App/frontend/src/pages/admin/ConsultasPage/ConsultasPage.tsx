@@ -42,18 +42,15 @@ const ConsultasPage = () => {
   };
 
   const columns: Column<Consulta>[] = [
-    { header: 'Nombre', accessor: (c) => <span className="font-medium text-gray-800 text-sm">{c.nombre}</span> },
-    { header: 'Email', accessor: 'email', className: 'hidden lg:table-cell text-sm' },
-    { header: 'Asunto', accessor: (c) => <span className="text-sm text-gray-600 truncate max-w-[200px] block">{c.asunto}</span> },
+    { header: 'Nombre', accessor: (c) => <span className="font-medium text-gray-800 text-sm truncate max-w-[120px] block">{c.nombre}</span> },
+    { header: 'Email', accessor: (c) => <span className="text-sm truncate block max-w-[120px] sm:max-w-xs">{c.email}</span>, className: 'hidden lg:table-cell' },
+    { header: 'Asunto', accessor: (c) => <span className="text-sm text-gray-600 truncate block max-w-[100px] sm:max-w-sm">{c.asunto}</span> },
     { header: 'Fecha', accessor: (c) => <span className="text-sm text-gray-500">{new Date(c.createdAt).toLocaleDateString('es-AR')}</span>, className: 'hidden md:table-cell' },
-    {
-      header: 'Estado',
-      accessor: (c) => (
-        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${c.respondido ? 'bg-green-50 text-green-600 border-green-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
-          {c.respondido ? 'Respondida' : 'Pendiente'}
-        </span>
-      ),
-    },
+    { header: 'Estado', accessor: (c) => (
+      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${c.respondido ? 'bg-green-50 text-green-600 border-green-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+        {c.respondido ? 'Respondida' : 'Pendiente'}
+      </span>
+    )},
   ];
 
   return (
