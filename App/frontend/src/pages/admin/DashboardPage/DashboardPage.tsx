@@ -12,9 +12,20 @@ const QUICK_ACTIONS = [
   { label: 'Gestionar Materias', href: '/admin/materias', icono: '\u{1F4D6}' },
 ];
 
+const formatearTiempo = (fecha: string) => {
+  const diff = Date.now() - new Date(fecha).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'Ahora';
+  if (mins < 60) return `Hace ${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `Hace ${hrs} hora${hrs > 1 ? 's' : ''}`;
+  const dias = Math.floor(hrs / 24);
+  return `Hace ${dias} dia${dias > 1 ? 's' : ''}`;
+};
+
 const DashboardPage = () => {
   const [stats, setStats] = useState<{ label: string; value: number; color: string }[]>([]);
-  const [actividades, setActividades] = useState<{ texto: string; timestamp: string }[]>([]);
+  const [actividades, setActividades] = useState<{ texto: string; timestamp: string; tipo: string; id: number }[]>([]);
 
   useEffect(() => {
     api.get('/stats/dashboard').then((res) => {
@@ -31,6 +42,12 @@ const DashboardPage = () => {
         { label: 'Materias Registradas', value: 0, color: 'bg-emerald-500' },
         { label: 'Staff Activo', value: 0, color: 'bg-amber-500' },
       ]);
+    });
+
+    api.get('/stats/recent-activity').then((res) => {
+      setActividades(res.data.data || []);
+    }).catch(() => {
+      setActividades([]);
     });
   }, []);
 
@@ -59,15 +76,10 @@ const DashboardPage = () => {
           <h2 className="text-base font-bold text-gray-900">Acciones Rapidas</h2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {QUICK_ACTIONS.map((action) => (
-              <Link
-                key={action.label}
-                to={action.href}
-                className="flex flex-col items-center justify-center gap-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-500 focus:border-blue-500 hover:-translate-y-1 transition-all duration-200 p-5"
-              >
+              <Link key={action.label} to={action.href}
+                className="flex flex-col items-center justify-center gap-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-500 focus:border-blue-500 hover:-translate-y-1 transition-all duration-200 p-5">
                 <span className="text-3xl">{action.icono}</span>
-                <span className="text-sm font-semibold text-gray-800 text-center leading-tight">
-                  {action.label}
-                </span>
+                <span className="text-sm font-semibold text-gray-800 text-center leading-tight">{action.label}</span>
               </Link>
             ))}
           </div>
@@ -84,7 +96,7 @@ const DashboardPage = () => {
                   <div className="w-2 h-2 mt-2 rounded-full bg-blue-500 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-700">{act.texto}</p>
-                    <span className="text-xs text-gray-400">{act.timestamp}</span>
+                    <span className="text-xs text-gray-400">{formatearTiempo(act.timestamp)}</span>
                   </div>
                 </li>
               ))}

@@ -120,7 +120,6 @@ const AdminCarrerasPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
     },
   ];
 

@@ -88,7 +88,6 @@ const AdminMateriasPage = () => {
           >Eliminar</button>
         </div>
       ),
-      className: 'text-right',
     },
   ]
 

@@ -2,10 +2,14 @@ import { useSiteConfigStore } from '../../stores/siteConfigStore';
 
 const SECTION_BLOCKS: Record<string, { alto: string; color: 'primary' | 'secondary' | 'accent'; label: string }> = {
   hero: { alto: 'h-20', color: 'primary', label: 'Hero' },
-  carreras: { alto: 'h-14', color: 'secondary', label: 'Carreras' },
-  noticias: { alto: 'h-16', color: 'accent', label: 'Noticias' },
-  testimonios: { alto: 'h-12', color: 'secondary', label: 'Testimonios' },
-  contacto: { alto: 'h-10', color: 'primary', label: 'Contacto' },
+  statistics: { alto: 'h-12', color: 'secondary', label: 'Estadisticas' },
+  careers: { alto: 'h-14', color: 'secondary', label: 'Carreras' },
+  news: { alto: 'h-16', color: 'accent', label: 'Noticias' },
+  events: { alto: 'h-14', color: 'accent', label: 'Eventos' },
+  testimonials: { alto: 'h-12', color: 'secondary', label: 'Testimonios' },
+  gallery: { alto: 'h-12', color: 'primary', label: 'Galeria' },
+  students: { alto: 'h-10', color: 'secondary', label: 'Estudiantes' },
+  contact: { alto: 'h-10', color: 'primary', label: 'Contacto' },
 };
 
 const PreviewPanel = () => {
@@ -39,6 +43,7 @@ const PreviewPanel = () => {
         >
           {config.sections
             .filter((s) => s.visible)
+            .sort((a, b) => a.order - b.order)
             .map((s) => {
               const block = SECTION_BLOCKS[s.id];
               if (!block) return null;

@@ -55,8 +55,8 @@ const TypographyConfig = () => {
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
-        <p className="text-xs text-gray-400">
-          Tamano base: {config.typography.baseSize}
+        <p className="text-xs text-gray-400" style={{ fontSize: config.typography.baseSize }}>
+          Vista previa con tamano base {config.typography.baseSize}
         </p>
       </div>
     </div>
