@@ -69,7 +69,7 @@ const ConsultaDetailModal = ({ isOpen, onClose, consulta }: ConsultaDetailModalP
 
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Mensaje</p>
-          <div className="p-4 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 whitespace-pre-wrap">{consulta.mensaje}</div>
+          <div className="p-4 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 whitespace-pre-wrap break-words overflow-y-auto max-h-60">{consulta.mensaje}</div>
         </div>
 
         <div>
@@ -77,7 +77,7 @@ const ConsultaDetailModal = ({ isOpen, onClose, consulta }: ConsultaDetailModalP
             {consulta.respondido ? 'Respuesta enviada' : 'Redactar respuesta'}
           </p>
           {consulta.respondido ? (
-            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 whitespace-pre-wrap">{consulta.respuesta || 'Sin respuesta registrada.'}</div>
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 whitespace-pre-wrap break-words overflow-y-auto max-h-40">{consulta.respuesta || 'Sin respuesta registrada.'}</div>
           ) : (
             <textarea value={respuesta} onChange={(e) => setRespuesta(e.target.value)} rows={4}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
