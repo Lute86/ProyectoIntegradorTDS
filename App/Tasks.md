@@ -179,6 +179,19 @@
 **Dependencias:** Ninguna
 **Contraparte FE:** Módulo FE 5
 
+#### Módulo 17: Actividad Reciente del Dashboard
+**Tareas:**
+- [x] Implementar servicio getRecentActivity() en stats.services.js (queries con LIMIT por módulo)
+- [x] Implementar controlador getRecentActivity en stats.controller.js
+- [x] Agregar ruta GET /api/stats/recent-activity (solo admin)
+- [x] Crear tests de integración para el nuevo endpoint (12 tests)
+- [x] Documentación PR
+
+**Dependencias:** Módulo BE 7 (Stats)
+**Contraparte FE:** Consumir endpoint en DashboardPage.tsx
+
+**Descripción:** Se agrega endpoint que retorna los últimos items de cada módulo (noticias, eventos, consultas, testimonios, usuarios) en una sola llamada, optimizado con queries paralelas y LIMIT en SQL. Formato unificado: { tipo, texto, timestamp, id }. Solo accesible para administradores.
+
 #### Módulo 8: Consultas / Contactos
 **Tareas:**
 - [x] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)
