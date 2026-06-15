@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSiteConfigStore } from '../../../stores/siteConfigStore';
-import ColorPicker from '../../../components/ui/ColorPicker';
 import ThemePresets from '../../../components/admin/ThemePresets';
 import TypographyConfig from '../../../components/admin/TypographyConfig';
 import LayoutSelector from '../../../components/admin/LayoutSelector';
@@ -17,7 +16,7 @@ const COLOR_LABELS: Record<string, string> = {
 };
 
 const PersonalizarPage = () => {
-  const { config, isLoading, isDirty, updateColors, saveConfig } = useSiteConfigStore();
+  const { config, isLoading, isDirty, saveConfig } = useSiteConfigStore();
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -36,7 +35,7 @@ const PersonalizarPage = () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 animate-pulse space-y-6 min-h-screen">
+      <div className="p-4 md:p-8 animate-pulse space-y-6 h-[calc(100vh-64px)]">
         <div className="h-8 bg-gray-200 rounded w-1/3" />
         <div className="h-4 bg-gray-100 rounded w-1/4" />
         <div className="h-96 bg-gray-100 rounded-xl" />
@@ -47,7 +46,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 pb-16 animate-in fade-in duration-500 h-full overflow-y-auto">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 h-[calc(100vh-64px)] overflow-y-auto">
       {/* Header de la pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -80,8 +79,8 @@ const PersonalizarPage = () => {
         <div className="lg:col-span-2 space-y-6">
           <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Temas Predefinidos</h2>
-              <p className="text-xs text-gray-500">Seleccione un tema para cambiar toda la paleta de colores de una vez.</p>
+              <h2 className="text-base font-bold text-gray-900">Temas y Colores</h2>
+              <p className="text-xs text-gray-500">Seleccione un tema o ajuste cada color de forma individual.</p>
             </div>
             <ThemePresets />
           </section>
