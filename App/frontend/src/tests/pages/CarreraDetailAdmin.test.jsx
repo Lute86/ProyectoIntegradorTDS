@@ -19,8 +19,9 @@ vi.mock('../../stores/usuariosStore', () => ({ useUsuariosStore: mockUsuariosSto
 
 const mockComisionCreate = vi.hoisted(() => vi.fn())
 const mockComisionGetAll = vi.hoisted(() => vi.fn().mockResolvedValue({ data: { data: [] } }))
+const mockAssignMaterias = vi.hoisted(() => vi.fn())
 vi.mock('../../services/comisionesService', () => ({
-  comisionesService: { getAll: mockComisionGetAll, create: mockComisionCreate, update: vi.fn(), delete: vi.fn(), assignMaterias: vi.fn(), removeMateria: vi.fn() },
+  comisionesService: { getAll: mockComisionGetAll, create: mockComisionCreate, update: vi.fn(), delete: vi.fn(), assignMaterias: mockAssignMaterias, removeMateria: vi.fn() },
 }))
 
 const mockCreate = vi.hoisted(() => vi.fn())
@@ -42,7 +43,7 @@ const MOCK_CARRERA = {
 }
 
 const MOCK_COMISION = {
-  id: 99, nombre: 'A', carrera_id: 1, anio_lectivo: 2026, semestre: 1,
+  id: 99, nombre: '1A', carrera_id: 1, anio_lectivo: 2026, semestre: 1,
   carrerasMaterias: [
     { id: 1, cuatrimestre: 1, carga_horaria_semanal: 6, materia: { id: 1, nombre: 'Programacion I' } },
     { id: 2, cuatrimestre: 1, carga_horaria_semanal: 4, materia: { id: 2, nombre: 'Matematica' } },
@@ -82,21 +83,23 @@ describe('CarreraDetailAdmin - Horarios', () => {
     expect(screen.getByText('Horarios por Comision')).toBeInTheDocument()
   })
 
-  it('abre modal de nueva comision y crea una comision', async () => {
-    mockComisionGetAll.mockResolvedValue({ data: { data: [MOCK_COMISION] } })
+  it('abre modal de nueva comision y la crea con nombre combinado', async () => {
+    mockComisionGetAll.mockResolvedValue({ data: { data: [] } })
+    mockComisionCreate.mockResolvedValue({ data: { data: { id: 200 } } })
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
     await screen.findByText('+ Nueva Comision')
     fireEvent.click(screen.getByText('+ Nueva Comision'))
     expect(screen.getByText('Nueva Comision')).toBeInTheDocument()
-    const input = screen.getByPlaceholderText('Ej: A, B, 1, Mixta')
+    const input = screen.getByPlaceholderText('Ej: A, B, C')
     fireEvent.change(input, { target: { value: 'A' } })
     fireEvent.click(screen.getByText('Crear'))
     await waitFor(() => {
       expect(mockComisionCreate).toHaveBeenCalledWith(expect.objectContaining({
-        carrera_id: 1, nombre: 'A',
+        carrera_id: 1, nombre: '1A', semestre: 1,
       }))
     })
+    expect(mockAssignMaterias).toHaveBeenCalledWith(200, [1, 2])
   })
 
   it('llama a horariosService.create al cargar horarios con datos validos', async () => {
@@ -104,12 +107,9 @@ describe('CarreraDetailAdmin - Horarios', () => {
     mockCreate.mockResolvedValue({ data: { data: { id: 101 } } })
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
-    // Click comision button to activate it
     const comBtn = await screen.findByText('A')
     fireEvent.click(comBtn)
-    // The selects are the dia dropdowns (2 materias)
     const selects = screen.getAllByRole('combobox')
-    // Filter out the year select (value != '') to keep only the dia selects
     const diaSelects = selects.filter((s) => s.tagName === 'SELECT' && !s.value)
     diaSelects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
     const timeInputs = document.querySelectorAll('input[type="time"]')
@@ -141,7 +141,7 @@ describe('CarreraDetailAdmin - Horarios', () => {
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
     await waitFor(() => {
-      expect(screen.getByText('No hay comisiones. Creá una nueva.')).toBeInTheDocument()
+      expect(screen.getByText('No hay comisiones para este cuatrimestre. Creá una nueva.')).toBeInTheDocument()
     })
   })
 

@@ -24,6 +24,12 @@ const nombresCuatri = {
 
 const DIAS = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
 
+const cuatriDeComision = (nombre) => {
+  const m = nombre.match(/^(\d+)/)
+  return m ? parseInt(m[1]) : 1
+}
+const letraDeComision = (nombre) => nombre.replace(/^\d+/, '')
+
 const CarreraDetailAdmin = () => {
   const { id } = useParams()
   const { selectedCarrera, loading, fetchCarreraById } = useCarrerasStore()
@@ -33,20 +39,24 @@ const CarreraDetailAdmin = () => {
   const [cuatriPrefijado, setCuatriPrefijado] = useState(null)
   const [horarios, setHorarios] = useState([])
 
+  const [semestreActivo, setSemestreActivo] = useState(1)
   const [cuatriActivo, setCuatriActivo] = useState(1)
   const [comisiones, setComisiones] = useState([])
   const [comisionesLoading, setComisionesLoading] = useState(false)
   const [selectedNombres, setSelectedNombres] = useState(new Set())
   const [comisionFormOpen, setComisionFormOpen] = useState(false)
-  const [comisionFormData, setComisionFormData] = useState({ nombre: '', anio_lectivo: new Date().getFullYear(), encargado_id: '' })
-  const [filtroAnioLectivo, setFiltroAnioLectivo] = useState(new Date().getFullYear().toString())
+  const [comisionFormData, setComisionFormData] = useState({ cuatrimestre: 1, letra: '', encargado_id: '' })
+  const [filtroAnioLectivo, setFiltroAnioLectivo] = useState('2026')
   const [formsPorComision, setFormsPorComision] = useState({})
   const [errores, setErrores] = useState({})
   const [guardandoBatch, setGuardandoBatch] = useState(false)
+  const [creando, setCreando] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
   const successTimer = useRef(null)
   const [batchMsg, setBatchMsg] = useState('')
   const batchTimer = useRef(null)
+  const [sharedFormData, setSharedFormData] = useState({})
+  const [sharedErrores, setSharedErrores] = useState({})
 
   const { usuarios, fetchUsuarios } = useUsuariosStore()
 
@@ -102,47 +112,67 @@ const CarreraDetailAdmin = () => {
 
   const openComisionForm = () => {
     setComisionFormData({
-      nombre: '',
-      anio_lectivo: parseInt(filtroAnioLectivo),
+      cuatrimestre: cuatriActivo,
+      letra: '',
       encargado_id: '',
     })
     setComisionFormOpen(true)
   }
 
   const handleCreateComision = async () => {
-    const { nombre, anio_lectivo, encargado_id } = comisionFormData
-    const nombres = nombre
+    const { cuatrimestre, letra, encargado_id } = comisionFormData
+    const letras = letra
       .split(',')
-      .map((n) => n.trim().toUpperCase())
-      .filter((n) => n.length > 0)
-    const uniqueNombres = [...new Set(nombres)]
-    if (uniqueNombres.length === 0) return
-    const basePayload = {
-      carrera_id: parseInt(id),
-      anio_lectivo: parseInt(anio_lectivo),
-    }
-    if (encargado_id) basePayload.encargado_id = parseInt(encargado_id)
+      .map((l) => l.trim().toUpperCase())
+      .filter((l) => l.length > 0)
+    if (letras.length === 0) return
+
+    const semestre = ((cuatrimestre - 1) % 2) + 1
+    setCreando(true)
+
     let creadas = 0
     const erroresLista = []
-    for (const n of uniqueNombres) {
-      for (const sem of [1, 2]) {
-        try {
-          await comisionesService.create({ ...basePayload, nombre: n, semestre: sem })
-          creadas++
-        } catch (err) {
-          const msg = err.response?.data?.message || `Error con "${n}" semestre ${sem}`
-          if (!erroresLista.includes(msg)) erroresLista.push(msg)
+    for (const l of letras) {
+      const nombre = `${cuatrimestre}${l}`
+      try {
+        const payload = {
+          carrera_id: parseInt(id),
+          nombre,
+          anio_lectivo: parseInt(filtroAnioLectivo),
+          semestre,
+        }
+        if (encargado_id) payload.encargado_id = parseInt(encargado_id)
+
+        const res = await comisionesService.create(payload)
+        const comisionId = res.data?.data?.id || res.data?.id
+
+        const materiaIds = (carrera?.carreraMaterias || [])
+          .filter((cm) => cm.cuatrimestre === cuatrimestre)
+          .map((cm) => cm.id)
+
+        if (materiaIds.length > 0 && comisionId) {
+          await comisionesService.assignMaterias(comisionId, materiaIds)
+        }
+        creadas++
+      } catch (err) {
+        const backendMsg = err.response?.data?.message || ''
+        if (backendMsg.toLowerCase().includes('unique') || backendMsg.toLowerCase().includes('ya existe')) {
+          erroresLista.push(`"${nombre}" ya existe`)
+        } else {
+          erroresLista.push(`"${nombre}": ${err.response?.data?.message || 'Error de conexion'}`)
         }
       }
     }
+
     setComisionFormOpen(false)
     await fetchComisiones()
     if (erroresLista.length === 0) {
-      const total = uniqueNombres.length * 2
-      mostrarExito(`${total} registro${total !== 1 ? 's' : ''} creado${total !== 1 ? 's' : ''} (${uniqueNombres.join(', ')}).`)
+      mostrarExito(`${creadas} comision${creadas !== 1 ? 'es' : ''} creada${creadas !== 1 ? 's' : ''} y materias vinculadas.`)
     } else {
-      mostrarExito(`Error: ${erroresLista.join('; ')}`)
+      const ok = creadas > 0 ? ` (${creadas} creada${creadas !== 1 ? 's' : ''})` : ''
+      mostrarExito(`Error: ${erroresLista.join('; ')}${ok}`)
     }
+    setCreando(false)
   }
 
   const mostrarExito = useCallback((msg) => {
@@ -187,11 +217,25 @@ const CarreraDetailAdmin = () => {
     return Math.min(maxCuatri, max + 1)
   }, [cuatrimestresDisponibles, maxCuatri])
 
+  const cuatrimestresDelSemestre = useMemo(() => {
+    return cuatrimestresDisponibles.filter((c) => ((c - 1) % 2) + 1 === semestreActivo)
+  }, [cuatrimestresDisponibles, semestreActivo])
+
   useEffect(() => {
-    if (activeTab === 'horarios' && cuatrimestresDisponibles.length > 0 && !cuatrimestresDisponibles.includes(cuatriActivo)) {
-      setCuatriActivo(cuatrimestresDisponibles[0])
+    if (activeTab === 'horarios' && cuatrimestresDelSemestre.length > 0 && !cuatrimestresDelSemestre.includes(cuatriActivo)) {
+      setCuatriActivo(cuatrimestresDelSemestre[0])
     }
-  }, [activeTab, cuatrimestresDisponibles, cuatriActivo])
+  }, [activeTab, cuatrimestresDelSemestre, cuatriActivo])
+
+  useEffect(() => {
+    if (cuatrimestresDelSemestre.length > 0 && !cuatrimestresDelSemestre.includes(cuatriActivo)) {
+      setCuatriActivo(cuatrimestresDelSemestre[0])
+    }
+  }, [semestreActivo, cuatrimestresDelSemestre, cuatriActivo])
+
+  useEffect(() => {
+    setSelectedNombres(new Set())
+  }, [cuatriActivo])
 
   const materiasCuatriActual = useMemo(() => {
     return carrera?.carreraMaterias?.filter((cm) => (cm.cuatrimestre || 1) === cuatriActivo) || []
@@ -202,30 +246,22 @@ const CarreraDetailAdmin = () => {
   }, [materiasCuatriActual])
 
   const aniosDisponibles = useMemo(() => {
-    const set = new Set(comisiones.map(c => c.anio_lectivo))
-    if (set.size === 0) set.add(new Date().getFullYear())
-    return Array.from(set).sort((a, b) => b - a)
-  }, [comisiones])
+  const años = [];
+  // Arranca en 2026 y sube hasta el 2040
+  for (let a = 2026; a <= 2040; a++) {
+    años.push(a);
+  }
+  // Los ordena de menor a mayor para que el 2026 quede primero
+  return años.sort((a, b) => a - b);
+}, []);
 
-  const comisionesAgrupadas = useMemo(() => {
-    const grupos = {}
-    comisiones.forEach((c) => {
-      if (!grupos[c.nombre]) grupos[c.nombre] = []
-      grupos[c.nombre].push(c)
-    })
-    return Object.entries(grupos).sort(([a], [b]) => a.localeCompare(b))
-  }, [comisiones])
-
-  const comisionesCuatriActual = useMemo(() => {
-    return comisiones.filter((c) => {
-      if (filtroAnioLectivo && c.anio_lectivo !== parseInt(filtroAnioLectivo)) return false
-      return true
-    })
-  }, [comisiones, filtroAnioLectivo])
+  const comisionesDelCuatri = useMemo(() => {
+    return comisiones.filter((c) => cuatriDeComision(c.nombre) === cuatriActivo && c.anio_lectivo === parseInt(filtroAnioLectivo))
+  }, [comisiones, cuatriActivo, filtroAnioLectivo])
 
   const comisionesSeleccionadas = useMemo(() => {
-    return comisiones.filter((c) => selectedNombres.has(c.nombre))
-  }, [comisiones, selectedNombres])
+    return comisiones.filter((c) => selectedNombres.has(c.nombre) && cuatriDeComision(c.nombre) === cuatriActivo && c.anio_lectivo === parseInt(filtroAnioLectivo))
+  }, [comisiones, selectedNombres, cuatriActivo, filtroAnioLectivo])
 
   const registrosDeComision = useCallback((nombre, semestre) => {
     return comisiones.find((c) => c.nombre === nombre && c.semestre === semestre && c.anio_lectivo === parseInt(filtroAnioLectivo))
@@ -249,6 +285,14 @@ const CarreraDetailAdmin = () => {
     })
     return porComision
   }, [comisionesSeleccionadas, horarios])
+
+  const modoCompartido = useMemo(() => {
+    if (selectedNombres.size === 0) return false
+    return Array.from(selectedNombres).every((nombre) => {
+      const horariosDeEsta = horariosPorComision[nombre] || []
+      return horariosDeEsta.length === 0
+    })
+  }, [selectedNombres, horariosPorComision])
 
   const borrarHorario = async (nombre, cmId) => {
     const horariosDeEsta = horariosPorComision[nombre] || []
@@ -292,15 +336,27 @@ const CarreraDetailAdmin = () => {
 
   useEffect(() => {
     setErrores({})
+    setSharedErrores({})
     if (selectedNombres.size > 0) {
-      initFormsPorComision()
+      if (modoCompartido) {
+        const inicial = {}
+        materiasCuatriActual.forEach((cm) => {
+          inicial[cm.id] = { dia: '', horario: '', horario_inicio: '', horario_fin: '', aula: '', profesor: '' }
+        })
+        setSharedFormData(inicial)
+        setFormsPorComision({})
+      } else {
+        initFormsPorComision()
+        setSharedFormData({})
+      }
     } else {
       setFormsPorComision({})
+      setSharedFormData({})
     }
-  }, [selectedNombres, initFormsPorComision])
+  }, [selectedNombres, initFormsPorComision, modoCompartido, materiasCuatriActual])
 
   const eliminarComision = async (nombre) => {
-    if (!confirm(`Eliminar comision ${nombre} (semestres 1 y 2) y todos sus horarios?`)) return
+    if (!confirm(`Eliminar comision ${nombre} y sus horarios?`)) return
     const registros = comisiones.filter((c) => c.nombre === nombre && c.anio_lectivo === parseInt(filtroAnioLectivo))
     if (registros.length === 0) return
     try {
@@ -424,7 +480,6 @@ const CarreraDetailAdmin = () => {
 
       const materiasForm = formsPorComision[nombre] || {}
 
-      // Auto-asignar materias
       const assignedIds = new Set((reg.carrerasMaterias || []).map((cm) => cm.id))
       const neededIds = []
       for (const [cmId, row] of Object.entries(materiasForm)) {
@@ -484,8 +539,188 @@ const CarreraDetailAdmin = () => {
     await fetchHorarios()
   }
 
+  const cargarHorariosComision = async (nombre) => {
+    if (!validarTodo()) {
+      mostrarBatchMsg('Corrige los campos marcados en rojo antes de guardar.')
+      return
+    }
+
+    setGuardandoBatch(true)
+    const sem = ((cuatriActivo - 1) % 2) + 1
+    const reg = registrosDeComision(nombre, sem)
+    if (!reg) { setGuardandoBatch(false); return }
+
+    const materiasForm = formsPorComision[nombre] || {}
+
+    const assignedIds = new Set((reg.carrerasMaterias || []).map((cm) => cm.id))
+    const neededIds = []
+    for (const [cmId, row] of Object.entries(materiasForm)) {
+      if (!row.dia || !row.horario_inicio || !row.horario_fin) continue
+      if (!assignedIds.has(Number(cmId))) neededIds.push(Number(cmId))
+    }
+    if (neededIds.length > 0) {
+      try { await comisionesService.assignMaterias(reg.id, neededIds) } catch { /* ok */ }
+    }
+
+    let guardados = 0
+    let fallidos = 0
+    let huboDatos = false
+
+    for (const [cmId, row] of Object.entries(materiasForm)) {
+      const { dia, horario: horarioCombinado, horario_inicio, horario_fin, aula, profesor } = row
+      const horario = horarioCombinado || (horario_inicio && horario_fin ? `${horario_inicio}-${horario_fin}` : '')
+      if (!dia || !horario) continue
+      huboDatos = true
+      const payload = {
+        carrera_materia_id: Number(cmId),
+        comision_id: reg.id,
+        dia,
+        horario,
+        aula: esVirtual ? 'Virtual' : aula,
+        profesor: profesor || undefined,
+      }
+      try {
+        const existente = horarios.find((h) => h.comision_id === reg.id && h.carrera_materia_id === Number(cmId))
+        if (existente) await horariosService.update(existente.id, payload)
+        else await horariosService.create(payload)
+        guardados++
+      } catch { fallidos++ }
+    }
+
+    if (!huboDatos) {
+      setGuardandoBatch(false)
+      mostrarBatchMsg('Completa al menos dia y horario en alguna materia.')
+      return
+    }
+
+    if (fallidos === 0) {
+      mostrarBatchMsg(`Horarios guardados correctamente para Comision ${letraDeComision(nombre)}.`)
+    } else if (guardados === 0) {
+      mostrarBatchMsg(`Error al guardar horarios de Comision ${letraDeComision(nombre)}.`)
+    } else {
+      mostrarBatchMsg(`${guardados} guardado${guardados !== 1 ? 's' : ''}, ${fallidos} fallaron en Comision ${letraDeComision(nombre)}.`)
+    }
+
+    setGuardandoBatch(false)
+    await fetchHorarios()
+    setTimeout(() => setBatchMsg(''), 3000)
+  }
+
+  const actualizarSharedField = (cmId, field, value) => {
+    setSharedFormData((prev) => {
+      const current = { ...(prev[cmId] || {}) }
+      const next = { ...current, [field]: value }
+      if (field === 'horario_inicio' || field === 'horario_fin') {
+        const inicio = field === 'horario_inicio' ? value : next.horario_inicio
+        const fin = field === 'horario_fin' ? value : next.horario_fin
+        next.horario = inicio && fin ? `${inicio}-${fin}` : ''
+      }
+      return { ...prev, [cmId]: next }
+    })
+  }
+
+  const handleSharedBlur = (cmId) => {
+    const row = sharedFormData[cmId]
+    if (!row) return
+    if (!row.dia && !row.horario) return
+    const err = validarFila(Number(cmId), row)
+    if (Object.keys(err).length === 0) {
+      setSharedErrores((prev) => { const n = { ...prev }; delete n[cmId]; return n })
+    } else {
+      setSharedErrores((prev) => ({ ...prev, [cmId]: err }))
+    }
+  }
+
+  const validarCompartido = () => {
+    const errs = {}
+    let ok = true
+    Object.entries(sharedFormData).forEach(([cmId, row]) => {
+      if (!row.dia && !row.horario_inicio && !row.horario_fin) return
+      const err = validarFila(Number(cmId), row)
+      if (Object.keys(err).length > 0) { errs[cmId] = err; ok = false }
+    })
+    setSharedErrores(errs)
+    return ok
+  }
+
+  const guardarCompartido = async () => {
+    if (!validarCompartido()) {
+      mostrarBatchMsg('Corrige los campos marcados en rojo antes de guardar.')
+      return
+    }
+
+    setGuardandoBatch(true)
+    const sem = ((cuatriActivo - 1) % 2) + 1
+    let totalGuardados = 0
+    let totalFallidos = 0
+    let huboDatos = false
+
+    for (const nombre of selectedNombres) {
+      const reg = registrosDeComision(nombre, sem)
+      if (!reg) continue
+
+      const assignedIds = new Set((reg.carrerasMaterias || []).map((cm) => cm.id))
+      const neededIds = []
+      for (const [cmId, row] of Object.entries(sharedFormData)) {
+        if (!row.dia || !row.horario_inicio || !row.horario_fin) continue
+        if (!assignedIds.has(Number(cmId))) neededIds.push(Number(cmId))
+      }
+      if (neededIds.length > 0) {
+        try { await comisionesService.assignMaterias(reg.id, neededIds) } catch { /* ok */ }
+      }
+
+      for (const [cmId, row] of Object.entries(sharedFormData)) {
+        const { dia, horario: horarioCombinado, horario_inicio, horario_fin, aula, profesor } = row
+        const horario = horarioCombinado || (horario_inicio && horario_fin ? `${horario_inicio}-${horario_fin}` : '')
+        if (!dia || !horario) continue
+        huboDatos = true
+        const payload = {
+          carrera_materia_id: Number(cmId),
+          comision_id: reg.id,
+          dia,
+          horario,
+          aula: esVirtual ? 'Virtual' : aula,
+          profesor: profesor || undefined,
+        }
+        try {
+          const existente = horarios.find((h) => h.comision_id === reg.id && h.carrera_materia_id === Number(cmId))
+          if (existente) await horariosService.update(existente.id, payload)
+          else await horariosService.create(payload)
+          totalGuardados++
+        } catch { totalFallidos++ }
+      }
+    }
+
+    if (!huboDatos) {
+      setGuardandoBatch(false)
+      mostrarBatchMsg('Completa al menos dia y horario en alguna materia.')
+      return
+    }
+
+    if (totalFallidos === 0) {
+      mostrarBatchMsg(`${totalGuardados} horario${totalGuardados !== 1 ? 's' : ''} guardado${totalGuardados !== 1 ? 's' : ''} correctamente en ${selectedNombres.size} comision${selectedNombres.size !== 1 ? 'es' : ''}.`)
+    } else if (totalGuardados === 0) {
+      mostrarBatchMsg('Error al guardar los horarios.')
+    } else {
+      mostrarBatchMsg(`${totalGuardados} guardado${totalGuardados !== 1 ? 's' : ''}, ${totalFallidos} fallaron.`)
+    }
+
+    setGuardandoBatch(false)
+    await fetchHorarios()
+  }
+
   const limpiarSeleccion = () => {
     setSelectedNombres(new Set())
+  }
+
+  const toggleTodas = () => {
+    const todas = new Set(comisionesDelCuatri.map((c) => c.nombre))
+    setSelectedNombres((prev) => {
+      if (prev.size === todas.size && [...prev].every((n) => todas.has(n))) {
+        return new Set()
+      }
+      return todas
+    })
   }
 
   const abrirModalConCuatri = (c) => {
@@ -563,7 +798,7 @@ const CarreraDetailAdmin = () => {
 
       {successMsg && (
         <div className={`px-4 py-3 rounded-lg text-sm font-semibold ${
-          successMsg.includes('Error') || successMsg.includes('Completa')
+          successMsg.includes('Error') || successMsg.includes('Completa') || successMsg.includes('ya existe')
             ? 'bg-red-50 text-red-700 border border-red-200'
             : 'bg-green-50 text-green-700 border border-green-200'
         }`}>
@@ -640,30 +875,26 @@ const CarreraDetailAdmin = () => {
             <button onClick={() => setComisionFormOpen(false)}
               className="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
             >Cancelar</button>
-            <button onClick={handleCreateComision}
-              className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-            >Crear</button>
+            <button onClick={handleCreateComision} disabled={creando}
+              className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
+            >{creando ? 'Creando...' : 'Crear'}</button>
           </>
         }
       >
         <div className="space-y-4">
+          <p className="text-xs text-gray-500">
+            Cuatrimestre: <strong>{nombresCuatri[comisionFormData.cuatrimestre] || `Cuatrimestre ${comisionFormData.cuatrimestre}`}</strong> ({comisionFormData.cuatrimestre})
+          </p>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Nombre</label>
-            <input value={comisionFormData.nombre}
-              onChange={(e) => setComisionFormData({ ...comisionFormData, nombre: e.target.value.toUpperCase().slice(0, 20) })}
-              placeholder="Ej: A, B, 1, Mixta"
-              maxLength={20}
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Letras</label>
+            <input value={comisionFormData.letra}
+              onChange={(e) => setComisionFormData({ ...comisionFormData, letra: e.target.value.toUpperCase().replace(/[^A-Z,]/g, '') })}
+              placeholder="Ej: A, B, C"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p className="text-[10px] text-gray-400 mt-1">Se crea automáticamente para semestre 1 y 2.</p>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Año de ingreso</label>
-            <input type="number" value={comisionFormData.anio_lectivo}
-              onChange={(e) => setComisionFormData({ ...comisionFormData, anio_lectivo: e.target.value })}
-              min={2020} max={2030}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <p className="text-[10px] text-gray-400 mt-1">
+              Se crear{comisionFormData.letra.includes(',') ? 'án' : 'á'}: <strong>{comisionFormData.letra.split(',').filter(l => l.trim()).map(l => `${comisionFormData.cuatrimestre}${l.trim().toUpperCase()}`).join(', ') || `${comisionFormData.cuatrimestre}?`}</strong>
+            </p>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
@@ -691,25 +922,9 @@ const CarreraDetailAdmin = () => {
           ) : (
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-3">
-                <h3 className="text-sm font-bold text-gray-700">1. Período</h3>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {cuatrimestresDisponibles.map((c) => {
-                      return (
-                        <button key={c} onClick={() => setCuatriActivo(c)}
-                          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
-                            cuatriActivo === c
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                          }`}
-                        >
-                          {nombresCuatri[c] || `Cuatrimestre ${c}`}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  <div className="flex items-center gap-2 ml-auto">
-                    <label className="text-xs font-semibold text-gray-500">Año:</label>
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs font-semibold text-gray-500">Año lectivo:</label>
                     <select value={filtroAnioLectivo} onChange={(e) => setFiltroAnioLectivo(e.target.value)}
                       className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -717,17 +932,47 @@ const CarreraDetailAdmin = () => {
                         <option key={a} value={a}>{a}</option>
                       ))}
                     </select>
-                    <span className="text-xs font-semibold text-gray-400 ml-2">
-                      Semestre {((cuatriActivo - 1) % 2) + 1}
-                    </span>
                   </div>
+                  <div className="flex items-center gap-1">
+                    {[1, 2].map((sem) => (
+                      <button key={sem} onClick={() => setSemestreActivo(sem)}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                          semestreActivo === sem
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                        }`}
+                      >Semestre {sem}</button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 flex-wrap">
+                  {cuatrimestresDisponibles.map((c) => {
+                    const activo = cuatrimestresDelSemestre.includes(c)
+                    return (
+                      <button key={c} onClick={() => activo && setCuatriActivo(c)}
+                        disabled={!activo}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                          !activo
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                            : cuatriActivo === c
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                        }`}
+                      >{nombresCuatri[c] || `C${c}`}</button>
+                    )
+                  })}
                 </div>
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-bold text-gray-700">2. Comisiones</h3>
+                  <h3 className="text-sm font-bold text-gray-700">2. Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
                   <div className="flex items-center gap-2">
+                    {comisionesDelCuatri.length > 0 && (
+                      <button onClick={toggleTodas}
+                        className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
+                      >{selectedNombres.size === comisionesDelCuatri.length ? 'Deseleccionar todas' : 'Todas'}</button>
+                    )}
                     {selectedNombres.size > 0 && (
                       <button onClick={limpiarSeleccion}
                         className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
@@ -736,9 +981,6 @@ const CarreraDetailAdmin = () => {
                     <button onClick={openComisionForm}
                       className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700"
                     >+ Nueva Comision</button>
-                    <button onClick={cargarHorarios} disabled={guardandoBatch || selectedNombres.size === 0}
-                      className="px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white text-xs font-semibold rounded-lg transition"
-                    >{guardandoBatch ? 'Guardando...' : 'Guardar Horarios'}</button>
                   </div>
                 </div>
                 {comisionesLoading ? (
@@ -747,34 +989,36 @@ const CarreraDetailAdmin = () => {
                       <div key={i} className="w-9 h-9 rounded-full bg-gray-200 animate-pulse" />
                     ))}
                   </div>
-                ) : comisionesAgrupadas.length === 0 ? (
+                ) : comisionesDelCuatri.length === 0 ? (
                   <div className="flex flex-col items-center gap-1 py-4">
-                    <span className="text-sm text-gray-400">No hay comisiones. Creá una nueva.</span>
+                    <span className="text-sm text-gray-400">No hay comisiones para este cuatrimestre. Creá una nueva.</span>
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center gap-2">
-                    {comisionesAgrupadas.map(([nombre, registros]) => {
-                      const isSelected = selectedNombres.has(nombre)
-                      const tutor = registros.find((r) => r.encargado)?.encargado
+                    {comisionesDelCuatri.map((c) => {
+                      const nombreCompleto = c.nombre
+                      const letra = letraDeComision(nombreCompleto)
+                      const isSelected = selectedNombres.has(nombreCompleto)
+                      const tutor = c.encargado
                       return (
-                        <div key={nombre} className="flex items-center gap-1">
-                          <button onClick={() => toggleComision(nombre)}
+                        <div key={c.id} className="flex items-center gap-1">
+                          <button onClick={() => toggleComision(nombreCompleto)}
                             className={`w-9 h-9 rounded-full text-sm font-bold transition-all ${
                               isSelected
                                 ? 'bg-blue-600 text-white shadow'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
-                            title={`Comision ${nombre}${tutor ? ` — Tutor: ${tutor.nombre} ${tutor.apellido}` : ''}`}
-                          >{nombre}</button>
-                          <button onClick={() => eliminarComision(nombre)}
+                            title={`Comision ${letra}${tutor ? ` — Tutor: ${tutor.nombre} ${tutor.apellido}` : ''}`}
+                          >{letra}</button>
+                          <button onClick={() => eliminarComision(nombreCompleto)}
                             className="text-red-400 hover:text-red-600 text-xs font-bold ml-0.5"
-                            title="Eliminar comision (ambos semestres)"
+                            title="Eliminar comision"
                           >&times;</button>
                         </div>
                       )
                     })}
                     {selectedNombres.size === 0 && (
-                      <span className="text-[10px] text-gray-400 ml-1 italic">Seleccioná una comisión para cargar horarios</span>
+                      <span className="text-[10px] text-gray-400 ml-1 italic">Hacé clic en una comisión para cargar horarios</span>
                     )}
                   </div>
                 )}
@@ -790,118 +1034,214 @@ const CarreraDetailAdmin = () => {
                 </div>
               )}
 
-              {selectedNombres.size > 0 ? (
-                <div className="space-y-4">
-                  {Array.from(selectedNombres).sort().map((nombre) => {
-                    const materiasForm = formsPorComision[nombre] || {}
-                    const materiaIdsAsignadas = materiaIdsAsignadasPorNombre[nombre] || new Set()
-                    const horariosDeEsta = horariosPorComision[nombre] || []
-                    return (
-                      <div key={nombre} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                        <h3 className="text-sm font-bold text-gray-700 mb-3">
-                          3. Horarios — Comisión {nombre}
-                          <span className="text-gray-400 font-normal ml-2">
-                            ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
-                          </span>
-                        </h3>
+              {selectedNombres.size > 0 && comisionesDelCuatri.length > 0 ? (
+                modoCompartido ? (
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="text-sm font-bold text-gray-700">
+                        3. Horarios — Compartido ({selectedNombres.size} comisiones)
+                        <span className="text-gray-400 font-normal ml-2">
+                          ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
+                        </span>
+                      </h3>
+                      <button onClick={guardarCompartido} disabled={guardandoBatch}
+                        className="px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white text-xs font-semibold rounded-lg transition"
+                      >{guardandoBatch ? 'Guardando...' : 'Guardar Horarios'}</button>
+                    </div>
+                    <p className="text-[10px] text-gray-400 mb-3">Modo compartido: los horarios se aplicarán a las {selectedNombres.size} comisiones seleccionadas.</p>
 
-                        {materiasCuatriActual.length === 0 ? (
-                          <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
-                        ) : (
-                          <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                              <thead>
-                                <tr className="border-b border-gray-200">
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500">Día</th>
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500">Inicio</th>
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500">Fin</th>
-                                  {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
-                                  <th className="px-3 py-2 text-xs font-semibold text-gray-500"></th>
+                    {materiasCuatriActual.length === 0 ? (
+                      <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="border-b border-gray-200">
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Día</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Inicio</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Fin</th>
+                              {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {materiasCuatriActual.map((cm) => {
+                              const row = sharedFormData[cm.id] || { dia: '', horario: '', aula: '', profesor: '' }
+                              return (
+                                <tr key={cm.id} className="border-b border-gray-100">
+                                  <td className="px-3 py-2">
+                                    <span className="text-sm font-medium text-gray-800">{cm.materia?.nombre}</span>
+                                    {cm.carga_horaria_semanal && (
+                                      <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
+                                    )}
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <select value={row.dia} onChange={(e) => actualizarSharedField(cm.id, 'dia', e.target.value)}
+                                      onBlur={() => handleSharedBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
+                                    >
+                                      <option value="">—</option>
+                                      {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
+                                    </select>
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <input type="time" value={row.horario_inicio || ''}
+                                      onChange={(e) => actualizarSharedField(cm.id, 'horario_inicio', e.target.value)}
+                                      onBlur={() => handleSharedBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300'}`}
+                                    />
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <input type="time" value={row.horario_fin || ''}
+                                      onChange={(e) => actualizarSharedField(cm.id, 'horario_fin', e.target.value)}
+                                      onBlur={() => handleSharedBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300'}`}
+                                    />
+                                  </td>
+                                  {!esVirtual && (
+                                    <td className="px-3 py-2">
+                                      <input value={row.aula} onChange={(e) => actualizarSharedField(cm.id, 'aula', e.target.value)}
+                                        onBlur={() => handleSharedBlur(cm.id)}
+                                        className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
+                                        placeholder="Ej: 201"
+                                      />
+                                    </td>
+                                  )}
+                                  <td className="px-3 py-2">
+                                    <input value={row.profesor} onChange={(e) => actualizarSharedField(cm.id, 'profesor', e.target.value)}
+                                      onBlur={() => handleSharedBlur(cm.id)}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
+                                      placeholder="Opcional"
+                                    />
+                                  </td>
                                 </tr>
-                              </thead>
-                              <tbody>
-                                {materiasCuatriActual.map((cm) => {
-                                  const row = materiasForm[cm.id] || { dia: '', horario: '', aula: '', profesor: '' }
-                                  const isAssigned = materiaIdsAsignadas.has(cm.id)
-                                  const horarioExistente = horariosDeEsta.find((h) => h.carrera_materia_id === cm.id)
-                                  return (
-                                    <tr key={cm.id} className={`border-b border-gray-100 ${isAssigned ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                      <td className="px-3 py-2">
-                                        <div className="flex items-center gap-1">
-                                          <span className={`text-sm font-medium ${isAssigned ? 'text-gray-800' : 'text-gray-500'}`}>
-                                            {isAssigned ? '' : '(Sin asignar) '}{cm.materia?.nombre}
-                                          </span>
-                                          {cm.carga_horaria_semanal && (
-                                            <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
-                                          )}
-                                          {isAssigned && (
-                                            <button onClick={() => removerMateriaDeComision(nombre, cm.id)}
-                                              className="ml-1 text-red-400 hover:text-red-600 text-xs"
-                                              title="Remover de esta comision"
-                                            >&times;</button>
-                                          )}
-                                        </div>
-                                      </td>
-                                      <td className="px-3 py-2">
-                                        <select value={row.dia} onChange={(e) => actualizarComisionField(nombre, cm.id, 'dia', e.target.value)}
-                                          onBlur={() => handleBlur(nombre, cm.id)}
-                                          className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
-                                        >
-                                          <option value="">—</option>
-                                          {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
-                                        </select>
-                                      </td>
-                                      <td className="px-3 py-2">
-                                        <input type="time" value={row.horario_inicio || ''}
-                                          onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_inicio', e.target.value)}
-                                          onBlur={() => handleBlur(nombre, cm.id)}
-                                          className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300'}`}
-                                        />
-                                      </td>
-                                      <td className="px-3 py-2">
-                                        <input type="time" value={row.horario_fin || ''}
-                                          onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_fin', e.target.value)}
-                                          onBlur={() => handleBlur(nombre, cm.id)}
-                                          className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300'}`}
-                                        />
-                                      </td>
-                                      {!esVirtual && (
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {Array.from(selectedNombres).sort().map((nombre) => {
+                      const materiasForm = formsPorComision[nombre] || {}
+                      const materiaIdsAsignadas = materiaIdsAsignadasPorNombre[nombre] || new Set()
+                      const horariosDeEsta = horariosPorComision[nombre] || []
+                      return (
+                        <div key={nombre} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className="text-sm font-bold text-gray-700">
+                              3. Horarios — Comisión {letraDeComision(nombre)}
+                              <span className="text-gray-400 font-normal ml-2">
+                                ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
+                              </span>
+                            </h3>
+                            <button onClick={() => cargarHorariosComision(nombre)} disabled={guardandoBatch}
+                              className="px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white text-xs font-semibold rounded-lg transition"
+                            >{guardandoBatch ? 'Guardando...' : 'Guardar Horarios'}</button>
+                          </div>
+                          <p className="text-[10px] text-gray-400 mb-3">Completá día, horario inicio/fin y aula. Profesor es opcional.</p>
+
+                          {materiasCuatriActual.length === 0 ? (
+                            <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
+                          ) : (
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left border-collapse">
+                                <thead>
+                                  <tr className="border-b border-gray-200">
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Día</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Inicio</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Fin</th>
+                                    {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {materiasCuatriActual.map((cm) => {
+                                    const row = materiasForm[cm.id] || { dia: '', horario: '', aula: '', profesor: '' }
+                                    const isAssigned = materiaIdsAsignadas.has(cm.id)
+                                    const horarioExistente = horariosDeEsta.find((h) => h.carrera_materia_id === cm.id)
+                                    return (
+                                      <tr key={cm.id} className={`border-b border-gray-100 ${isAssigned ? 'bg-white' : 'bg-gray-50/50'}`}>
                                         <td className="px-3 py-2">
-                                          <input value={row.aula} onChange={(e) => actualizarComisionField(nombre, cm.id, 'aula', e.target.value)}
+                                          <div className="flex items-center gap-1">
+                                            <span className={`text-sm font-medium ${isAssigned ? 'text-gray-800' : 'text-gray-500'}`}>
+                                              {isAssigned ? '' : '(Sin asignar) '}{cm.materia?.nombre}
+                                            </span>
+                                            {cm.carga_horaria_semanal && (
+                                              <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
+                                            )}
+                                            {isAssigned && (
+                                              <button onClick={() => removerMateriaDeComision(nombre, cm.id)}
+                                                className="ml-1 text-red-400 hover:text-red-600 text-xs"
+                                                title="Remover de esta comision"
+                                              >&times;</button>
+                                            )}
+                                          </div>
+                                        </td>
+                                        <td className="px-3 py-2">
+                                          <select value={row.dia} onChange={(e) => actualizarComisionField(nombre, cm.id, 'dia', e.target.value)}
                                             onBlur={() => handleBlur(nombre, cm.id)}
-                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
-                                            placeholder="Ej: 201"
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
+                                          >
+                                            <option value="">—</option>
+                                            {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
+                                          </select>
+                                        </td>
+                                        <td className="px-3 py-2">
+                                          <input type="time" value={row.horario_inicio || ''}
+                                            onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_inicio', e.target.value)}
+                                            onBlur={() => handleBlur(nombre, cm.id)}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300'}`}
                                           />
                                         </td>
-                                      )}
-                                      <td className="px-3 py-2">
-                                        <input value={row.profesor} onChange={(e) => actualizarComisionField(nombre, cm.id, 'profesor', e.target.value)}
-                                          onBlur={() => handleBlur(nombre, cm.id)}
-                                          className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
-                                          placeholder="Opcional"
-                                        />
-                                      </td>
-                                      <td className="px-3 py-2">
-                                        {horarioExistente && (
-                                          <button onClick={() => borrarHorario(nombre, cm.id)}
-                                            className="text-xs font-semibold text-red-500 hover:text-red-700"
-                                            title="Eliminar horario"
-                                          >Borrar</button>
+                                        <td className="px-3 py-2">
+                                          <input type="time" value={row.horario_fin || ''}
+                                            onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_fin', e.target.value)}
+                                            onBlur={() => handleBlur(nombre, cm.id)}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300'}`}
+                                          />
+                                        </td>
+                                        {!esVirtual && (
+                                          <td className="px-3 py-2">
+                                            <input value={row.aula} onChange={(e) => actualizarComisionField(nombre, cm.id, 'aula', e.target.value)}
+                                              onBlur={() => handleBlur(nombre, cm.id)}
+                                              className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
+                                              placeholder="Ej: 201"
+                                            />
+                                          </td>
                                         )}
-                                      </td>
-                                    </tr>
-                                  )
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+                                        <td className="px-3 py-2">
+                                          <input value={row.profesor} onChange={(e) => actualizarComisionField(nombre, cm.id, 'profesor', e.target.value)}
+                                            onBlur={() => handleBlur(nombre, cm.id)}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
+                                            placeholder="Opcional"
+                                          />
+                                        </td>
+                                        <td className="px-3 py-2">
+                                          {horarioExistente && (
+                                            <button onClick={() => borrarHorario(nombre, cm.id)}
+                                              className="text-xs font-semibold text-red-500 hover:text-red-700"
+                                              title="Eliminar horario"
+                                            >Borrar</button>
+                                          )}
+                                        </td>
+                                      </tr>
+                                    )
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
               ) : (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
                   <p className="text-gray-500 text-sm font-medium mb-1">Seleccioná una comisión</p>
