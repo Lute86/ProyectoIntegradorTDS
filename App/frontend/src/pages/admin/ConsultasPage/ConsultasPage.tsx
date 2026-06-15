@@ -4,7 +4,7 @@ import { Consulta, useConsultasStore } from '../../../stores/consultasStore';
 import ConsultaDetailModal from '../../../components/admin/ConsultaDetailModal';
 
 const ConsultasPage = () => {
-  const { consultas, isLoading, error, fetchConsultas, eliminarConsulta } = useConsultasStore();
+  const { consultas, isLoading, error, fetchConsultas, eliminarConsulta, responderConsulta } = useConsultasStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [consultaActiva, setConsultaActiva] = useState<Consulta | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -32,6 +32,12 @@ const ConsultasPage = () => {
   const handleEliminar = async (id: number) => {
     if (window.confirm('Confirma que desea eliminar esta consulta?')) {
       await eliminarConsulta(id);
+    }
+  };
+
+  const handleFinalizar = async (c: Consulta) => {
+    if (window.confirm('Marcar esta consulta como finalizada?')) {
+      await responderConsulta(c.id, c.respuesta || 'Respondido via email directo');
     }
   };
 
@@ -93,6 +99,9 @@ const ConsultasPage = () => {
             actions={(c) => (
               <div className="flex gap-2 justify-end">
                 <button onClick={() => abrirDetalle(c)} className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">Ver Detalle</button>
+                {!c.respondido && (
+                  <button onClick={() => handleFinalizar(c)} className="px-3 py-1.5 text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">Finalizar</button>
+                )}
                 <button onClick={() => handleEliminar(c.id)} className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">Borrar</button>
               </div>
             )}

@@ -28,18 +28,13 @@ const NoticiasPage = () => {
 
   const columns: Column<Noticia>[] = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Titulo',
       accessor: (n) => (
         <div className="flex flex-col">
           <span className="font-semibold text-gray-800 text-sm">{n.titulo}</span>
-          <span className="text-xs text-gray-400 lg:hidden">{n.categoria?.nombre ?? '-'}</span>
         </div>
       ),
+      className: 'w-1/2',
     },
     {
       header: 'Categoria',
@@ -62,8 +57,12 @@ const NoticiasPage = () => {
     },
     {
       header: 'Fecha',
-      accessor: 'fecha_publicacion',
-      className: 'hidden lg:table-cell text-sm text-gray-500',
+      accessor: (n) => {
+        const d = new Date(n.fecha_publicacion);
+        const f = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        return <span className="whitespace-nowrap text-sm">{f}</span>;
+      },
+      className: 'hidden lg:table-cell text-gray-500 w-32',
     },
     {
       header: 'Acciones',
@@ -83,7 +82,7 @@ const NoticiasPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: 'w-32 text-right',
     },
   ];
 

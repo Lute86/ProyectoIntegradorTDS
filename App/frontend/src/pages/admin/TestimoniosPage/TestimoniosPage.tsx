@@ -33,24 +33,21 @@ const TestimoniosPage = () => {
 
   const columns: Column<Testimonio>[] = [
     {
-      header: 'ID',
-      accessor: 'id',
-      className: 'w-16 text-gray-400 font-mono hidden lg:table-cell',
-    },
-    {
       header: 'Autor',
       accessor: (t) => (
-        <div className="flex flex-col">
-          <span className="font-semibold text-gray-800 text-sm">{t.autor_nombre}</span>
-          <span className="text-xs text-gray-400">{t.autor_carrera}</span>
+        <div className="flex flex-col truncate">
+          <span className="font-semibold text-gray-800 text-sm truncate">{t.autor_nombre}</span>
+          <span className="text-xs text-gray-400 truncate">{t.autor_carrera}</span>
         </div>
       ),
+      className: 'w-1/4 max-w-[200px]',
     },
     {
       header: 'Contenido',
       accessor: (t) => (
-        <p className="text-sm text-gray-600 truncate max-w-xs">{t.texto}</p>
+        <p className="text-sm text-gray-600 truncate">{t.texto}</p>
       ),
+      className: 'w-1/2 lg:w-[60%]',
     },
     {
       header: 'Estado',
@@ -65,6 +62,7 @@ const TestimoniosPage = () => {
           {t.visible ? 'Visible' : 'Oculto'}
         </span>
       ),
+      className: 'w-24',
     },
     {
       header: 'Acciones',
@@ -84,7 +82,7 @@ const TestimoniosPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: 'w-32 text-right',
     },
   ];
 

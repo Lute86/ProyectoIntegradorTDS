@@ -87,7 +87,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[65vh] pr-1">
           {/* Campo: Nombre */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
