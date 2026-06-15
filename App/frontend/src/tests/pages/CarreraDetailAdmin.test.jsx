@@ -140,7 +140,7 @@ describe('CarreraDetailAdmin - Horarios', () => {
   it('muestra mensaje placeholder si no hay comision seleccionada', () => {
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
-    expect(screen.getByText('Selecciona o crea una comision para gestionar horarios.')).toBeInTheDocument()
+    expect(screen.getByText('No hay comisiones para este período.')).toBeInTheDocument()
   })
 
   it('muestra error parcial cuando algunas filas fallan al guardar', async () => {
