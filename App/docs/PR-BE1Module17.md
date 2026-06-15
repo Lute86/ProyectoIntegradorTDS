@@ -51,7 +51,7 @@ Se agrega endpoint `GET /api/stats/recent-activity` que retorna los últimos ite
     },
     {
       "tipo": "evento",
-      "texto": "Evento: Feria de就业",
+      "texto": "Evento: Feria de",
       "timestamp": "2026-06-20T09:00:00.000Z",
       "id": 3
     },
@@ -132,4 +132,4 @@ make tests-back arg=stats
 - Parámetro `limit` configurable por query string
 - Filtro por tipos específicos (`?tipos=noticia,evento`)
 - Cache con TTL en el frontend (patrón `_lastFetched` existente en noticiasStore)
-- Endpoint público para活动 reciente del sitio (sin auth)
+- Endpoint público para actividades reciente del sitio (sin auth)
