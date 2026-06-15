@@ -31,6 +31,7 @@ import consultaModel from './consulta.model.js';
 import horarioModel from './horario.model.js';
 import carreraMateriaModel from './carreraMateria.model.js';
 import comisionModel from './comision.model.js';
+import comisionCarreraMateriaModel from './comisionCarreraMateria.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -66,6 +67,9 @@ models.CarreraMateria = CarreraMateria;
 
 const Comision = comisionModel(sequelizeInstance, DataTypes);
 models.Comision = Comision;
+
+const ComisionCarreraMateria = comisionCarreraMateriaModel(sequelizeInstance, DataTypes);
+models.ComisionCarreraMateria = ComisionCarreraMateria;
 
 const Imagen = imagenModel(sequelizeInstance, DataTypes);
 models.Imagen = Imagen;
