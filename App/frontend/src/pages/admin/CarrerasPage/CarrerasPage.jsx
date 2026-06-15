@@ -97,6 +97,7 @@ const AdminCarrerasPage = () => {
     },
     {
       header: 'Acciones',
+      className: 'w-32 text-right',
       accessor: (c) => (
         <div className="flex gap-2 justify-end">
           <button

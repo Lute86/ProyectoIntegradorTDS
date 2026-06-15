@@ -40,7 +40,11 @@ const EventosPage = () => {
     },
     {
       header: 'Fecha',
-      accessor: (e) => <span className="text-sm">{e.fecha}</span>,
+      accessor: (e) => {
+        const d = new Date(e.fecha);
+        const f = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        return <span className="whitespace-nowrap text-sm">{f}</span>;
+      },
     },
     {
       header: 'Ubicacion',
@@ -80,7 +84,7 @@ const EventosPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: 'w-32 text-right',
     },
   ];
 

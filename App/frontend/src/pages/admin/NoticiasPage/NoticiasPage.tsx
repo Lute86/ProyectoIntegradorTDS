@@ -57,7 +57,11 @@ const NoticiasPage = () => {
     },
     {
       header: 'Fecha',
-      accessor: (n) => <span className="whitespace-nowrap text-sm">{new Date(n.fecha_publicacion).toLocaleDateString('es-AR')}</span>,
+      accessor: (n) => {
+        const d = new Date(n.fecha_publicacion);
+        const f = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        return <span className="whitespace-nowrap text-sm">{f}</span>;
+      },
       className: 'hidden lg:table-cell text-gray-500 w-32',
     },
     {
@@ -78,7 +82,7 @@ const NoticiasPage = () => {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: 'w-32 text-right',
     },
   ];
 
