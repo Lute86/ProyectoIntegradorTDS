@@ -52,7 +52,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -66,12 +66,49 @@ describe('Comision Endpoints', () => {
       expect(res.body.data.activo).toBe(true);
     });
 
+    it('debería crear una comisión con materias', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_id: carreraId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
+          carrera_materias_ids: [carreraMateriaId],
+        })
+        .expect(201);
+
+      expect(res.body.success).toBe(true);
+    });
+
+    it('debería crear una comisión sin materias', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_id: carreraId,
+          nombre: 'B',
+          anio_lectivo: 2026,
+          semestre: 1,
+        })
+        .expect(201);
+
+      expect(res.body.success).toBe(true);
+
+      const detail = await request(app)
+        .get(`/api/comisiones/${res.body.data.id}`)
+        .expect(200);
+
+      expect(detail.body.data.carrerasMaterias).toHaveLength(0);
+    });
+
     it('debería crear una comisión con nombre numérico', async () => {
       const res = await request(app)
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: '1',
           anio_lectivo: 2026,
           semestre: 1,
@@ -87,7 +124,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'MAÑANA',
           anio_lectivo: 2026,
           semestre: 1,
@@ -103,7 +140,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${profesorToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -118,7 +155,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           anio_lectivo: 2026,
           semestre: 1,
         })
@@ -128,7 +165,7 @@ describe('Comision Endpoints', () => {
       expect(res.body.errors).toBeDefined();
     });
 
-    it('debería fallar si falta carrera_materia_id', async () => {
+    it('debería fallar si falta carrera_id', async () => {
       const res = await request(app)
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -147,7 +184,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           semestre: 1,
         })
@@ -161,7 +198,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
         })
@@ -175,7 +212,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 3,
@@ -185,15 +222,31 @@ describe('Comision Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si la carrera_materia no existe', async () => {
+    it('debería fallar si la carrera no existe', async () => {
       const res = await request(app)
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: 9999,
+          carrera_id: 9999,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
+        })
+        .expect(409);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar si carrera_materias_ids contiene ID inexistente', async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_id: carreraId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
+          carrera_materias_ids: [9999],
         })
         .expect(409);
 
@@ -204,7 +257,7 @@ describe('Comision Endpoints', () => {
       const res = await request(app)
         .post('/api/comisiones')
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -219,7 +272,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${tutorToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -234,7 +287,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A'.repeat(21),
           anio_lectivo: 2026,
           semestre: 1,
@@ -251,7 +304,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -261,7 +314,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'B',
           anio_lectivo: 2026,
           semestre: 1,
@@ -271,7 +324,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: '1',
           anio_lectivo: 2026,
           semestre: 2,
@@ -314,13 +367,14 @@ describe('Comision Endpoints', () => {
       expect(res.body.data).toHaveLength(2);
     });
 
-    it('debería filtrar por carrera_materia_id', async () => {
+    it('debería incluir carrerasMaterias en la respuesta', async () => {
       const res = await request(app)
-        .get(`/api/comisiones?carrera_materia_id=${carreraMateriaId}`)
+        .get('/api/comisiones')
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(3);
+      expect(res.body.data[0].carrerasMaterias).toBeDefined();
+      expect(Array.isArray(res.body.data[0].carrerasMaterias)).toBe(true);
     });
 
     it('debería obtener comisiones sin token (público)', async () => {
@@ -341,10 +395,11 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
+          carrera_materias_ids: [carreraMateriaId],
         });
       comisionId = res.body.data.id;
     });
@@ -357,7 +412,9 @@ describe('Comision Endpoints', () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.id).toBe(comisionId);
       expect(res.body.data.nombre).toBe('A');
-      expect(res.body.data.carreraMateria).toBeDefined();
+      expect(res.body.data.carrerasMaterias).toBeDefined();
+      expect(Array.isArray(res.body.data.carrerasMaterias)).toBe(true);
+      expect(res.body.data.carrerasMaterias).toHaveLength(1);
     });
 
     it('debería incluir horarios vacíos al inicio', async () => {
@@ -404,7 +461,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -445,6 +502,34 @@ describe('Comision Endpoints', () => {
       expect(res.body.data.semestre).toBe(2);
     });
 
+    it('debería actualizar materias via carrera_materias_ids', async () => {
+      const materia2Res = await request(app)
+        .post('/api/materias')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ nombre: 'Física' });
+      const materia2Id = materia2Res.body.data.id;
+
+      const cm2Res = await request(app)
+        .post(`/api/carreras/${carreraId}/materias`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ materia_id: materia2Id, cuatrimestre: 2, carga_horaria_semanal: 4 });
+      const cm2Id = cm2Res.body.data.id;
+
+      const res = await request(app)
+        .put(`/api/comisiones/${comisionId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ carrera_materias_ids: [carreraMateriaId, cm2Id] })
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+
+      const detail = await request(app)
+        .get(`/api/comisiones/${comisionId}`)
+        .expect(200);
+
+      expect(detail.body.data.carrerasMaterias).toHaveLength(2);
+    });
+
     it('debería fallar al actualizar comisión con token de profesor (solo admin)', async () => {
       const res = await request(app)
         .put(`/api/comisiones/${comisionId}`)
@@ -465,11 +550,11 @@ describe('Comision Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('debería fallar si se asigna una carrera_materia inexistente', async () => {
+    it('debería fallar si se asigna una carrera inexistente', async () => {
       const res = await request(app)
         .put(`/api/comisiones/${comisionId}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ carrera_materia_id: 9999 })
+        .send({ carrera_id: 9999 })
         .expect(409);
 
       expect(res.body.success).toBe(false);
@@ -486,6 +571,124 @@ describe('Comision Endpoints', () => {
     });
   });
 
+  describe('POST /api/comisiones/:id/materias', () => {
+    let comisionId;
+
+    beforeEach(async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_id: carreraId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
+        });
+      comisionId = res.body.data.id;
+    });
+
+    it('debería asignar materias a una comisión', async () => {
+      const res = await request(app)
+        .post(`/api/comisiones/${comisionId}/materias`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ carrera_materias_ids: [carreraMateriaId] })
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+
+      const detail = await request(app)
+        .get(`/api/comisiones/${comisionId}`)
+        .expect(200);
+
+      expect(detail.body.data.carrerasMaterias).toHaveLength(1);
+    });
+
+    it('debería fallar sin token', async () => {
+      const res = await request(app)
+        .post(`/api/comisiones/${comisionId}/materias`)
+        .send({ carrera_materias_ids: [carreraMateriaId] })
+        .expect(401);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar con token de profesor (solo admin)', async () => {
+      const res = await request(app)
+        .post(`/api/comisiones/${comisionId}/materias`)
+        .set('Authorization', `Bearer ${profesorToken}`)
+        .send({ carrera_materias_ids: [carreraMateriaId] })
+        .expect(403);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería fallar si la comisión no existe', async () => {
+      const res = await request(app)
+        .post('/api/comisiones/9999/materias')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ carrera_materias_ids: [carreraMateriaId] })
+        .expect(404);
+
+      expect(res.body.success).toBe(false);
+    });
+  });
+
+  describe('DELETE /api/comisiones/:id/materias/:carreraMateriaId', () => {
+    let comisionId;
+
+    beforeEach(async () => {
+      const res = await request(app)
+        .post('/api/comisiones')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          carrera_id: carreraId,
+          nombre: 'A',
+          anio_lectivo: 2026,
+          semestre: 1,
+          carrera_materias_ids: [carreraMateriaId],
+        });
+      comisionId = res.body.data.id;
+    });
+
+    it('debería remover una materia de la comisión', async () => {
+      const res = await request(app)
+        .delete(`/api/comisiones/${comisionId}/materias/${carreraMateriaId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+
+      const detail = await request(app)
+        .get(`/api/comisiones/${comisionId}`)
+        .expect(200);
+
+      expect(detail.body.data.carrerasMaterias).toHaveLength(0);
+    });
+
+    it('debería fallar si la materia no está asignada', async () => {
+      const res = await request(app)
+        .delete(`/api/comisiones/${comisionId}/materias/${carreraMateriaId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+
+      const res2 = await request(app)
+        .delete(`/api/comisiones/${comisionId}/materias/${carreraMateriaId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+
+      expect(res2.body.success).toBe(false);
+    });
+
+    it('debería fallar si la comisión no existe', async () => {
+      const res = await request(app)
+        .delete('/api/comisiones/9999/materias/1')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+
+      expect(res.body.success).toBe(false);
+    });
+  });
+
   describe('DELETE /api/comisiones/:id', () => {
     let comisionId;
 
@@ -494,7 +697,7 @@ describe('Comision Endpoints', () => {
         .post('/api/comisiones')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          carrera_materia_id: carreraMateriaId,
+          carrera_id: carreraId,
           nombre: 'A',
           anio_lectivo: 2026,
           semestre: 1,
@@ -544,6 +747,11 @@ describe('Comision Endpoints', () => {
     });
 
     it('debería fallar al eliminar comisión con horarios asociados', async () => {
+      await request(app)
+        .post(`/api/comisiones/${comisionId}/materias`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ carrera_materias_ids: [carreraMateriaId] });
+
       await request(app)
         .post('/api/horarios')
         .set('Authorization', `Bearer ${adminToken}`)

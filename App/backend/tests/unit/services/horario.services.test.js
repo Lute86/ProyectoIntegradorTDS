@@ -6,6 +6,7 @@ jest.unstable_mockModule('../../../src/models/index.js', () => ({
     Horario: createModelMock(),
     CarreraMateria: createModelMock(),
     Comision: createModelMock(),
+    ComisionCarreraMateria: createModelMock(),
     Materia: createModelMock(),
     Carrera: createModelMock(),
   },
@@ -90,6 +91,7 @@ describe('horario.services', () => {
     it('deberia crear un horario si la carrera_materia y comision existen', async () => {
       models.CarreraMateria.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
       models.Comision.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+      models.ComisionCarreraMateria.findOne.mockResolvedValue(createInstanceMock({ comision_id: 1, carrera_materia_id: 1 }));
       models.Horario.create.mockResolvedValue(
         createInstanceMock({ id: 1, carrera_materia_id: 1, comision_id: 1, dia: 'Lunes' })
       );
@@ -124,6 +126,16 @@ describe('horario.services', () => {
 
       await expect(create({ carrera_materia_id: 1, comision_id: 999 })).rejects.toThrow(
         'La comisión especificada no existe'
+      );
+    });
+
+    it('deberia lanzar error si la materia no esta asignada a la comision', async () => {
+      models.CarreraMateria.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+      models.Comision.findByPk.mockResolvedValue(createInstanceMock({ id: 1 }));
+      models.ComisionCarreraMateria.findOne.mockResolvedValue(null);
+
+      await expect(create({ carrera_materia_id: 1, comision_id: 1 })).rejects.toThrow(
+        'La materia no está asignada a esta comisión'
       );
     });
   });

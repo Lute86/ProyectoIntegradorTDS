@@ -99,6 +99,13 @@ export const create = handleDbErrors(async (data) => {
     if (!comision) {
       throw new ConflictError('La comisión especificada no existe');
     }
+
+    const pairExists = await models.ComisionCarreraMateria.findOne({
+      where: { comision_id: data.comision_id, carrera_materia_id: data.carrera_materia_id },
+    });
+    if (!pairExists) {
+      throw new ConflictError('La materia no está asignada a esta comisión. Asignala primero desde POST /api/comisiones/:id/materias');
+    }
   }
 
   const horario = await models.Horario.create(data);
