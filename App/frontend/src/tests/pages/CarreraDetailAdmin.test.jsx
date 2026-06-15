@@ -109,14 +109,14 @@ describe('CarreraDetailAdmin - Horarios', () => {
     fireEvent.click(comBtn)
     // The selects are the dia dropdowns (2 materias)
     const selects = screen.getAllByRole('combobox')
-    // Filter out the semestre select from the comision creation modal (not open)
-    const diaSelects = selects.filter((s) => s.tagName === 'SELECT')
+    // Filter out the year select (value != '') to keep only the dia selects
+    const diaSelects = selects.filter((s) => s.tagName === 'SELECT' && !s.value)
     diaSelects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
     const timeInputs = document.querySelectorAll('input[type="time"]')
     timeInputs.forEach((i, idx) => fireEvent.change(i, { target: { value: idx % 2 === 0 ? '18:00' : '20:00' } }))
     const aulas = screen.getAllByPlaceholderText('Ej: 201')
     aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
-    fireEvent.click(screen.getByText('Cargar Horarios'))
+    fireEvent.click(screen.getByText('Guardar Horarios'))
 
     await waitFor(() => {
       expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({
@@ -130,17 +130,19 @@ describe('CarreraDetailAdmin - Horarios', () => {
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
     fireEvent.click(await screen.findByText('A'))
-    fireEvent.click(screen.getByText('Cargar Horarios'))
+    fireEvent.click(screen.getByText('Guardar Horarios'))
 
     await waitFor(() => {
       expect(screen.getByText(/Completa al menos dia y horario/)).toBeInTheDocument()
     })
   })
 
-  it('muestra mensaje placeholder si no hay comision seleccionada', () => {
+  it('muestra mensaje placeholder si no hay comision seleccionada', async () => {
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
-    expect(screen.getByText('No hay comisiones para este período.')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('No hay comisiones. Creá una nueva.')).toBeInTheDocument()
+    })
   })
 
   it('muestra error parcial cuando algunas filas fallan al guardar', async () => {
@@ -151,13 +153,13 @@ describe('CarreraDetailAdmin - Horarios', () => {
     fireEvent.click(screen.getByText('Horarios por Comision'))
     fireEvent.click(await screen.findByText('A'))
 
-    const selects = screen.getAllByRole('combobox')
+    const selects = screen.getAllByRole('combobox').filter((s) => s.tagName === 'SELECT' && !s.value)
     selects.forEach((s) => fireEvent.change(s, { target: { value: 'Lunes' } }))
     const timeInputs = document.querySelectorAll('input[type="time"]')
     timeInputs.forEach((i, idx) => fireEvent.change(i, { target: { value: idx % 2 === 0 ? '18:00' : '20:00' } }))
     const aulas = screen.getAllByPlaceholderText('Ej: 201')
     aulas.forEach((a) => fireEvent.change(a, { target: { value: '201' } }))
-    fireEvent.click(screen.getByText('Cargar Horarios'))
+    fireEvent.click(screen.getByText('Guardar Horarios'))
 
     await waitFor(() => {
       expect(screen.getByText(/1 guardado, 1 fallaron/)).toBeInTheDocument()

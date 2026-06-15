@@ -15,7 +15,7 @@ const titles = {
   personalizar: 'Personalizar Sitio',
   ajustes: 'Ajustes Generales',
   consultas: 'Consultas',
-  comisiones: 'Comisiones',
+
 };
 
 export default function AdminTopbar() {
