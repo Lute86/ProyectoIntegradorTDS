@@ -1,5 +1,15 @@
 import { useSiteConfigStore } from "../../stores/siteConfigStore";
 import { clsx } from "clsx";
+import ColorPicker from "../ui/ColorPicker";
+
+const COLOR_LABELS: Record<string, string> = {
+  primary: "Color Principal",
+  secondary: "Color Secundario",
+  accent: "Color de Acento",
+  surface: "Superficie",
+  background: "Fondo",
+  text: "Texto",
+};
 
 interface Tema {
   id: string;
@@ -15,7 +25,6 @@ interface Tema {
   };
 }
 
-/* Paletas de colores predefinidas para cada tema */
 const TEMAS: Tema[] = [
   {
     id: "moderno",
@@ -47,40 +56,55 @@ const ThemePresets = () => {
   const { config, updateColors } = useSiteConfigStore();
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {TEMAS.map((tema) => {
-        const activo = config.themePreset === tema.id;
-        return (
-          <button
-            key={tema.id}
-            type="button"
-            onClick={() => {
-              updateColors(tema.colores);
-              useSiteConfigStore.getState().updateConfig({ themePreset: tema.id });
-            }}
-            className={clsx(
-              "text-left p-4 rounded-xl border-2 transition-all",
-              activo
-                ? "border-blue-500 bg-blue-50 shadow-md"
-                : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
-            )}
-          >
-            <h3 className="text-sm font-bold text-gray-900 mb-1">{tema.nombre}</h3>
-            <p className="text-[10px] text-gray-500 mb-3">{tema.descripcion}</p>
+    <div className="space-y-6">
+      {/* Grilla de temas predefinidos */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {TEMAS.map((tema) => {
+          const activo = config.themePreset === tema.id;
+          return (
+            <button
+              key={tema.id}
+              type="button"
+              onClick={() => {
+                updateColors(tema.colores);
+                useSiteConfigStore.getState().updateConfig({ themePreset: tema.id });
+              }}
+              className={clsx(
+                "text-left p-4 rounded-xl border-2 transition-all",
+                activo
+                  ? "border-blue-500 bg-blue-50 shadow-md"
+                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
+              )}
+            >
+              <h3 className="text-sm font-bold text-gray-900 mb-1">{tema.nombre}</h3>
+              <p className="text-[10px] text-gray-500 mb-3">{tema.descripcion}</p>
+              <div className="flex h-5 rounded-lg overflow-hidden border border-gray-200">
+                {Object.values(tema.colores).map((color) => (
+                  <div key={color} className="flex-1" style={{ backgroundColor: color }} />
+                ))}
+              </div>
+              <p className="text-[10px] text-gray-400 mt-2 font-mono">{Object.values(tema.colores).join(" | ")}</p>
+            </button>
+          );
+        })}
+      </div>
 
-            {/* Barra de colores del tema */}
-            <div className="flex h-5 rounded-lg overflow-hidden border border-gray-200">
-              {Object.values(tema.colores).map((color) => (
-                <div key={color} className="flex-1" style={{ backgroundColor: color }} />
-              ))}
-            </div>
-
-            <p className="text-[10px] text-gray-400 mt-2 font-mono">
-              {Object.values(tema.colores).join(" | ")}
-            </p>
-          </button>
-        );
-      })}
+      {/* Selectores de color individuales */}
+      <div className="border-t border-gray-200 pt-4">
+        <p className="text-xs text-gray-500 mb-4">Ajuste fino de colores:</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {Object.entries(config.colors)
+            .filter(([key]) => key !== "card")
+            .map(([key, value]) => (
+              <ColorPicker
+                key={key}
+                label={COLOR_LABELS[key] || key}
+                value={value}
+                onChange={(color) => updateColors({ [key]: color })}
+              />
+            ))}
+        </div>
+      </div>
     </div>
   );
 };
