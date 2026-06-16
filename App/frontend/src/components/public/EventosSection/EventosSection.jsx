@@ -6,7 +6,7 @@ import useScrollReveal from '../../../hooks/useScrollReveal'
 export default function EventosSection({ eventos, onVerDetalle }) {
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 400 })
 
   useEffect(() => {
     const updateVisible = () => {
@@ -38,10 +38,12 @@ export default function EventosSection({ eventos, onVerDetalle }) {
   }, [goNext, total, visible])
 
   return (
-    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="max-w-content mx-auto px-4">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-body dark:text-white">Proximos Eventos</h2>
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+            Proximos Eventos
+          </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">No te pierdas las actividades del instituto</p>
         </div>
 
@@ -61,7 +63,7 @@ export default function EventosSection({ eventos, onVerDetalle }) {
               <div className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
                 {ultimos.map((e) => (
-                  <div key={e.id} className="px-2 shrink-0"
+                  <div key={e.id} className="px-3 shrink-0"
                     style={{ flex: `0 0 ${100 / visible}%` }}>
                     <div className="h-full"><EventosCard evento={e} onVerDetalle={() => onVerDetalle(e)} /></div>
                   </div>

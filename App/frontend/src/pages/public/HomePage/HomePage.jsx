@@ -37,7 +37,7 @@ export default function HomePage() {
   const [selectedEvento, setSelectedEvento] = useState(null)
   const { noticias: storeNoticias, fetchNoticias } = useNoticiasStore()
   const { config } = useSiteConfigStore()
-  const layout = useSiteConfigStore((s) => s.config.layout)
+  const layout = config?.layout || 'full-width'
   const { eventos, fetchEventos } = useEventosStore()
   const { testimonios, fetchTestimonios } = useTestimoniosStore()
 
@@ -76,12 +76,12 @@ export default function HomePage() {
   }, [config.sections, carreras, noticias, eventos, testimonios])
 
   return (
-    <div className={`dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg`}>
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         {secciones.hero}
-      </div>
-      <div className={`${layout === 'boxed' ? 'max-w-[1280px] mx-auto px-4' : ''}`}>
-        {secciones.otras}
+        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4`}>
+          {secciones.otras}
+        </div>
       </div>
       {selectedEvento && (
         <EventoDetailModal

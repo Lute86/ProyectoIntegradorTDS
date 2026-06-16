@@ -102,10 +102,24 @@ export default function CarreraDetailPage() {
   }, [activeTab, carrera?.id, fetchedHorarios, loadingHorarios, fetchHorarios])
 
   const comisiones = useMemo(() => {
-    const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
+    const set = new Set(horarios.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean))
     return Array.from(set).sort()
   }, [horarios])
 
+  const comisionesDelCuatri = useMemo(() => {
+    const horariosBase = cuatriFilter
+      ? horarios.filter((h) => h.carreraMateria?.cuatrimestre === cuatriFilter)
+      : horarios
+    const set = new Set(
+      horariosBase.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean)
+    )
+    return Array.from(set).sort()
+  }, [horarios, cuatriFilter])
+
+  useEffect(() => {
+    setSelectedComision('')
+  }, [cuatriFilter])
+ 
   const cuatrimestres = useMemo(() => {
     const set = new Set(
       horarios.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
@@ -117,7 +131,7 @@ export default function CarreraDetailPage() {
     if (!selectedComision) return []
     let filtrados = horarios
     if (selectedComision !== 'Todas') {
-      filtrados = filtrados.filter((h) => h.comision === selectedComision)
+      filtrados = filtrados.filter((h) => (h.comisionInfo?.nombre || h.comision) === selectedComision)
     }
     if (cuatriFilter) {
       filtrados = filtrados.filter(
@@ -174,10 +188,11 @@ export default function CarreraDetailPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-12 md:py-16 bg-black/40`}>
+        <div className="absolute inset-0 bg-black/50" />
+        <div className={`relative z-10 ${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
           <div className="flex items-center gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
@@ -192,7 +207,7 @@ export default function CarreraDetailPage() {
             </div>
             <div>
               <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
-              <p className="text-blue-200">Tecnicatura en {carrera.nombre}</p>
+              <p className="text-white">Tecnicatura en {carrera.nombre}</p>
             </div>
           </div>
         </div>
@@ -313,7 +328,7 @@ export default function CarreraDetailPage() {
                             : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
                         }`}
                       >Todas</button>
-                      {comisiones.map((com) => (
+                      {comisionesDelCuatri.map((com) => (
                         <button key={com} onClick={() => setSelectedComision(com)}
                           className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                             selectedComision === com
@@ -346,7 +361,7 @@ export default function CarreraDetailPage() {
                               <tr key={i} className="border-t border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5">
                                 <td className="p-3 text-body dark:text-white font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
                                 {selectedComision === 'Todas' && (
-                                  <td className="p-3 text-body dark:text-white/70 font-semibold">Comision {h.comision}</td>
+                                  <td className="p-3 text-body dark:text-white/70 font-semibold">Comision {h.comisionInfo?.nombre || h.comision}</td>
                                 )}
                                 <td className="p-3 text-body dark:text-white/80">{h.dia}</td>
                                 <td className="p-3 text-body dark:text-white/70">{h.horario}</td>

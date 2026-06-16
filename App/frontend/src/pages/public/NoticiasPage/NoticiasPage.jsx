@@ -94,12 +94,13 @@ export default function NoticiasPage() {
     <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
           <h1 className="text-h1 mb-3">Noticias</h1>
-          <p className="text-blue-200 text-lg">Mantenete informado sobre las novedades del instituto</p>
+          <p className="text-white text-xl">Mantenete informado sobre las novedades del instituto</p>
         </div>
       </div>
 

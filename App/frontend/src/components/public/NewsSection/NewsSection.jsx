@@ -6,7 +6,7 @@ import useScrollReveal from '../../../hooks/useScrollReveal'
 export default function NewsSection({ noticias }) {
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 300 })
 
   useEffect(() => {
     const updateVisible = () => {
@@ -40,10 +40,12 @@ export default function NewsSection({ noticias }) {
   if (total === 0) return null
 
   return (
-    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-600 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="max-w-content mx-auto px-4">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-body dark:text-white">Ultimas Noticias</h2>
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+            Ultimas Noticias
+          </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">Mantenete informado sobre las novedades del instituto</p>
         </div>
 
@@ -60,7 +62,7 @@ export default function NewsSection({ noticias }) {
             <div className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * (100 / visible)}%)`, justifyContent: total <= visible ? 'center' : undefined }}>
               {ultimas.map((n) => (
-                <div key={n.id} className="px-2 shrink-0"
+                <div key={n.id} className="px-3 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
                   <NewsCard noticia={n} />
                 </div>

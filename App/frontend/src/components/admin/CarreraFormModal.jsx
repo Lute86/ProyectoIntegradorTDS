@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import useCarrerasStore from '../../stores/carrerasStore';
+import ColorPicker from '../ui/ColorPicker';
 
 // Esquema de validacion del formulario de carreras
 const carreraSchema = z.object({
@@ -70,7 +71,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
     } else {
       reset({
         nombre: '', slug: '', descripcion: '',
-        duracion: '', modalidad: '', color: '', activa: true,
+        duracion: '', modalidad: '', color: '#3B82F6', activa: true,
       });
     }
   }, [carreraToEdit, reset]);
@@ -194,12 +195,11 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
           {/* Filas: Color + Activa */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Color (hex)</label>
-              <input
-                {...register('color')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-mono"
-                placeholder="#3B82F6"
+            <div className="space-y-2">
+              <ColorPicker
+                label="Color"
+                value={watch('color') || '#3B82F6'}
+                onChange={(color) => setValue('color', color, { shouldValidate: true })}
               />
               {errors.color && (
                 <p className="text-xs text-red-500 mt-1">{errors.color.message}</p>

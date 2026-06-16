@@ -64,16 +64,17 @@ export default function NoticiaDetailPage() {
     return (
       <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
         <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-        <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        <div className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
           style={{ backgroundImage: `url(${noticiaBg})` }}
         >
-          <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="relative z-10 max-w-4xl mx-auto px-4 py-12 md:py-16">
             <div className="h-6 bg-blue-300/30 rounded w-24 mb-4 animate-pulse" />
             <div className="h-10 bg-blue-300/30 rounded w-2/3 mb-4 animate-pulse" />
             <div className="h-4 bg-blue-300/20 rounded w-1/3 animate-pulse" />
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
+<div className="max-w-4xl mx-auto px-4 -mt-4 mb-8">
           <div className="h-56 md:h-72 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
         </div>
         <div className="max-w-4xl mx-auto px-4 pb-16">
@@ -110,17 +111,18 @@ export default function NoticiaDetailPage() {
     <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 py-16 md:py-24">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>
             <IconoCategoria categoria={noticia.categoria} className="w-4 h-4" />
             {noticia.categoria}
           </span>
-          <div className="flex items-center gap-4 text-blue-200 text-sm">
+          <div className="flex items-center gap-4 text-white/80 text-base">
             <span>Por {noticia.autor}</span>
-            <span className="w-1 h-1 bg-blue-300 rounded-full" />
+            <span className="w-1 h-1 bg-white/60 rounded-full" />
             <span>{noticia.fecha}</span>
           </div>
         </div>

@@ -40,10 +40,10 @@ describe('HomePage', () => {
     useNoticiasStore.setState({ noticias: MOCK_NOTICIAS, fetchNoticias: vi.fn(), isLoading: false })
   })
 
-  it('renderiza todas las secciones', () => {
+  it('renderiza todas las secciones', async () => {
     render(<MemoryRouter><HomePage /></MemoryRouter>)
     expect(screen.getByText('Instituto de Formacion Tecnica Superior N° 29')).toBeInTheDocument()
-    expect(screen.getByText('1500+')).toBeInTheDocument()
+    expect(await screen.findByText('+1500', {}, { timeout: 3000 })).toBeInTheDocument()
     expect(screen.getByText('Nuestras Carreras')).toBeInTheDocument()
     expect(screen.getByText('Ultimas Noticias')).toBeInTheDocument()
     expect(screen.getByText('Lo que dicen nuestros estudiantes')).toBeInTheDocument()

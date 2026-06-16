@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useEventosStore } from '../../../stores/eventosStore'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
-import noticiaBg from '../../../assets/fonts/noticia1.png'
+import noticiaBg from '../../../assets/fonts/eventos.png'
 
 const estadoBadgeMap = {
   confirmado: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-300 dark:border-green-400/30',
@@ -84,12 +84,13 @@ export default function EventosPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
           <h1 className="text-h1 mb-3">Eventos</h1>
-          <p className="text-blue-200 text-lg">Actividades y novedades del instituto</p>
+          <p className="text-white text-xl">Actividades y novedades del instituto</p>
         </div>
       </div>
 
@@ -167,9 +168,9 @@ export default function EventosPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-xl font-bold text-body dark:text-white mb-3 leading-snug">{titulo}</h3>
-                            <p className="text-sm text-body/70 dark:text-white/70 mb-5 leading-relaxed line-clamp-2"
-                              dangerouslySetInnerHTML={{ __html: descripcion }}
-                            />
+                            <p className="text-sm text-body/70 dark:text-white/70 mb-5 leading-relaxed line-clamp-2">
+                              {descripcion?.replace(/<[^>]*>/g, '')}
+                            </p>
                             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-100 dark:border-white/10">
                               {badge && icon && (
                                 <div className="flex items-center gap-2 text-sm text-body/50 dark:text-white/50">
