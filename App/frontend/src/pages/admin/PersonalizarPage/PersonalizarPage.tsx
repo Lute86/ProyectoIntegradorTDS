@@ -37,7 +37,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 animate-in fade-in duration-500 flex-1 overflow-y-auto w-full bg-white">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 flex-1 overflow-y-auto w-full bg-white pb-24">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Personalizar Sitio</h1>
@@ -87,7 +87,7 @@ const PersonalizarPage = () => {
           <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
             <div>
               <h2 className="text-base font-bold text-gray-900">Orden de Secciones</h2>
-              <p className="text-xs text-gray-500">Arrastre las secciones para reordenarlas en la pagina principal.</p>
+              <p className="text-xs text-gray-500">Active, desactive o reordene las secciones. Los cambios afectaran tanto a la Landing Page como al Menu de Navegacion (Navbar).</p>
             </div>
             <SectionManager />
           </section>
