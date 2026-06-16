@@ -36,7 +36,7 @@ describe('UsuarioFormModal', () => {
     expect(screen.getByPlaceholderText('Ingrese el nombre')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Ingrese el apellido')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('correo@ifts29.edu.ar')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Minimo 6 caracteres')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Minimo 8 caracteres')).toBeInTheDocument()
     expect(screen.getByText('Crear usuario')).toBeInTheDocument()
     expect(screen.getByText('Cancelar')).toBeInTheDocument()
   })
@@ -47,7 +47,7 @@ describe('UsuarioFormModal', () => {
     expect(screen.getByDisplayValue('Andres')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Garcia')).toBeInTheDocument()
     expect(screen.getByDisplayValue('admin@ifts29.edu.ar')).toBeInTheDocument()
-    expect(screen.queryByPlaceholderText('Minimo 6 caracteres')).not.toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('Minimo 8 caracteres')).not.toBeInTheDocument()
     expect(screen.getByText('Guardar cambios')).toBeInTheDocument()
   })
 
@@ -69,7 +69,7 @@ describe('UsuarioFormModal', () => {
     await userEvent.type(screen.getByPlaceholderText('Ingrese el nombre'), 'Nuevo')
     await userEvent.type(screen.getByPlaceholderText('Ingrese el apellido'), 'Usuario')
     await userEvent.type(screen.getByPlaceholderText('correo@ifts29.edu.ar'), 'nuevo@test.com')
-    await userEvent.type(screen.getByPlaceholderText('Minimo 6 caracteres'), 'pass123')
+    await userEvent.type(screen.getByPlaceholderText('Minimo 8 caracteres'), 'Admin1234')
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'profesor' } })
 
     await userEvent.click(screen.getByText('Crear usuario'))
@@ -77,7 +77,7 @@ describe('UsuarioFormModal', () => {
     expect(mockAddUsuario).toHaveBeenCalledTimes(1)
     expect(mockAddUsuario).toHaveBeenCalledWith({
       nombre: 'Nuevo', apellido: 'Usuario', email: 'nuevo@test.com',
-      rol: 'profesor', password: 'pass123', activo: true,
+      rol: 'profesor', password: 'Admin1234', activo: true,
     })
     expect(mockOnClose).toHaveBeenCalledTimes(1)
   })
