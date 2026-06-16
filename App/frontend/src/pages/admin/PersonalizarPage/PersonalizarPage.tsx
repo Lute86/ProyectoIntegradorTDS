@@ -26,7 +26,7 @@ const PersonalizarPage = () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 animate-pulse space-y-6 h-[calc(100vh-64px)]">
+      <div className="p-4 md:p-8 animate-pulse space-y-6 flex-1 overflow-y-auto bg-white">
         <div className="h-8 bg-gray-200 rounded w-1/3" />
         <div className="h-4 bg-gray-100 rounded w-1/4" />
         <div className="h-96 bg-gray-100 rounded-xl" />
@@ -37,7 +37,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 animate-in fade-in duration-500 h-[calc(100vh-64px)] overflow-y-auto">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 flex-1 overflow-y-auto w-full bg-white">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Personalizar Sitio</h1>
