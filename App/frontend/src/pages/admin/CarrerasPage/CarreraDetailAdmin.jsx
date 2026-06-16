@@ -967,31 +967,19 @@ const CarreraDetailAdmin = () => {
           ) : (
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-3">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs font-semibold text-gray-500">Año lectivo:</label>
+                <div className="flex items-start gap-4 flex-wrap">
+                  <div className="flex items-start gap-2">
+                    <label className="text-xs font-semibold text-gray-500 mt-1.5">Año lectivo:</label>
                     <select value={filtroAnioLectivo} onChange={(e) => setFiltroAnioLectivo(e.target.value)}
-                      className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                     >
                       {aniosDisponibles.map((a) => (
                         <option key={a} value={a}>{a}</option>
                       ))}
                     </select>
                   </div>
-                  <div className="flex items-center gap-1">
-                    {[1, 2].map((sem) => (
-                      <button key={sem} onClick={() => setSemestreActivo(sem)}
-                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
-                          semestreActivo === sem
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                        }`}
-                      >Semestre {sem}</button>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 flex-wrap">
-                  {cuatrimestresDisponibles.map((c) => {
+                  <div className="flex items-center gap-1 flex-wrap pt-0.5">
+                    {cuatrimestresDisponibles.map((c) => {
                     const activo = cuatrimestresDelSemestre.includes(c)
                     return (
                       <button key={c} onClick={() => {
@@ -1013,10 +1001,11 @@ const CarreraDetailAdmin = () => {
                   })}
                 </div>
               </div>
+            </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-bold text-gray-700">2. Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
+                <div className="flex items-center justify-center gap-4 mb-3 flex-wrap">
+                  <h3 className="text-sm font-bold text-gray-700">Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
                   <div className="flex items-center gap-2">
                     {selectedNombres.size > 0 && (
                       <button onClick={limpiarSeleccion}
@@ -1089,7 +1078,7 @@ const CarreraDetailAdmin = () => {
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                     <div className="flex items-center justify-between mb-1">
                       <h3 className="text-sm font-bold text-gray-700">
-                        3. Horarios — Compartido ({selectedNombres.size} comisiones)
+                        Horarios — Compartido ({selectedNombres.size} comisiones)
                         <span className="text-gray-400 font-normal ml-2">
                           ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
                         </span>
@@ -1183,7 +1172,7 @@ const CarreraDetailAdmin = () => {
                         <div key={nombre} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                           <div className="flex items-center justify-between mb-1">
                             <h3 className="text-sm font-bold text-gray-700">
-                              3. Horarios — Comisión {letraDeComision(nombre)}
+                              Horarios — Comisión {letraDeComision(nombre)}
                               <span className="text-gray-400 font-normal ml-2">
                                 ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
                               </span>
