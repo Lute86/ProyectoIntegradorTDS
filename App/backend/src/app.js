@@ -28,8 +28,12 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', {
 }));
 
 // ── CORS ──────────────────────────────────────────────────────────────────
+const corsOrigin = process.env.FRONTEND_URL;
+if (process.env.NODE_ENV === 'production' && !corsOrigin) {
+  logger.warn('FRONTEND_URL no está definido — CORS bloqueará todas las solicitudes');
+}
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://localhost',
+  origin: corsOrigin || (process.env.NODE_ENV === 'production' ? false : 'http://localhost:5173'),
   credentials: true,
 }));
 

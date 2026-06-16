@@ -5,6 +5,9 @@ export async function up(queryInterface, Sequelize) {
     return;
   }
 
+  const dialect = queryInterface.sequelize.getDialect();
+  const q = (col) => dialect === 'postgres' ? `"${col}"` : col;
+
   await queryInterface.addColumn('horarios', 'comision_id', {
     type: Sequelize.INTEGER,
     allowNull: true,
@@ -19,17 +22,19 @@ export async function up(queryInterface, Sequelize) {
   );
 
   const comisionMap = {};
+  const now = new Date();
 
   for (const horario of horarios) {
     const key = `${horario.carrera_materia_id}-${horario.comision}`;
     
     if (!comisionMap[key]) {
-      const anioActual = new Date().getFullYear();
+      const anioActual = now.getFullYear();
+      const activoVal = dialect === 'postgres' ? true : 1;
       const [comisionResult] = await queryInterface.sequelize.query(
-        `INSERT INTO comisiones (carrera_materia_id, nombre, anio_lectivo, semestre, activo, createdAt, updatedAt)
-         VALUES (?, ?, ?, 1, 1, datetime('now'), datetime('now'))`,
+        `INSERT INTO comisiones (carrera_materia_id, nombre, anio_lectivo, semestre, activo, ${q('createdAt')}, ${q('updatedAt')})
+         VALUES (?, ?, ?, 1, ${activoVal}, ?, ?)`,
         {
-          replacements: [horario.carrera_materia_id, horario.comision, anioActual],
+          replacements: [horario.carrera_materia_id, horario.comision, anioActual, now, now],
           type: Sequelize.QueryTypes.INSERT,
         }
       );

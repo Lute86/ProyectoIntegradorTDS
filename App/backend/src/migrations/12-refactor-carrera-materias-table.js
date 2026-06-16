@@ -74,9 +74,9 @@ export async function up(queryInterface, Sequelize) {
       )
     `);
 
-    await queryInterface.removeConstraint('horarios', 'horarios_ibfk_1').catch(() => {});
+    await queryInterface.sequelize.query('ALTER TABLE horarios DROP CONSTRAINT IF EXISTS horarios_ibfk_1').catch(() => {});
     await queryInterface.removeIndex('horarios', ['materia_id']).catch(() => {});
-    await queryInterface.sequelize.query('DROP INDEX IF EXISTS idx_horarios_materia_id_comision ON horarios').catch(() => {});
+    await queryInterface.sequelize.query('DROP INDEX IF EXISTS idx_horarios_materia_id_comision').catch(() => {});
     await queryInterface.removeColumn('horarios', 'materia_id');
 
     await queryInterface.changeColumn('horarios', 'carrera_materia_id', {
@@ -109,9 +109,9 @@ export async function up(queryInterface, Sequelize) {
       onDelete: 'RESTRICT',
     });
 
-    await queryInterface.removeConstraint('horarios', 'horarios_ibfk_1').catch(() => {});
+    await queryInterface.sequelize.query('ALTER TABLE horarios DROP CONSTRAINT IF EXISTS horarios_ibfk_1').catch(() => {});
     await queryInterface.removeIndex('horarios', ['materia_id']).catch(() => {});
-    await queryInterface.sequelize.query('DROP INDEX IF EXISTS idx_horarios_materia_id_comision ON horarios').catch(() => {});
+    await queryInterface.sequelize.query('DROP INDEX IF EXISTS idx_horarios_materia_id_comision').catch(() => {});
     await queryInterface.removeColumn('horarios', 'materia_id');
 
     await queryInterface.addIndex('horarios', ['carrera_materia_id']);

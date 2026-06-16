@@ -68,8 +68,10 @@ export async function up(queryInterface, Sequelize) {
   }
 
   //    Read existing data
+  const dialect = queryInterface.sequelize.getDialect();
+  const quote = (col) => dialect === 'postgres' ? `"${col}"` : col;
   const allComisiones = await queryInterface.sequelize.query(
-    'SELECT id, nombre, anio_lectivo, semestre, encargado_id, activo, createdAt, updatedAt, deletedAt FROM comisiones',
+    `SELECT id, nombre, anio_lectivo, semestre, encargado_id, activo, ${quote('createdAt')}, ${quote('updatedAt')}, ${quote('deletedAt')} FROM comisiones`,
     { type: Sequelize.QueryTypes.SELECT }
   );
 
@@ -94,6 +96,11 @@ export async function up(queryInterface, Sequelize) {
   }
 
   //    Drop old table and recreate with new schema
+  //    PostgreSQL requires removing FK constraints before drop
+  if (dialect === 'postgres') {
+    await queryInterface.sequelize.query('ALTER TABLE horarios DROP CONSTRAINT IF EXISTS horarios_comision_id_fkey');
+    await queryInterface.sequelize.query('ALTER TABLE comision_carrera_materias DROP CONSTRAINT IF EXISTS comision_carrera_materias_comision_id_fkey');
+  }
   await queryInterface.dropTable('comisiones');
 
   await queryInterface.createTable('comisiones', {
@@ -152,16 +159,18 @@ export async function up(queryInterface, Sequelize) {
     const cmId = comisionCmMap[c.id];
     const carreraId = cmId ? carreraIds[cmId] : null;
 
+    const activoValue = dialect === 'postgres' ? c.activo : (c.activo ? 1 : 0);
+
     await queryInterface.sequelize.query(`
-      INSERT INTO comisiones (id, carrera_id, nombre, anio_lectivo, semestre, encargado_id, activo, createdAt, updatedAt, deletedAt)
+      INSERT INTO comisiones (id, carrera_id, nombre, anio_lectivo, semestre, encargado_id, activo, ${quote('createdAt')}, ${quote('updatedAt')}, ${quote('deletedAt')})
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, {
-      replacements: [c.id, carreraId, c.nombre, c.anio_lectivo, c.semestre, c.encargado_id, c.activo ? 1 : 0, c.createdAt, c.updatedAt, c.deletedAt],
+      replacements: [c.id, carreraId, c.nombre, c.anio_lectivo, c.semestre, c.encargado_id, activoValue, c.createdAt, c.updatedAt, c.deletedAt],
     });
   }
 
-  //    Restore autoincrement offset
-  if (allComisiones.length > 0) {
+  //    Restore autoincrement offset (SQLite only)
+  if (allComisiones.length > 0 && dialect === 'sqlite') {
     const maxId = Math.max(...allComisiones.map((c) => c.id));
     await queryInterface.sequelize.query(
       `DELETE FROM sqlite_sequence WHERE name = 'comisiones'`
@@ -189,8 +198,10 @@ export async function down(queryInterface, Sequelize) {
   }
 
   // Read current data
+  const dialectDown = queryInterface.sequelize.getDialect();
+  const quoteDown = (col) => dialectDown === 'postgres' ? `"${col}"` : col;
   const allComisiones = await queryInterface.sequelize.query(
-    'SELECT id, nombre, anio_lectivo, semestre, encargado_id, activo, createdAt, updatedAt, deletedAt FROM comisiones',
+    `SELECT id, nombre, anio_lectivo, semestre, encargado_id, activo, ${quoteDown('createdAt')}, ${quoteDown('updatedAt')}, ${quoteDown('deletedAt')} FROM comisiones`,
     { type: Sequelize.QueryTypes.SELECT }
   );
 
@@ -207,6 +218,10 @@ export async function down(queryInterface, Sequelize) {
   }
 
   // Drop and recreate with old schema
+  if (dialectDown === 'postgres') {
+    await queryInterface.sequelize.query('ALTER TABLE horarios DROP CONSTRAINT IF EXISTS horarios_comision_id_fkey');
+    await queryInterface.sequelize.query('ALTER TABLE comision_carrera_materias DROP CONSTRAINT IF EXISTS comision_carrera_materias_comision_id_fkey');
+  }
   await queryInterface.dropTable('comisiones');
 
   await queryInterface.createTable('comisiones', {
@@ -261,15 +276,16 @@ export async function down(queryInterface, Sequelize) {
 
   for (const c of allComisiones) {
     const cmId = cmMap[c.id];
+    const activoValueDown = dialectDown === 'postgres' ? c.activo : (c.activo ? 1 : 0);
     await queryInterface.sequelize.query(`
-      INSERT INTO comisiones (id, carrera_materia_id, nombre, anio_lectivo, semestre, encargado_id, activo, createdAt, updatedAt, deletedAt)
+      INSERT INTO comisiones (id, carrera_materia_id, nombre, anio_lectivo, semestre, encargado_id, activo, ${quoteDown('createdAt')}, ${quoteDown('updatedAt')}, ${quoteDown('deletedAt')})
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, {
-      replacements: [c.id, cmId, c.nombre, c.anio_lectivo, c.semestre, c.encargado_id, c.activo ? 1 : 0, c.createdAt, c.updatedAt, c.deletedAt],
+      replacements: [c.id, cmId, c.nombre, c.anio_lectivo, c.semestre, c.encargado_id, activoValueDown, c.createdAt, c.updatedAt, c.deletedAt],
     });
   }
 
-  if (allComisiones.length > 0) {
+  if (allComisiones.length > 0 && dialectDown === 'sqlite') {
     const maxId = Math.max(...allComisiones.map((c) => c.id));
     await queryInterface.sequelize.query(
       `DELETE FROM sqlite_sequence WHERE name = 'comisiones'`

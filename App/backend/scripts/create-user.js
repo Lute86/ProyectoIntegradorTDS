@@ -29,7 +29,7 @@ async function main() {
       await existing.save();
     }
 
-    console.log(`  User: ${EMAIL} / ${PASSWORD} (${ROL})`);
+    console.log(`  User created: ${EMAIL} (${ROL})`);
     process.exit(0);
   } catch (err) {
     console.error(`  Error: ${err.message}`);
