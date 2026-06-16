@@ -63,7 +63,7 @@ export default function EstudiantesPage() {
     if (!comision) return []
     let filtrados = horarios
     if (comision !== 'Todas') {
-      filtrados = filtrados.filter((h) => h.comision === comision)
+      filtrados = filtrados.filter((h) => (h.comisionInfo?.nombre || h.comision) === comision)
     }
     if (cuatriFilter) {
       filtrados = filtrados.filter(
@@ -92,9 +92,19 @@ export default function EstudiantesPage() {
   }, [horariosFiltrados])
 
   const comisiones = useMemo(() => {
-    const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
+    const set = new Set(horarios.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean))
     return Array.from(set).sort()
   }, [horarios])
+
+  const comisionesDelCuatri = useMemo(() => {
+    const horariosBase = cuatriFilter
+      ? horarios.filter((h) => h.carreraMateria?.cuatrimestre === cuatriFilter)
+      : horarios
+    const set = new Set(
+      horariosBase.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean)
+    )
+    return Array.from(set).sort()
+  }, [horarios, cuatriFilter])
 
   const cuatrimestres = useMemo(() => {
     const set = new Set(
@@ -104,6 +114,7 @@ export default function EstudiantesPage() {
   }, [horarios])
 
   useEffect(() => { setComision(''); setCuatriFilter('') }, [carreraId])
+  useEffect(() => { setComision('') }, [cuatriFilter])
 
   return (
     <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
@@ -172,22 +183,7 @@ export default function EstudiantesPage() {
                 </select>
               </div>
 
-              {carreraId && comisiones.length > 0 && (
-                <div className="flex-1 animate-in fade-in duration-300">
-                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
-                  <select value={comision} onChange={(e) => setComision(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
-                  >
-                    <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
-                    <option className="dark:bg-slate-800 dark:text-white" value="Todas">Todas las comisiones</option>
-                    {comisiones.map((c) => (
-                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>Comision {c}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {comision && cuatrimestres.length > 0 && (
+              {carreraId && cuatrimestres.length > 0 && (
                 <div className="flex-1 animate-in fade-in duration-300">
                   <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Cuatrimestre</label>
                   <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
@@ -196,6 +192,21 @@ export default function EstudiantesPage() {
                     <option className="dark:bg-slate-800 dark:text-white" value="">Todos los cuatrimestres</option>
                     {cuatrimestres.map((c) => (
                       <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {carreraId && comisionesDelCuatri.length > 0 && (
+                <div className="flex-1 animate-in fade-in duration-300">
+                  <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
+                  <select value={comision} onChange={(e) => setComision(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                  >
+                    <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
+                    <option className="dark:bg-slate-800 dark:text-white" value="Todas">Todas las comisiones</option>
+                    {comisionesDelCuatri.map((c) => (
+                      <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>Comision {c}</option>
                     ))}
                   </select>
                 </div>
@@ -236,7 +247,7 @@ export default function EstudiantesPage() {
                             <tr key={i} className="border-b border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                               <td className="text-center px-4 py-3 font-semibold text-body dark:text-white">{h.carreraMateria?.materia?.nombre || '—'}</td>
                               {comision === 'Todas' && (
-                                <td className="text-center px-4 py-3 font-semibold text-blue-600 dark:text-blue-400">Comision {h.comision}</td>
+                                <td className="text-center px-4 py-3 font-semibold text-blue-600 dark:text-blue-400">Comision {h.comisionInfo?.nombre || h.comision}</td>
                               )}
                               <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.dia}</td>
                               <td className="text-center px-4 py-3 text-body dark:text-white/70">{h.horario}</td>
