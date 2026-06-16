@@ -192,6 +192,20 @@
 
 **Descripción:** Se agrega endpoint que retorna los últimos items de cada módulo (noticias, eventos, consultas, testimonios, usuarios) en una sola llamada, optimizado con queries paralelas y LIMIT en SQL. Formato unificado: { tipo, texto, timestamp, id }. Solo accesible para administradores.
 
+#### Módulo 18: Validación de Secciones Deshabilitadas en Site Config
+**Tareas:**
+- [x] Agregar constante MAX_DISABLED_SECTIONS = 3 en siteconfig.controller.js
+- [x] Implementar lógica de merge de secciones enviadas con las existentes en la DB
+- [x] Validar que no se deshabiliten más de 3 secciones (merge resultante)
+- [x] Validar que siempre haya al menos 1 sección habilitada
+- [x] Crear tests de integración (5 tests: límite exacto, exceso, todas deshabilitadas, merge, actualización parcial)
+- [x] Documentación PR (docs/PR-BE1Module18.md)
+
+**Dependencias:** Módulo BE 7 (Configuración del Sitio)
+**Contraparte FE:** Consumir errores 400 en admin de secciones
+
+**Descripción:** Se agrega validación en `PUT /api/config` para impedir que se deshabiliten más de 3 secciones de la página principal. La validación compara contra el estado actual de la DB (merge por ID), no solo lo enviado en el request. Retorna error 400 si el merge resulta en más de 3 secciones con `visible: false` o si todas quedan deshabilitadas.
+
 #### Módulo 8: Consultas / Contactos
 **Tareas:**
 - [x] Implementar modelo Consulta (id, nombre, email, asunto, mensaje, respondido, respuesta, created_at, updated_at)

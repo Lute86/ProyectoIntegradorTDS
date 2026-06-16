@@ -147,5 +147,127 @@ describe('SiteConfig Endpoints', () => {
 
       expect(res.body.success).toBe(true);
     });
+
+    describe('Validación de secciones deshabilitadas (máx 3)', () => {
+      it('debería permitir exactamente 3 secciones deshabilitadas', async () => {
+        const res = await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: true, order: 1 },
+              { id: 'statistics', visible: true, order: 2 },
+              { id: 'careers', visible: true, order: 3 },
+              { id: 'news', visible: false, order: 4 },
+              { id: 'events', visible: false, order: 5 },
+              { id: 'gallery', visible: false, order: 6 },
+            ],
+          })
+          .expect(200);
+
+        expect(res.body.success).toBe(true);
+      });
+
+      it('debería rechazar si se deshabilitan más de 3 secciones', async () => {
+        const res = await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: true, order: 1 },
+              { id: 'statistics', visible: false, order: 2 },
+              { id: 'careers', visible: false, order: 3 },
+              { id: 'news', visible: false, order: 4 },
+              { id: 'events', visible: false, order: 5 },
+            ],
+          })
+          .expect(400);
+
+        expect(res.body.success).toBe(false);
+        expect(res.body.errors[0].msg).toContain('No se pueden deshabilitar más de 3');
+      });
+
+      it('debería rechazar si todas las secciones están deshabilitadas', async () => {
+        const res = await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: false, order: 1 },
+              { id: 'statistics', visible: false, order: 2 },
+              { id: 'careers', visible: false, order: 3 },
+            ],
+          })
+          .expect(400);
+
+        expect(res.body.success).toBe(false);
+        expect(res.body.errors[0].msg).toContain('al menos una sección habilitada');
+      });
+
+      it('debería fallar al deshabilitar más de 3 al hacer merge con secciones existentes', async () => {
+        await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: true, order: 1 },
+              { id: 'statistics', visible: true, order: 2 },
+              { id: 'careers', visible: true, order: 3 },
+              { id: 'news', visible: true, order: 4 },
+              { id: 'events', visible: true, order: 5 },
+              { id: 'testimonials', visible: true, order: 6 },
+              { id: 'gallery', visible: true, order: 7 },
+            ],
+          })
+          .expect(200);
+
+        const res = await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'statistics', visible: false, order: 2 },
+              { id: 'careers', visible: false, order: 3 },
+              { id: 'news', visible: false, order: 4 },
+              { id: 'events', visible: false, order: 5 },
+            ],
+          })
+          .expect(400);
+
+        expect(res.body.success).toBe(false);
+        expect(res.body.errors[0].msg).toContain('No se pueden deshabilitar más de 3');
+      });
+
+      it('debería permitir actualización parcial de secciones sin exceder el límite', async () => {
+        await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: true, order: 1 },
+              { id: 'statistics', visible: true, order: 2 },
+              { id: 'careers', visible: true, order: 3 },
+              { id: 'news', visible: true, order: 4 },
+              { id: 'events', visible: true, order: 5 },
+              { id: 'testimonials', visible: true, order: 6 },
+              { id: 'gallery', visible: true, order: 7 },
+            ],
+          })
+          .expect(200);
+
+        const res = await request(app)
+          .put('/api/config')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({
+            sections: [
+              { id: 'hero', visible: false, order: 1 },
+              { id: 'statistics', visible: false, order: 2 },
+            ],
+          })
+          .expect(200);
+
+        expect(res.body.success).toBe(true);
+      });
+    });
   });
 });
