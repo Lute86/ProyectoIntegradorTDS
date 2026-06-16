@@ -95,7 +95,7 @@ const UsuariosPage = () => {
           Editar
         </button>
       ),
-      className: 'w-32 text-right'
+      className: 'w-28 min-w-[7rem] text-right'
     }
   ];
 

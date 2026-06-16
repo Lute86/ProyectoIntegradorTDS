@@ -8,7 +8,7 @@ import UserAvatar from '../../ui/UserAvatar';
  */
 const AdminLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex">
       {/* Sidebar Minimalista (Placeholder) */}
       <aside className="w-64 bg-slate-900 text-white hidden lg:flex flex-col">
         <div className="p-8">
@@ -86,7 +86,7 @@ const AdminLayout = () => {
         </header>
 
         {/* Área de Scroll de la Página */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <Outlet />
         </main>
       </div>

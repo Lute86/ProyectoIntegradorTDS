@@ -45,7 +45,7 @@ const TestimoniosPage = () => {
     {
       header: 'Contenido',
       accessor: (t) => (
-        <p className="text-sm text-gray-600 truncate">{t.texto}</p>
+        <p className="text-sm text-gray-600 truncate max-w-[150px] md:max-w-md">{t.texto}</p>
       ),
       className: 'w-1/2 lg:w-[60%]',
     },
@@ -82,7 +82,7 @@ const TestimoniosPage = () => {
           </button>
         </div>
       ),
-      className: 'w-32 text-right',
+      className: 'w-28 min-w-[7rem] text-right',
     },
   ];
 

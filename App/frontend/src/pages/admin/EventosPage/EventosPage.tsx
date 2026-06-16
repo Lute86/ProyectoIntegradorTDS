@@ -35,7 +35,7 @@ const EventosPage = () => {
     {
       header: 'Nombre',
       accessor: (e) => (
-        <span className="font-semibold text-gray-800 text-sm">{e.nombre}</span>
+        <span className="font-semibold text-gray-800 text-sm truncate block max-w-[150px]">{e.nombre}</span>
       ),
     },
     {
@@ -84,7 +84,7 @@ const EventosPage = () => {
           </button>
         </div>
       ),
-      className: 'w-32 text-right',
+      className: 'w-28 min-w-[7rem] text-right',
     },
   ];
 
