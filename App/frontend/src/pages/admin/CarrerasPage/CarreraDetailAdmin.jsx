@@ -57,6 +57,7 @@ const CarreraDetailAdmin = () => {
   const batchTimer = useRef(null)
   const [sharedFormData, setSharedFormData] = useState({})
   const [sharedErrores, setSharedErrores] = useState({})
+  const [pristineForms, setPristineForms] = useState({})
 
   const { usuarios, fetchUsuarios } = useUsuariosStore()
 
@@ -310,17 +311,19 @@ const CarreraDetailAdmin = () => {
 
   const initFormsPorComision = useCallback(() => {
     const inicial = {}
+    const pristine = {}
     selectedNombres.forEach((nombre) => {
       const sem = ((cuatriActivo - 1) % 2) + 1
       const reg = registrosDeComision(nombre, sem)
       const formsMaterias = {}
+      const pristineMaterias = {}
       materiasCuatriActual.forEach((cm) => {
         const existente = reg ? horarios.find(
           (h) => h.carrera_materia_id === cm.id && h.comision_id === reg.id
         ) : null
         const horarioStr = existente?.horario || ''
         const partes = horarioStr.split('-')
-        formsMaterias[cm.id] = {
+        const values = {
           dia: existente?.dia || '',
           horario: horarioStr,
           horario_inicio: partes[0] || '',
@@ -328,10 +331,14 @@ const CarreraDetailAdmin = () => {
           aula: existente?.aula || '',
           profesor: existente?.profesor || '',
         }
+        formsMaterias[cm.id] = { ...values }
+        pristineMaterias[cm.id] = { ...values }
       })
       inicial[nombre] = formsMaterias
+      pristine[nombre] = pristineMaterias
     })
     setFormsPorComision(inicial)
+    setPristineForms(pristine)
   }, [materiasCuatriActual, selectedNombres, horarios, cuatriActivo, registrosDeComision])
 
   useEffect(() => {
@@ -352,6 +359,7 @@ const CarreraDetailAdmin = () => {
     } else {
       setFormsPorComision({})
       setSharedFormData({})
+      setPristineForms({})
     }
   }, [selectedNombres, initFormsPorComision, modoCompartido, materiasCuatriActual])
 
@@ -539,16 +547,10 @@ const CarreraDetailAdmin = () => {
     await fetchHorarios()
   }
 
-  const cargarHorariosComision = async (nombre) => {
-    if (!validarTodo()) {
-      mostrarBatchMsg('Corrige los campos marcados en rojo antes de guardar.')
-      return
-    }
-
-    setGuardandoBatch(true)
+  const guardarHorariosDeComision = useCallback(async (nombre) => {
     const sem = ((cuatriActivo - 1) % 2) + 1
     const reg = registrosDeComision(nombre, sem)
-    if (!reg) { setGuardandoBatch(false); return }
+    if (!reg) return { guardados: 0, fallidos: 0, huboDatos: false }
 
     const materiasForm = formsPorComision[nombre] || {}
 
@@ -587,18 +589,61 @@ const CarreraDetailAdmin = () => {
       } catch { fallidos++ }
     }
 
-    if (!huboDatos) {
+    return { guardados, fallidos, huboDatos }
+  }, [cuatriActivo, registrosDeComision, formsPorComision, esVirtual, horarios])
+
+  const comisionEstaDirty = useCallback((nombre) => {
+    const current = formsPorComision[nombre] || {}
+    const pristine = pristineForms[nombre] || {}
+    return Object.keys(current).some((cmId) => {
+      const cur = current[cmId]
+      const pri = pristine[cmId]
+      if (!pri) return Object.values(cur).some(v => v)
+      return ['dia', 'horario_inicio', 'horario_fin', 'aula', 'profesor'].some(
+        (f) => (cur[f] || '') !== (pri[f] || '')
+      )
+    })
+  }, [formsPorComision, pristineForms])
+
+  const cargarHorariosComision = async (nombre) => {
+    if (!validarTodo()) {
+      mostrarBatchMsg('Corrige los campos marcados en rojo antes de guardar.')
+      return
+    }
+
+    setGuardandoBatch(true)
+
+    const comisionesAGuardar = Array.from(selectedNombres).filter(
+      (nom) => nom === nombre || comisionEstaDirty(nom)
+    )
+
+    let totalGuardados = 0
+    let totalFallidos = 0
+    let huboDatosGlobal = false
+    const comisionesConDatos = []
+
+    for (const nom of comisionesAGuardar) {
+      const result = await guardarHorariosDeComision(nom)
+      totalGuardados += result.guardados
+      totalFallidos += result.fallidos
+      if (result.huboDatos) {
+        huboDatosGlobal = true
+        comisionesConDatos.push(nom)
+      }
+    }
+
+    if (!huboDatosGlobal) {
       setGuardandoBatch(false)
       mostrarBatchMsg('Completa al menos dia y horario en alguna materia.')
       return
     }
 
-    if (fallidos === 0) {
-      mostrarBatchMsg(`Horarios guardados correctamente para Comision ${letraDeComision(nombre)}.`)
-    } else if (guardados === 0) {
-      mostrarBatchMsg(`Error al guardar horarios de Comision ${letraDeComision(nombre)}.`)
+    if (totalFallidos === 0) {
+      mostrarBatchMsg(`${totalGuardados} horario${totalGuardados !== 1 ? 's' : ''} guardado${totalGuardados !== 1 ? 's' : ''} correctamente en ${comisionesConDatos.length} comision${comisionesConDatos.length !== 1 ? 'es' : ''}.`)
+    } else if (totalGuardados === 0) {
+      mostrarBatchMsg('Error al guardar los horarios.')
     } else {
-      mostrarBatchMsg(`${guardados} guardado${guardados !== 1 ? 's' : ''}, ${fallidos} fallaron en Comision ${letraDeComision(nombre)}.`)
+      mostrarBatchMsg(`${totalGuardados} guardado${totalGuardados !== 1 ? 's' : ''}, ${totalFallidos} fallaron.`)
     }
 
     setGuardandoBatch(false)
@@ -949,14 +994,19 @@ const CarreraDetailAdmin = () => {
                   {cuatrimestresDisponibles.map((c) => {
                     const activo = cuatrimestresDelSemestre.includes(c)
                     return (
-                      <button key={c} onClick={() => activo && setCuatriActivo(c)}
-                        disabled={!activo}
+                      <button key={c} onClick={() => {
+                        if (!activo) {
+                          const sem = ((c - 1) % 2) + 1
+                          setSemestreActivo(sem)
+                        }
+                        setCuatriActivo(c)
+                      }}
                         className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
-                          !activo
-                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                            : cuatriActivo === c
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                          cuatriActivo === c
+                            ? 'bg-blue-600 text-white'
+                            : activo
+                              ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                         }`}
                       >{nombresCuatri[c] || `C${c}`}</button>
                     )
@@ -968,11 +1018,6 @@ const CarreraDetailAdmin = () => {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-bold text-gray-700">2. Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
                   <div className="flex items-center gap-2">
-                    {comisionesDelCuatri.length > 0 && (
-                      <button onClick={toggleTodas}
-                        className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
-                      >{selectedNombres.size === comisionesDelCuatri.length ? 'Deseleccionar todas' : 'Todas'}</button>
-                    )}
                     {selectedNombres.size > 0 && (
                       <button onClick={limpiarSeleccion}
                         className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
@@ -995,6 +1040,11 @@ const CarreraDetailAdmin = () => {
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center gap-2">
+                    {comisionesDelCuatri.length > 0 && (
+                      <button onClick={toggleTodas}
+                        className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
+                      >{selectedNombres.size === comisionesDelCuatri.length ? 'Deseleccionar todas' : 'Todas'}</button>
+                    )}
                     {comisionesDelCuatri.map((c) => {
                       const nombreCompleto = c.nombre
                       const letra = letraDeComision(nombreCompleto)
