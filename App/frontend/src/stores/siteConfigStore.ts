@@ -214,17 +214,29 @@ export const useSiteConfigStore = create<SiteConfigState>()(
 }),
 {
   name: 'site-config-storage',
-  merge: (persisted, current) => ({
-    ...current,
-    ...persisted,
-    config: {
-      ...current.config,
-      ...(persisted?.config || {}),
-      colors: {
-        ...current.config.colors,
-        ...(persisted?.config?.colors || {}),
+  merge: (persisted, current) => {
+    const defaultSections = current.config.sections;
+    const persistedSections = persisted?.config?.sections;
+    const mergedSections = persistedSections?.length
+      ? defaultSections.map((sec) => {
+          const p = persistedSections.find((ps) => ps.id === sec.id);
+          return p ? { ...sec, ...p } : sec;
+        })
+      : defaultSections;
+
+    return {
+      ...current,
+      ...persisted,
+      config: {
+        ...current.config,
+        ...(persisted?.config || {}),
+        sections: mergedSections,
+        colors: {
+          ...current.config.colors,
+          ...(persisted?.config?.colors || {}),
+        },
       },
-    },
-  }),
+    };
+  },
 }
 ));
