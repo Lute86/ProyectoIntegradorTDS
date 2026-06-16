@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import Badge from '../../ui/Badge/Badge'
 import IconoCategoria from '../../ui/IconoCategoria/IconoCategoria'
 
@@ -10,11 +9,16 @@ const badgeMap = {
   Becas: 'rose',
 }
 
-export default function NewsCard({ noticia }) {
-  const { titulo, slug, categoria, resumen, fecha } = noticia
+export default function NewsCard({ noticia, onVerDetalle }) {
+  const { titulo, categoria, resumen, fecha } = noticia
+
+  const Comp = onVerDetalle ? 'div' : 'a'
+  const extraProps = onVerDetalle
+    ? { onClick: () => onVerDetalle(noticia), className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer' }
+    : { href: `/noticias/${noticia.slug}`, className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300' }
 
   return (
-    <Link to={`/noticias/${slug}`} className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    <Comp {...extraProps}>
       <div className="p-6">
         <Badge variant={badgeMap[categoria] || 'gray'}>
           <IconoCategoria categoria={categoria} className="w-3.5 h-3.5 mr-1" />
@@ -27,6 +31,6 @@ export default function NewsCard({ noticia }) {
           <span className="text-blue-600 dark:text-blue-400 font-semibold">Leer más →</span>
         </div>
       </div>
-    </Link>
+    </Comp>
   )
 }

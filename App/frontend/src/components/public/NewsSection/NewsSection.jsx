@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import NewsCard from './NewsCard'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
-export default function NewsSection({ noticias }) {
+export default function NewsSection({ noticias, onVerDetalle }) {
   const [current, setCurrent] = useState(0)
   const [visible, setVisible] = useState(3)
   const { ref, isVisible, style } = useScrollReveal({ delayMs: 300 })
@@ -64,7 +64,7 @@ export default function NewsSection({ noticias }) {
               {ultimas.map((n) => (
                 <div key={n.id} className="px-3 shrink-0"
                   style={{ flex: `0 0 ${100 / visible}%` }}>
-                  <NewsCard noticia={n} />
+                  <NewsCard noticia={n} onVerDetalle={onVerDetalle} />
                 </div>
               ))}
             </div>

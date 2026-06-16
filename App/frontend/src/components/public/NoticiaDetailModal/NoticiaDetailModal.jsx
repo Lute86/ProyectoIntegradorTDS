@@ -12,7 +12,7 @@ const BADGE_COLORS = {
   Becas: 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300',
 }
 
-export default function NoticiaDetailModal({ noticia, onClose }) {
+export default function NoticiaDetailModal({ noticia, onClose, showLinkToNoticias = true }) {
   const titulo = noticia.titulo
   const contenido = noticia.contenido
   const categoria = noticia.categoria || 'Sin categoria'
@@ -39,7 +39,7 @@ export default function NoticiaDetailModal({ noticia, onClose }) {
     >
       <div className="fixed inset-0 bg-black/60" />
 
-      <div className="relative bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl w-full sm:min-w-[36rem] max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200"
+      <div className="relative bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl w-full sm:min-w-[36rem] max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="shrink-0 border-b border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between">
@@ -73,12 +73,14 @@ export default function NoticiaDetailModal({ noticia, onClose }) {
           )}
         </div>
 
-        <div className="shrink-0 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between">
-          <Link to="/noticias" onClick={onClose}
-            className="px-5 py-2.5 bg-blue-600 dark:bg-blue-500/20 dark:text-blue-400 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-500/30 hover:shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            Ver noticias
-          </Link>
+        <div className="shrink-0 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-center gap-3">
+          {showLinkToNoticias && (
+            <Link to="/noticias" onClick={onClose}
+              className="px-5 py-2.5 bg-blue-600 dark:bg-blue-500/20 dark:text-blue-400 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-500/30 hover:shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              Ver noticias
+            </Link>
+          )}
           <button onClick={onClose}
             className="px-5 py-2.5 bg-gray-900 dark:bg-white/10 text-white text-sm font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-white/20 hover:shadow-lg hover:scale-105 transition-all duration-300"
           >

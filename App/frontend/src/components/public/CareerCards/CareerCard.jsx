@@ -16,7 +16,8 @@ export default function CareerCard({ carrera }) {
   const { nombre, slug, duracion, descripcion, modalidad, color } = carrera
 
   return (
-    <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    <Link to={`/carreras/${slug}`}
+      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       <div
         className="h-24 flex items-center justify-center text-white text-lg font-bold px-4 text-center leading-tight"
         style={{ backgroundColor: color || '#3B82F6' }}
@@ -29,14 +30,11 @@ export default function CareerCard({ carrera }) {
           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeStyles[badgeVariant(modalidad)]}`}>
             {duracion ? `${duracion} años` : ''}
           </span>
-          <Link
-            to={`/carreras/${slug}`}
-            className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-          >
+          <span className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400">
             Ver más →
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

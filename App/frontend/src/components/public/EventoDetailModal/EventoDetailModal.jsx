@@ -90,14 +90,15 @@ export default function EventoDetailModal({ evento, onClose, showVerEventos = tr
                 <span>{ubicacion}</span>
               </div>
             )}
-          </div>
 
-          <div className="flex flex-wrap gap-2">
             {estado && (
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadge[estado] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
+              <span className={`ml-4 self-center px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadge[estado] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
                 {estado.charAt(0).toUpperCase() + estado.slice(1)}
               </span>
             )}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
             {modalidad && (
               <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${modalidadBadge[modalidad] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
                 {modalidad.charAt(0).toUpperCase() + modalidad.slice(1)}
@@ -115,7 +116,7 @@ export default function EventoDetailModal({ evento, onClose, showVerEventos = tr
           )}
         </div>
 
-        <div className="shrink-0 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-end gap-3">
+        <div className="shrink-0 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-center gap-3">
           {showVerEventos && (
             <Link to="/eventos" onClick={onClose}
               className="px-5 py-2.5 bg-blue-600 dark:bg-blue-500/20 dark:text-blue-400 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-500/30 hover:shadow-lg hover:scale-105 transition-all duration-300"
