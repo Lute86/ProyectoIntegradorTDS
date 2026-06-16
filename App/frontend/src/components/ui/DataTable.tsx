@@ -122,7 +122,7 @@ export const DataTable = <T extends { id?: string | number }>({
       )}
 
       <div className="w-full overflow-x-auto block">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full min-w-[850px] text-left border-collapse">
           <thead className="bg-gray-50/80 border-b border-gray-200">
             <tr>
               {selectable && (
@@ -189,7 +189,7 @@ export const DataTable = <T extends { id?: string | number }>({
                   ))}
                   {actions && (
                     <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <div className="flex justify-end gap-2">{actions(item)}</div>
+                      <div className="flex justify-end gap-2 whitespace-nowrap">{actions(item)}</div>
                     </td>
                   )}
                 </tr>
