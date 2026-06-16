@@ -33,7 +33,9 @@ export async function up(queryInterface, Sequelize) {
           updatedAt: new Date(),
         },
       ]);
-      console.log(`  ${user.rol}: ${user.email} / ${password}`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`  ${user.rol}: ${user.email} / ${password}`);
+      }
     }
   }
 }

@@ -1,4 +1,7 @@
 export async function up(queryInterface, Sequelize) {
+  const dialect = queryInterface.sequelize.getDialect();
+  const q = (col) => dialect === 'postgres' ? `"${col}"` : col;
+
   const [existingCount] = await queryInterface.sequelize.query(
     'SELECT COUNT(*) as count FROM comisiones',
     { type: Sequelize.QueryTypes.SELECT }
@@ -22,20 +25,23 @@ export async function up(queryInterface, Sequelize) {
   const now = new Date();
   const anioActual = now.getFullYear();
 
+  const semestre = 1;
+  const activo = true;
+
   const comisionA = await queryInterface.sequelize.query(
-    `INSERT INTO comisiones (carrera_id, nombre, anio_lectivo, semestre, activo, createdAt, updatedAt)
-     VALUES (?, 'A', ?, 1, 1, ?, ?)`,
+    `INSERT INTO comisiones (carrera_id, nombre, anio_lectivo, semestre, activo, ${q('createdAt')}, ${q('updatedAt')})
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     {
-      replacements: [carreraId, anioActual, now, now],
+      replacements: [carreraId, 'A', anioActual, 1, true, now, now],
       type: Sequelize.QueryTypes.INSERT,
     }
   );
 
   const comisionB = await queryInterface.sequelize.query(
-    `INSERT INTO comisiones (carrera_id, nombre, anio_lectivo, semestre, activo, createdAt, updatedAt)
-     VALUES (?, 'B', ?, 1, 1, ?, ?)`,
+    `INSERT INTO comisiones (carrera_id, nombre, anio_lectivo, semestre, activo, ${q('createdAt')}, ${q('updatedAt')})
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     {
-      replacements: [carreraId, anioActual, now, now],
+      replacements: [carreraId, 'B', anioActual, 1, true, now, now],
       type: Sequelize.QueryTypes.INSERT,
     }
   );

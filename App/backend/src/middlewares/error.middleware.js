@@ -1,5 +1,6 @@
 import multer from 'multer';
 import logger from '../utils/logger.js';
+import { AppError } from '../utils/AppError.js';
 
 export function errorHandler(err, req, res, next) {
   if (err instanceof multer.MulterError) {
@@ -26,7 +27,8 @@ export function errorHandler(err, req, res, next) {
   });
 
   const statusCode = err.status || err.statusCode || 500;
-  const message = err.message || 'Error interno del servidor';
+  const isAppError = err instanceof AppError || (statusCode >= 400 && statusCode < 500);
+  const message = isAppError ? (err.message || 'Error interno del servidor') : 'Error interno del servidor';
 
   const response = {
     success: false,
