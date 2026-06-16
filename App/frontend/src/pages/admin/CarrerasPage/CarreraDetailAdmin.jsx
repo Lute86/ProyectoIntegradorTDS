@@ -46,7 +46,9 @@ const CarreraDetailAdmin = () => {
   const [selectedNombres, setSelectedNombres] = useState(new Set())
   const [comisionFormOpen, setComisionFormOpen] = useState(false)
   const [comisionFormData, setComisionFormData] = useState({ cuatrimestre: 1, letra: '', encargado_id: '' })
-  const [filtroAnioLectivo, setFiltroAnioLectivo] = useState('2026')
+  const [filtroAnioLectivo, setFiltroAnioLectivo] = useState('2024')
+  const [anioOpen, setAnioOpen] = useState(false)
+  const anioRef = useRef(null)
   const [formsPorComision, setFormsPorComision] = useState({})
   const [errores, setErrores] = useState({})
   const [guardandoBatch, setGuardandoBatch] = useState(false)
@@ -101,6 +103,16 @@ const CarreraDetailAdmin = () => {
       fetchComisiones()
     }
   }, [activeTab, id, fetchHorarios, fetchComisiones])
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (anioRef.current && !anioRef.current.contains(e.target)) {
+        setAnioOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   const toggleComision = (nombre) => {
     setSelectedNombres((prev) => {
@@ -248,11 +260,11 @@ const CarreraDetailAdmin = () => {
 
   const aniosDisponibles = useMemo(() => {
   const años = [];
-  // Arranca en 2026 y sube hasta el 2040
-  for (let a = 2026; a <= 2040; a++) {
+  // Arranca en 2024 y sube hasta el 2040
+  for (let a = 2024; a <= 2040; a++) {
     años.push(a);
   }
-  // Los ordena de menor a mayor para que el 2026 quede primero
+  // Los ordena de menor a mayor para que el 2024 quede primero
   return años.sort((a, b) => a - b);
 }, []);
 
@@ -909,6 +921,7 @@ const CarreraDetailAdmin = () => {
             onAsignada={() => fetchCarreraById(id)}
             maxCuatri={maxCuatri}
             cuatrimestrePrefijado={cuatriPrefijado}
+            materiasAsignadas={new Set((carrera?.carreraMaterias || []).map(cm => cm.materia?.id).filter(Boolean))}
           />
         </div>
       )}
@@ -968,15 +981,25 @@ const CarreraDetailAdmin = () => {
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-3">
                 <div className="flex items-start gap-4 flex-wrap">
-                  <div className="flex items-start gap-2">
+                  <div className="relative flex items-start gap-2" ref={anioRef}>
                     <label className="text-xs font-semibold text-gray-500 mt-1.5">Año lectivo:</label>
-                    <select value={filtroAnioLectivo} onChange={(e) => setFiltroAnioLectivo(e.target.value)}
-                      className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    <button type="button" onClick={() => setAnioOpen(!anioOpen)}
+                      className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer flex items-center gap-1"
                     >
-                      {aniosDisponibles.map((a) => (
-                        <option key={a} value={a}>{a}</option>
-                      ))}
-                    </select>
+                      {filtroAnioLectivo}
+                      <span className="text-blue-400 text-[10px]">▾</span>
+                    </button>
+                    {anioOpen && (
+                      <div className="absolute top-full left-0 mt-1 z-10 w-24 bg-white border border-gray-200 rounded-lg shadow-lg max-h-36 overflow-y-auto">
+                        {aniosDisponibles.map((a) => (
+                          <button key={a} type="button" onClick={() => { setFiltroAnioLectivo(String(a)); setAnioOpen(false) }}
+                            className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-blue-50 ${filtroAnioLectivo === String(a) ? 'bg-blue-100 text-blue-600' : 'text-gray-700'}`}
+                          >
+                            {a}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 flex-wrap pt-0.5">
                     {cuatrimestresDisponibles.map((c) => {

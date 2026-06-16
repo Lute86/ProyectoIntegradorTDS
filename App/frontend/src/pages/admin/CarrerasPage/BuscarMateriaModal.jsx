@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import useMateriasStore from '../../../stores/materiasStore'
 
-const BuscarMateriaModal = ({ isOpen, onClose, carreraId, onAsignada, maxCuatri = 12, cuatrimestrePrefijado }) => {
+const BuscarMateriaModal = ({ isOpen, onClose, carreraId, onAsignada, maxCuatri = 12, cuatrimestrePrefijado, materiasAsignadas = new Set() }) => {
   const { materias, loading, fetchMaterias, addAsignacion } = useMateriasStore()
   const [busqueda, setBusqueda] = useState('')
   const [seleccionadas, setSeleccionadas] = useState(new Set())
@@ -109,6 +109,18 @@ const BuscarMateriaModal = ({ isOpen, onClose, carreraId, onAsignada, maxCuatri 
             </p>
           ) : (
             filtradas.map((m) => {
+              const yaAsignada = materiasAsignadas.has(m.id)
+              if (yaAsignada) {
+                return (
+                  <div key={m.id}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400 bg-gray-50"
+                  >
+                    <span className="text-green-400 text-xs">✓</span>
+                    {m.nombre}
+                    <span className="text-[10px] text-gray-300 ml-auto">ya asignada</span>
+                  </div>
+                )
+              }
               const checked = seleccionadas.has(m.id)
               return (
                 <label key={m.id}
