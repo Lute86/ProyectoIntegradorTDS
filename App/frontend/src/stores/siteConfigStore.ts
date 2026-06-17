@@ -59,15 +59,15 @@ const DEFAULT_CONFIG: SiteConfig = {
   layout: 'full-width',
   themePreset: 'moderno',
   sections: [
-    { id: 'hero', visible: true, order: 1 },
-    { id: 'statistics', visible: true, order: 2 },
-    { id: 'careers', visible: true, order: 3 },
-    { id: 'news', visible: true, order: 4 },
-    { id: 'events', visible: true, order: 5 },
-    { id: 'testimonials', visible: true, order: 6 },
-    { id: 'gallery', visible: true, order: 7 },
-    { id: 'students', visible: true, order: 8 },
-    { id: 'contact', visible: true, order: 9 },
+    { id: 'hero', visible: true, order: 1, navVisible: true },
+    { id: 'statistics', visible: true, order: 2, navVisible: true },
+    { id: 'careers', visible: true, order: 3, navVisible: true },
+    { id: 'news', visible: true, order: 4, navVisible: true },
+    { id: 'events', visible: true, order: 5, navVisible: true },
+    { id: 'testimonials', visible: true, order: 6, navVisible: true },
+    { id: 'gallery', visible: true, order: 7, navVisible: true },
+    { id: 'students', visible: true, order: 8, navVisible: true },
+    { id: 'contact', visible: true, order: 9, navVisible: true },
   ],
   socialLinks: {
     instagram: 'https://instagram.com/ifts29',
@@ -84,7 +84,7 @@ interface SiteConfigState {
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
-  toggleSectionVisibility: (sectionId: string) => void;
+  toggleNavVisibility: (sectionId: string) => void;
   resetConfig: () => void;
 }
 
@@ -165,11 +165,15 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     if (cfg.contactPhone) payload.contact_phone = cfg.contactPhone;
     if (cfg.seoDescription) payload.seo_description = cfg.seoDescription;
     try {
+      const sectionsBackup = JSON.parse(JSON.stringify(state.config.sections));
       await api.put('/config', payload);
       set({ isDirty: false });
     } catch (err: any) {
       console.error('Error del backend:', err.response?.data);
-      set({ isDirty: false });
+      set((state) => ({
+        config: { ...state.config, sections: sectionsBackup },
+        isDirty: false,
+      }));
       throw err;
     }
   },
@@ -203,6 +207,17 @@ export const useSiteConfigStore = create<SiteConfigState>()(
         ...state.config,
         sections: state.config.sections.map((s) =>
           s.id === sectionId ? { ...s, visible: !s.visible } : s
+        ),
+      },
+      isDirty: true,
+    }));
+  },
+  toggleNavVisibility: (sectionId) => {
+    set((state) => ({
+      config: {
+        ...state.config,
+        sections: state.config.sections.map((s) =>
+          s.id === sectionId ? { ...s, navVisible: !s.navVisible } : s
         ),
       },
       isDirty: true,

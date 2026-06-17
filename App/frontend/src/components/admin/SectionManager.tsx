@@ -3,6 +3,8 @@ import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-ki
 import { useSiteConfigStore } from '../../stores/siteConfigStore';
 import DraggableSection from './DraggableSection';
 
+const EXCLUIDAS = ['students', 'contact'];
+
 const SECTION_LABELS: Record<string, string> = {
   hero: 'Hero / Portada',
   statistics: 'Estadisticas',
@@ -11,33 +13,32 @@ const SECTION_LABELS: Record<string, string> = {
   events: 'Eventos',
   testimonials: 'Testimonios',
   gallery: 'Galeria',
-  students: 'Estudiantes',
-  contact: 'Contacto',
 };
 
 const SectionManager = () => {
   const { config, updateConfig } = useSiteConfigStore();
+  const visibles = config.sections.filter((s) => !EXCLUIDAS.includes(s.id));
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = config.sections.findIndex((s) => s.id === active.id);
-    const newIndex = config.sections.findIndex((s) => s.id === over.id);
-    const reordenado = arrayMove(config.sections, oldIndex, newIndex);
-    updateConfig({ sections: reordenado });
+    const oldIndex = visibles.findIndex((s) => s.id === active.id);
+    const newIndex = visibles.findIndex((s) => s.id === over.id);
+    const reordenado = arrayMove(visibles, oldIndex, newIndex);
+
+    const otras = config.sections.filter((s) => EXCLUIDAS.includes(s.id));
+    updateConfig({ sections: [...reordenado, ...otras] });
   };
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={config.sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={visibles.map((s) => s.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-2">
-          {config.sections.map((s) => (
+          {visibles.map((s) => (
             <DraggableSection
-              key={s.id}
-              id={s.id}
-              nombre={SECTION_LABELS[s.id] || s.id}
-              visible={s.visible}
+              key={s.id} id={s.id} nombre={SECTION_LABELS[s.id] || s.id}
+              visible={s.visible} navVisible={s.navVisible ?? true}
             />
           ))}
         </div>

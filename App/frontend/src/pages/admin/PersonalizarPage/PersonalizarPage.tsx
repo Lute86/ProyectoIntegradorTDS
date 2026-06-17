@@ -37,7 +37,7 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 animate-in fade-in duration-500 flex-1 overflow-y-auto w-full bg-white pb-24">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 w-full bg-white pb-24">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Personalizar Sitio</h1>

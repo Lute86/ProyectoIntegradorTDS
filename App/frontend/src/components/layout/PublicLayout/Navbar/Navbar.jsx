@@ -23,7 +23,7 @@ export default function Navbar() {
     const newsVisible = config.sections.find(s => s.id === 'news')?.visible
     return config.sections
       .filter((s) => {
-        if (!s.visible || !NAV_MAP[s.id]) return false
+        if (!s.navVisible || !NAV_MAP[s.id]) return false
         if (s.id === 'events' && newsVisible) return false
         return true
       })
