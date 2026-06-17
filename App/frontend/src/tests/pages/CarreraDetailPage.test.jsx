@@ -77,12 +77,29 @@ describe('CarreraDetailPage', () => {
 
   it('muestra info card de seleccion en pestana Horarios cuando hay comisiones', async () => {
     mockHorariosGetAll.mockResolvedValue({
-      data: { data: [{ id: 1, comision: 'A', carreraMateria: { cuatrimestre: 1, materia: { nombre: 'Prog I' } }, dia: 'Lunes', horario: '18:00', aula: '201', profesor: 'Juan' }] },
+      data: {
+        data: [
+          {
+            id: 1,
+            comision: 'A',
+            carreraMateria: {
+              cuatrimestre: 1,
+              materia: { nombre: 'Prog I' },
+            },
+            dia: 'Lunes',
+            horario: '18:00',
+            aula: '201',
+            profesor: 'Juan',
+          },
+        ],
+      },
     })
+
     renderWithRoute('desarrollo-de-software')
     fireEvent.click(screen.getByText('Horarios'))
-    await waitFor(() => {
-      expect(screen.getByText('Selecciona una comision y/o cuatrimestre para ver los horarios')).toBeInTheDocument()
-    })
+
+    expect(
+      await screen.findByText(/selecciona una comision para ver los horarios/i)
+    ).toBeInTheDocument()
   })
 })

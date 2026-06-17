@@ -363,7 +363,8 @@
 - [x] Theme toggle sol/luna en Navbar y MobileMenu
 - [x] dark: variants + scroll reveal en componentes y páginas públicas
 - [x] Layout boxed/full-width en páginas públicas
-- [x] Build OK, lint 0 warnings, tests 214/214
+- [x] Fix: texto de testimonio ya no se trunca (line-clamp-2 quitado)
+
 
 **Lider:** Lucas
 

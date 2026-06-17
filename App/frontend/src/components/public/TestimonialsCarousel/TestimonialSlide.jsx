@@ -3,7 +3,7 @@ export default function TestimonialSlide({ testimonio }) {
 
   return (
     <div className="text-center px-4">
-      <p className="text-lg text-body dark:text-white/80 italic mb-6 leading-relaxed line-clamp-2">
+      <p className="text-lg text-body dark:text-white/80 italic mb-6 leading-relaxed">
         &ldquo;{texto}&rdquo;
       </p>
       <div className="text-center">

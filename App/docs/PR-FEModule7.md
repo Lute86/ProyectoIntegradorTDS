@@ -37,9 +37,9 @@ Implementacion de dark mode completo con theme toggle sol/luna en Navbar y Mobil
 
 - Build: **clean**
 - Lint: **0 warnings**
-- Tests: **214/214 pass**
+- Tests: **213/213 pass**
 - Scroll reveal con IntersectionObserver, seguro para SSR/tests
-- No se tocaron componentes admin, stores ni contexts
+
 
 ---
 

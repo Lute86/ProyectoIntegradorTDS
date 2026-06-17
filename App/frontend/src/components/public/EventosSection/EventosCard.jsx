@@ -11,7 +11,8 @@ export default function EventosCard({ evento, onVerDetalle }) {
   const modalidad = evento.modalidad || (evento.ubicacion ? 'presencial' : '')
 
   return (
-    <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+    <div onClick={onVerDetalle}
+      className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full cursor-pointer">
       <div className="p-6 flex flex-col h-full">
         <h3 className="text-lg font-bold text-body dark:text-white mb-3">{titulo}</h3>
         <p className="text-sm text-body/70 dark:text-white/70 mb-4 line-clamp-2 flex-1">{descripcion}</p>
@@ -24,11 +25,6 @@ export default function EventosCard({ evento, onVerDetalle }) {
                   {modalidad}
                 </span>
               )}
-              <button onClick={onVerDetalle}
-                className="px-3 py-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-500/30 transition-colors"
-              >
-                Ver detalle →
-              </button>
             </div>
           </div>
         </div>

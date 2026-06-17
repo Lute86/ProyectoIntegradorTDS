@@ -40,23 +40,7 @@ export default function TestimonialsCarousel({ testimonios }) {
 
           {total > 1 && (
             <>
-              <div className="flex items-center justify-center gap-4 mt-8">
-                <button
-                  onClick={goPrev}
-                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
-                  aria-label="Anterior"
-                >
-                  ◀
-                </button>
-                <button
-                  onClick={goNext}
-                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
-                  aria-label="Siguiente"
-                >
-                  ▶
-                </button>
-              </div>
-              <div className="flex items-center justify-center gap-2 mt-4">
+              <div className="flex items-center justify-center gap-2 mt-8">
                 {testimonios.map((_, i) => (
                   <button
                     key={i}

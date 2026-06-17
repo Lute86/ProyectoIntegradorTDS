@@ -230,6 +230,7 @@ export default function EventosPage() {
         <EventoDetailModal
           evento={selectedEvento}
           onClose={() => setSelectedEvento(null)}
+          showVerEventos={false}
         />
       )}
       </div>

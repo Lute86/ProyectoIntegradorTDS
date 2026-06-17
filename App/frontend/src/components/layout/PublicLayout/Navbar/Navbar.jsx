@@ -9,6 +9,7 @@ const NAV_MAP = {
   hero:    { to: '/',        label: 'Inicio' },
   careers: { to: '/carreras', label: 'Carreras' },
   news:    { to: '/noticias', label: 'Noticias' },
+  events:  { to: '/eventos',  label: 'Eventos' },
   students:{ to: '/estudiantes', label: 'Estudiantes' },
   contact: { to: '/contacto', label: 'Contacto' },
 }
@@ -19,8 +20,13 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = useMemo(() => {
+    const newsVisible = config.sections.find(s => s.id === 'news')?.visible
     return config.sections
-      .filter((s) => s.visible && NAV_MAP[s.id])
+      .filter((s) => {
+        if (!s.visible || !NAV_MAP[s.id]) return false
+        if (s.id === 'events' && newsVisible) return false
+        return true
+      })
       .sort((a, b) => a.order - b.order)
       .map((s) => NAV_MAP[s.id])
   }, [config.sections])
