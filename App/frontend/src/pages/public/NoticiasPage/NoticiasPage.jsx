@@ -12,6 +12,7 @@ const BADGE_COLORS = {
 }
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
+import NoticiaDetailModal from '../../../components/public/NoticiaDetailModal/NoticiaDetailModal'
 import NewsSidebar from './NewsSidebar'
 import noticiaBg from '../../../assets/fonts/noticia1.png'
 
@@ -45,6 +46,7 @@ export default function NoticiasPage() {
   const selectedCategoryRef = useRef(selectedCategory)
   selectedCategoryRef.current = selectedCategory
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedNoticia, setSelectedNoticia] = useState(null)
 
   useEffect(() => { fetchNoticias() }, [fetchNoticias])
 
@@ -94,12 +96,13 @@ export default function NoticiasPage() {
     <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="max-w-content mx-auto px-4 py-12 md:py-16 text-center bg-black/40">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
           <h1 className="text-h1 mb-3">Noticias</h1>
-          <p className="text-blue-200 text-lg">Mantenete informado sobre las novedades del instituto</p>
+          <p className="text-white text-xl">Mantenete informado sobre las novedades del instituto</p>
         </div>
       </div>
 
@@ -154,8 +157,8 @@ export default function NoticiasPage() {
 
                 <div className="space-y-5">
                   {paginatedNoticias.map((n) => (
-                    <Link key={n.id} to={`/noticias/${n.slug}`}
-                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div key={n.id} onClick={() => setSelectedNoticia(n)}
+                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
                         <div className="sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-400 to-slate-600 text-white">
                           <IconoCategoria categoria={n.categoria} className="w-10 h-10" selected />
@@ -173,7 +176,7 @@ export default function NoticiasPage() {
                           </div>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
 
@@ -201,6 +204,13 @@ export default function NoticiasPage() {
         </div>
       </div>
       </div>
+      {selectedNoticia && (
+        <NoticiaDetailModal
+          noticia={selectedNoticia}
+          onClose={() => setSelectedNoticia(null)}
+          showLinkToNoticias={false}
+        />
+      )}
     </div>
   )
 }

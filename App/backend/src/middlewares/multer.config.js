@@ -1,4 +1,5 @@
 import multer from 'multer';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join, extname } from 'path';
 import mkdirp from 'mkdirp';
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
     cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
   },
 });

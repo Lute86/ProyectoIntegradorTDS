@@ -56,7 +56,7 @@ export const updateSiteConfigValidation = [
       if (!Array.isArray(value)) {
         throw new Error('Sections debe ser un array JSON válido');
       }
-      const validSections = ['hero', 'statistics', 'careers', 'news', 'events', 'testimonials', 'gallery', 'students', 'contact'];
+      const validSections = ['hero', 'statistics', 'careers', 'news', 'events', 'testimonials', 'gallery'];
       for (const section of value) {
         if (!section.id || !validSections.includes(section.id)) {
           throw new Error(`Sección inválida: ${section.id}. Válidas: ${validSections.join(', ')}`);

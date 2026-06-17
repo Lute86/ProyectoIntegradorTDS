@@ -12,7 +12,9 @@ export default function QuickLinks({ links = LINKS }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-center text-body dark:text-white mb-6">Enlaces Utiles</h2>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-body dark:text-white">Enlaces Utiles</h2>
+      </div>
       <div className="grid grid-cols-3 gap-4">
         {links.map((link) => (
           <a

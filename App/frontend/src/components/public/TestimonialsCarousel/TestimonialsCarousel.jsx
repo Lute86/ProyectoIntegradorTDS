@@ -4,7 +4,7 @@ import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function TestimonialsCarousel({ testimonios }) {
   const [current, setCurrent] = useState(0)
-  const { ref, isVisible } = useScrollReveal()
+  const { ref, isVisible, style } = useScrollReveal({ delayMs: 200 })
 
   const total = testimonios?.length || 0
 
@@ -26,10 +26,12 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-16 dark:bg-gradient-to-b dark:from-slate-500 dark:to-slate-400 bg-site-bg transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="max-w-content mx-auto px-4">
+    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
-          <h2 className="text-h2 text-body dark:text-white">Lo que dicen nuestros estudiantes</h2>
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+            Lo que dicen nuestros estudiantes
+          </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
         </div>
 
@@ -38,23 +40,7 @@ export default function TestimonialsCarousel({ testimonios }) {
 
           {total > 1 && (
             <>
-              <div className="flex items-center justify-center gap-4 mt-8">
-                <button
-                  onClick={goPrev}
-                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
-                  aria-label="Anterior"
-                >
-                  ◀
-                </button>
-                <button
-                  onClick={goNext}
-                  className="w-12 h-12 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm border border-white/20 dark:border-white/20 rounded-full shadow-lg hover:bg-black/20 dark:hover:bg-white/20 text-body dark:text-white transition-all"
-                  aria-label="Siguiente"
-                >
-                  ▶
-                </button>
-              </div>
-              <div className="flex items-center justify-center gap-2 mt-4">
+              <div className="flex items-center justify-center gap-2 mt-8">
                 {testimonios.map((_, i) => (
                   <button
                     key={i}

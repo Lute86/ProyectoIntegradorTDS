@@ -15,8 +15,9 @@ describe('TestimonialSlide', () => {
     expect(screen.getByText('Desarrollo de Software')).toBeInTheDocument()
   })
 
-  it('muestra iniciales en el avatar', () => {
+  it('no tiene line-clamp (texto completo visible)', () => {
     render(<TestimonialSlide testimonio={testimonio} />)
-    expect(screen.getByText('JP')).toBeInTheDocument()
+    const texto = screen.getByText(/Muy buena institucion/)
+    expect(texto.className).not.toContain('line-clamp-2')
   })
 })

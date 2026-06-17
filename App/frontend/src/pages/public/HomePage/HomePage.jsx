@@ -6,6 +6,7 @@ import GaleriaCarousel from '../../../components/public/GaleriaCarousel/GaleriaC
 import TestimonialsCarousel from '../../../components/public/TestimonialsCarousel/TestimonialsCarousel'
 import EventosSection from '../../../components/public/EventosSection/EventosSection'
 import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
+import NoticiaDetailModal from '../../../components/public/NoticiaDetailModal/NoticiaDetailModal'
 import { MOCK_STATS } from '../../../data/mockStats'
 import { useState, useEffect, useMemo } from 'react'
 import useCarrerasStore from '../../../stores/carrerasStore'
@@ -35,9 +36,10 @@ function adaptNoticia(n) {
 export default function HomePage() {
   const { carreras, fetchCarreras } = useCarrerasStore()
   const [selectedEvento, setSelectedEvento] = useState(null)
+  const [selectedNoticia, setSelectedNoticia] = useState(null)
   const { noticias: storeNoticias, fetchNoticias } = useNoticiasStore()
   const { config } = useSiteConfigStore()
-  const layout = useSiteConfigStore((s) => s.config.layout)
+  const layout = config?.layout || 'full-width'
   const { eventos, fetchEventos } = useEventosStore()
   const { testimonios, fetchTestimonios } = useTestimoniosStore()
 
@@ -56,7 +58,7 @@ export default function HomePage() {
       hero:        <Hero />,
       statistics:  <Stats items={MOCK_STATS} />,
       careers:     <CareerCarousel carreras={carreras} />,
-      news:        <NewsSection noticias={noticias} />,
+      news:        <NewsSection noticias={noticias} onVerDetalle={(n) => setSelectedNoticia(n)} />,
       events:      <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
       testimonials:<TestimonialsCarousel testimonios={testimonios} />,
       gallery:     <GaleriaCarousel />,
@@ -73,20 +75,26 @@ export default function HomePage() {
       hero: heroSection ? <div key="hero">{mapa['hero']}</div> : null,
       otras: otrasSecciones.map((s) => <div key={s.id}>{mapa[s.id]}</div>).filter(Boolean),
     }
-  }, [config.sections, carreras, noticias, eventos, testimonios])
+  }, [config.sections, carreras, noticias, eventos, testimonios, setSelectedNoticia])
 
   return (
-    <div className={`dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg`}>
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         {secciones.hero}
-      </div>
-      <div className={`${layout === 'boxed' ? 'max-w-[1280px] mx-auto px-4' : ''}`}>
-        {secciones.otras}
+        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4`}>
+          {secciones.otras}
+        </div>
       </div>
       {selectedEvento && (
         <EventoDetailModal
           evento={selectedEvento}
           onClose={() => setSelectedEvento(null)}
+        />
+      )}
+      {selectedNoticia && (
+        <NoticiaDetailModal
+          noticia={selectedNoticia}
+          onClose={() => setSelectedNoticia(null)}
         />
       )}
     </div>

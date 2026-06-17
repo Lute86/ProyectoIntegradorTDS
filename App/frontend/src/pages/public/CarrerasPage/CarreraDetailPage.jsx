@@ -44,6 +44,7 @@ export default function CarreraDetailPage() {
   const [cuatriFilter, setCuatriFilter] = useState('')
   const [loadingHorarios, setLoadingHorarios] = useState(false)
   const [fetchedHorarios, setFetchedHorarios] = useState(false)
+  const [anioFilter, setAnioFilter] = useState('')
 
   const carrera = useMemo(() => {
     return selectedCarrera || carreras.find((c) => c.slug === slug) || null
@@ -76,6 +77,7 @@ export default function CarreraDetailPage() {
   useEffect(() => {
     setSelectedComision('')
     setCuatriFilter('')
+    setAnioFilter('')
     setHorarios([])
     setActiveTab('descripcion')
     setFetchedHorarios(false)
@@ -101,23 +103,52 @@ export default function CarreraDetailPage() {
     }
   }, [activeTab, carrera?.id, fetchedHorarios, loadingHorarios, fetchHorarios])
 
-  const comisiones = useMemo(() => {
-    const set = new Set(horarios.map((h) => h.comision).filter(Boolean))
+  const aniosDisponibles = useMemo(() => {
+    const set = new Set(horarios.map(h => h.comisionInfo?.anio_lectivo).filter(Boolean))
     return Array.from(set).sort()
   }, [horarios])
 
+  const horariosDelAnio = useMemo(() => {
+    if (!anioFilter) return horarios
+    return horarios.filter(h => h.comisionInfo?.anio_lectivo === anioFilter)
+  }, [horarios, anioFilter])
+
+  const comisiones = useMemo(() => {
+    const set = new Set(horariosDelAnio.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean))
+    return Array.from(set).sort()
+  }, [horariosDelAnio])
+
+  const comisionesDelCuatri = useMemo(() => {
+    const horariosBase = cuatriFilter
+      ? horariosDelAnio.filter((h) => h.carreraMateria?.cuatrimestre === cuatriFilter)
+      : horariosDelAnio
+    const set = new Set(
+      horariosBase.map((h) => h.comisionInfo?.nombre || h.comision).filter(Boolean)
+    )
+    return Array.from(set).sort()
+  }, [horariosDelAnio, cuatriFilter])
+
+  useEffect(() => {
+    setSelectedComision('')
+  }, [cuatriFilter])
+
+  useEffect(() => {
+    setSelectedComision('')
+    setCuatriFilter('')
+  }, [anioFilter])
+ 
   const cuatrimestres = useMemo(() => {
     const set = new Set(
-      horarios.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
+      horariosDelAnio.map((h) => h.carreraMateria?.cuatrimestre).filter(Boolean)
     )
     return Array.from(set).sort((a, b) => a - b)
-  }, [horarios])
+  }, [horariosDelAnio])
 
   const horariosFiltrados = useMemo(() => {
     if (!selectedComision) return []
-    let filtrados = horarios
+    let filtrados = horariosDelAnio
     if (selectedComision !== 'Todas') {
-      filtrados = filtrados.filter((h) => h.comision === selectedComision)
+      filtrados = filtrados.filter((h) => (h.comisionInfo?.nombre || h.comision) === selectedComision)
     }
     if (cuatriFilter) {
       filtrados = filtrados.filter(
@@ -130,7 +161,7 @@ export default function CarreraDetailPage() {
       if (nomA !== nomB) return nomA.localeCompare(nomB)
       return (a.dia || '').localeCompare(b.dia || '')
     })
-  }, [horarios, selectedComision, cuatriFilter])
+  }, [horariosDelAnio, selectedComision, cuatriFilter])
 
   if (loading && !carrera) {
     return (
@@ -174,10 +205,11 @@ export default function CarreraDetailPage() {
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
-        className="bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-12 md:py-16 bg-black/40`}>
+        <div className="absolute inset-0 bg-black/50" />
+        <div className={`relative z-10 ${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
           <div className="flex items-center gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
@@ -192,7 +224,7 @@ export default function CarreraDetailPage() {
             </div>
             <div>
               <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
-              <p className="text-blue-200">Tecnicatura en {carrera.nombre}</p>
+              <p className="text-white">Tecnicatura en {carrera.nombre}</p>
             </div>
           </div>
         </div>
@@ -259,14 +291,7 @@ export default function CarreraDetailPage() {
 
             {activeTab === 'horarios' && (
               <div>
-                {comisiones.length > 0 ? (
-                  <div className="flex items-center gap-3 mb-4">
-                    <h3 className="text-xl font-bold text-body dark:text-white">Horarios</h3>
-                    <p className="text-body/70 dark:text-white/70 text-xs">Selecciona una comision y/o cuatrimestre para ver los horarios</p>
-                  </div>
-                ) : (
-                  <h3 className="text-xl font-bold text-body dark:text-white mb-4">Horarios</h3>
-                )}
+                <h3 className="text-xl font-bold text-body dark:text-white mb-4">Horarios</h3>
 
                 {loadingHorarios ? (
                   <div className="space-y-4">
@@ -278,53 +303,62 @@ export default function CarreraDetailPage() {
                       </div>
                     ))}
                   </div>
-                ) : comisiones.length === 0 ? (
+                ) : horarios.length === 0 ? (
                   <p className="text-body/50 dark:text-white/50 text-center py-8 text-sm">
                     Sin horarios disponibles para esta carrera.
                   </p>
                 ) : (
                   <>
-                    {cuatrimestres.length > 1 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <button onClick={() => setCuatriFilter('')}
-                          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                            !cuatriFilter
-                              ? 'bg-slate-800 text-white shadow-sm'
-                              : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
-                          }`}
-                        >Todos los cuatrimestres</button>
-                        {cuatrimestres.map((c) => (
-                          <button key={c} onClick={() => setCuatriFilter(c)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                              cuatriFilter === c
-                                ? 'bg-slate-800 text-white shadow-sm'
-                                : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
-                            }`}
-                          >{nombresCuatri[c] || `Cuatrimestre ${c}`}</button>
-                        ))}
+                    <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        {aniosDisponibles.length > 0 && (
+                          <div className="flex-1 animate-in fade-in duration-300">
+                            <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Año lectivo</label>
+                            <select value={anioFilter} onChange={(e) => setAnioFilter(Number(e.target.value) || '')}
+                              className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                            >
+                              <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
+                              {aniosDisponibles.map((a) => (
+                                <option className="dark:bg-slate-800 dark:text-white" key={a} value={a}>{a}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+                        {cuatrimestres.length > 0 && (
+                          <div className="flex-1 animate-in fade-in duration-300">
+                            <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Cuatrimestre</label>
+                            <select value={cuatriFilter} onChange={(e) => setCuatriFilter(Number(e.target.value) || '')}
+                              className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                            >
+                              <option className="dark:bg-slate-800 dark:text-white" value="">Todos los cuatrimestres</option>
+                              {cuatrimestres.map((c) => (
+                                <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>{nombresCuatri[c] || `Cuatrimestre ${c}`}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+                        {comisionesDelCuatri.length > 0 && (
+                          <div className="flex-1 animate-in fade-in duration-300">
+                            <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Comision</label>
+                            <select value={selectedComision} onChange={(e) => setSelectedComision(e.target.value)}
+                              className="w-full px-4 py-2.5 border border-slate-300 dark:border-white/30 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-body dark:text-white"
+                            >
+                              <option className="dark:bg-slate-800 dark:text-white" value="">Seleccionar</option>
+                              <option className="dark:bg-slate-800 dark:text-white" value="Todas">Todas las comisiones</option>
+                              {comisionesDelCuatri.map((c) => (
+                                <option className="dark:bg-slate-800 dark:text-white" key={c} value={c}>Comision {c}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
                       </div>
-                    )}
-
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      <button onClick={() => setSelectedComision('Todas')}
-                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                          selectedComision === 'Todas'
-                            ? 'bg-blue-600 text-white shadow-sm'
-                            : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
-                        }`}
-                      >Todas</button>
-                      {comisiones.map((com) => (
-                        <button key={com} onClick={() => setSelectedComision(com)}
-                          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                            selectedComision === com
-                              ? 'bg-blue-600 text-white shadow-sm'
-                              : 'bg-white dark:bg-white/10 border border-slate-300 dark:border-white/30 text-body dark:text-white/70 hover:bg-slate-100 dark:hover:bg-white/20'
-                          }`}
-                        >Comision {com}</button>
-                      ))}
                     </div>
 
-                    {!selectedComision ? null : horariosFiltrados.length === 0 ? (
+                    {anioFilter && comisiones.length === 0 ? (
+                      <p className="text-body/50 dark:text-white/50 text-center py-8 text-sm">No hay horarios para el año seleccionado.</p>
+                    ) : !selectedComision ? (
+                      <p className="text-body/50 dark:text-white/50 text-center py-8 text-sm">Selecciona una comision para ver los horarios.</p>
+                    ) : horariosFiltrados.length === 0 ? (
                     <p className="text-body/50 dark:text-white/50 text-center py-8 text-sm">
                       No hay horarios disponibles para esta seleccion.
                     </p>
@@ -346,7 +380,7 @@ export default function CarreraDetailPage() {
                               <tr key={i} className="border-t border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5">
                                 <td className="p-3 text-body dark:text-white font-medium">{h.carreraMateria?.materia?.nombre || '—'}</td>
                                 {selectedComision === 'Todas' && (
-                                  <td className="p-3 text-body dark:text-white/70 font-semibold">Comision {h.comision}</td>
+                                  <td className="p-3 text-body dark:text-white/70 font-semibold">Comision {h.comisionInfo?.nombre || h.comision}</td>
                                 )}
                                 <td className="p-3 text-body dark:text-white/80">{h.dia}</td>
                                 <td className="p-3 text-body dark:text-white/70">{h.horario}</td>

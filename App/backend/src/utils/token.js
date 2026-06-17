@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_in_production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET no está definido en las variables de entorno');
+}
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 
 export function generateToken(payload, expiresIn = JWT_EXPIRES_IN) {

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 
-export default function useScrollReveal() {
+export default function useScrollReveal({ delayMs = 0 } = {}) {
   const ref = useRef(null)
   const [isVisible, setIsVisible] = useState(true)
 
@@ -27,5 +27,5 @@ export default function useScrollReveal() {
     return () => observer.disconnect()
   }, [])
 
-  return { ref, isVisible }
+  return { ref, isVisible, style: { animationDelay: `${delayMs}ms` } }
 }

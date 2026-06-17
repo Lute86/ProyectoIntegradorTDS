@@ -1,30 +1,24 @@
-# FE Modulo 1 - Fundacion y Autenticacion
+# Pull Request - Modulo 1: Fundacion y Autenticacion
 
-## Resumen de cambios
+**Autor:** Lucas (FE Dev 1)
+**Stack:** React 19, Vite 6, Tailwind 4, Zustand, Axios
 
-Se implementa la capa base del frontend: sistema de diseno UI completo, capa de servicios API con axios, contextos globales, stores de estado (Zustand), layout publico con Navbar/Footer, y correccion del login flow.
+---
 
-**Cambios principales:**
-- Capa de servicios API con axios e interceptores (token JWT, 401 redirect)
-- Stores Zustand: authStore (user, token, login/logout), uiStore (theme, sidebar, toasts)
-- AuthContext integrado con API real + mock fallback (admin@ifts29.edu.ar / admin1234)
-- ThemeContext con persistencia en localStorage y soporte dark mode
-- LayoutContext (sidebar toggle) y ToastContext (notificaciones)
-- Sistema de diseno UI: 13 componentes (Button, Input, Select, Textarea, Card, Badge, Modal, Table, Pagination, Toggle, Toast, Skeleton, EmptyState)
-- PublicLayout con Navbar (links responsive, mobile menu) y Footer (3 columnas)
-- Corregido LoginPage para redirigir al dashboard tras login exitoso
-- Corregidos imports relativos con `../../../` en pages/ y ProtectedRoute
-- Responsive: contenedores `max-w-6xl` → `max-w-content` en 12 archivos, grids con variantes `xl:` y `3xl:`, tipografia fluida con `clamp()` (text-h1, text-h2, text-hero)
+## Resumen
 
-## Archivos
+Implementacion de la capa base del frontend: sistema de diseno UI con 12 componentes reutilizables, servicios API con axios e interceptors JWT, 3 contextos globales (Theme, Layout, Toast), stores Zustand con persistencia (authStore, uiStore), PublicLayout completo (Navbar responsive + MobileMenu + Footer) y AdminLayout (Sidebar colapsable + Topbar con breadcrumbs).
 
-### Nuevos
-| Archivo | Descripcion |
-|---------|-------------|
-| `src/services/api.js` | Axios instance con interceptors |
-| `src/stores/authStore.js` | Zustand store de autenticacion |
-| `src/stores/uiStore.js` | Zustand store de UI global |
-| `src/contexts/ThemeContext/ThemeContext.jsx` | Provider de tema (claro/oscuro) |
+---
+
+## Archivos Creados
+
+| Archivo | Proposito |
+|---------|-----------|
+| `src/services/api.js` | Axios con interceptors JWT y 401 redirect |
+| `src/stores/authStore.js` | Store de autenticacion |
+| `src/stores/uiStore.js` | Store de UI global (theme, sidebar, toasts) |
+| `src/contexts/ThemeContext/ThemeContext.jsx` | Provider de tema claro/oscuro |
 | `src/contexts/LayoutContext/LayoutContext.jsx` | Provider de layout (sidebar) |
 | `src/contexts/ToastContext/ToastContext.jsx` | Provider de toasts |
 | `src/components/ui/Button/Button.jsx` | 5 variantes, 3 tamanos, loading |
@@ -40,46 +34,41 @@ Se implementa la capa base del frontend: sistema de diseno UI completo, capa de 
 | `src/components/ui/Toast/Toast.jsx` | 4 tipos, auto-close |
 | `src/components/ui/Skeleton/Skeleton.jsx` | 6 variantes con animate-pulse |
 | `src/components/ui/EmptyState/EmptyState.jsx` | Icono, titulo, accion |
-| `src/components/layout/PublicLayout/PublicLayout.jsx` | Layout publico (Navbar + Outlet + Footer) |
+| `src/components/layout/PublicLayout/PublicLayout.jsx` | Layout publico |
 | `src/components/layout/PublicLayout/Navbar/Navbar.jsx` | Navbar responsive |
 | `src/components/layout/PublicLayout/Navbar/MobileMenu.jsx` | Menu mobile overlay |
 | `src/components/layout/PublicLayout/Footer/Footer.jsx` | Footer 3 columnas |
 
-### Modificados
-| Archivo | Descripcion |
-|---------|-------------|
-| `src/contexts/AuthContext/AuthContext.jsx` | Integrado con API, mock fallback, localStorage |
+---
+
+## Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
 | `src/App.jsx` | Agregados ThemeProvider, LayoutProvider, ToastProvider |
 | `src/AppRouter.jsx` | PublicLayout wrapper, import default ProtectedRoute |
-| `src/pages/admin/LoginPage/LoginPage.jsx` | handleSubmit corregido para usar login(email, password) |
-| `src/pages/public/NoticiasPage/NoticiasPage.jsx` | Import path corregido |
-| `src/pages/public/NoticiaDetailPage/NoticiaDetailPage.jsx` | Import path corregido |
-| `src/components/ProtectedRoute.jsx` | Ahora renderiza AdminLayout |
+| `src/pages/admin/LoginPage/LoginPage.jsx` | Fix handleSubmit para usar login(email, password) |
+| `src/components/ProtectedRoute.jsx` | Renderiza AdminLayout |
 | `src/components/layout/AdminLayout/AdminLayout.jsx` | Layout admin con sidebar + topbar + outlet |
-| `src/components/layout/AdminLayout/AdminSidebar/AdminSidebar.jsx` | Sidebar con 4 secciones y navegacion |
-| `src/components/layout/AdminLayout/AdminTopbar/AdminTopbar.jsx` | Topbar con titulo, breadcrumbs, avatar, logout |
+| `src/components/layout/AdminLayout/AdminSidebar/AdminSidebar.jsx` | Sidebar con 4 secciones |
+| `src/components/layout/AdminLayout/AdminTopbar/AdminTopbar.jsx` | Topbar con breadcrumbs, avatar, logout |
 | `src/components/layout/AdminLayout/AdminBreadcrumbs/AdminBreadcrumbs.jsx` | Breadcrumb basado en ruta activa |
 
-### Errores corregidos
-- Rutas relativas `../../` incorrectas desde `pages/*/XPage/` (necesitan `../../../`)
+---
+
+## Detalles Tecnicos
+
+- **Axios interceptor:** Adjunta JWT en headers, redirect a `/login` en 401
+- **3 contextos globales:** ThemeContext (claro/oscuro con localStorage), LayoutContext (sidebar colapsable), ToastContext (notificaciones con auto-close)
+- **2 stores Zustand:** authStore con persistencia localStorage (login, logout, refresh token), uiStore (theme, sidebar, toasts)
+- **Sistema de diseno:** 12 componentes UI reutilizables con variantes (Button: 5 variantes, Modal: 4 tamanos, Badge: 6 colores)
+- **PublicLayout:** Navbar responsive con dropdown + MobileMenu overlay + Footer 3 columnas
+- **AdminLayout:** Sidebar colapsable con 4 secciones, Topbar con breadcrumbs dinamicos
+
+---
+
+## Errores Corregidos
+
+- Rutas relativas desde `pages/*/XPage/` necesitan `../../../` para llegar a `src/`
 - ProtectedRoute importado con `{ }` pero exportado como `default`
-- LoginPage pasaba objeto `{ email, role }` en vez de `(email, password)` al AuthContext
-
-## Pendiente
-
-### Tests faltantes
-| Archivo | Prioridad |
-|---------|-----------|
-| `tests/stores/authStore.test.js` | Alta — store crítico sin cobertura |
-| `tests/components/Select.test.jsx` | Media |
-| `tests/components/Textarea.test.jsx` | Media |
-| `tests/components/layout/Navbar.test.jsx` | Media |
-| `tests/components/layout/MobileMenu.test.jsx` | Baja |
-| `tests/components/layout/Footer.test.jsx` | Baja |
-| `tests/components/layout/PublicLayout.test.jsx` | Media |
-| `tests/pages/admin/LoginPage.test.jsx` | Alta |
-| `tests/components/layout/AdminLayout.test.jsx` | Media |
-| `tests/components/layout/AdminSidebar.test.jsx` | Media |
-
-### Issues
-
+- LoginPage pasaba objeto en vez de `(email, password)`

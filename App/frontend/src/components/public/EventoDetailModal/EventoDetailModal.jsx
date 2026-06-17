@@ -22,7 +22,7 @@ function formatFecha(fechaStr) {
   return `${parseInt(d)} de ${meses[parseInt(m) - 1]} de ${y}`
 }
 
-export default function EventoDetailModal({ evento, onClose }) {
+export default function EventoDetailModal({ evento, onClose, showVerEventos = true }) {
   const titulo = evento.nombre || evento.titulo
   const descripcion = evento.descripcion
   const fecha = formatFecha(evento.fecha)
@@ -49,10 +49,10 @@ export default function EventoDetailModal({ evento, onClose }) {
     >
       <div className="fixed inset-0 bg-black/60" />
 
-      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200"
+      <div className="relative bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl w-full sm:min-w-[36rem] max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <div className="shrink-0 border-b border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-bold text-body dark:text-white pr-4">{titulo}</h2>
           <button onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0"
@@ -63,7 +63,7 @@ export default function EventoDetailModal({ evento, onClose }) {
           </button>
         </div>
 
-        <div className="px-6 py-5 space-y-5">
+        <div className="px-6 py-5 space-y-5 overflow-y-auto flex-1 min-h-0 modal-scrollbar">
           <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 text-sm text-body/70 dark:text-white/70">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,14 +90,15 @@ export default function EventoDetailModal({ evento, onClose }) {
                 <span>{ubicacion}</span>
               </div>
             )}
-          </div>
 
-          <div className="flex flex-wrap gap-2">
             {estado && (
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadge[estado] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
+              <span className={`ml-4 self-center px-3 py-1 rounded-full text-xs font-semibold border ${estadoBadge[estado] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
                 {estado.charAt(0).toUpperCase() + estado.slice(1)}
               </span>
             )}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
             {modalidad && (
               <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${modalidadBadge[modalidad] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-400/30'}`}>
                 {modalidad.charAt(0).toUpperCase() + modalidad.slice(1)}
@@ -115,14 +116,16 @@ export default function EventoDetailModal({ evento, onClose }) {
           )}
         </div>
 
-        <div className="sticky bottom-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-between rounded-b-2xl">
-          <Link to="/eventos" onClick={onClose}
-            className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Ver eventos
-          </Link>
+        <div className="shrink-0 border-t border-slate-100 dark:border-white/10 px-6 py-4 flex items-center justify-center gap-3">
+          {showVerEventos && (
+            <Link to="/eventos" onClick={onClose}
+              className="px-5 py-2.5 bg-blue-600 dark:bg-blue-500/20 dark:text-blue-400 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-500/30 hover:shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              Ver eventos
+            </Link>
+          )}
           <button onClick={onClose}
-            className="px-5 py-2 bg-slate-800 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-5 py-2.5 bg-gray-900 dark:bg-white/10 text-white text-sm font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-white/20 hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             Cerrar
           </button>

@@ -10,6 +10,7 @@ const labels = {
   usuarios: 'Usuarios',
   personalizar: 'Personalizar Sitio',
   ajustes: 'Ajustes',
+
 };
 
 export default function AdminBreadcrumbs() {

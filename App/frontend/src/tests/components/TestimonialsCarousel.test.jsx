@@ -23,9 +23,4 @@ describe('TestimonialsCarousel', () => {
     expect(container.innerHTML).toBe('')
   })
 
-  it('muestra controles de navegacion si hay mas de un testimonio', () => {
-    render(<TestimonialsCarousel testimonios={testimonios} />)
-    expect(screen.getByLabelText('Anterior')).toBeInTheDocument()
-    expect(screen.getByLabelText('Siguiente')).toBeInTheDocument()
-  })
 })
