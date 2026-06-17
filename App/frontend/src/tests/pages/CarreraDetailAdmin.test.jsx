@@ -43,11 +43,21 @@ const MOCK_CARRERA = {
 }
 
 const MOCK_COMISION = {
-  id: 99, nombre: '1A', carrera_id: 1, anio_lectivo: 2026, semestre: 1,
+  id: 99, nombre: '1A', carrera_id: 1, anio_lectivo: 2024, semestre: 1,
   carrerasMaterias: [
     { id: 1, cuatrimestre: 1, carga_horaria_semanal: 6, materia: { id: 1, nombre: 'Programacion I' } },
     { id: 2, cuatrimestre: 1, carga_horaria_semanal: 4, materia: { id: 2, nombre: 'Matematica' } },
   ],
+}
+
+const MOCK_HORARIO_EXISTENTE = {
+  id: 50,
+  comision_id: 99,
+  carrera_materia_id: 1,
+  dia: 'Lunes',
+  horario: '10:00-12:00',
+  aula: '101',
+  profesor: ''
 }
 
 function renderPage() {
@@ -75,6 +85,7 @@ describe('CarreraDetailAdmin - Horarios', () => {
     })
     mockComisionCreate.mockReset()
     mockComisionGetAll.mockResolvedValue({ data: { data: [] } })
+    mockGetAll.mockResolvedValue({ data: { data: [] } })
   })
 
   it('renderiza las pestanas Materias y Horarios por Comision', () => {
@@ -149,6 +160,19 @@ describe('CarreraDetailAdmin - Horarios', () => {
     mockComisionGetAll.mockResolvedValue({ data: { data: [MOCK_COMISION] } })
     mockCreate.mockRejectedValueOnce(new Error('Error de red'))
       .mockResolvedValueOnce({ data: { data: { id: 102 } } })
+    // Mock horarios existentes para forzar modo individual
+    mockGetAll.mockResolvedValue({ 
+      data: { 
+        data: [{
+          id: 52,
+          comision_id: 99,
+          carrera_materia_id: 1,
+          dia: 'Lunes',
+          horario: '10:00-12:00',
+          aula: '101'
+        }]
+      } 
+    })
     renderPage()
     fireEvent.click(screen.getByText('Horarios por Comision'))
     fireEvent.click(await screen.findByText('A'))
