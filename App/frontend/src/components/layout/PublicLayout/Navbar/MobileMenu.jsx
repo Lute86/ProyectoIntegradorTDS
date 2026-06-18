@@ -15,7 +15,9 @@ export default function MobileMenu({ open, onClose, links }) {
           </button>
         </div>
         <ul className="flex flex-col gap-2">
-          {links.map((l) => (
+          {links.flatMap((l) =>
+            l.children ? l.children : [l]
+          ).map((l) => (
             <li key={l.to}>
               <NavLink
                 to={l.to}

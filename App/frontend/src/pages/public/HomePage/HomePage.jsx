@@ -54,36 +54,30 @@ export default function HomePage() {
   }, [storeNoticias])
 
   const secciones = useMemo(() => {
-    const mapa = {
-      hero:        <Hero />,
-      statistics:  <Stats items={MOCK_STATS} />,
-      careers:     <CareerCarousel carreras={carreras} />,
-      news:        <NewsSection noticias={noticias} onVerDetalle={(n) => setSelectedNoticia(n)} />,
-      events:      <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
-      testimonials:<TestimonialsCarousel testimonios={testimonios} />,
-      gallery:     <GaleriaCarousel />,
+    const components = {
+      hero:        () => <Hero />,
+      statistics:  () => <Stats items={MOCK_STATS} />,
+      careers:     () => <CareerCarousel carreras={carreras} />,
+      news:        () => <NewsSection noticias={noticias} onVerDetalle={(n) => setSelectedNoticia(n)} />,
+      events:      () => <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
+      testimonials:() => <TestimonialsCarousel testimonios={testimonios} />,
+      gallery:     () => <GaleriaCarousel />,
     }
 
     const visibleItems = config.sections
       .filter((s) => s.visible && HOME_SECTION_IDS.includes(s.id))
       .sort((a, b) => a.order - b.order)
 
-    const heroSection = visibleItems.find(s => s.id === 'hero')
-    const otrasSecciones = visibleItems.filter(s => s.id !== 'hero')
-
-    return {
-      hero: heroSection ? <div key="hero">{mapa['hero']}</div> : null,
-      otras: otrasSecciones.map((s) => <div key={s.id}>{mapa[s.id]}</div>).filter(Boolean),
-    }
+    return visibleItems.map((s) => {
+      const render = components[s.id]
+      return render ? <div key={s.id}>{render()}</div> : null
+    }).filter(Boolean)
   }, [config.sections, carreras, noticias, eventos, testimonios, setSelectedNoticia])
 
   return (
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-site-bg">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-        {secciones.hero}
-        <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4`}>
-          {secciones.otras}
-        </div>
+        {secciones}
       </div>
       {selectedEvento && (
         <EventoDetailModal

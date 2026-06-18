@@ -59,15 +59,13 @@ const DEFAULT_CONFIG: SiteConfig = {
   layout: 'full-width',
   themePreset: 'moderno',
   sections: [
-    { id: 'hero', visible: true, order: 1, navVisible: true },
-    { id: 'statistics', visible: true, order: 2, navVisible: true },
-    { id: 'careers', visible: true, order: 3, navVisible: true },
-    { id: 'news', visible: true, order: 4, navVisible: true },
-    { id: 'events', visible: true, order: 5, navVisible: true },
-    { id: 'testimonials', visible: true, order: 6, navVisible: true },
-    { id: 'gallery', visible: true, order: 7, navVisible: true },
-    { id: 'students', visible: true, order: 8, navVisible: true },
-    { id: 'contact', visible: true, order: 9, navVisible: true },
+    { id: 'hero', visible: true, order: 1 },
+    { id: 'statistics', visible: true, order: 2 },
+    { id: 'careers', visible: true, order: 3 },
+    { id: 'news', visible: true, order: 4 },
+    { id: 'events', visible: true, order: 5 },
+    { id: 'testimonials', visible: true, order: 6 },
+    { id: 'gallery', visible: true, order: 7 },
   ],
   socialLinks: {
     instagram: 'https://instagram.com/ifts29',
@@ -84,7 +82,6 @@ interface SiteConfigState {
   updateConfig: (data: Partial<SiteConfig>) => void;
   updateColors: (colors: Partial<SiteConfig['colors']>) => void;
   updateTypography: (typography: Partial<SiteConfig['typography']>) => void;
-  toggleNavVisibility: (sectionId: string) => void;
   resetConfig: () => void;
 }
 
@@ -99,6 +96,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     try {
       const res = await siteConfigService.getConfig()
       const data = res.data?.data || res.data
+      console.log('[DEBUG fetchConfig] API response sections:', JSON.stringify(data?.sections?.map((s: any) => ({ id: s.id, order: s.order }))))
       if (data) {
         set({
           config: {
@@ -141,6 +139,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
           },
           isLoading: false,
         })
+        console.log('[DEBUG fetchConfig] Store sections AFTER set:', JSON.stringify(useSiteConfigStore.getState().config.sections.map(s => ({ id: s.id, order: s.order }))))
       }
     } catch {
       set({ isLoading: false })
@@ -149,6 +148,7 @@ export const useSiteConfigStore = create<SiteConfigState>()(
   saveConfig: async () => {
     const state = useSiteConfigStore.getState();
     const cfg = state.config;
+    console.log('[DEBUG saveConfig] sections BEFORE save:', JSON.stringify(cfg.sections.map(s => ({ id: s.id, order: s.order }))));
     const payload: Record<string, unknown> = {
       site_name: cfg.siteName || 'IFTS 29',
       site_subtitle: cfg.siteSubtitle || '',
@@ -166,7 +166,8 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     if (cfg.seoDescription) payload.seo_description = cfg.seoDescription;
     try {
       const sectionsBackup = JSON.parse(JSON.stringify(state.config.sections));
-      await api.put('/config', payload);
+      const res = await api.put('/config', payload);
+      console.log('[DEBUG saveConfig] API response sections:', JSON.stringify(res.data?.data?.sections?.map((s: any) => ({ id: s.id, order: s.order }))));
       set({ isDirty: false });
     } catch (err: any) {
       console.error('Error del backend:', err.response?.data);
@@ -212,17 +213,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
       isDirty: true,
     }));
   },
-  toggleNavVisibility: (sectionId) => {
-    set((state) => ({
-      config: {
-        ...state.config,
-        sections: state.config.sections.map((s) =>
-          s.id === sectionId ? { ...s, navVisible: !s.navVisible } : s
-        ),
-      },
-      isDirty: true,
-    }));
-  },
   resetConfig: () => {
     set({ config: DEFAULT_CONFIG, isDirty: false });
   },
@@ -232,12 +222,20 @@ export const useSiteConfigStore = create<SiteConfigState>()(
   merge: (persisted, current) => {
     const defaultSections = current.config.sections;
     const persistedSections = persisted?.config?.sections;
-    const mergedSections = persistedSections?.length
-      ? defaultSections.map((sec) => {
-          const p = persistedSections.find((ps) => ps.id === sec.id);
-          return p ? { ...sec, ...p } : sec;
-        })
-      : defaultSections;
+    console.log('[DEBUG persist merge] persisted sections:', JSON.stringify(persistedSections?.map((s: any) => ({ id: s.id, order: s.order }))))
+    console.log('[DEBUG persist merge] default sections:', JSON.stringify(defaultSections.map(s => ({ id: s.id, order: s.order }))))
+
+    let mergedSections = defaultSections;
+    if (persistedSections?.length) {
+      const merged = [...persistedSections];
+      for (const def of defaultSections) {
+        if (!merged.some((s) => s.id === def.id)) {
+          merged.push(def);
+        }
+      }
+      mergedSections = merged;
+    }
+    console.log('[DEBUG persist merge] merged sections:', JSON.stringify(mergedSections.map(s => ({ id: s.id, order: s.order }))))
 
     return {
       ...current,
