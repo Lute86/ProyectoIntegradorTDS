@@ -96,7 +96,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     try {
       const res = await siteConfigService.getConfig()
       const data = res.data?.data || res.data
-      console.log('[DEBUG fetchConfig] API response sections:', JSON.stringify(data?.sections?.map((s: any) => ({ id: s.id, order: s.order }))))
       if (data) {
         set({
           config: {
@@ -139,7 +138,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
           },
           isLoading: false,
         })
-        console.log('[DEBUG fetchConfig] Store sections AFTER set:', JSON.stringify(useSiteConfigStore.getState().config.sections.map(s => ({ id: s.id, order: s.order }))))
       }
     } catch {
       set({ isLoading: false })
@@ -148,7 +146,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
   saveConfig: async () => {
     const state = useSiteConfigStore.getState();
     const cfg = state.config;
-    console.log('[DEBUG saveConfig] sections BEFORE save:', JSON.stringify(cfg.sections.map(s => ({ id: s.id, order: s.order }))));
     const payload: Record<string, unknown> = {
       site_name: cfg.siteName || 'IFTS 29',
       site_subtitle: cfg.siteSubtitle || '',
@@ -167,7 +164,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
     try {
       const sectionsBackup = JSON.parse(JSON.stringify(state.config.sections));
       const res = await api.put('/config', payload);
-      console.log('[DEBUG saveConfig] API response sections:', JSON.stringify(res.data?.data?.sections?.map((s: any) => ({ id: s.id, order: s.order }))));
       set({ isDirty: false });
     } catch (err: any) {
       console.error('Error del backend:', err.response?.data);
@@ -222,8 +218,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
   merge: (persisted, current) => {
     const defaultSections = current.config.sections;
     const persistedSections = persisted?.config?.sections;
-    console.log('[DEBUG persist merge] persisted sections:', JSON.stringify(persistedSections?.map((s: any) => ({ id: s.id, order: s.order }))))
-    console.log('[DEBUG persist merge] default sections:', JSON.stringify(defaultSections.map(s => ({ id: s.id, order: s.order }))))
 
     let mergedSections = defaultSections;
     if (persistedSections?.length) {
@@ -235,7 +229,6 @@ export const useSiteConfigStore = create<SiteConfigState>()(
       }
       mergedSections = merged;
     }
-    console.log('[DEBUG persist merge] merged sections:', JSON.stringify(mergedSections.map(s => ({ id: s.id, order: s.order }))))
 
     return {
       ...current,
