@@ -59,8 +59,8 @@ const PersonalizarPage = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+        <div className="lg:col-span-2 space-y-6 min-w-0">
+          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
             <div>
               <h2 className="text-base font-bold text-gray-900">Temas y Colores</h2>
               <p className="text-xs text-gray-500">Seleccione un tema o ajuste cada color de forma individual.</p>
@@ -68,7 +68,7 @@ const PersonalizarPage = () => {
             <ThemePresets />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
             <div>
               <h2 className="text-base font-bold text-gray-900">Tipografia</h2>
               <p className="text-xs text-gray-500">Configure las fuentes y el tamano base del sitio.</p>
@@ -76,7 +76,7 @@ const PersonalizarPage = () => {
             <TypographyConfig />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
             <div>
               <h2 className="text-base font-bold text-gray-900">Layout</h2>
               <p className="text-xs text-gray-500">Seleccione la disposicion del contenido.</p>
@@ -84,7 +84,7 @@ const PersonalizarPage = () => {
             <LayoutSelector />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
+          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
             <div>
               <h2 className="text-base font-bold text-gray-900">Orden de Secciones</h2>
               <p className="text-xs text-gray-500">Active, desactive o reordene las secciones. Los cambios afectaran tanto a la Landing Page como al Menu de Navegacion (Navbar).</p>

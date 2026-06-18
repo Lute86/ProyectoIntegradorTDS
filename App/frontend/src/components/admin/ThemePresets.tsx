@@ -59,8 +59,8 @@ const ThemePresets = () => {
 
   return (
     <div className="space-y-6">
-      {/* Grilla de temas predefinidos */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Lista de temas predefinidos */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
         {TEMAS.map((tema) => {
           const activo = config.themePreset === tema.id;
           return (
@@ -72,20 +72,19 @@ const ThemePresets = () => {
                 useSiteConfigStore.getState().updateConfig({ themePreset: tema.id });
               }}
               className={clsx(
-                "text-left p-4 rounded-xl border-2 transition-all",
+                "text-left p-3 lg:p-4 rounded-xl border-2 transition-all",
                 activo
                   ? "border-blue-500 bg-blue-50 shadow-md"
                   : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
               )}
             >
-              <h3 className="text-sm font-bold text-gray-900 mb-1">{tema.nombre}</h3>
-              <p className="text-[10px] text-gray-500 mb-3">{tema.descripcion}</p>
-              <div className="flex h-5 rounded-lg overflow-hidden border border-gray-200">
+              <h3 className="text-sm font-bold text-gray-900 mb-0.5">{tema.nombre}</h3>
+              <p className="text-[10px] text-gray-500 mb-2">{tema.descripcion}</p>
+              <div className="flex h-4 rounded-lg overflow-hidden border border-gray-200">
                 {Object.values(tema.colores).map((color) => (
                   <div key={color} className="flex-1" style={{ backgroundColor: color }} />
                 ))}
               </div>
-              <p className="text-[10px] text-gray-400 mt-2 font-mono">{Object.values(tema.colores).join(" | ")}</p>
             </button>
           );
         })}

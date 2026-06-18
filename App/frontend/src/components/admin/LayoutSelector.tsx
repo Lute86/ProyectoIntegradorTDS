@@ -18,7 +18,7 @@ const LayoutSelector = () => {
   const { config, updateConfig } = useSiteConfigStore();
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
       {LAYOUTS.map((layout) => {
         const activo = config.layout === layout.id;
         return (
@@ -27,25 +27,22 @@ const LayoutSelector = () => {
             type="button"
             onClick={() => updateConfig({ layout: layout.id as 'boxed' | 'full-width' })}
             className={clsx(
-              'text-left p-4 rounded-xl border-2 transition-all',
+              'text-left p-3 lg:p-4 rounded-xl border-2 transition-all',
               activo
                 ? 'border-blue-500 bg-blue-50 shadow-md'
                 : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
             )}
           >
-            {/* Icono visual simple: representa el layout */}
             <div className={clsx(
-              'flex mb-3 border border-gray-300 rounded-lg p-2',
-              layout.id === 'full-width' ? 'justify-stretch' : 'justify-center'
+              'flex border border-gray-300 rounded-lg p-1.5 mb-2 justify-center'
             )}>
               <div className={clsx(
-                'h-12 bg-blue-200 rounded',
+                'h-8 bg-blue-200 rounded',
                 layout.id === 'full-width' ? 'w-full' : 'w-3/4'
               )} />
             </div>
-
             <h3 className="text-sm font-bold text-gray-900">{layout.nombre}</h3>
-            <p className="text-xs text-gray-500 mt-1">{layout.descripcion}</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">{layout.descripcion}</p>
           </button>
         );
       })}
