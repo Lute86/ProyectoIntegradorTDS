@@ -7,7 +7,7 @@ function generatePassword() {
 
 export async function up(queryInterface, Sequelize) {
   const users = [
-    { email: 'admin@ifts29.edu.ar', nombre: 'Admin', rol: 'admin' },
+    { email: 'admin@ifts29.edu.ar', nombre: 'Admin', rol: 'admin', password: 'admin1234' },
     { email: 'profesor@ifts29.edu.ar', nombre: 'Profesor', rol: 'profesor' },
     { email: 'tutor@ifts29.edu.ar', nombre: 'Tutor', rol: 'tutor' },
   ];
@@ -19,7 +19,7 @@ export async function up(queryInterface, Sequelize) {
     );
 
     if (Number(existing.count) === 0) {
-      const password = generatePassword();
+      const password = user.password ?? generatePassword();
       const passwordHash = await bcrypt.hash(password, 10);
       await queryInterface.bulkInsert('users', [
         {
