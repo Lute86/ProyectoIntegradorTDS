@@ -24,7 +24,6 @@ const SectionManager = () => {
     const oldIndex = sections.findIndex((s) => s.id === active.id);
     const newIndex = sections.findIndex((s) => s.id === over.id);
     const reordenado = arrayMove(sections, oldIndex, newIndex).map((s, i) => ({ ...s, order: i + 1 }));
-    console.log('[DEBUG DnD] Reordenado:', JSON.stringify(reordenado.map(s => ({ id: s.id, order: s.order }))));
 
     updateConfig({ sections: reordenado });
   };
