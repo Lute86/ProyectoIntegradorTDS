@@ -7,11 +7,10 @@ interface DraggableSectionProps {
   id: string;
   nombre: string;
   visible: boolean;
-  navVisible: boolean;
 }
 
-const DraggableSection = ({ id, nombre, visible, navVisible }: DraggableSectionProps) => {
-  const { toggleSectionVisibility, toggleNavVisibility } = useSiteConfigStore();
+const DraggableSection = ({ id, nombre, visible }: DraggableSectionProps) => {
+  const { toggleSectionVisibility } = useSiteConfigStore();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   return (
@@ -39,14 +38,6 @@ const DraggableSection = ({ id, nombre, visible, navVisible }: DraggableSectionP
         </button>
       </div>
 
-      <div className="flex items-center gap-3">
-        <label className="text-[10px] text-gray-400">Menu</label>
-        <button type="button" onClick={() => toggleNavVisibility(id)}
-          className={clsx('relative w-9 h-4 rounded-full transition-colors', navVisible ? 'bg-blue-500' : 'bg-gray-300')}
-          title={navVisible ? 'Ocultar en menu' : 'Mostrar en menu'}>
-          <span className={clsx('absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full shadow transition-transform', navVisible && 'translate-x-[18px]')} />
-        </button>
-      </div>
     </div>
   );
 };
