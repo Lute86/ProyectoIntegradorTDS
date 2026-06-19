@@ -45,24 +45,19 @@ Abre en navegador:
 - **Frontend:** http://localhost:5173
 - **Backend:** http://localhost:3000/api
 
-### Paso 5: Crear el usuario de login (30 seg)
+### Paso 5: Ingresar al panel
 
-El seed de usuarios (`01-user-seeder.js`) crea los usuarios con **contraseñas
-aleatorias y hasheadas**, así que no hay un `admin1234` listo para usar. Para
-tener credenciales conocidas, ejecutá el script de creación de usuario:
-
-```bash
-docker compose -f docker-compose.dev.yml exec backend node scripts/create-user.js   # (make seed-user-dev)
-# Crea/actualiza: admin@ifts29.edu.ar / admin1234 (rol admin)
-```
-
-Luego hacé clic en **"Admin"** y usá:
+El seed de usuarios (`01-user-seeder.js`) ya crea el **admin con una contraseña
+fija y conocida** (`admin1234`), así que podés ingresar directo sin pasos extra.
+Hacé clic en **"Admin"** y usá:
 ```
 Email:    admin@ifts29.edu.ar
 Password: admin1234
 ```
 
-> ¿Querés otro email o contraseña? Pasalos como variables:
+> Nota: los usuarios `profesor` y `tutor` se siembran con contraseñas aleatorias.
+> Si necesitás credenciales conocidas para ellos (u otro email/contraseña),
+> usá el script de creación de usuario:
 > ```bash
 > docker compose -f docker-compose.dev.yml exec backend \
 >   env EMAIL=tu@mail.com PASSWORD=TuPassword ROL=admin node scripts/create-user.js

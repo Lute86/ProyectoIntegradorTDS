@@ -121,45 +121,6 @@ npm test -- --coverage
 npm test Button.test.jsx
 ```
 
----
-
-## 📈 Cobertura Esperada
-
-### Backend
-
-```
-Statements   : 80%+ (líneas ejecutadas)
-Branches     : 75%+ (condicionales if/else)
-Functions    : 85%+ (funciones ejecutadas)
-Lines        : 80%+ (líneas totales)
-```
-
-**Comando:**
-```bash
-npm run test:cov
-```
-
-**Salida esperada:**
-```
- PASS  tests/integration/auth.test.js
- PASS  tests/unit/utils/token.test.js
-
-----------|---------|---------|---------|
-File      | Stmts   | Branch  | Funcs   |
-----------|---------|---------|---------|
-All files | 82.5    | 76.3    | 84.2    |
-```
-
-### Frontend
-
-```
-Statements   : 70%+
-Branches     : 65%+
-Functions    : 75%+
-Lines        : 70%+
-```
-
----
 
 ## ✍️ Escribir un Test
 

@@ -8,12 +8,13 @@
 
 Roles: Admin, Profesor, Tutor.
 
-> ⚠️ **Importante sobre las contraseñas.** El seeder de usuarios
-> (`make seed-dev` → `01-user-seeder.js`) crea `admin`, `profesor` y `tutor`
-> con **contraseñas aleatorias** (`crypto.randomBytes`), que sólo se imprimen en
-> los logs cuando `NODE_ENV` no es `production`. **No existe un `admin1234` por
-> defecto.** Para tener un login conocido, ejecutá el script de creación de
-> usuario, que sí define email/contraseña:
+> ℹ️ **Sobre las contraseñas.** El seeder de usuarios
+> (`make seed-dev` → `01-user-seeder.js`) crea el **admin con contraseña fija
+> `admin1234`** para ingreso fácil en desarrollo. Los usuarios `profesor` y
+> `tutor` se siembran con **contraseñas aleatorias** (`crypto.randomBytes`), que
+> sólo se imprimen en los logs cuando `NODE_ENV` no es `production`. Para tener
+> un login conocido de esos roles (u otro email/contraseña), ejecutá el script
+> de creación de usuario:
 >
 > ```bash
 > docker compose -f docker-compose.dev.yml exec backend node scripts/create-user.js   # (make seed-user-dev)
@@ -27,6 +28,8 @@ Roles: Admin, Profesor, Tutor.
 ### Admin (Acceso total)
 
 ```
+Email:    admin@ifts29.edu.ar
+Password: admin1234
 Rol:      Administrador
 Acceso:   Panel administrativo completo
 ```
@@ -152,23 +155,26 @@ Desde el perfil (próximamente):
 
 ## 🔐 Requisitos de Contraseña
 
-> ℹ️ **Lo que valida el código hoy:** la única regla implementada es **mínimo 8
-> caracteres** (`express-validator` en `user.validator.js`, tanto al crear como al
-> actualizar; y `z.string().min(8)` en el frontend). **No** se exige mayúscula,
-> minúscula, número ni carácter especial.
+La contraseña debe cumplir **todas** estas reglas:
 
-Cualquier contraseña de 8 caracteres o más es aceptada:
+- **Mínimo 8 caracteres**
+- Al menos una **letra minúscula** (`a-z`)
+- Al menos una **letra mayúscula** (`A-Z`)
+- Al menos un **número** (`0-9`)
+
+Ejemplos:
 
 ```
-12345678         # ✅ válida (≥ 8 chars)
-admin1234        # ✅ válida
-Admin@           # ❌ rechazada (menos de 8)
+Admin1234        # ✅ válida (8+, may + min + número)
+12345678         # ❌ rechazada (sin letras)
+adminadmin       # ❌ rechazada (sin mayúscula ni número)
+Admin1           # ❌ rechazada (menos de 8)
 ```
 
-> 💡 **Política "contraseña fuerte" (mayúscula + minúscula + número + especial)
-> NO está implementada.** Si se quisiera, habría que agregar una regla `.matches(...)`
-> en `backend/src/middlewares/validators/user.validator.js` y el `.regex(...)`
-> equivalente en el esquema Zod del frontend.
+> ℹ️ El usuario admin sembrado (`admin1234`) se carga directo en la base por el
+> seeder, que **no pasa por esta validación**, por eso funciona para ingresar
+> aunque no tenga mayúscula. La regla de complejidad aplica al **crear/editar
+> usuarios desde la app**.
 
 ---
 
