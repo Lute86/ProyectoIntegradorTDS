@@ -52,10 +52,6 @@ export default function LoginPage() {
           >
             Iniciar Sesión
           </button>
-          <p className="text-center text-sm text-gray-500">
-            Usuario: admin@ifts29.edu.ar<br />
-            Contraseña: admin1234
-          </p>
         </form>
       </div>
     </div>

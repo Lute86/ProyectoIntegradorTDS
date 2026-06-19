@@ -48,7 +48,8 @@ conflictos con otras versiones instaladas localmente.
 
 ### Cómo funciona el hot-reload
 
-Cuando ejecutás `make dev`, Docker monta las carpetas de código como
+Cuando levantás el entorno (`docker compose -f docker-compose.dev.yml up --build`,
+o `make dev`), Docker monta las carpetas de código como
 **volúmenes** dentro de los contenedores:
 
 ```
@@ -62,6 +63,10 @@ El contenedor ejecuta tu código local en tiempo real. Guardás un archivo,
 Vite o Nodemon lo detectan, y el browser o el servidor se actualiza solo.
 Igual que `npm run dev`, pero dentro de Docker.
 
+> En desarrollo se usa el compose `docker-compose.dev.yml`. Todos los comandos
+> de esta sección lo referencian con `-f docker-compose.dev.yml`; el `make <algo>`
+> equivalente está entre paréntesis como atajo (Linux/macOS/WSL).
+
 ### Flujo diario normal
 
 No es necesario acceder a los contenedores ni ejecutar comandos extra.
@@ -74,8 +79,8 @@ Hay tres situaciones donde Docker requiere intervención:
 
 ```bash
 # Después de git pull, reconstruir las imágenes (ejecuta npm install adentro)
-make dev-down
-make dev
+docker compose -f docker-compose.dev.yml down            # (make dev-down)
+docker compose -f docker-compose.dev.yml up --build      # (make dev)
 ```
 
 Los `node_modules` no están montados como volumen (son pesados y específicos
@@ -85,28 +90,30 @@ dentro del contenedor.
 #### b) Hay una migración nueva de base de datos
 
 ```bash
-make migrate-dev
+docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:migrate   # (make migrate-dev)
 ```
 
 Las migraciones no se ejecutan solas al guardar el archivo. Hay que
-correrlas explícitamente, o bien hacer `make dev-down && make dev` (el
-contenedor corre `db:migrate` automáticamente al arrancar).
+correrlas explícitamente, o bien reconstruir el entorno con
+`docker compose -f docker-compose.dev.yml down` y `... up --build`
+(`make dev-down && make dev`); el contenedor corre `db:migrate`
+automáticamente al arrancar.
 
 #### c) Debuggear o explorar el servidor
 
 ```bash
-make logs-dev       # ver logs en tiempo real
-make shell-be-dev   # abrir una shell dentro del contenedor del backend
+docker compose -f docker-compose.dev.yml logs -f            # (make logs-dev)      ver logs en tiempo real
+docker compose -f docker-compose.dev.yml exec backend sh    # (make shell-be-dev)  shell dentro del backend
 ```
 
 ### Resumen
 
-| Situación | Qué hacer |
-|---|---|
-| Cambié código fuente | Nada — hot-reload automático |
-| Alguien agregó una dependencia | `make dev-down && make dev` |
-| Hay una migración nueva | `make migrate-dev` |
-| Quiero ver los logs | `make logs-dev` |
+| Situación | Comando Docker | Atajo make |
+|---|---|---|
+| Cambié código fuente | Nada — hot-reload automático | — |
+| Alguien agregó una dependencia | `docker compose -f docker-compose.dev.yml down` + `... up --build` | `make dev-down && make dev` |
+| Hay una migración nueva | `docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:migrate` | `make migrate-dev` |
+| Quiero ver los logs | `docker compose -f docker-compose.dev.yml logs -f` | `make logs-dev` |
 
 ---
 
@@ -140,15 +147,14 @@ cp .env.example .env
 make dev
 ```
 
-Al primer arranque el backend ejecuta automáticamente:
-- `sequelize db:migrate`  — crea las 9 tablas en SQLite
-- `sequelize db:seed:all` — carga datos de prueba
+Al primer arranque (dev) el backend ejecuta automáticamente las **migraciones**
+(`npx sequelize-cli db:migrate`), creando las tablas en SQLite y **seeds** (equivale a `npx sequelize-cli db:seed:all` dentro del contenedor).
 
 **URLs disponibles:**
 - Frontend: http://localhost:5173
 - Backend:  http://localhost:3000/api
 
-### Credenciales del admin (seed de dev)
+### Credenciales del admin (seed de dev -make seed-user-dev - requiere seed manual para generar estas credenciales)
 
 | Campo    | Valor               |
 |----------|---------------------|
@@ -161,15 +167,38 @@ Al primer arranque el backend ejecuta automáticamente:
 ## 4. Producción y HTTPS
 
 ```bash
-cp .env.example .env
-# Editar: DOMAIN, POSTGRES_PASSWORD, JWT_SECRET
+bash scripts/generate-secrets.sh   # (make setup-prod)  genera .env con secrets (JWT_SECRET, DB_PASSWORD)
+# Editar .env: DOMAIN y FRONTEND_URL
 
-make check-env   # verifica que el .env esté completo
-make ssl         # obtiene el certificado (solo la primera vez)
-make prod        # levanta todo en background
+# verificar que el .env esté completo  (make check-env)
+bash scripts/generate-ssl.sh        # (make ssl-selfsigned) genera el cert auto-firmado
+docker compose up --build -d        # (make prod)  levanta todo en background
 ```
 
-El sitio queda disponible en `https://<DOMAIN>`.
+> El target `make prod` encadena `check-env` + `ssl-selfsigned` + `docker compose up --build -d`.
+> Si lo corrés a mano, generá el certificado auto-firmado antes de levantar.
+
+El sitio queda disponible en `https://<DOMAIN>` (con **certificado auto-firmado**,
+el navegador mostrará un aviso de seguridad).
+
+### Carga de datos en producción
+
+**No hay seeders automáticos en producción.** El arranque corre las migraciones
+(crea las tablas), pero la base queda vacía. Los datos se cargan a mano:
+
+```bash
+# Crear/actualizar un usuario (admin por defecto, o pasando EMAIL/PASSWORD/ROL)
+docker compose exec backend node scripts/create-user.js              # (make seed-user)
+docker compose exec backend env EMAIL=otro@ifts29.edu.ar PASSWORD=... ROL=admin \
+  node scripts/create-user.js
+
+# Cargar el resto de los datos de ejemplo (carreras, noticias, etc.) con los seeders
+docker compose exec backend npx sequelize-cli db:seed:all            # (make seed)
+```
+
+> ⚠️ **Let's Encrypt (`make ssl`) todavía NO está implementado**: el servicio
+> `certbot` referenciado no existe en `docker-compose.yml`. Para producción hoy
+> se usa el certificado auto-firmado. Ver sección 6.
 
 ---
 
@@ -215,49 +244,19 @@ Navegador → https://ifts29.edu.ar/api/noticias
 
 ## 6. Cómo funciona Certbot / Let's Encrypt
 
-### El problema que resuelve
+> 🚧 **Estado: PENDIENTE / NO IMPLEMENTADO.** El servicio `certbot` y el
+> `--profile ssl` que usa `make ssl` **no existen** en `docker-compose.yml`.
+> Hoy producción usa **certificado auto-firmado** (`make ssl-selfsigned`,
+> incluido en `make prod`).
 
-HTTPS requiere un certificado SSL: un archivo que le demuestra al
-navegador que el servidor es legítimo. Esos certificados los emiten
-entidades llamadas **autoridades de certificación**. Históricamente
-costaban dinero y se renovaban manualmente. **Let's Encrypt** es una
-autoridad gratuita y automática.
+**Idea (a futuro).** Let's Encrypt es una autoridad de certificación gratuita
+y automática. Para emitir el certificado verifica que controlás el dominio con
+el desafío ACME: Certbot deja un archivo en `/.well-known/acme-challenge/`,
+Nginx lo sirve por HTTP sin redirigir, Let's Encrypt lo lee y emite el cert
+(válido 90 días, renovable automáticamente con `certbot renew`).
 
-### El desafío ACME — cómo se verifica que el dominio es tuyo
-
-Para emitir un certificado para `ifts29.edu.ar`, Let's Encrypt necesita
-verificar que vos controlás ese dominio. Lo hace así:
-
-```
-1. Certbot le pide a Let's Encrypt un certificado para ifts29.edu.ar
-
-2. Let's Encrypt responde: "poné este archivo en
-   http://ifts29.edu.ar/.well-known/acme-challenge/<TOKEN>"
-
-3. Certbot crea ese archivo en /var/www/certbot/
-
-4. Nginx sirve esa carpeta en /.well-known/acme-challenge/ sin redirigir a HTTPS
-   (por eso el bloque HTTP tiene esa excepción — si redirigiera todo a HTTPS
-   antes de tener el certificado, el desafío fallaría)
-
-5. Let's Encrypt visita la URL, verifica el archivo y emite el certificado
-
-6. Certbot guarda el certificado en /etc/letsencrypt/
-
-7. Nginx lee ese certificado para servir HTTPS
-```
-
-### Renovación automática
-
-Los certificados de Let's Encrypt duran 90 días. El servicio `certbot`
-del `docker-compose.yml` corre en background y ejecuta `certbot renew`
-cada 12 horas. Si el certificado está a menos de 30 días de vencer,
-lo renueva solo. No hay que hacer nada.
-
-```
-Primera vez:    make ssl   →  obtiene el certificado
-Cada 90 días:   certbot (servicio Docker) lo renueva automáticamente
-```
+**Para habilitarlo** habría que agregar el servicio `certbot` al compose,
+publicar el puerto 80 y apuntar Nginx a `/etc/letsencrypt/`.
 
 ---
 
@@ -279,9 +278,9 @@ main     → producción. Nadie pushea directo acá, nunca.
 ### Ciclo de trabajo
 
 ```bash
-# 1. Siempre partir desde dev actualizado
-git checkout dev
-git pull origin dev
+# 1. Siempre partir desde develop actualizado
+git checkout develop
+git pull origin develop
 
 # 2. Crear una rama para lo que vas a hacer
 git checkout -b feature/pagina-noticias
@@ -290,8 +289,8 @@ git checkout -b feature/pagina-noticias
 git add .
 git commit -m "feat: agrega listado de noticias con filtros"
 
-# 4. Antes de abrir el PR, traer los últimos cambios de dev
-git pull origin dev --rebase
+# 4. Antes de abrir el PR, traer los últimos cambios de develop
+git pull origin develop --rebase
 
 # 5. Pushear
 git push origin feature/pagina-noticias
@@ -323,8 +322,8 @@ Alguien hizo `npm install algo` y pusheó el `package.json` actualizado,
 pero los `node_modules` dentro del contenedor no tienen ese paquete.
 
 ```bash
-make dev-down
-make dev          # reconstruye la imagen y ejecuta npm install
+docker compose -f docker-compose.dev.yml down            # (make dev-down)
+docker compose -f docker-compose.dev.yml up --build      # (make dev)  reconstruye la imagen y ejecuta npm install
 ```
 
 ### Caso 2: error de columna o tabla que no existe — nueva migración
@@ -332,9 +331,10 @@ make dev          # reconstruye la imagen y ejecuta npm install
 Alguien agregó una migración nueva.
 
 ```bash
-make migrate-dev
-# Si sigue fallando, reconstruir todo:
-make dev-reset && make dev
+docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:migrate   # (make migrate-dev)
+# Si sigue fallando, reconstruir todo (⚠ borra la BD):
+docker compose -f docker-compose.dev.yml down -v         # (make dev-reset)
+docker compose -f docker-compose.dev.yml up --build      # (make dev)
 ```
 
 ### Caso 3: conflicto de merge al hacer pull
@@ -354,18 +354,19 @@ hizo los cambios antes de forzar una resolución.
 ### Caso 4: el contenedor no arranca
 
 ```bash
-make logs-dev     # ver el error exacto
-make dev-down
-make dev
+docker compose -f docker-compose.dev.yml logs -f         # (make logs-dev)  ver el error exacto
+docker compose -f docker-compose.dev.yml down            # (make dev-down)
+docker compose -f docker-compose.dev.yml up --build      # (make dev)
 ```
 
 ### Checklist general
 
 ```
-1. git pull origin dev
-2. make dev-down && make dev
-3. make migrate-dev              (si hay migraciones nuevas)
-4. make logs-dev                 (si sigue fallando)
+1. git pull origin develop
+2. docker compose -f docker-compose.dev.yml down && ... up --build   (make dev-down && make dev)
+3. docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:migrate
+                                            (make migrate-dev — si hay migraciones nuevas)
+4. docker compose -f docker-compose.dev.yml logs -f                  (make logs-dev — si sigue fallando)
 ```
 
 ---
@@ -376,46 +377,66 @@ make dev
 Usá Docker Desktop (PowerShell o CMD):
 
 ```powershell
-terminas de vsc desde app
-docker compose -f docker-compose.dev.yml up --build    # iniciar
-docker compose -f docker-compose.dev.yml up            # levantar
-docker compose -f docker-compose.dev.yml down          # detener
+docker compose -f docker-compose.dev.yml up --build      # iniciar (reconstruye imágenes)
+docker compose -f docker-compose.dev.yml up              # levantar (sin reconstruir)
+docker compose -f docker-compose.dev.yml down            # detener
 docker compose -f docker-compose.dev.yml exec backend sh # shell en backend
-docker compose -f docker-compose.dev.yml logs -f       # logs en tiempo real
+docker compose -f docker-compose.dev.yml logs -f         # logs en tiempo real
 ```
-en docker-compose.dev.. para que funcione y se actualice en tiempo real en windows agregar en la lista de variables de environment tanto de front como back: --> CHOKIDAR_USEPOLLING: "true"
+
+> **Hot-reload en Windows:** para que los cambios se detecten en tiempo real,
+> agregá en `docker-compose.dev.yml`, dentro de `environment` de **frontend** y
+> **backend**: `CHOKIDAR_USEPOLLING: "true"`.
+
 ### En Linux/macOS (o WSL con Makefile)
+
+`make` es sólo un atajo de los comandos `docker compose` de arriba.
 
 ```bash
 make help    # lista todos los comandos
 ```
 
-| Comando | Descripción |
-|---|---|
-| `make scaffold` | Genera toda la estructura de carpetas y archivos vacíos. Ya realizado - No disponible |
-| `make install` | Instala dependencias de frontend y backend |
-| `make dev` | Levanta entorno de desarrollo con hot-reload |
-| `make dev-down` | Detiene el entorno de desarrollo |
-| `make dev-reset` | Detiene y borra la BD de desarrollo |
-| `make prod` | Construye y levanta producción en background |
-| `make prod-down` | Detiene producción |
-| `make ssl` | Obtiene certificado SSL con Let's Encrypt |
-| `make logs-dev` | Logs en tiempo real (desarrollo) |
-| `make logs-be` | Logs solo del backend (producción) |
-| `make shell-be-dev` | Shell dentro del contenedor backend (dev) |
-| `make migrate-dev` | Ejecuta migraciones en desarrollo |
-| `make seed-dev` | Carga los seeders en desarrollo |
+| Comando make | Equivale a (docker)                                                        | Descripción |
+|---|---|---|
+| `make install`     | `npm install` en `frontend/` y `backend/`                            | Instala dependencias (sin Docker) |
+| `make dev`         | `docker compose -f docker-compose.dev.yml up --build`                | Levanta desarrollo con hot-reload |
+| `make dev-down`    | `docker compose -f docker-compose.dev.yml down`                      | Detiene el entorno de desarrollo |
+| `make dev-reset`   | `docker compose -f docker-compose.dev.yml down -v`                   | Detiene y borra la BD de desarrollo |
+| `make migrate-dev` | `... exec backend npx sequelize-cli db:migrate`                      | Ejecuta migraciones (dev) |
+| `make seed-dev`    | `... exec backend npx sequelize-cli db:seed:all`                     | Carga los seeders (dev) |
+| `make logs-dev`    | `docker compose -f docker-compose.dev.yml logs -f`                   | Logs en tiempo real (dev) |
+| `make shell-be-dev`| `... exec backend sh`                                                | Shell dentro del backend (dev) |
+| `make prod`        | `check-env` + cert auto-firmado + `docker compose up --build -d`     | Construye y levanta producción |
+| `make prod-down`   | `docker compose down`                                                | Detiene producción |
+| `make seed`        | `docker compose exec backend npx sequelize-cli db:seed:all`          | Carga los seeders (prod) |
+| `make seed-user`   | `docker compose exec backend node scripts/create-user.js`            | Crea/actualiza un usuario (prod) |
+| `make logs-be`     | `docker compose logs -f backend`                                     | Logs sólo del backend (prod) |
+| `make ssl`         | (🚧 pendiente — Let's Encrypt no implementado, ver sección 6)        | — |
 
 ---
 
 ## 10. Variables de entorno
 
-| Variable            | Descripción                         | Default / Requerido |
-|---------------------|-------------------------------------|---------------------|
-| `DOMAIN`            | Dominio del sitio (para SSL)        | `ifts29.edu.ar` (*) |
-| `JWT_SECRET`        | Secret para firmar tokens JWT       | **obligatorio**     |
-| `JWT_EXPIRES_IN`    | Expiración del token                | `7d`                |
-| `POSTGRES_DB`       | Nombre de la BD (prod)              | `ifts29`            |
-| `POSTGRES_USER`     | Usuario de PostgreSQL (prod)        | `ifts29user`        |
-| `POSTGRES_PASSWORD` | Contraseña de PostgreSQL (prod)     | **obligatorio**     |
-| `MAX_FILE_SIZE`     | Tamaño máximo de upload (bytes)     | `20971520` (20 MB)  |
+**Desarrollo:** `cp .env.example .env` y listo (usa SQLite, no hace falta editar nada).
+
+**Producción:** el template es `.env.prod` (commiteado). `make setup-prod`
+(`bash scripts/generate-secrets.sh`) lo copia a `.env` y completa `JWT_SECRET`
+y `DB_PASSWORD` con secrets aleatorios. Después editás `DOMAIN` y `FRONTEND_URL`.
+
+| Variable          | Descripción                                  | Default / Requerido        |
+|-------------------|----------------------------------------------|----------------------------|
+| `DOMAIN`          | Dominio del sitio (SSL y CORS)               | `localhost` (*)            |
+| `JWT_SECRET`      | Secret para firmar tokens JWT                | **obligatorio** (autogen.) |
+| `JWT_EXPIRES_IN`  | Expiración del token                         | `7d`                       |
+| `DB_HOST`         | Host de PostgreSQL (prod)                    | `postgres`                 |
+| `DB_PORT`         | Puerto de PostgreSQL (prod)                  | `5432`                     |
+| `DB_NAME`         | Nombre de la BD (prod)                       | `ifts29`                   |
+| `DB_USER`         | Usuario de PostgreSQL (prod)                 | `ifts29user`               |
+| `DB_PASSWORD`     | Contraseña de PostgreSQL (prod)              | **obligatorio** (autogen.) |
+| `FRONTEND_URL`    | Origen permitido por CORS (prod)             | `https://localhost`        |
+| `MAX_FILE_SIZE`   | Tamaño máximo de upload (bytes)              | `20971520` (20 MB)         |
+| `LOG_LEVEL`       | Nivel de logueo del backend                  | `info`                     |
+
+> Los nombres `POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD` aparecen sólo
+> dentro del contenedor de PostgreSQL; en `docker-compose.yml` se derivan de
+> `DB_NAME / DB_USER / DB_PASSWORD`. En tu `.env` configurás siempre las `DB_*`.

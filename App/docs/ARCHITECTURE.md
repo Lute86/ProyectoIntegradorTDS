@@ -13,7 +13,7 @@ La aplicación utiliza una arquitectura de **frontend y backend separados**, con
                     │      Nginx :80/443    │  (Producción)
                     │  - Redirect HTTP→HTTPS│
                     │  - Sirve React build  │
-                    │  - Proxy /api → Backend│
+                    │  - Proxy /api,/uploads│
                     └───────────┬───────────┘
                                 │
             ┌───────────────────┴───────────────────┐
@@ -72,10 +72,11 @@ La aplicación utiliza una arquitectura de **frontend y backend separados**, con
 Funcionalidades:
 - **Puerto 80**: Redirige todo el tráfico HTTP a HTTPS (excepto challenge de Let's Encrypt)
 - **Puerto 443**: Sirve la aplicación con SSL/TLS
-- **Proxy inverso**: `/api/` se reenvía al backend en `http://backend:3000`
+- **Proxy inverso `/api/`**: se reenvía al backend en `http://backend:3000`
+- **Proxy `/uploads/`**: bloque `location ^~ /uploads/` que reenvía los archivos subidos al backend (el `^~` evita que la regex de assets los capture y devuelva 404)
 - **SPA Fallback**: Rutas de React Router devuelven `index.html`
 - **Cache**: Assets estáticos con hash tienen cache de 1 año
-- **SSL**: Soporta certificados de Let's Encrypt montados como volumen
+- **SSL**: Actualmente certificado **auto-firmado** (Let's Encrypt previsto - no implementado)
 
 ## Docker Compose
 
@@ -108,7 +109,7 @@ El `Makefile` usa `docker compose up` (sin archivo `-f` específico, busca `dock
 
 1. Usuario accede a `https://dominio.com`
 2. Nginx recibe la petición en puerto 443
-3. Si es `/api/*`: Nginx hace proxy a `backend:3000` en la red interna de Docker
+3. Si es `/api/*` o `/uploads/*`: Nginx hace proxy a `backend:3000` en la red interna de Docker
 4. Si es cualquier otra ruta: Nginx sirve `index.html` (SPA fallback)
 5. React Router maneja el enrutamiento del lado del cliente
 
