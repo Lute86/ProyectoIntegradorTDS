@@ -154,7 +154,9 @@ Al primer arranque (dev) el backend ejecuta automáticamente las **migraciones**
 - Frontend: http://localhost:5173
 - Backend:  http://localhost:3000/api
 
-### Credenciales del admin (seed de dev -make seed-user-dev - requiere seed manual para generar estas credenciales)
+### Credenciales del admin (seed de dev — `make seed-dev` / `01-user-seeder.js`)
+
+El seeder crea el admin con contraseña fija `admin1234` para ingreso fácil en desarrollo:
 
 | Campo    | Valor               |
 |----------|---------------------|
