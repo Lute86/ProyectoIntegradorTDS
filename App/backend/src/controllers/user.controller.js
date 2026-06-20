@@ -46,6 +46,9 @@ export const update = asyncHandler(async (req, res) => {
   }
 
   const { id } = req.params;
+  if (req.user.rol !== 'admin') {
+    delete req.body.rol;
+  }
   const user = await userService.update(id, req.body);
   return success(res, user, 'Usuario actualizado exitosamente');
 });

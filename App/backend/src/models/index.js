@@ -21,6 +21,17 @@ const models = {
 import userModel from './user.model.js';
 import carreraModel from './carrera.model.js';
 import materiaModel from './materia.model.js';
+import siteconfigModel from './siteconfig.model.js';
+import categoriaModel from './categoria.model.js';
+import noticiaModel from './noticia.model.js';
+import eventoModel from './evento.model.js';
+import testimonioModel from './testimonio.model.js';
+import imagenModel from './imagen.model.js';
+import consultaModel from './consulta.model.js';
+import horarioModel from './horario.model.js';
+import carreraMateriaModel from './carreraMateria.model.js';
+import comisionModel from './comision.model.js';
+import comisionCarreraMateriaModel from './comisionCarreraMateria.model.js';
 
 const User = userModel(sequelizeInstance, DataTypes);
 models.User = User;
@@ -30,6 +41,38 @@ models.Carrera = Carrera;
 
 const Materia = materiaModel(sequelizeInstance, DataTypes);
 models.Materia = Materia;
+
+const SiteConfig = siteconfigModel(sequelizeInstance, DataTypes);
+models.SiteConfig = SiteConfig;
+
+const Categoria = categoriaModel(sequelizeInstance, DataTypes);
+models.Categoria = Categoria;
+
+const Noticia = noticiaModel(sequelizeInstance, DataTypes);
+models.Noticia = Noticia;
+
+const Evento = eventoModel(sequelizeInstance, DataTypes);
+models.Evento = Evento;
+
+const Testimonio = testimonioModel(sequelizeInstance, DataTypes);
+models.Testimonio = Testimonio;
+const Consulta = consultaModel(sequelizeInstance, DataTypes);
+models.Consulta = Consulta;
+
+const Horario = horarioModel(sequelizeInstance, DataTypes);
+models.Horario = Horario;
+
+const CarreraMateria = carreraMateriaModel(sequelizeInstance, DataTypes);
+models.CarreraMateria = CarreraMateria;
+
+const Comision = comisionModel(sequelizeInstance, DataTypes);
+models.Comision = Comision;
+
+const ComisionCarreraMateria = comisionCarreraMateriaModel(sequelizeInstance, DataTypes);
+models.ComisionCarreraMateria = ComisionCarreraMateria;
+
+const Imagen = imagenModel(sequelizeInstance, DataTypes);
+models.Imagen = Imagen;
 
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {

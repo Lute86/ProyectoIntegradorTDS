@@ -1,0 +1,48 @@
+# ── Entorno ────────────────────────────────────────────────────────────────
+.env
+.env.production
+.env.local
+
+# ── Dependencias ───────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+
+# ── Builds ─────────────────────────────────────────────────────────────────
+frontend/dist/
+frontend/.vite/
+
+# ── Base de datos y uploads (dev) ──────────────────────────────────────────
+backend/data/
+backend/uploads/
+*.sqlite
+*.sqlite-journal
+
+# ── Logs ───────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS / Editor ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ── Docker (producción) ─────────────────────────────────────────────────
+docker-compose.dev.yml
+docker/Dockerfile.backend
+docker/Dockerfile.frontend
+
+# ── Scripts  ────────────────────────────────────────────────────────────
+AGENTS.md
+GUIDELINES.md
+
+# ── Otros  ────────────────────────────────────────────────────────────
+Mejoras.txt
+CONTINUAR.md
+auditoria-persistencia.html
+new-styles-preview.html
+documentacion-final.html
+App/pendientes.html

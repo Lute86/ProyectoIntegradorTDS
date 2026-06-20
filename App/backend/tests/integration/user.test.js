@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from '@jest/glo
 import request from 'supertest';
 import app from '../../src/app.js';
 import { sequelize } from '../../src/models/index.js';
+import { createAndLogin } from '../helpers/helpers.js';
 
 describe('User Endpoints', () => {
   let adminToken;
@@ -15,32 +16,12 @@ describe('User Endpoints', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
 
-    // Create admin user and get token
-    const adminRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Admin',
-        apellido: 'User',
-        email: 'admin@test.com',
-        password: '123456',
-        rol: 'admin',
-      });
+    const adminResult = await createAndLogin({ nombre: 'Admin', email: 'admin@test.com', rol: 'admin' });
+    adminToken = adminResult.token;
 
-    adminToken = adminRes.body.data.token;
-
-    // Create regular user and get token
-    const userRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Regular',
-        apellido: 'User',
-        email: 'user@test.com',
-        password: '123456',
-        rol: 'profesor',
-      });
-
-    userToken = userRes.body.data.token;
-    createdUserId = userRes.body.data.user.id;
+    const userResult = await createAndLogin({ nombre: 'Regular', email: 'user@test.com', rol: 'profesor' });
+    userToken = userResult.token;
+    createdUserId = userResult.user.id;
   });
 
   afterAll(async () => {
@@ -108,7 +89,7 @@ describe('User Endpoints', () => {
           nombre: 'Nuevo',
           apellido: 'Usuario',
           email: 'nuevo@test.com',
-          password: '123456',
+          password: 'Testpass123',
           rol: 'tutor',
         })
         .expect(201);
@@ -125,7 +106,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Usuario',
           email: 'duplicado@test.com',
-          password: '123456',
+          password: 'Testpass123',
         });
 
       const res = await request(app)
@@ -134,7 +115,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Otro',
           email: 'duplicado@test.com',
-          password: '123456',
+          password: 'Testpass123',
         })
         .expect(409);
 
@@ -148,7 +129,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Nuevo',
           email: 'nuevo@test.com',
-          password: '123456',
+          password: 'Testpass123',
         })
         .expect(403);
 
@@ -178,7 +159,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Otro',
           email: 'otro@test.com',
-          password: '123456',
+          password: 'Testpass123',
         });
 
       const otherUserId = otherRes.body.data.id;
@@ -193,6 +174,19 @@ describe('User Endpoints', () => {
         .expect(409);
 
       expect(res.body.success).toBe(false);
+    });
+
+    it('no debería permitir cambio de rol a usuario no admin', async () => {
+      const res = await request(app)
+        .put(`/api/usuarios/${createdUserId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          rol: 'admin',
+        })
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.rol).toBe('profesor');
     });
   });
 

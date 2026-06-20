@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from '@jest/glo
 import request from 'supertest';
 import app from '../../src/app.js';
 import { sequelize } from '../../src/models/index.js';
+import { createAndLogin } from '../helpers/helpers.js';
 
 describe('Carrera Endpoints', () => {
   let adminToken;
@@ -15,38 +16,9 @@ describe('Carrera Endpoints', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
 
-    // Create admin user and get token
-    const adminRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Admin',
-        email: 'admin@test.com',
-        password: '123456',
-        rol: 'admin',
-      });
-    adminToken = adminRes.body.data.token;
-
-    // Create profesor user and get token
-    const profesorRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Profesor',
-        email: 'profesor@test.com',
-        password: '123456',
-        rol: 'profesor',
-      });
-    profesorToken = profesorRes.body.data.token;
-
-    // Create tutor user and get token
-    const tutorRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        nombre: 'Tutor',
-        email: 'tutor@test.com',
-        password: '123456',
-        rol: 'tutor',
-      });
-    tutorToken = tutorRes.body.data.token;
+    ({ token: adminToken } = await createAndLogin({ nombre: 'Admin', email: 'admin@test.com', rol: 'admin' }));
+    ({ token: profesorToken } = await createAndLogin({ nombre: 'Profesor', email: 'profesor@test.com', rol: 'profesor' }));
+    ({ token: tutorToken } = await createAndLogin({ nombre: 'Tutor', email: 'tutor@test.com', rol: 'tutor' }));
   });
 
   afterAll(async () => {
@@ -213,12 +185,13 @@ describe('Carrera Endpoints', () => {
       expect(res.body.data[0].activa).toBe(true);
     });
 
-    it('debería fallar sin token', async () => {
+    it('debería obtener todas las carreras sin token (público)', async () => {
       const res = await request(app)
         .get('/api/carreras')
-        .expect(401);
+        .expect(200);
 
-      expect(res.body.success).toBe(false);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data).toHaveLength(2);
     });
   });
 
@@ -271,6 +244,57 @@ describe('Carrera Endpoints', () => {
       const res = await request(app)
         .get('/api/carreras/9999')
         .set('Authorization', `Bearer ${profesorToken}`)
+        .expect(404);
+
+      expect(res.body.success).toBe(false);
+    });
+
+    it('debería obtener una carrera por ID sin token (público)', async () => {
+      const res = await request(app)
+        .get(`/api/carreras/${carreraId}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.id).toBe(carreraId);
+    });
+  });
+
+  describe('GET /api/carreras/slug/:slug', () => {
+    beforeEach(async () => {
+      await request(app)
+        .post('/api/carreras')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          nombre: 'Desarrollo de Software',
+          slug: 'desarrollo-de-software',
+          descripcion: 'Carrera técnica en programación',
+          modalidad: 'virtual',
+        });
+    });
+
+    it('debería obtener una carrera por slug (profesor)', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/desarrollo-de-software')
+        .set('Authorization', `Bearer ${profesorToken}`)
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.slug).toBe('desarrollo-de-software');
+      expect(res.body.data.nombre).toBe('Desarrollo de Software');
+    });
+
+    it('debería obtener una carrera por slug sin token (público)', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/desarrollo-de-software')
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.slug).toBe('desarrollo-de-software');
+    });
+
+    it('debería fallar si el slug no existe', async () => {
+      const res = await request(app)
+        .get('/api/carreras/slug/no-existe')
         .expect(404);
 
       expect(res.body.success).toBe(false);

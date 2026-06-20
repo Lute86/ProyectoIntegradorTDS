@@ -1,4 +1,5 @@
 import multer from 'multer';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join, extname } from 'path';
 import mkdirp from 'mkdirp';
@@ -14,17 +15,17 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
     cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
   },
 });
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const extname = allowedTypes.test(extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const extOk = allowedTypes.test(extname(file.originalname).toLowerCase());
+  const mimetypeOk = allowedTypes.test(file.mimetype);
 
-  if (mimetype && extname) {
+  if (mimetypeOk && extOk) {
     return cb(null, true);
   }
   cb(new Error('Solo se permiten imágenes (jpeg, jpg, png, gif, webp)'));

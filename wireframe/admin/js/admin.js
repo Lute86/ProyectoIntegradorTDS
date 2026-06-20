@@ -39,6 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.openModal = function(id) {
     document.getElementById(id).classList.add('active');
+    if (id === 'modalLayoutImage') {
+      const current = document.getElementById('currentLayoutImage');
+      const modalCurrent = document.getElementById('modalCurrentImage');
+      const preview = document.getElementById('layoutImagePreview');
+      if (current && modalCurrent) {
+        modalCurrent.src = current.src;
+      }
+      if (preview && current) {
+        preview.src = current.src;
+      }
+      loadPreviousImages();
+    }
   };
 
   window.closeModal = function(id) {
@@ -56,6 +68,65 @@ document.addEventListener('DOMContentLoaded', () => {
   window.selectLayout = function(el, layout) {
     document.querySelectorAll('.layout-option').forEach(opt => opt.classList.remove('active'));
     el.classList.add('active');
+  };
+
+  window.handleLayoutImageSelect = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor seleccioná un archivo de imagen.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const src = e.target.result;
+      const preview = document.getElementById('layoutImagePreview');
+      const modalCurrent = document.getElementById('modalCurrentImage');
+      const box = document.getElementById('layoutImageBox');
+
+      preview.src = src;
+      modalCurrent.src = src;
+      box.style.backgroundImage = `url('${src}')`;
+      box.style.backgroundSize = document.getElementById('layoutImageFit').value;
+      box.style.backgroundPosition = 'center';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.applyLayoutImage = function() {
+    const preview = document.getElementById('layoutImagePreview');
+    if (!preview.src || preview.src.includes('placeholder.com')) {
+      alert('Seleccioná primero una imagen.');
+      return;
+    }
+
+    const current = document.getElementById('currentLayoutImage');
+    const box = document.getElementById('layoutImageBox');
+    const fit = document.getElementById('layoutImageFit').value;
+
+    current.src = preview.src;
+    box.style.backgroundImage = `url('${preview.src}')`;
+    box.style.backgroundSize = fit;
+    box.style.backgroundPosition = 'center';
+
+    // Guardar la imagen aplicada en localStorage
+    saveLayoutImage(preview.src);
+
+    closeModal('modalLayoutImage');
+  };
+
+  window.clearLayoutImage = function() {
+    const current = document.getElementById('currentLayoutImage');
+    const preview = document.getElementById('layoutImagePreview');
+    const box = document.getElementById('layoutImageBox');
+
+    current.src = 'https://via.placeholder.com/480x260?text=Imagen+actual';
+    preview.src = 'https://via.placeholder.com/420x220?text=Previsualizaci%C3%B3n';
+    box.style.backgroundImage = 'linear-gradient(135deg, #eef2ff, #e0f2fe)';
+    box.style.backgroundSize = 'cover';
+    box.style.backgroundPosition = 'center';
+    document.getElementById('layoutImageInput').value = '';
   };
 
   window.applyTheme = function(theme) {

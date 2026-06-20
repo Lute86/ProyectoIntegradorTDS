@@ -4,11 +4,11 @@ import { handleDbErrors } from '../utils/dbErrorHandler.js';
 
 export const getAll = handleDbErrors(async (filters = {}) => {
   const where = {};
-  
+
   if (filters.modalidad) {
     where.modalidad = filters.modalidad;
   }
-  
+
   if (filters.activa !== undefined) {
     where.activa = filters.activa;
   }
@@ -25,9 +25,16 @@ export const getById = handleDbErrors(async (id) => {
   const carrera = await models.Carrera.findByPk(id, {
     include: [
       {
-        model: models.Materia,
-        as: 'materias',
-        attributes: ['id', 'nombre', 'cuatrimestre'],
+        model: models.CarreraMateria,
+        as: 'carreraMaterias',
+        attributes: ['id', 'cuatrimestre', 'carga_horaria_semanal'],
+        include: [
+          {
+            model: models.Materia,
+            as: 'materia',
+            attributes: ['id', 'nombre', 'descripcion'],
+          },
+        ],
       },
     ],
   });
@@ -44,9 +51,16 @@ export const getBySlug = handleDbErrors(async (slug) => {
     where: { slug },
     include: [
       {
-        model: models.Materia,
-        as: 'materias',
-        attributes: ['id', 'nombre', 'cuatrimestre'],
+        model: models.CarreraMateria,
+        as: 'carreraMaterias',
+        attributes: ['id', 'cuatrimestre', 'carga_horaria_semanal'],
+        include: [
+          {
+            model: models.Materia,
+            as: 'materia',
+            attributes: ['id', 'nombre', 'descripcion'],
+          },
+        ],
       },
     ],
   });
@@ -59,7 +73,7 @@ export const getBySlug = handleDbErrors(async (slug) => {
 });
 
 export const create = handleDbErrors(async (data) => {
-  const existing = await models.Carrera.findOne({ where: { slug: data.slug } });  
+  const existing = await models.Carrera.findOne({ where: { slug: data.slug } });
   if (existing) {
     throw new ConflictError('Ya existe una carrera con ese slug');
   }
@@ -93,7 +107,7 @@ export const remove = handleDbErrors(async (id) => {
     throw new NotFoundError('Carrera no encontrada');
   }
 
-  const materiasCount = await models.Materia.count({ where: { carrera_id: id } });  
+  const materiasCount = await models.CarreraMateria.count({ where: { carrera_id: id } });
   if (materiasCount > 0) {
     throw new ConflictError('No se puede eliminar una carrera que tiene materias asociadas');
   }

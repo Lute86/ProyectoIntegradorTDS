@@ -1,37 +1,73 @@
-import { useState } from 'react'
+import { useEffect, useRef } from 'react';
+import { AuthProvider } from './contexts/AuthContext/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext/ThemeContext';
+import { LayoutProvider } from './contexts/LayoutContext/LayoutContext';
+import { ToastProvider } from './contexts/ToastContext/ToastContext';
+import { useSiteConfigStore } from './stores/siteConfigStore';
+import useGoogleFonts from './hooks/useGoogleFonts';
+import AppRouter from './AppRouter';
 
-function App() {
-  const [status, setStatus] = useState(null)
-
-  const checkHealth = async () => {
-    try {
-      const res = await fetch('/api/health')
-      const data = await res.json()
-      setStatus({ ok: res.ok, data })
-    } catch (err) {
-      setStatus({ ok: false, error: err.message })
-    }
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">IFTS 29 — Nueva Web</h1>
-        <p className="mt-2 text-gray-500">GoSoftware · entorno funcionando correctamente.</p>
-        <button
-          onClick={checkHealth}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Verificar backend /api/health
-        </button>
-        {status && (
-          <pre className="mt-4 p-2 bg-gray-100 text-left text-sm rounded">
-            {JSON.stringify(status, null, 2)}
-          </pre>
-        )}
-      </div>
-    </div>
-  )
+function inyectarVariables(config) {
+  const root = document.documentElement;
+  root.style.setProperty('--color-primary', config.colors.primary);
+  root.style.setProperty('--color-secondary', config.colors.secondary);
+  root.style.setProperty('--color-accent', config.colors.accent);
+  root.style.setProperty('--color-surface', config.colors.surface);
+  root.style.setProperty('--color-bg', config.colors.background);
+  root.style.setProperty('--color-text', config.colors.text);
+  root.style.setProperty('--clr-primary', config.colors.primary);
+  root.style.setProperty('--clr-secondary', config.colors.secondary);
+  root.style.setProperty('--clr-accent', config.colors.accent);
+  root.style.setProperty('--clr-surface', config.colors.surface);
+  root.style.setProperty('--clr-bg', config.colors.background);
+  root.style.setProperty('--clr-card', config.colors.card || '#ffffff');
+  root.style.setProperty('--clr-text', config.colors.text);
+  root.style.setProperty('--font-heading', `"${config.typography.headingFont}", sans-serif`);
+  root.style.setProperty('--font-body', `"${config.typography.bodyFont}", sans-serif`);
+  root.style.setProperty('--font-base-size', config.typography.baseSize);
 }
 
-export default App
+function ThemeInitializer({ children }) {
+  useGoogleFonts();
+  const config = useSiteConfigStore((s) => s.config);
+  const fetchConfig = useSiteConfigStore((s) => s.fetchConfig);
+  const primeraVez = useRef(true);
+
+  // Inyecta las variables ni bien se monta el componente (hidrata desde persist o default)
+  useEffect(() => {
+    if (primeraVez.current) {
+      inyectarVariables(config);
+      primeraVez.current = false;
+    }
+  }, [config]);
+
+  // Escucha cambios y re-inyecta
+  useEffect(() => {
+    inyectarVariables(config);
+  }, [config]);
+
+  // Siempre trae datos de la API para mantener el sitio actualizado
+  useEffect(() => {
+    fetchConfig();
+  }, [fetchConfig]);
+
+  return children;
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <LayoutProvider>
+          <ToastProvider>
+            <ThemeInitializer>
+              <AppRouter />
+            </ThemeInitializer>
+          </ToastProvider>
+        </LayoutProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
+
+export default App;

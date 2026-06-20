@@ -13,10 +13,10 @@ RED    = \033[31m
 
 # ── PHONYs agrupados por sección ──────────────────────────────────────────────
 .PHONY: scaffold setup install install-frontend install-backend
-.PHONY: dev dev-d dev-down dev-reset
-.PHONY: prod prod-down prod-reset ssl
+.PHONY: dev dev-d dev-down dev-reset dev-reset-up
+.PHONY: prod prod-down prod-reset ssl ssl-selfsigned setup-prod
 .PHONY: logs logs-dev logs-be logs-fe
-.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev tests-back tests-frontend lint-backend lint-frontend
+.PHONY: shell-be shell-be-dev migrate migrate-dev seed-dev seed seed-user-dev seed-user db-count db-count-dev tests-back tests-back-unit tests-back-all tests-frontend lint-backend lint-frontend
 .PHONY: check-env help fclean
 
 # =============================================================================
@@ -58,13 +58,17 @@ dev: ## Levanta el entorno de desarrollo con hot-reload (Vite + Nodemon + SQLite
 
 dev-d: ## Igual que dev pero en background (detached)
 	docker compose -f docker-compose.dev.yml up --build -d
-
+	@echo "$(YELLOW)  Frontend → http://localhost:5173$(RESET)"
+	@echo "$(YELLOW)  Backend  → http://localhost:3000/api$(RESET)"
+	
 dev-down: ## Detiene el entorno de desarrollo
 	docker compose -f docker-compose.dev.yml down
 
 dev-reset: ## Detiene el entorno de desarrollo y borra la BD SQLite
 	@echo "$(RED)⚠  Esto eliminará la base de datos de desarrollo.$(RESET)"
 	docker compose -f docker-compose.dev.yml down -v
+
+dev-reset-up: dev-reset dev
 
 fclean: ## Remove all containers, volumes, images and node_modules
 	docker compose -f docker-compose.dev.yml down -v --rmi all --remove-orphans
@@ -76,9 +80,27 @@ fclean: ## Remove all containers, volumes, images and node_modules
 # PRODUCCIÓN
 # =============================================================================
 
-prod: check-env ## Construye y levanta producción (Nginx HTTPS + Node + PostgreSQL)
+setup-prod: ## Genera .env con secrets aleatorios (JWT_SECRET, DB_PASSWORD)
+	@echo "$(CYAN)▶ Generando .env con secrets...$(RESET)"
+	bash scripts/generate-secrets.sh
+
+ssl-selfsigned: ## Genera certificado SSL auto-firmado en docker/ssl/
+	@echo "$(CYAN)▶ Generando certificado SSL auto-firmado...$(RESET)"
+	bash scripts/generate-ssl.sh
+
+prod: check-env ssl-selfsigned ## Construye y levanta producción (Nginx HTTPS + Node + PostgreSQL)
 	@echo "$(CYAN)▶ Iniciando producción...$(RESET)"
 	docker compose up --build -d
+
+prod-first: ## Primera vez: genera .env, SSL y levanta producción
+	@echo "$(CYAN)▶ Configuración inicial de producción...$(RESET)"
+	@$(MAKE) setup-prod
+	@$(MAKE) ssl-selfsigned
+	@$(MAKE) prod
+	@echo ""
+	@echo "$(GREEN)✔ Producción lista$(RESET)"
+	@echo "  HTTPS → https://localhost"
+	@echo "  Para cargar datos: make migrate && make seed && make seed-user"
 
 prod-down: ## Detiene producción
 	docker compose down
@@ -126,8 +148,41 @@ migrate-dev: ## Ejecuta migraciones en desarrollo
 seed-dev: ## Carga los seeders en desarrollo
 	docker compose -f docker-compose.dev.yml exec backend npx sequelize-cli db:seed:all
 
-tests-back: ## Ejecuta tests del backend en desarrollo (docker)
+seed: ## Carga los seeders en producción
+	docker compose exec backend npx sequelize-cli db:seed:all
+
+seed-user-dev: ## Crea/actualiza un usuario en desarrollo. Uso: make seed-user-dev [EMAIL=...] [PASSWORD=...] [ROL=...]
+	docker compose -f docker-compose.dev.yml exec backend node scripts/create-user.js
+
+seed-user: ## Crea/actualiza un usuario en producción. Uso: make seed-user [EMAIL=...] [PASSWORD=...] [ROL=...]
+	docker compose exec backend node scripts/create-user.js
+
+db-count: ## Muestra cantidad de filas por tabla (producción)
+	docker compose exec backend node scripts/db-count.js
+
+db-count-dev: ## Muestra cantidad de filas por tabla (desarrollo)
+	docker compose -f docker-compose.dev.yml exec backend node scripts/db-count.js
+
+tests-back: ## Ejecuta tests del backend (docker). Uso: make tests-back | make tests-back arg=consulta
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- $(arg)
+else
 	docker compose -f docker-compose.dev.yml exec backend npm test
+endif
+
+tests-back-unit: ## Ejecuta solo unit tests del backend (docker). Uso: make tests-back-unit | make tests-back-unit arg=auth
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- tests/unit $(arg)
+else
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- tests/unit
+endif
+
+tests-back-all: ## Ejecuta todos los tests del backend: integration + unit (docker). Uso: make tests-back-all | make tests-back-all arg=evento
+ifdef arg
+	docker compose -f docker-compose.dev.yml exec backend npm run test:arg -- $(arg)
+else
+	docker compose -f docker-compose.dev.yml exec backend npm test
+endif
 
 tests-frontend: ## Ejecuta tests del frontend en desarrollo (docker)
 	docker compose -f docker-compose.dev.yml exec frontend npm test -- --run
@@ -145,7 +200,7 @@ lint-frontend: ## Ejecuta lint del frontend (docker)
 check-env:
 	@if [ ! -f .env ]; then \
 		echo "$(RED)✗ No existe el archivo .env$(RESET)"; \
-		echo "  Ejecutá: $(BOLD)cp .env.example .env$(RESET)"; \
+		echo "  Ejecutá: $(BOLD)make setup-prod$(RESET)"; \
 		exit 1; \
 	fi
 	@if grep -q "CAMBIA_ESTO" .env; then \
