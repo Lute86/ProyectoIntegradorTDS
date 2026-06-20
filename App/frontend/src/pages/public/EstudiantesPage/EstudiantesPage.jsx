@@ -137,8 +137,8 @@ export default function EstudiantesPage() {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
-          <p className="text-white text-xl">Todo lo que necesitas en un solo lugar</p>
+          <h1 className="text-h1 mb-3 animate-fade-in-up text-shadow-hero">Portal del Estudiante</h1>
+          <p className="text-white text-xl animate-fade-in-up delay-150">Todo lo que necesitas en un solo lugar</p>
         </div>
       </div>
 

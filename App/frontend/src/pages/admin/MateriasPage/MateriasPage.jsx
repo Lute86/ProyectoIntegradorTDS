@@ -68,9 +68,9 @@ const AdminMateriasPage = () => {
       header: 'Nombre',
       accessor: (m) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-gray-800 text-sm">{m.nombre}</span>
+          <span className="font-semibold text-gray-800 dark:text-slate-100 text-sm">{m.nombre}</span>
           {m.descripcion && (
-            <span className="text-xs text-gray-400 truncate max-w-xs hidden md:inline">{m.descripcion}</span>
+            <span className="text-xs text-gray-400 dark:text-slate-500 truncate max-w-xs hidden md:inline">{m.descripcion}</span>
           )}
         </div>
       ),
@@ -95,8 +95,8 @@ const AdminMateriasPage = () => {
     <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Materias</h1>
-          <p className="text-sm text-gray-500">Administra las materias y asignaciones a carreras.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Gestion de Materias</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Administra las materias y asignaciones a carreras.</p>
         </div>
         <button onClick={abrirCrear}
           className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm active:scale-95 gap-2"
@@ -106,7 +106,7 @@ const AdminMateriasPage = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</span>
@@ -120,13 +120,13 @@ const AdminMateriasPage = () => {
           </div>
         )}
 
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3 bg-gray-50/50">
-          <span className={`text-sm whitespace-nowrap ${selectedIds.size > 0 ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
+        <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex items-center gap-3 bg-gray-50/50 dark:bg-slate-700/50">
+          <span className={`text-sm whitespace-nowrap ${selectedIds.size > 0 ? 'text-gray-700 dark:text-slate-200 font-medium' : 'text-gray-400 dark:text-slate-500'}`}>
             {selectedIds.size > 0
               ? `${selectedIds.size} materia${selectedIds.size !== 1 ? 's' : ''} seleccionada${selectedIds.size !== 1 ? 's' : ''}`
               : 'Selecciona una o mas materias para asignar a carrera'}
           </span>
-          <span className="w-px h-5 bg-gray-200" />
+          <span className="w-px h-5 bg-gray-200 dark:bg-slate-700" />
           <button
             disabled={selectedIds.size === 0}
             onClick={() => {
@@ -137,12 +137,12 @@ const AdminMateriasPage = () => {
             className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all shadow-sm ${
               selectedIds.size > 0
                 ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-95'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-100 dark:bg-slate-700/50 text-gray-400 dark:text-slate-500 cursor-not-allowed'
             }`}
           >Asignar a carrera</button>
           {selectedIds.size > 0 && (
             <button onClick={() => setSelectedIds(new Set())}
-              className="px-3 py-1.5 text-xs font-semibold text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+              className="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-700/50 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition"
             >Limpiar seleccion</button>
           )}
         </div>
@@ -272,20 +272,20 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[85vh] flex flex-col">
-        <div className="flex items-center justify-between p-5 border-b border-gray-200">
-          <h2 className="text-lg font-bold text-gray-900">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[85vh] flex flex-col">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             Asignar {materias.length > 1 ? `${materias.length} materias` : 'materia'} a carrera
           </h2>
           <button type="button" onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
+            className="w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 flex items-center justify-center text-lg font-bold transition-colors"
           >X</button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {materias.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Materias a asignar</p>
+              <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">Materias a asignar</p>
               <div className="flex flex-wrap gap-1.5">
                 {materias.map((m) => (
                   <span key={m.id} className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg">
@@ -297,13 +297,13 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
           )}
 
           {carrerasLoading ? (
-            <p className="text-sm text-gray-400 text-center py-4">Cargando carreras...</p>
+            <p className="text-sm text-gray-400 dark:text-slate-500 text-center py-4">Cargando carreras...</p>
           ) : (
             <form onSubmit={onSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Carrera</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Carrera</label>
                 <select value={selectedCarreraId} onChange={(e) => handleCarreraChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700 dark:text-slate-100"
                 >
                   <option value="">Seleccionar carrera...</option>
                   {carreras.filter((c) => c.activa).map((c) => (
@@ -314,24 +314,24 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
 
               {loadingCarrera && (
                 <div className="space-y-2 animate-pulse">
-                  <div className="h-4 bg-gray-100 rounded w-1/3" />
-                  <div className="h-12 bg-gray-100 rounded" />
+                  <div className="h-4 bg-gray-100 dark:bg-slate-700/50 rounded w-1/3" />
+                  <div className="h-12 bg-gray-100 dark:bg-slate-700/50 rounded" />
                 </div>
               )}
 
               {carreraMaterias && !loadingCarrera && (
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Materias de la carrera por cuatrimestre</p>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">Materias de la carrera por cuatrimestre</p>
                   {porCuatri.length === 0 ? (
-                    <p className="text-xs text-gray-400 italic">Esta carrera no tiene materias asignadas aun.</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500 italic">Esta carrera no tiene materias asignadas aun.</p>
                   ) : (
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {porCuatri.map(([cuatri, cmList]) => (
-                        <div key={cuatri} className="bg-gray-50 rounded-lg p-2.5">
+                        <div key={cuatri} className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-2.5">
                           <p className="text-xs font-bold text-blue-600 mb-1">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</p>
                           <div className="flex flex-wrap gap-1">
                             {cmList.map((cm) => (
-                              <span key={cm.id} className="px-2 py-0.5 bg-white text-gray-600 text-[11px] rounded border border-gray-200">
+                              <span key={cm.id} className="px-2 py-0.5 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-[11px] rounded border border-gray-200 dark:border-slate-700">
                                 {cm.materia?.nombre || '—'}
                                 {cm.carga_horaria_semanal ? ` (${cm.carga_horaria_semanal}hs)` : ''}
                               </span>
@@ -346,17 +346,17 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Cuatrimestre</label>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Cuatrimestre</label>
                   <input type="number" min={1} max={maxCuatri} value={cuatrimestre} onChange={(e) => setCuatrimestre(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                     placeholder="1"
                   />
-                  <p className="text-xs text-gray-400 mt-0.5">Max: {maxCuatri}</p>
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Max: {maxCuatri}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Carga horaria semanal (hs)</label>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Carga horaria semanal (hs)</label>
                   <input type="number" min={1} value={cargaHoraria} onChange={(e) => setCargaHoraria(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                     placeholder="4"
                   />
                 </div>
@@ -379,7 +379,7 @@ const AsignarCarreraModal = ({ isOpen, onClose, materias }) => {
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={onClose}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 text-sm font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                 >Cancelar</button>
                 <button type="submit" disabled={submitting || carrerasLoading}
                   className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg transition shadow-sm"

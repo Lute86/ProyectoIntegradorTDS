@@ -41,7 +41,7 @@ export default function EventosSection({ eventos, onVerDetalle }) {
     <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
       <div className="max-w-content mx-auto px-8">
         <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent drop-shadow-sm">
             Proximos Eventos
           </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">No te pierdas las actividades del instituto</p>

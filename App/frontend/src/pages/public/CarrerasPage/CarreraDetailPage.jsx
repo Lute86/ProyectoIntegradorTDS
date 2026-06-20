@@ -223,8 +223,8 @@ export default function CarreraDetailPage() {
               )}
             </div>
             <div>
-              <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
-              <p className="text-white">Tecnicatura en {carrera.nombre}</p>
+              <h1 className="text-h1 mb-1 animate-fade-in-up text-shadow-hero">{carrera.nombre}</h1>
+              <p className="text-white animate-fade-in-up delay-150">Tecnicatura en {carrera.nombre}</p>
             </div>
           </div>
         </div>

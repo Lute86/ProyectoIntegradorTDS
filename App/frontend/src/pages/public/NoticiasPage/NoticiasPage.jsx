@@ -101,12 +101,12 @@ export default function NoticiasPage() {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Noticias</h1>
-          <p className="text-white text-xl">Mantenete informado sobre las novedades del instituto</p>
+          <h1 className="text-h1 mb-3 animate-fade-in-up text-shadow-hero">Noticias</h1>
+          <p className="text-white text-xl animate-fade-in-up delay-150">Mantenete informado sobre las novedades del instituto</p>
         </div>
       </div>
 
-      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content-narrow'} mx-auto px-6 lg:px-8 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2 xl:col-span-3">
             <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 mb-6">
@@ -158,7 +158,7 @@ export default function NoticiasPage() {
                 <div className="space-y-5">
                   {paginatedNoticias.map((n) => (
                     <div key={n.id} onClick={() => setSelectedNoticia(n)}
-                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
                         <div className="sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-400 to-slate-600 text-white">
                           <IconoCategoria categoria={n.categoria} className="w-10 h-10" selected />

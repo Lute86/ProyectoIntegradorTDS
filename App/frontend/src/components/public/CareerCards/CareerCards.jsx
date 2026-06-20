@@ -7,7 +7,7 @@ export default function CareerCards({ carreras }) {
     <section className="py-12">
       <div className="max-w-content mx-auto px-6">
         <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent drop-shadow-sm">
             Nuestras Carreras
           </h2>
           <p className="text-body/70 dark:text-white/70 mt-2">Formacion tecnica de calidad con salida laboral inmediata</p>

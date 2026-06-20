@@ -37,8 +37,8 @@ export default function CarrerasPage() {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Carreras</h1>
-          <p className="text-white text-xl">Explora nuestras ofertas academicas</p>
+          <h1 className="text-h1 mb-3 animate-fade-in-up text-shadow-hero">Carreras</h1>
+          <p className="text-white text-xl animate-fade-in-up delay-150">Explora nuestras ofertas academicas</p>
         </div>
       </div>
 

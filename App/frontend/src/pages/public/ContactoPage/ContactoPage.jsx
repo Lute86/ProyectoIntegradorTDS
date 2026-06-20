@@ -43,8 +43,8 @@ export default function ContactoPage() {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3 text-white">Contacto</h1>
-          <p className="text-white text-xl">Estamos para ayudarte</p>
+          <h1 className="text-h1 mb-3 text-white animate-fade-in-up text-shadow-hero">Contacto</h1>
+          <p className="text-white text-xl animate-fade-in-up delay-150">Estamos para ayudarte</p>
         </div>
       </div>
 
