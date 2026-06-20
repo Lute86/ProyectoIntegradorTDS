@@ -74,7 +74,7 @@ const ThemePresets = () => {
               className={clsx(
                 "text-left p-3 lg:p-4 rounded-xl border-2 transition-all",
                 activo
-                  ? "border-blue-500 bg-blue-50 shadow-md"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:border-blue-400 shadow-md"
                   : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-gray-300 hover:shadow-sm"
               )}
             >
