@@ -36,8 +36,8 @@ const TestimoniosPage = () => {
       header: 'Autor',
       accessor: (t) => (
         <div className="flex flex-col truncate">
-          <span className="font-semibold text-gray-800 text-sm truncate">{t.autor_nombre}</span>
-          <span className="text-xs text-gray-400 truncate">{t.autor_carrera}</span>
+          <span className="font-semibold text-gray-800 dark:text-slate-100 text-sm truncate">{t.autor_nombre}</span>
+          <span className="text-xs text-gray-400 dark:text-slate-500 truncate">{t.autor_carrera}</span>
         </div>
       ),
       className: 'w-1/4 max-w-[200px]',
@@ -45,7 +45,7 @@ const TestimoniosPage = () => {
     {
       header: 'Contenido',
       accessor: (t) => (
-        <p className="text-sm text-gray-600 truncate max-w-[150px] md:max-w-md">{t.texto}</p>
+        <p className="text-sm text-gray-600 dark:text-slate-400 truncate max-w-[150px] md:max-w-md">{t.texto}</p>
       ),
       className: 'w-1/2 lg:w-[60%]',
     },
@@ -90,8 +90,8 @@ const TestimoniosPage = () => {
     <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Testimonios</h1>
-          <p className="text-sm text-gray-500">Administra los testimonios de alumnos y graduados.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Gestion de Testimonios</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Administra los testimonios de alumnos y graduados.</p>
         </div>
         <button onClick={abrirModalCrear} className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm active:scale-95 gap-2">
           <span className="text-lg">+</span>
@@ -99,7 +99,7 @@ const TestimoniosPage = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</span>
@@ -111,8 +111,8 @@ const TestimoniosPage = () => {
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="flex items-center gap-4 animate-pulse">
                 <div className="flex-1 space-y-2">
-                  <div className="h-3 bg-gray-200 rounded w-1/2" />
-                  <div className="h-2 bg-gray-100 rounded w-1/4" />
+                  <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/2" />
+                  <div className="h-2 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4" />
                 </div>
               </div>
             ))}
