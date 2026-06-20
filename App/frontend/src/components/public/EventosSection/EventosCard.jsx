@@ -12,7 +12,7 @@ export default function EventosCard({ evento, onVerDetalle }) {
 
   return (
     <div onClick={onVerDetalle}
-      className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full cursor-pointer">
+      className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full cursor-pointer">
       <div className="p-6 flex flex-col h-full">
         <h3 className="text-lg font-bold text-body dark:text-white mb-3">{titulo}</h3>
         <p className="text-sm text-body/70 dark:text-white/70 mb-4 line-clamp-2 flex-1">{descripcion}</p>

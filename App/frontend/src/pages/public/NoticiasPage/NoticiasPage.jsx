@@ -93,7 +93,7 @@ export default function NoticiasPage() {
   const handleCategoryFilter = (cat) => { setSelectedCategory(cat === selectedCategory ? '' : cat); setCurrentPage(1) }
 
   return (
-    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-50">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
@@ -109,7 +109,7 @@ export default function NoticiasPage() {
       <div className={`${layout === 'boxed' ? '' : 'max-w-content-narrow'} mx-auto px-6 lg:px-8 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2 xl:col-span-3">
-            <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 mb-6">
+            <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row gap-4 mb-5">
                 <div className="flex-1 relative">
                   <input
@@ -158,7 +158,7 @@ export default function NoticiasPage() {
                 <div className="space-y-5">
                   {paginatedNoticias.map((n) => (
                     <div key={n.id} onClick={() => setSelectedNoticia(n)}
-                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
                         <div className="sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-400 to-slate-600 text-white">
                           <IconoCategoria categoria={n.categoria} className="w-10 h-10" selected />

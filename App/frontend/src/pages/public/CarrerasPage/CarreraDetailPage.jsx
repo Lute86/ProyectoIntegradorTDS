@@ -165,7 +165,7 @@ export default function CarreraDetailPage() {
 
   if (loading && !carrera) {
     return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
           <div className="max-w-content mx-auto px-4 py-12 md:py-16 animate-pulse">
@@ -183,7 +183,7 @@ export default function CarreraDetailPage() {
 
   if (!carrera) {
     return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
         <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-body dark:text-white mb-4">Carrera no encontrada</h1>
@@ -202,7 +202,7 @@ export default function CarreraDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
@@ -256,7 +256,7 @@ export default function CarreraDetailPage() {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {infoCards.map((item, i) => (
-                    <div key={i} className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm text-center">
+                    <div key={i} className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-200 dark:border-white/20 shadow-sm text-center">
                       <h4 className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">{item.label}</h4>
                       <p className="text-body dark:text-white/80 text-sm">{item.valor}</p>
                     </div>
@@ -309,7 +309,7 @@ export default function CarreraDetailPage() {
                   </p>
                 ) : (
                   <>
-                    <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
+                    <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-5">
                       <div className="flex flex-col sm:flex-row gap-4">
                         {aniosDisponibles.length > 0 && (
                           <div className="flex-1 animate-in fade-in duration-300">
@@ -409,7 +409,7 @@ export default function CarreraDetailPage() {
                         {materias.map((m, i) => (
                           <div
                             key={i}
-                            className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm border-l-4 border-blue-600"
+                            className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-200 dark:border-white/20 shadow-sm border-l-4 border-blue-600"
                           >
                             <h5 className="font-semibold text-body dark:text-white text-sm">{m.nombre}</h5>
                             {m.carga_horaria_semanal && (
@@ -426,7 +426,7 @@ export default function CarreraDetailPage() {
           </div>
 
           <aside className="space-y-6">
-            <div className="p-5 bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm">
+            <div className="p-5 bg-white dark:bg-white/10 rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm">
               <h4 className="font-bold text-body dark:text-white mb-3">Otras Carreras</h4>
               {otrasCarreras.length === 0 ? (
                 <p className="text-sm text-body/50 dark:text-white/50">No hay otras carreras.</p>

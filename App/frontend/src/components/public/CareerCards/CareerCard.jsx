@@ -17,7 +17,7 @@ export default function CareerCard({ carrera }) {
 
   return (
     <Link to={`/carreras/${slug}`}
-      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       <div
         className="h-24 flex items-center justify-center text-white text-lg font-bold px-4 text-center leading-tight"
         style={{ backgroundColor: color || '#3B82F6' }}

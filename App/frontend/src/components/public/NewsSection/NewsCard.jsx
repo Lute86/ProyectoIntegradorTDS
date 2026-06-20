@@ -14,8 +14,8 @@ export default function NewsCard({ noticia, onVerDetalle }) {
 
   const Comp = onVerDetalle ? 'div' : 'a'
   const extraProps = onVerDetalle
-    ? { onClick: () => onVerDetalle(noticia), className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer' }
-    : { href: `/noticias/${noticia.slug}`, className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300' }
+    ? { onClick: () => onVerDetalle(noticia), className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer' }
+    : { href: `/noticias/${noticia.slug}`, className: 'block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300' }
 
   return (
     <Comp {...extraProps}>

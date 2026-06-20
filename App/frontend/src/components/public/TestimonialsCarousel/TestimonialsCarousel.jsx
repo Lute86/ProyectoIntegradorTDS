@@ -26,8 +26,8 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
-      <div className="max-w-content mx-auto px-8">
+    <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
         <div className="text-center mb-10">
           <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent drop-shadow-sm">
             Lo que dicen nuestros estudiantes

@@ -35,7 +35,7 @@ export default function ContactoPage() {
   }
 
   return (
-    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="relative text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
@@ -50,7 +50,7 @@ export default function ContactoPage() {
 
       <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 md:p-8">
+          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-6 md:p-8">
             <h2 className="text-xl font-bold mb-6 text-body dark:text-white">Envia tu consulta</h2>
             <ContactForm onSubmit={handleSubmit} isLoading={isLoading} />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -60,7 +60,7 @@ export default function ContactoPage() {
           <div className="space-y-4">
             {infoCards.map((card) => (
               <div key={card.title}
-                className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5 flex gap-4 items-start"
+                className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-5 flex gap-4 items-start"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 bg-blue-100 dark:bg-blue-500/20">
                   {card.icon}
@@ -71,7 +71,7 @@ export default function ContactoPage() {
                 </div>
               </div>
             ))}
-            <div className="h-64 rounded-xl overflow-hidden border border-gray-100 dark:border-white/20 shadow-sm">
+            <div className="h-64 rounded-xl overflow-hidden border border-gray-200 dark:border-white/20 shadow-sm">
               <iframe
                 src="https://www.google.com/maps?q=-34.602693,-58.371193&output=embed&z=16"
                 width="100%"
