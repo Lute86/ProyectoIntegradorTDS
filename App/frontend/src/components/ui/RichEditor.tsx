@@ -31,7 +31,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm max-w-none p-4 min-h-[200px] focus:outline-none text-gray-800',
+          'prose prose-sm dark:prose-invert max-w-none p-4 min-h-[200px] focus:outline-none text-gray-800 dark:text-slate-100',
       },
     },
   });
@@ -68,7 +68,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
         'px-2.5 py-1.5 text-xs font-bold rounded transition-colors',
         activo
           ? 'bg-blue-600 text-white'
-          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-600'
       )}
     >
       {label}
@@ -76,9 +76,9 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
   );
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
+    <div className="border border-gray-300 dark:border-slate-600 rounded-lg overflow-hidden bg-white dark:bg-slate-800">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-gray-200 bg-gray-50">
+      <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
         <BotonToolbar
           onClick={() => editor.chain().focus().toggleBold().run()}
           activo={editor.isActive('bold')}
@@ -92,7 +92,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
           title="Cursiva"
         />
 
-        <span className="w-px h-5 bg-gray-300 mx-1" />
+        <span className="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1" />
 
         <BotonToolbar
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -113,7 +113,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
           title="Titulo terciario"
         />
 
-        <span className="w-px h-5 bg-gray-300 mx-1" />
+        <span className="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1" />
 
         <BotonToolbar
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -128,7 +128,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
           title="Lista numerada"
         />
 
-        <span className="w-px h-5 bg-gray-300 mx-1" />
+        <span className="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1" />
 
         <BotonToolbar
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -148,7 +148,7 @@ const RichEditor = ({ value, onChange, placeholder = 'Escriba aqui...' }: RichEd
           title="Insertar enlace"
         />
 
-        <span className="w-px h-5 bg-gray-300 mx-1" />
+        <span className="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1" />
 
         <BotonToolbar
           onClick={() => editor.chain().focus().undo().run()}

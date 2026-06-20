@@ -72,16 +72,16 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-5">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-5">
         {/* Header del modal */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             {esEdicion ? 'Editar Evento' : 'Nuevo Evento'}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
+            className="w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 dark:text-slate-500 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
           >
             X
           </button>
@@ -90,10 +90,10 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[65vh] pr-1">
           {/* Campo: Nombre */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Nombre</label>
             <input
               {...register('nombre')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="Nombre del evento"
             />
             {errors.nombre && (
@@ -104,21 +104,21 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
           {/* Fecha + Ubicacion */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Fecha</label>
               <input
                 type="date"
                 {...register('fecha')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               />
               {errors.fecha && (
                 <p className="text-xs text-red-500 mt-1">{errors.fecha.message}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Ubicacion / Modalidad</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Ubicacion / Modalidad</label>
               <input
                 {...register('ubicacion')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                 placeholder="Ej: Presencial, Virtual, Aula 3"
               />
               {errors.ubicacion && (
@@ -129,10 +129,10 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
 
           {/* Estado */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Estado</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Estado</label>
             <select
               {...register('estado')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700"
             >
               <option value="">Seleccione un estado</option>
               <option value="pendiente">Pendiente</option>
@@ -147,7 +147,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
 
           {/* Descripcion (RichEditor) */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Descripcion</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Descripcion</label>
             <Controller
               name="descripcion"
               control={control}
@@ -169,7 +169,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition"
             >
               Cancelar
             </button>

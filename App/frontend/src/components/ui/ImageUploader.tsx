@@ -48,8 +48,8 @@ const ImageUploader = ({ onFileSelect, previewUrl }: ImageUploaderProps) => {
       className={clsx(
         'relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-xl cursor-pointer transition-colors',
         isDragging
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
+          : 'border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 hover:bg-gray-100 dark:hover:bg-slate-700'
       )}
     >
       <input
@@ -72,12 +72,12 @@ const ImageUploader = ({ onFileSelect, previewUrl }: ImageUploaderProps) => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center gap-2 text-gray-400">
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-lg">+</div>
+        <div className="flex flex-col items-center gap-2 text-gray-400 dark:text-slate-400">
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-gray-500 dark:text-slate-300 font-bold text-lg">+</div>
           <p className="text-sm font-medium">
             {isDragging ? 'Suelte la imagen aqui' : 'Arrastre una imagen o haga clic'}
           </p>
-          <p className="text-xs text-gray-400">JPG, PNG o WebP</p>
+          <p className="text-xs text-gray-400 dark:text-slate-500">JPG, PNG o WebP</p>
         </div>
       )}
     </div>

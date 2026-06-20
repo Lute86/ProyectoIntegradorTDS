@@ -13,7 +13,7 @@ export default function Pagination({ current, total, onChange }) {
       <button
         disabled={current === 1}
         onClick={() => onChange(current - 1)}
-        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Anterior
       </button>
@@ -25,7 +25,7 @@ export default function Pagination({ current, total, onChange }) {
             'px-3 py-1.5 text-sm rounded-md border',
             p === current
               ? 'bg-blue-600 text-white border-blue-600'
-              : 'border-gray-300 hover:bg-gray-50'
+              : 'border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700'
           )}
         >
           {p}
@@ -34,7 +34,7 @@ export default function Pagination({ current, total, onChange }) {
       <button
         disabled={current === total}
         onClick={() => onChange(current + 1)}
-        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Siguiente
       </button>
