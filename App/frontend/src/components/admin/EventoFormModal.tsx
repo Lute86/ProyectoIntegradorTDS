@@ -57,13 +57,13 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
     } else {
       reset({ nombre: '', fecha: '', ubicacion: '', estado: undefined, descripcion: '' });
     }
-  }, [eventoToEdit, reset]);
+  }, [eventoToEdit, reset, isOpen]);
 
-  const onSubmit = (data: EventoFormData) => {
+  const onSubmit = async (data: EventoFormData) => {
     if (esEdicion && eventoToEdit) {
-      updateEvento(eventoToEdit.id, data);
+      await updateEvento(eventoToEdit.id, data);
     } else {
-      addEvento(data);
+      await addEvento(data);
     }
     onClose();
   };

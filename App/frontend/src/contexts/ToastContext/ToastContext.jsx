@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useCallback } from 'react';
 import useUIStore from '../../stores/uiStore';
+import ToastContainer from '../../components/ui/Toast/ToastContainer';
 
 const ToastContext = createContext();
 
@@ -16,6 +17,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ toasts, showToast, removeToast }}>
       {children}
+      <ToastContainer />
     </ToastContext.Provider>
   );
 }

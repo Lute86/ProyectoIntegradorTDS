@@ -44,13 +44,13 @@ const TestimonioFormModal = ({ isOpen, onClose, testimonioToEdit }: TestimonioFo
     } else {
       reset({ autor_nombre: '', autor_carrera: '', texto: '', visible: true });
     }
-  }, [testimonioToEdit, reset]);
+  }, [testimonioToEdit, reset, isOpen]);
 
-  const onSubmit = (data: TestimonioFormData) => {
+  const onSubmit = async (data: TestimonioFormData) => {
     if (esEdicion && testimonioToEdit) {
-      updateTestimonio(testimonioToEdit.id, data);
+      await updateTestimonio(testimonioToEdit.id, data);
     } else {
-      addTestimonio(data);
+      await addTestimonio(data);
     }
     onClose();
   };

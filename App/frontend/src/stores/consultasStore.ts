@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../services/api';
+import useUIStore from './uiStore';
 
 export interface Consulta {
   id: number;
@@ -59,9 +60,10 @@ export const useConsultasStore = create<ConsultasState>((set) => ({
           c.id === id ? { ...c, ...response.data.data } : c
         ),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Consulta respondida exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al responder la consulta';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   eliminarConsulta: async (id) => {
@@ -70,9 +72,10 @@ export const useConsultasStore = create<ConsultasState>((set) => ({
       set((state) => ({
         consultas: state.consultas.filter((c) => c.id !== id),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Consulta eliminada exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la consulta';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 }));

@@ -77,7 +77,7 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
     } else {
       reset({ titulo: '', slug: '', categoria_id: '', estado: undefined, contenido: '' });
     }
-  }, [noticiaToEdit, reset]);
+  }, [noticiaToEdit, reset, isOpen]);
 
   // Auto-genera el slug cuando cambia el titulo (solo al crear)
   const tituloActual = watch('titulo');
@@ -98,16 +98,12 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
       fecha_publicacion: new Date().toISOString(),
     };
 
-    try {
-      if (esEdicion && noticiaToEdit) {
-        await updateNoticia(noticiaToEdit.id, body);
-      } else {
-        await addNoticia(body);
-      }
-      onClose();
-    } catch {
-      // el store ya maneja el error
+    if (esEdicion && noticiaToEdit) {
+      await updateNoticia(noticiaToEdit.id, body);
+    } else {
+      await addNoticia(body);
     }
+    onClose();
   };
 
   if (!isOpen) return null;

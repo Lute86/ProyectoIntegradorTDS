@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../services/api';
+import useUIStore from './uiStore';
 
 export interface GaleriaImagen {
   id: number;
@@ -37,18 +38,20 @@ export const useGaleriaStore = create<GaleriaState>((set) => ({
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       set((state) => ({ imagenes: [...state.imagenes, response.data.data] }));
+      useUIStore.getState().setPageNotification({ message: 'Imagen subida exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al subir la imagen';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   deleteImagen: async (id) => {
     try {
       await api.delete(`/imagenes/${id}`);
       set((state) => ({ imagenes: state.imagenes.filter((i) => i.id !== id) }));
+      useUIStore.getState().setPageNotification({ message: 'Imagen eliminada exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la imagen';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 }));

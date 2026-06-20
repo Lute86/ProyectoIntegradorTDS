@@ -31,6 +31,14 @@ const useUIStore = create((set) => ({
     set((state) => ({
       toasts: state.toasts.filter((t) => t.id !== id),
     })),
+
+  pageNotification: null,
+
+  setPageNotification: (notification) =>
+    set({ pageNotification: notification }),
+
+  clearPageNotification: () =>
+    set({ pageNotification: null }),
 }));
 
 export default useUIStore;

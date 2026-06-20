@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../services/api';
+import useUIStore from './uiStore';
 
 export interface Testimonio {
   id: number;
@@ -37,9 +38,10 @@ export const useTestimoniosStore = create<TestimoniosState>((set) => ({
     try {
       const response = await api.post('/testimonios', nuevoTestimonio);
       set((state) => ({ testimonios: [...state.testimonios, response.data.data] }));
+      useUIStore.getState().setPageNotification({ message: 'Testimonio creado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al crear el testimonio';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   updateTestimonio: async (id, data) => {
@@ -48,18 +50,20 @@ export const useTestimoniosStore = create<TestimoniosState>((set) => ({
       set((state) => ({
         testimonios: state.testimonios.map((t) => (t.id === id ? { ...t, ...response.data.data } : t)),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Testimonio actualizado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al actualizar el testimonio';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   deleteTestimonio: async (id) => {
     try {
       await api.delete(`/testimonios/${id}`);
       set((state) => ({ testimonios: state.testimonios.filter((t) => t.id !== id) }));
+      useUIStore.getState().setPageNotification({ message: 'Testimonio eliminado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar el testimonio';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 }));

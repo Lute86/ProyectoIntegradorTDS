@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import api from '../services/api';
 import { User } from '../mocks/users.mock';
+import useUIStore from './uiStore';
 
 interface UsuariosState {
   usuarios: User[];
@@ -32,9 +33,10 @@ export const useUsuariosStore = create<UsuariosState>((set) => ({
       set((state) => ({
         usuarios: [...state.usuarios, response.data.data],
       }));
+      useUIStore.getState().setPageNotification({ message: 'Usuario creado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al crear el usuario';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   updateUsuario: async (id, data) => {
@@ -45,9 +47,10 @@ export const useUsuariosStore = create<UsuariosState>((set) => ({
           u.id === id ? { ...u, ...response.data.data } : u
         ),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Usuario actualizado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al actualizar el usuario';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   deleteUsuario: async (id) => {
@@ -56,9 +59,10 @@ export const useUsuariosStore = create<UsuariosState>((set) => ({
       set((state) => ({
         usuarios: state.usuarios.filter((u) => u.id !== id),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Usuario eliminado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar el usuario';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 }));

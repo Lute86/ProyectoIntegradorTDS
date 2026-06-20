@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import api from '../services/api'
+import useUIStore from './uiStore'
 
 const TTL = 30000
 
@@ -27,11 +28,11 @@ const useMateriasStore = create((set, get) => ({
     try {
       const response = await api.post('/materias', data)
       set((state) => ({ materias: [...state.materias, response.data.data] }))
+      useUIStore.getState().setPageNotification({ message: 'Materia creada exitosamente', type: 'success' })
       return response.data.data
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al crear la materia'
-      set({ error: mensaje })
-      throw err
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 
@@ -43,10 +44,10 @@ const useMateriasStore = create((set, get) => ({
           m.id === id ? { ...m, ...response.data.data } : m
         ),
       }))
+      useUIStore.getState().setPageNotification({ message: 'Materia actualizada exitosamente', type: 'success' })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al actualizar la materia'
-      set({ error: mensaje })
-      throw err
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 
@@ -56,10 +57,10 @@ const useMateriasStore = create((set, get) => ({
       set((state) => ({
         materias: state.materias.filter((m) => m.id !== id),
       }))
+      useUIStore.getState().setPageNotification({ message: 'Materia eliminada exitosamente', type: 'success' })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la materia'
-      set({ error: mensaje })
-      throw err
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 
@@ -80,8 +81,6 @@ const useMateriasStore = create((set, get) => ({
       set((state) => ({ asignaciones: [...state.asignaciones, response.data.data] }))
       return response.data.data
     } catch (err) {
-      const mensaje = err.response?.data?.message || 'Error al asignar la materia'
-      set({ error: mensaje })
       throw err
     }
   },
@@ -95,8 +94,6 @@ const useMateriasStore = create((set, get) => ({
         ),
       }))
     } catch (err) {
-      const mensaje = err.response?.data?.message || 'Error al actualizar la asignacion'
-      set({ error: mensaje })
       throw err
     }
   },
@@ -110,8 +107,6 @@ const useMateriasStore = create((set, get) => ({
         asignaciones: state.asignaciones.filter((a) => a.id !== id),
       }))
     } catch (err) {
-      const mensaje = err.response?.data?.message || 'Error al eliminar la asignacion'
-      set({ error: mensaje })
       throw err
     }
   },

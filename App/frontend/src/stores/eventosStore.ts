@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../services/api';
+import useUIStore from './uiStore';
 
 export interface Evento {
   id: number;
@@ -38,9 +39,10 @@ export const useEventosStore = create<EventosState>((set) => ({
     try {
       const response = await api.post('/eventos', nuevoEvento);
       set((state) => ({ eventos: [...state.eventos, response.data.data] }));
+      useUIStore.getState().setPageNotification({ message: 'Evento creado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al crear el evento';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   updateEvento: async (id, data) => {
@@ -49,18 +51,20 @@ export const useEventosStore = create<EventosState>((set) => ({
       set((state) => ({
         eventos: state.eventos.map((e) => (e.id === id ? { ...e, ...response.data.data } : e)),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Evento actualizado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al actualizar el evento';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
   deleteEvento: async (id) => {
     try {
       await api.delete(`/eventos/${id}`);
       set((state) => ({ eventos: state.eventos.filter((e) => e.id !== id) }));
+      useUIStore.getState().setPageNotification({ message: 'Evento eliminado exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar el evento';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 }));
