@@ -13,7 +13,7 @@ interface TestimoniosState {
   testimonios: Testimonio[];
   isLoading: boolean;
   error: string | null;
-  fetchTestimonios: () => Promise<void>;
+  fetchTestimonios: (params?: Record<string, unknown>) => Promise<void>;
   addTestimonio: (testimonio: Omit<Testimonio, 'id'>) => Promise<void>;
   updateTestimonio: (id: number, data: Partial<Testimonio>) => Promise<void>;
   deleteTestimonio: (id: number) => Promise<void>;
@@ -23,10 +23,10 @@ export const useTestimoniosStore = create<TestimoniosState>((set) => ({
   testimonios: [],
   isLoading: false,
   error: null,
-  fetchTestimonios: async () => {
+  fetchTestimonios: async (params?: Record<string, unknown>) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await api.get('/testimonios');
+      const response = await api.get('/testimonios', { params });
       set({ testimonios: response.data.data, isLoading: false });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar los testimonios';

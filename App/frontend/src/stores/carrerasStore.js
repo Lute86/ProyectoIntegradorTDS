@@ -7,10 +7,10 @@ const useCarrerasStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  fetchCarreras: async () => {
+  fetchCarreras: async (params) => {
     set({ loading: true, error: null })
     try {
-      const response = await api.get('/carreras')
+      const response = await api.get('/carreras', { params })
       set({ carreras: response.data.data, loading: false })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al cargar las carreras'
