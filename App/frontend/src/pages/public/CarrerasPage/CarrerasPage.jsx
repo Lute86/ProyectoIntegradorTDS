@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useCarrerasStore from '../../../stores/carrerasStore'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
+import PageHero from '../../../components/public/PageHero/PageHero'
+import CareerIcon from '../../../components/ui/CareerIcon/CareerIcon'
 import carreraImg from '../../../assets/fonts/carrera1.png'
 
 const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
@@ -31,16 +33,12 @@ export default function CarrerasPage() {
   return (
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-      <div
-        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
-        style={{ backgroundImage: `url(${carreraImg})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3 animate-fade-in-up text-shadow-hero">Carreras</h1>
-          <p className="text-white text-xl animate-fade-in-up delay-150">Explora nuestras ofertas academicas</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Oferta academica"
+        title="Carreras"
+        subtitle="Explora nuestras ofertas academicas"
+        image={carreraImg}
+      />
 
       <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         {loading ? (
@@ -82,16 +80,22 @@ export default function CarrerasPage() {
                   <Link
                     key={c.id}
                     to={`/carreras/${c.slug}`}
-                    className="w-full md:w-[calc(50%-12px)] max-w-lg bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group"
+                    className="w-full md:w-[calc(50%-12px)] max-w-lg flex flex-col bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group"
                   >
                     <div
-                      className="h-24 flex items-center justify-center text-white text-base font-bold px-4 text-center leading-tight"
-                      style={{ backgroundColor: c.color || '#3B82F6' }}
+                      className="relative h-28 flex items-center gap-4 px-6 overflow-hidden"
+                      style={{ background: `linear-gradient(135deg, ${c.color || '#3B82F6'} 0%, ${c.color || '#3B82F6'}cc 55%, ${c.color || '#3B82F6'}80 100%)` }}
                     >
-                      {c.nombre}
+                      <div className="absolute -right-6 -top-8 w-28 h-28 rounded-full bg-white/15 blur-md" />
+                      <div className="absolute -left-8 -bottom-10 w-32 h-32 rounded-full bg-black/10 blur-md" />
+                      <CareerIcon
+                        name={c.icono || 'graduation'}
+                        className="relative w-12 h-12 shrink-0 [&_svg]:fill-white drop-shadow-md group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <h3 className="relative text-white text-lg font-bold leading-tight text-shadow-hero line-clamp-2">{c.nombre}</h3>
                     </div>
-                    <div className="p-4">
-                      <p className="text-sm text-body/70 dark:text-white/70 mb-3 line-clamp-2">{c.descripcion}</p>
+                    <div className="flex flex-col flex-1 p-4">
+                      <p className="text-sm text-body/70 dark:text-white/70 mb-3 line-clamp-2 flex-1">{c.descripcion}</p>
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/10">
                         <div className="flex items-center gap-2">
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${

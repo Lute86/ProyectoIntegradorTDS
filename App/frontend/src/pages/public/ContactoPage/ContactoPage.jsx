@@ -2,6 +2,7 @@ import { useState } from 'react'
 import api from '../../../services/api'
 import ContactForm from './ContactForm'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
+import PageHero from '../../../components/public/PageHero/PageHero'
 
 import contacBg from '../../../assets/fonts/contac.png'
 
@@ -37,16 +38,12 @@ export default function ContactoPage() {
   return (
     <div className="dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-      <div
-        className="relative text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
-        style={{ backgroundImage: `url(${contacBg})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3 text-white animate-fade-in-up text-shadow-hero">Contacto</h1>
-          <p className="text-white text-xl animate-fade-in-up delay-150">Estamos para ayudarte</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Estamos en contacto"
+        title="Contacto"
+        subtitle="Estamos para ayudarte"
+        image={contacBg}
+      />
 
       <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
