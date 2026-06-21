@@ -29,7 +29,7 @@ export default function CarrerasPage() {
   }, [carreras, selectedFilter])
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
       <div
         className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
@@ -37,8 +37,8 @@ export default function CarrerasPage() {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Carreras</h1>
-          <p className="text-white text-xl">Explora nuestras ofertas academicas</p>
+          <h1 className="text-h1 mb-3 animate-fade-in-up text-shadow-hero">Carreras</h1>
+          <p className="text-white text-xl animate-fade-in-up delay-150">Explora nuestras ofertas academicas</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export default function CarrerasPage() {
                   <Link
                     key={c.id}
                     to={`/carreras/${c.slug}`}
-                    className="w-full md:w-[calc(50%-12px)] max-w-lg bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group"
+                    className="w-full md:w-[calc(50%-12px)] max-w-lg bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group"
                   >
                     <div
                       className="h-24 flex items-center justify-center text-white text-base font-bold px-4 text-center leading-tight"

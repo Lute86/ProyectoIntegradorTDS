@@ -55,9 +55,9 @@ const AdminCarrerasPage = () => {
             <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: c.color }} />
           )}
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-800 text-sm">{c.nombre}</span>
+            <span className="font-semibold text-gray-800 dark:text-slate-100 text-sm">{c.nombre}</span>
             {c.descripcion && (
-              <span className="text-xs text-gray-400 truncate max-w-xs hidden md:inline">{c.descripcion}</span>
+              <span className="text-xs text-gray-400 dark:text-slate-500 truncate max-w-xs hidden md:inline">{c.descripcion}</span>
             )}
           </div>
         </div>
@@ -71,7 +71,7 @@ const AdminCarrerasPage = () => {
             {MODALIDAD_LABELS[c.modalidad] || c.modalidad}
           </span>
         ) : (
-          <span className="text-xs text-gray-400">&mdash;</span>
+          <span className="text-xs text-gray-400 dark:text-slate-500">&mdash;</span>
         )
       ),
       className: 'hidden md:table-cell',
@@ -79,7 +79,7 @@ const AdminCarrerasPage = () => {
     {
       header: 'Duracion',
       accessor: (c) => (
-        <span className="text-sm text-gray-500">{c.duracion ? `${c.duracion} años` : '—'}</span>
+        <span className="text-sm text-gray-500 dark:text-slate-400">{c.duracion ? `${c.duracion} años` : '—'}</span>
       ),
       className: 'hidden lg:table-cell',
     },
@@ -128,8 +128,8 @@ const AdminCarrerasPage = () => {
       {/* Header de la Pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Carreras</h1>
-          <p className="text-sm text-gray-500">Administra las carreras del instituto.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Gestion de Carreras</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Administra las carreras del instituto.</p>
         </div>
 
         <button
@@ -142,7 +142,7 @@ const AdminCarrerasPage = () => {
       </div>
 
       {/* Contenedor de la Tabla */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</span>

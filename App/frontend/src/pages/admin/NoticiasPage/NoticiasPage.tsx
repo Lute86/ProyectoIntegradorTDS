@@ -31,7 +31,7 @@ const NoticiasPage = () => {
       header: 'Titulo',
       accessor: (n) => (
         <div className="flex flex-col truncate">
-          <span className="font-semibold text-gray-800 text-sm truncate">{n.titulo}</span>
+          <span className="font-semibold text-gray-800 dark:text-slate-100 text-sm truncate">{n.titulo}</span>
         </div>
       ),
       className: 'w-1/2 max-w-[200px]',
@@ -67,7 +67,7 @@ const NoticiasPage = () => {
         const f = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
         return <span className="whitespace-nowrap text-sm">{f}</span>;
       },
-      className: 'hidden lg:table-cell text-gray-500 w-32',
+      className: 'hidden lg:table-cell text-gray-500 dark:text-slate-400 w-32',
     },
     {
       header: 'Acciones',
@@ -96,8 +96,8 @@ const NoticiasPage = () => {
       {/* Header de la Pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Noticias</h1>
-          <p className="text-sm text-gray-500">Administra las noticias del instituto.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Gestion de Noticias</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Administra las noticias del instituto.</p>
         </div>
 
         <button
@@ -110,7 +110,7 @@ const NoticiasPage = () => {
       </div>
 
       {/* Contenedor de la Tabla */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</span>
@@ -123,8 +123,8 @@ const NoticiasPage = () => {
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="flex items-center gap-4 animate-pulse">
                 <div className="flex-1 space-y-2">
-                  <div className="h-3 bg-gray-200 rounded w-1/2" />
-                  <div className="h-2 bg-gray-100 rounded w-1/4" />
+                  <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/2" />
+                  <div className="h-2 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4" />
                 </div>
               </div>
             ))}

@@ -75,14 +75,26 @@ export default function HomePage() {
       .filter((s) => s.visible && HOME_SECTION_IDS.includes(s.id))
       .sort((a, b) => a.order - b.order)
 
+    let bandIndex = 0
     return visibleItems.map((s) => {
       const render = components[s.id]
-      return render ? <div key={s.id}>{render()}</div> : null
+      if (!render) return null
+      if (s.id === 'hero') return <div key={s.id}>{render()}</div>
+      const banded = bandIndex % 2 === 0
+      bandIndex += 1
+      return (
+        <div
+          key={s.id}
+          className={banded ? 'bg-white dark:bg-white/[0.04] border-y border-slate-200/60 dark:border-white/[0.06]' : ''}
+        >
+          {render()}
+        </div>
+      )
     }).filter(Boolean)
   }, [config.sections, carreras, noticias, eventos, testimoniosVisibles, setSelectedNoticia])
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         {secciones}
       </div>

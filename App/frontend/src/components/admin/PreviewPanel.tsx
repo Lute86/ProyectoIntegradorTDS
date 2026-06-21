@@ -17,22 +17,22 @@ const PreviewPanel = () => {
   const esBoxed = config.layout === 'boxed';
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 space-y-3 sticky top-8">
-      <div className="text-center pb-3 border-b border-gray-100">
-        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Vista Previa</p>
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 space-y-3 sticky top-8">
+      <div className="text-center pb-3 border-b border-gray-100 dark:border-slate-700">
+        <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-slate-500 font-semibold">Vista Previa</p>
       </div>
 
       <div
-        className="rounded-lg border border-gray-200 overflow-hidden"
+        className="rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden"
         style={{ fontFamily: config.typography.bodyFont }}
       >
-        <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 border-b border-gray-200">
+        <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-700">
           <div className="flex gap-1">
             <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
             <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
             <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
           </div>
-          <div className="flex-1 h-5 bg-white rounded text-[9px] text-gray-400 flex items-center px-2 border border-gray-200">
+          <div className="flex-1 h-5 bg-white dark:bg-slate-800 rounded text-[9px] text-gray-400 dark:text-slate-500 flex items-center px-2 border border-gray-200 dark:border-slate-700">
             www.ifts29.edu.ar
           </div>
         </div>
@@ -77,7 +77,7 @@ const PreviewPanel = () => {
         </div>
       </div>
 
-      <p className="text-[10px] text-gray-400 text-center">
+      <p className="text-[10px] text-gray-400 dark:text-slate-500 text-center">
         Los cambios se reflejan automaticamente.
       </p>
     </div>
