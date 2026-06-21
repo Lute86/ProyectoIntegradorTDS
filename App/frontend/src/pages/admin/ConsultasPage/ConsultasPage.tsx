@@ -42,10 +42,10 @@ const ConsultasPage = () => {
   };
 
   const columns: Column<Consulta>[] = [
-    { header: 'Nombre', accessor: (c) => <span className="font-medium text-gray-800 text-sm truncate max-w-[120px] block">{c.nombre}</span> },
+    { header: 'Nombre', accessor: (c) => <span className="font-medium text-gray-800 dark:text-slate-100 text-sm truncate max-w-[120px] block">{c.nombre}</span> },
     { header: 'Email', accessor: (c) => <span className="text-sm truncate block max-w-[120px] sm:max-w-xs">{c.email}</span>, className: 'hidden lg:table-cell' },
-    { header: 'Asunto', accessor: (c) => <span className="text-sm text-gray-600 truncate block max-w-[100px] sm:max-w-sm">{c.asunto}</span> },
-    { header: 'Fecha', accessor: (c) => <span className="text-sm text-gray-500">{new Date(c.createdAt).toLocaleDateString('es-AR')}</span>, className: 'hidden md:table-cell' },
+    { header: 'Asunto', accessor: (c) => <span className="text-sm text-gray-600 dark:text-slate-400 truncate block max-w-[100px] sm:max-w-sm">{c.asunto}</span> },
+    { header: 'Fecha', accessor: (c) => <span className="text-sm text-gray-500 dark:text-slate-400">{new Date(c.createdAt).toLocaleDateString('es-AR')}</span>, className: 'hidden md:table-cell' },
     { header: 'Estado', accessor: (c) => (
       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${c.respondido ? 'bg-green-50 text-green-600 border-green-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
         {c.respondido ? 'Respondida' : 'Pendiente'}
@@ -57,19 +57,19 @@ const ConsultasPage = () => {
     <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestion de Consultas</h1>
-          <p className="text-sm text-gray-500">Consulta y responde los mensajes recibidos desde el formulario de contacto.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Gestion de Consultas</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Consulta y responde los mensajes recibidos desde el formulario de contacto.</p>
         </div>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Buscar por nombre, email o asunto..."
-          className="w-full sm:w-72 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+          className="w-full sm:w-72 px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         {error && (
           <div className="flex items-center gap-3 p-4 bg-red-50 border-b border-red-100">
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</span>
@@ -81,8 +81,8 @@ const ConsultasPage = () => {
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="flex items-center gap-4 animate-pulse">
                 <div className="flex-1 space-y-2">
-                  <div className="h-3 bg-gray-200 rounded w-1/2" />
-                  <div className="h-2 bg-gray-100 rounded w-1/4" />
+                  <div className="h-3 bg-gray-200 dark:bg-slate-700/50 rounded w-1/2" />
+                  <div className="h-2 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4" />
                 </div>
               </div>
             ))}

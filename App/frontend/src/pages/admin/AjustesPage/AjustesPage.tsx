@@ -61,9 +61,9 @@ const AjustesPage = () => {
   if (isLoading) {
     return (
       <div className="p-4 md:p-8 animate-pulse space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-1/3" />
-        <div className="h-4 bg-gray-100 rounded w-1/4" />
-        <div className="h-64 bg-gray-100 rounded-xl" />
+        <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-1/3" />
+        <div className="h-4 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4" />
+        <div className="h-64 bg-gray-100 dark:bg-slate-700/50 rounded-xl" />
       </div>
     );
   }
@@ -74,8 +74,8 @@ const AjustesPage = () => {
     <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Ajustes del Sitio</h1>
-          <p className="text-sm text-gray-500">Configuracion general, SEO y redes sociales.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Ajustes del Sitio</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Configuracion general, SEO y redes sociales.</p>
         </div>
         <button onClick={handleGuardar} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm active:scale-95">
           Guardar Cambios
@@ -94,8 +94,8 @@ const AjustesPage = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
-          <h2 className="text-base font-bold text-gray-900">Configuracion General</h2>
+        <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 space-y-4">
+          <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Configuracion General</h2>
           <div className="space-y-3">
             <Campo label="Nombre del sitio" name="siteName" value={form.siteName} onChange={handleChange} />
             <Campo label="Subtitulo" name="siteSubtitle" value={form.siteSubtitle} onChange={handleChange} />
@@ -105,8 +105,8 @@ const AjustesPage = () => {
           </div>
         </section>
 
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
-          <h2 className="text-base font-bold text-gray-900">Redes Sociales</h2>
+        <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 space-y-4">
+          <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Redes Sociales</h2>
           <div className="space-y-3">
             {Object.entries(form.socialLinks).map(([key, value]) => (
               <Campo key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} name={`social-${key}`} value={value || ''} onChange={handleChange} />
@@ -114,12 +114,12 @@ const AjustesPage = () => {
           </div>
         </section>
 
-        <section className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-4">
-          <h2 className="text-base font-bold text-gray-900">SEO</h2>
+        <section className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 space-y-4">
+          <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">SEO</h2>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Descripcion SEO</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Descripcion SEO</label>
             <textarea name="seoDescription" value={form.seoDescription} onChange={handleChange} rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
               placeholder="Breve descripcion para motores de busqueda..."
             />
           </div>
@@ -131,8 +131,8 @@ const AjustesPage = () => {
 
 const Campo = ({ label, name, value, onChange }: { label: string; name: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => (
   <div>
-    <label className="block text-sm font-semibold text-gray-700 mb-1">{label}</label>
-    <input name={name} value={value} onChange={onChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
+    <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">{label}</label>
+    <input name={name} value={value} onChange={onChange} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
   </div>
 );
 

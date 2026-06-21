@@ -89,7 +89,7 @@ describe('User Endpoints', () => {
           nombre: 'Nuevo',
           apellido: 'Usuario',
           email: 'nuevo@test.com',
-          password: 'testpass123',
+          password: 'Testpass123',
           rol: 'tutor',
         })
         .expect(201);
@@ -106,7 +106,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Usuario',
           email: 'duplicado@test.com',
-          password: 'testpass123',
+          password: 'Testpass123',
         });
 
       const res = await request(app)
@@ -115,7 +115,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Otro',
           email: 'duplicado@test.com',
-          password: 'testpass123',
+          password: 'Testpass123',
         })
         .expect(409);
 
@@ -129,7 +129,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Nuevo',
           email: 'nuevo@test.com',
-          password: 'testpass123',
+          password: 'Testpass123',
         })
         .expect(403);
 
@@ -159,7 +159,7 @@ describe('User Endpoints', () => {
         .send({
           nombre: 'Otro',
           email: 'otro@test.com',
-          password: 'testpass123',
+          password: 'Testpass123',
         });
 
       const otherUserId = otherRes.body.data.id;

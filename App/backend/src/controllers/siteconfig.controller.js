@@ -39,6 +39,8 @@ export const updateConfig = asyncHandler(async (req, res) => {
     if (disabledCount > MAX_DISABLED_SECTIONS) {
       return validationError(res, [{ msg: `No se pueden deshabilitar más de ${MAX_DISABLED_SECTIONS} secciones de la página principal` }]);
     }
+
+    req.body.sections = merged;
   }
 
   const config = await siteConfigService.updateConfig(req.body);

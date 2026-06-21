@@ -165,7 +165,7 @@ export default function CarreraDetailPage() {
 
   if (loading && !carrera) {
     return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="bg-gradient-to-br from-slate-900 to-blue-700 text-white">
           <div className="max-w-content mx-auto px-4 py-12 md:py-16 animate-pulse">
@@ -183,7 +183,7 @@ export default function CarreraDetailPage() {
 
   if (!carrera) {
     return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+      <div className="min-h-screen flex items-center justify-center dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
         <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-body dark:text-white mb-4">Carrera no encontrada</h1>
@@ -202,29 +202,55 @@ export default function CarreraDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
-      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-50 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500">
+      {/* Acentos decorativos de fondo */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute top-[30%] -left-40 w-[30rem] h-[30rem] rounded-full bg-[var(--color-primary)]/5 dark:bg-[var(--color-primary)]/10 blur-3xl" />
+        <div className="absolute top-[70%] -right-40 w-[34rem] h-[34rem] rounded-full bg-[var(--color-secondary)]/5 dark:bg-[var(--color-secondary)]/10 blur-3xl" />
+      </div>
+      <div className={`relative z-10 ${layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}`}>
       <div
-        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
+        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[260px] md:min-h-[320px] flex items-center overflow-hidden"
         style={{ backgroundImage: `url(${carreraImg})` }}
       >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className={`relative z-10 ${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-24`}>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/55 to-slate-950/75" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)]/30 via-transparent to-[var(--color-secondary)]/20 mix-blend-multiply" />
+        <div className="pointer-events-none absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[var(--color-primary)]/25 blur-3xl animate-float" />
+        <div className="pointer-events-none absolute -bottom-24 -right-16 w-96 h-96 rounded-full bg-[var(--color-secondary)]/20 blur-3xl animate-float delay-300" />
+        <div className={`relative z-10 w-full ${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-16 md:py-20`}>
+          <Link to="/carreras" className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-5 transition-colors animate-fade-in-up">
+            <span>←</span> Volver a carreras
+          </Link>
           <div className="flex items-center gap-5">
             <div
-              className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
-              style={{ backgroundColor: carrera.color || '#3B82F6' }}
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg overflow-hidden animate-fade-in-up"
+              style={{ background: `linear-gradient(135deg, ${carrera.color || '#3B82F6'} 0%, ${carrera.color || '#3B82F6'}cc 100%)` }}
             >
-              {carrera.icono ? <CareerIcon name={carrera.icono} className="w-8 h-8 text-white" /> : (
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute -right-3 -top-4 w-16 h-16 rounded-full bg-white/15 blur-md" />
+              {carrera.icono ? <CareerIcon name={carrera.icono} className="relative w-9 h-9 [&_svg]:fill-white drop-shadow" /> : (
+                <svg className="relative w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                 </svg>
               )}
             </div>
             <div>
-              <h1 className="text-h1 mb-1">{carrera.nombre}</h1>
-              <p className="text-white">Tecnicatura en {carrera.nombre}</p>
+              <h1 className="text-h1 mb-2 animate-fade-in-up text-shadow-hero">{carrera.nombre}</h1>
+              <div className="flex flex-wrap items-center gap-2 animate-fade-in-up delay-150">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 ring-1 ring-white/25 backdrop-blur-sm">
+                  Tecnicatura en {carrera.nombre}
+                </span>
+                {carrera.duracion && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 ring-1 ring-white/25 backdrop-blur-sm">
+                    {carrera.duracion} años
+                  </span>
+                )}
+                {carrera.modalidad && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 ring-1 ring-white/25 backdrop-blur-sm capitalize">
+                    {carrera.modalidad}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -233,15 +259,15 @@ export default function CarreraDetailPage() {
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2 xl:col-span-3">
-            <div className="flex gap-1 border-b border-slate-300 mb-6">
+            <div className="flex gap-1 border-b border-slate-300 dark:border-white/15 mb-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
+                  className={`px-4 py-3 text-sm font-semibold border-b-2 -mb-px whitespace-nowrap transition-colors ${
                     activeTab === tab.id
-                      ? 'text-blue-600 border-blue-600'
-                      : 'text-body/70 dark:text-white/70 border-transparent hover:text-body'
+                      ? 'text-[var(--color-primary)] dark:text-blue-400 border-[var(--color-primary)]'
+                      : 'text-body/70 dark:text-white/70 border-transparent hover:text-body dark:hover:text-white'
                   }`}
                 >
                   {tab.label}
@@ -256,7 +282,7 @@ export default function CarreraDetailPage() {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {infoCards.map((item, i) => (
-                    <div key={i} className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm text-center">
+                    <div key={i} className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-200 dark:border-white/20 shadow-sm text-center">
                       <h4 className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">{item.label}</h4>
                       <p className="text-body dark:text-white/80 text-sm">{item.valor}</p>
                     </div>
@@ -309,7 +335,7 @@ export default function CarreraDetailPage() {
                   </p>
                 ) : (
                   <>
-                    <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
+                    <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-5">
                       <div className="flex flex-col sm:flex-row gap-4">
                         {aniosDisponibles.length > 0 && (
                           <div className="flex-1 animate-in fade-in duration-300">
@@ -409,7 +435,7 @@ export default function CarreraDetailPage() {
                         {materias.map((m, i) => (
                           <div
                             key={i}
-                            className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-100 dark:border-white/20 shadow-sm border-l-4 border-blue-600"
+                            className="p-4 bg-white dark:bg-white/10 rounded-xl border border-gray-200 dark:border-white/20 shadow-sm border-l-4 border-blue-600"
                           >
                             <h5 className="font-semibold text-body dark:text-white text-sm">{m.nombre}</h5>
                             {m.carga_horaria_semanal && (
@@ -426,7 +452,7 @@ export default function CarreraDetailPage() {
           </div>
 
           <aside className="space-y-6">
-            <div className="p-5 bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm">
+            <div className="p-5 bg-white dark:bg-white/10 rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm">
               <h4 className="font-bold text-body dark:text-white mb-3">Otras Carreras</h4>
               {otrasCarreras.length === 0 ? (
                 <p className="text-sm text-body/50 dark:text-white/50">No hay otras carreras.</p>
@@ -449,12 +475,13 @@ export default function CarreraDetailPage() {
               )}
             </div>
 
-            <div className="bg-blue-600 text-white p-5 rounded-xl text-center">
-              <h4 className="font-bold mb-2">¿Tenes dudas?</h4>
-              <p className="text-sm text-blue-100 mb-4">Contactanos para mas informacion</p>
+            <div className="relative overflow-hidden bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-6 rounded-2xl text-center shadow-md">
+              <div className="pointer-events-none absolute -right-6 -top-8 w-28 h-28 rounded-full bg-white/15 blur-md" />
+              <h4 className="relative font-bold mb-2 text-lg">¿Tenes dudas?</h4>
+              <p className="relative text-sm text-white/80 mb-4">Contactanos para mas informacion</p>
               <Link
                 to="/contacto"
-                className="inline-block px-4 py-2 border-2 border-white text-white text-sm font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
+                className="relative inline-block px-5 py-2 bg-white text-[var(--color-primary)] text-sm font-semibold rounded-lg hover:bg-blue-50 hover:scale-105 transition-all duration-300"
               >
                 Contacto
               </Link>

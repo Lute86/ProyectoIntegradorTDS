@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useEventosStore } from '../../../stores/eventosStore'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import EventoDetailModal from '../../../components/public/EventoDetailModal/EventoDetailModal'
+import PageHero from '../../../components/public/PageHero/PageHero'
 import noticiaBg from '../../../assets/fonts/eventos.png'
 
 const estadoBadgeMap = {
@@ -81,22 +82,18 @@ export default function EventosPage() {
   const layout = useSiteConfigStore((s) => s.config.layout)
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-      <div
-        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
-        style={{ backgroundImage: `url(${noticiaBg})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Eventos</h1>
-          <p className="text-white text-xl">Actividades y novedades del instituto</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Agenda"
+        title="Eventos"
+        subtitle="Actividades y novedades del instituto"
+        image={noticiaBg}
+      />
 
-      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content-narrow'} mx-auto px-6 lg:px-8 py-8`}>
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5 mb-8">
+          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-5 mb-8">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
                 <input
@@ -159,7 +156,7 @@ export default function EventosPage() {
                   return (
                     <div key={e.id}
                       onClick={() => setSelectedEvento(e)}
-                      className={`bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border-l-4 ${accent} border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
+                      className={`bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border-l-4 ${accent} border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
                     >
                       <div className="p-6 md:p-8">
                         <div className="flex gap-5">

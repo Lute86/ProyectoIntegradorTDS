@@ -793,9 +793,9 @@ const CarreraDetailAdmin = () => {
   if (loading && !carrera) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
-        <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse" />
-        <div className="h-4 bg-gray-100 rounded w-1/4 animate-pulse" />
-        <div className="h-96 bg-gray-100 rounded-xl animate-pulse" />
+        <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-1/3 animate-pulse" />
+        <div className="h-4 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4 animate-pulse" />
+        <div className="h-96 bg-gray-100 dark:bg-slate-700/50 rounded-xl animate-pulse" />
       </div>
     )
   }
@@ -804,7 +804,7 @@ const CarreraDetailAdmin = () => {
     return (
       <div className="p-4 md:p-8">
         <Link to="/admin/carreras" className="text-blue-600 hover:underline">&larr; Volver a Carreras</Link>
-        <p className="text-gray-500 mt-4">Carrera no encontrada.</p>
+        <p className="text-gray-500 dark:text-slate-400 mt-4">Carrera no encontrada.</p>
       </div>
     )
   }
@@ -815,13 +815,13 @@ const CarreraDetailAdmin = () => {
         &larr; Volver a Carreras
       </Link>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{carrera.nombre}</h1>
-            <p className="text-sm text-gray-500 mt-1">{carrera.descripcion || 'Sin descripcion'}</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{carrera.nombre}</h1>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">{carrera.descripcion || 'Sin descripcion'}</p>
           </div>
-          <div className="flex items-center gap-3 text-sm text-gray-500">
+          <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-slate-400">
             {carrera.duracion && <span>{carrera.duracion} anos</span>}
             {carrera.modalidad && (
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
@@ -841,13 +841,13 @@ const CarreraDetailAdmin = () => {
         </div>
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-slate-700">
         {TABS.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'text-blue-600 border-blue-600'
-                : 'text-gray-500 border-transparent hover:text-gray-700'
+                : 'text-gray-500 dark:text-slate-400 border-transparent hover:text-gray-700 dark:hover:text-slate-200'
             }`}
           >{tab.label}</button>
         ))}
@@ -866,17 +866,17 @@ const CarreraDetailAdmin = () => {
       {activeTab === 'materias' && (
         <div className="space-y-4">
           {materiasPorCuatri.map(([cuatri, materias]) => (
-            <div key={cuatri} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div key={cuatri} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5">
               <h3 className="text-sm font-bold text-blue-600 mb-3">
                 {nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}
               </h3>
               <div className="space-y-2">
                 {materias.map((cm) => (
-                  <div key={cm.id} className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg">
+                  <div key={cm.id} className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-gray-800 text-sm">{cm.materia?.nombre || '—'}</span>
+                      <span className="font-medium text-gray-800 dark:text-slate-100 text-sm">{cm.materia?.nombre || '—'}</span>
                       {cm.carga_horaria_semanal && (
-                        <span className="text-xs text-gray-400">{cm.carga_horaria_semanal}hs semanales</span>
+                        <span className="text-xs text-gray-400 dark:text-slate-500">{cm.carga_horaria_semanal}hs semanales</span>
                       )}
                     </div>
                     <button onClick={async () => {
@@ -899,8 +899,8 @@ const CarreraDetailAdmin = () => {
           ))}
 
           {materiasPorCuatri.length === 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <p className="text-gray-400 text-sm">No hay materias asignadas a esta carrera.</p>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
+              <p className="text-gray-400 dark:text-slate-500 text-sm">No hay materias asignadas a esta carrera.</p>
               <button onClick={() => abrirModalConCuatri(1)}
                 className="mt-3 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700"
               >+ Agregar materia</button>
@@ -931,7 +931,7 @@ const CarreraDetailAdmin = () => {
         footer={
           <>
             <button onClick={() => setComisionFormOpen(false)}
-              className="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+              className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-slate-400 bg-gray-100 dark:bg-slate-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700"
             >Cancelar</button>
             <button onClick={handleCreateComision} disabled={creando}
               className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
@@ -940,27 +940,27 @@ const CarreraDetailAdmin = () => {
         }
       >
         <div className="space-y-4">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-slate-400">
             Cuatrimestre: <strong>{nombresCuatri[comisionFormData.cuatrimestre] || `Cuatrimestre ${comisionFormData.cuatrimestre}`}</strong> ({comisionFormData.cuatrimestre})
           </p>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Letras</label>
+            <label className="block text-xs font-semibold text-gray-600 dark:text-slate-300 mb-1">Letras</label>
             <input value={comisionFormData.letra}
               onChange={(e) => setComisionFormData({ ...comisionFormData, letra: e.target.value.toUpperCase().replace(/[^A-Z,]/g, '') })}
               placeholder="Ej: A, B, C"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p className="text-[10px] text-gray-400 mt-1">
+            <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1">
               Se crear{comisionFormData.letra.includes(',') ? 'án' : 'á'}: <strong>{comisionFormData.letra.split(',').filter(l => l.trim()).map(l => `${comisionFormData.cuatrimestre}${l.trim().toUpperCase()}`).join(', ') || `${comisionFormData.cuatrimestre}?`}</strong>
             </p>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Tutor <span className="text-gray-400 font-normal">(opcional)</span>
+            <label className="block text-xs font-semibold text-gray-600 dark:text-slate-300 mb-1">
+              Tutor <span className="text-gray-400 dark:text-slate-500 font-normal">(opcional)</span>
             </label>
             <select value={comisionFormData.encargado_id}
               onChange={(e) => setComisionFormData({ ...comisionFormData, encargado_id: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Sin tutor</option>
               {usuarios.map((u) => (
@@ -974,26 +974,26 @@ const CarreraDetailAdmin = () => {
       {activeTab === 'horarios' && (
         <div className="space-y-4">
           {cuatrimestresDisponibles.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <p className="text-gray-400 text-sm">No hay materias asignadas a esta carrera. Asigna materias primero en la pestana Materias.</p>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
+              <p className="text-gray-400 dark:text-slate-500 text-sm">No hay materias asignadas a esta carrera. Asigna materias primero en la pestana Materias.</p>
             </div>
           ) : (
             <>
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-3">
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 space-y-3">
                 <div className="flex items-start gap-4 flex-wrap">
                   <div className="relative flex items-start gap-2" ref={anioRef}>
-                    <label className="text-xs font-semibold text-gray-500 mt-1.5">Año lectivo:</label>
+                    <label className="text-xs font-semibold text-gray-500 dark:text-slate-400 mt-1.5">Año lectivo:</label>
                     <button type="button" onClick={() => setAnioOpen(!anioOpen)}
-                      className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer flex items-center gap-1"
+                      className="px-2.5 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer flex items-center gap-1"
                     >
                       {filtroAnioLectivo}
                       <span className="text-blue-400 text-[10px]">▾</span>
                     </button>
                     {anioOpen && (
-                      <div className="absolute top-full left-0 mt-1 z-10 w-24 bg-white border border-gray-200 rounded-lg shadow-lg max-h-36 overflow-y-auto">
+                      <div className="absolute top-full left-0 mt-1 z-10 w-24 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg max-h-36 overflow-y-auto">
                         {aniosDisponibles.map((a) => (
                           <button key={a} type="button" onClick={() => { setFiltroAnioLectivo(String(a)); setAnioOpen(false) }}
-                            className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-blue-50 ${filtroAnioLectivo === String(a) ? 'bg-blue-100 text-blue-600' : 'text-gray-700'}`}
+                            className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-blue-50 ${filtroAnioLectivo === String(a) ? 'bg-blue-100 text-blue-600' : 'text-gray-700 dark:text-slate-200'}`}
                           >
                             {a}
                           </button>
@@ -1017,7 +1017,7 @@ const CarreraDetailAdmin = () => {
                             ? 'bg-blue-600 text-white'
                             : activo
                               ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                              : 'bg-gray-100 dark:bg-slate-700/50 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700'
                         }`}
                       >{nombresCuatri[c] || `C${c}`}</button>
                     )
@@ -1026,13 +1026,13 @@ const CarreraDetailAdmin = () => {
               </div>
             </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5">
                 <div className="flex items-center justify-center gap-4 mb-3 flex-wrap">
-                  <h3 className="text-sm font-bold text-gray-700">Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
+                  <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">Comisiones — {nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`}</h3>
                   <div className="flex items-center gap-2">
                     {selectedNombres.size > 0 && (
                       <button onClick={limpiarSeleccion}
-                        className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
+                        className="px-3 py-1.5 bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600"
                       >Limpiar</button>
                     )}
                     <button onClick={openComisionForm}
@@ -1043,18 +1043,18 @@ const CarreraDetailAdmin = () => {
                 {comisionesLoading ? (
                   <div className="flex gap-2">
                     {[1,2,3].map((i) => (
-                      <div key={i} className="w-9 h-9 rounded-full bg-gray-200 animate-pulse" />
+                      <div key={i} className="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700 animate-pulse" />
                     ))}
                   </div>
                 ) : comisionesDelCuatri.length === 0 ? (
                   <div className="flex flex-col items-center gap-1 py-4">
-                    <span className="text-sm text-gray-400">No hay comisiones para este cuatrimestre. Creá una nueva.</span>
+                    <span className="text-sm text-gray-400 dark:text-slate-500">No hay comisiones para este cuatrimestre. Creá una nueva.</span>
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center gap-2">
                     {comisionesDelCuatri.length > 0 && (
                       <button onClick={toggleTodas}
-                        className="px-3 py-1.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-300"
+                        className="px-3 py-1.5 bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600"
                       >{selectedNombres.size === comisionesDelCuatri.length ? 'Deseleccionar todas' : 'Todas'}</button>
                     )}
                     {comisionesDelCuatri.map((c) => {
@@ -1068,7 +1068,7 @@ const CarreraDetailAdmin = () => {
                             className={`w-9 h-9 rounded-full text-sm font-bold transition-all ${
                               isSelected
                                 ? 'bg-blue-600 text-white shadow'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                : 'bg-gray-100 dark:bg-slate-700/50 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
                             }`}
                             title={`Comision ${letra}${tutor ? ` — Tutor: ${tutor.nombre} ${tutor.apellido}` : ''}`}
                           >{letra}</button>
@@ -1080,7 +1080,7 @@ const CarreraDetailAdmin = () => {
                       )
                     })}
                     {selectedNombres.size === 0 && (
-                      <span className="text-[10px] text-gray-400 ml-1 italic">Hacé clic en una comisión para cargar horarios</span>
+                      <span className="text-[10px] text-gray-400 dark:text-slate-500 ml-1 italic">Hacé clic en una comisión para cargar horarios</span>
                     )}
                   </div>
                 )}
@@ -1098,11 +1098,11 @@ const CarreraDetailAdmin = () => {
 
               {selectedNombres.size > 0 && comisionesDelCuatri.length > 0 ? (
                 modoCompartido ? (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                  <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-sm font-bold text-gray-700">
+                      <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">
                         Horarios — Compartido ({selectedNombres.size} comisiones)
-                        <span className="text-gray-400 font-normal ml-2">
+                        <span className="text-gray-400 dark:text-slate-500 font-normal ml-2">
                           ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
                         </span>
                       </h3>
@@ -1110,38 +1110,38 @@ const CarreraDetailAdmin = () => {
                         className="px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white text-xs font-semibold rounded-lg transition"
                       >{guardandoBatch ? 'Guardando...' : 'Guardar Horarios'}</button>
                     </div>
-                    <p className="text-[10px] text-gray-400 mb-3">Modo compartido: los horarios se aplicarán a las {selectedNombres.size} comisiones seleccionadas.</p>
+                    <p className="text-[10px] text-gray-400 dark:text-slate-500 mb-3">Modo compartido: los horarios se aplicarán a las {selectedNombres.size} comisiones seleccionadas.</p>
 
                     {materiasCuatriActual.length === 0 ? (
-                      <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
+                      <p className="text-gray-400 dark:text-slate-500 text-sm">No hay materias en este cuatrimestre.</p>
                     ) : (
                       <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                           <thead>
-                            <tr className="border-b border-gray-200">
-                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
-                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Día</th>
-                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Inicio</th>
-                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Fin</th>
-                              {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
-                              <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
+                            <tr className="border-b border-gray-200 dark:border-slate-700">
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Materia</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Día</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Inicio</th>
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Fin</th>
+                              {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Aula</th>}
+                              <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Profesor</th>
                             </tr>
                           </thead>
                           <tbody>
                             {materiasCuatriActual.map((cm) => {
                               const row = sharedFormData[cm.id] || { dia: '', horario: '', aula: '', profesor: '' }
                               return (
-                                <tr key={cm.id} className="border-b border-gray-100">
+                                <tr key={cm.id} className="border-b border-gray-100 dark:border-slate-700">
                                   <td className="px-3 py-2">
-                                    <span className="text-sm font-medium text-gray-800">{cm.materia?.nombre}</span>
+                                    <span className="text-sm font-medium text-gray-800 dark:text-slate-100">{cm.materia?.nombre}</span>
                                     {cm.carga_horaria_semanal && (
-                                      <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
+                                      <span className="text-xs text-gray-400 dark:text-slate-500 ml-1">({cm.carga_horaria_semanal}hs)</span>
                                     )}
                                   </td>
                                   <td className="px-3 py-2">
                                     <select value={row.dia} onChange={(e) => actualizarSharedField(cm.id, 'dia', e.target.value)}
                                       onBlur={() => handleSharedBlur(cm.id)}
-                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${sharedErrores[cm.id]?.dia ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                     >
                                       <option value="">—</option>
                                       {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
@@ -1151,21 +1151,21 @@ const CarreraDetailAdmin = () => {
                                     <input type="time" value={row.horario_inicio || ''}
                                       onChange={(e) => actualizarSharedField(cm.id, 'horario_inicio', e.target.value)}
                                       onBlur={() => handleSharedBlur(cm.id)}
-                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300'}`}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${sharedErrores[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                     />
                                   </td>
                                   <td className="px-3 py-2">
                                     <input type="time" value={row.horario_fin || ''}
                                       onChange={(e) => actualizarSharedField(cm.id, 'horario_fin', e.target.value)}
                                       onBlur={() => handleSharedBlur(cm.id)}
-                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300'}`}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${sharedErrores[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                     />
                                   </td>
                                   {!esVirtual && (
                                     <td className="px-3 py-2">
                                       <input value={row.aula} onChange={(e) => actualizarSharedField(cm.id, 'aula', e.target.value)}
                                         onBlur={() => handleSharedBlur(cm.id)}
-                                        className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
+                                        className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 ${sharedErrores[cm.id]?.aula ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                         placeholder="Ej: 201"
                                       />
                                     </td>
@@ -1173,7 +1173,7 @@ const CarreraDetailAdmin = () => {
                                   <td className="px-3 py-2">
                                     <input value={row.profesor} onChange={(e) => actualizarSharedField(cm.id, 'profesor', e.target.value)}
                                       onBlur={() => handleSharedBlur(cm.id)}
-                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${sharedErrores[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
+                                      className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 ${sharedErrores[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                       placeholder="Opcional"
                                     />
                                   </td>
@@ -1192,11 +1192,11 @@ const CarreraDetailAdmin = () => {
                       const materiaIdsAsignadas = materiaIdsAsignadasPorNombre[nombre] || new Set()
                       const horariosDeEsta = horariosPorComision[nombre] || []
                       return (
-                        <div key={nombre} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                        <div key={nombre} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5">
                           <div className="flex items-center justify-between mb-1">
-                            <h3 className="text-sm font-bold text-gray-700">
+                            <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">
                               Horarios — Comisión {letraDeComision(nombre)}
-                              <span className="text-gray-400 font-normal ml-2">
+                              <span className="text-gray-400 dark:text-slate-500 font-normal ml-2">
                                 ({nombresCuatri[cuatriActivo] || `Cuatrimestre ${cuatriActivo}`})
                               </span>
                             </h3>
@@ -1204,22 +1204,22 @@ const CarreraDetailAdmin = () => {
                               className="px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white text-xs font-semibold rounded-lg transition"
                             >{guardandoBatch ? 'Guardando...' : 'Guardar Horarios'}</button>
                           </div>
-                          <p className="text-[10px] text-gray-400 mb-3">Completá día, horario inicio/fin y aula. Profesor es opcional.</p>
+                          <p className="text-[10px] text-gray-400 dark:text-slate-500 mb-3">Completá día, horario inicio/fin y aula. Profesor es opcional.</p>
 
                           {materiasCuatriActual.length === 0 ? (
-                            <p className="text-gray-400 text-sm">No hay materias en este cuatrimestre.</p>
+                            <p className="text-gray-400 dark:text-slate-500 text-sm">No hay materias en este cuatrimestre.</p>
                           ) : (
                             <div className="overflow-x-auto">
                               <table className="w-full text-left border-collapse">
                                 <thead>
-                                  <tr className="border-b border-gray-200">
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Materia</th>
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Día</th>
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Inicio</th>
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Fin</th>
-                                    {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500">Aula</th>}
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500">Profesor</th>
-                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500"></th>
+                                  <tr className="border-b border-gray-200 dark:border-slate-700">
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Materia</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Día</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Inicio</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Fin</th>
+                                    {!esVirtual && <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Aula</th>}
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400">Profesor</th>
+                                    <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -1228,14 +1228,14 @@ const CarreraDetailAdmin = () => {
                                     const isAssigned = materiaIdsAsignadas.has(cm.id)
                                     const horarioExistente = horariosDeEsta.find((h) => h.carrera_materia_id === cm.id)
                                     return (
-                                      <tr key={cm.id} className={`border-b border-gray-100 ${isAssigned ? 'bg-white' : 'bg-gray-50/50'}`}>
+                                      <tr key={cm.id} className={`border-b border-gray-100 dark:border-slate-700 ${isAssigned ? 'bg-white dark:bg-slate-800' : 'bg-gray-50/50 dark:bg-slate-700/50'}`}>
                                         <td className="px-3 py-2">
                                           <div className="flex items-center gap-1">
-                                            <span className={`text-sm font-medium ${isAssigned ? 'text-gray-800' : 'text-gray-500'}`}>
+                                            <span className={`text-sm font-medium ${isAssigned ? 'text-gray-800 dark:text-slate-100' : 'text-gray-500 dark:text-slate-400'}`}>
                                               {isAssigned ? '' : '(Sin asignar) '}{cm.materia?.nombre}
                                             </span>
                                             {cm.carga_horaria_semanal && (
-                                              <span className="text-xs text-gray-400 ml-1">({cm.carga_horaria_semanal}hs)</span>
+                                              <span className="text-xs text-gray-400 dark:text-slate-500 ml-1">({cm.carga_horaria_semanal}hs)</span>
                                             )}
                                             {isAssigned && (
                                               <button onClick={() => removerMateriaDeComision(nombre, cm.id)}
@@ -1248,7 +1248,7 @@ const CarreraDetailAdmin = () => {
                                         <td className="px-3 py-2">
                                           <select value={row.dia} onChange={(e) => actualizarComisionField(nombre, cm.id, 'dia', e.target.value)}
                                             onBlur={() => handleBlur(nombre, cm.id)}
-                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.dia ? 'border-red-400' : 'border-gray-300'}`}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${errores[nombre]?.[cm.id]?.dia ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                           >
                                             <option value="">—</option>
                                             {DIAS.map((d) => <option key={d} value={d}>{d}</option>)}
@@ -1258,21 +1258,21 @@ const CarreraDetailAdmin = () => {
                                           <input type="time" value={row.horario_inicio || ''}
                                             onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_inicio', e.target.value)}
                                             onBlur={() => handleBlur(nombre, cm.id)}
-                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300'}`}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${errores[nombre]?.[cm.id]?.horario_inicio ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                           />
                                         </td>
                                         <td className="px-3 py-2">
                                           <input type="time" value={row.horario_fin || ''}
                                             onChange={(e) => actualizarComisionField(nombre, cm.id, 'horario_fin', e.target.value)}
                                             onBlur={() => handleBlur(nombre, cm.id)}
-                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300'}`}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${errores[nombre]?.[cm.id]?.horario_fin ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                           />
                                         </td>
                                         {!esVirtual && (
                                           <td className="px-3 py-2">
                                             <input value={row.aula} onChange={(e) => actualizarComisionField(nombre, cm.id, 'aula', e.target.value)}
                                               onBlur={() => handleBlur(nombre, cm.id)}
-                                              className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.aula ? 'border-red-400' : 'border-gray-300'}`}
+                                              className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 ${errores[nombre]?.[cm.id]?.aula ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                               placeholder="Ej: 201"
                                             />
                                           </td>
@@ -1280,7 +1280,7 @@ const CarreraDetailAdmin = () => {
                                         <td className="px-3 py-2">
                                           <input value={row.profesor} onChange={(e) => actualizarComisionField(nombre, cm.id, 'profesor', e.target.value)}
                                             onBlur={() => handleBlur(nombre, cm.id)}
-                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 ${errores[nombre]?.[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300'}`}
+                                            className={`w-full px-1.5 py-1 border rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 ${errores[nombre]?.[cm.id]?.profesor ? 'border-red-400' : 'border-gray-300 dark:border-slate-600'}`}
                                             placeholder="Opcional"
                                           />
                                         </td>
@@ -1305,9 +1305,9 @@ const CarreraDetailAdmin = () => {
                   </div>
                 )
               ) : (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-                  <p className="text-gray-500 text-sm font-medium mb-1">Seleccioná una comisión</p>
-                  <p className="text-gray-400 text-xs">Hacé clic en una comisión arriba para cargar horarios.</p>
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
+                  <p className="text-gray-500 dark:text-slate-400 text-sm font-medium mb-1">Seleccioná una comisión</p>
+                  <p className="text-gray-400 dark:text-slate-500 text-xs">Hacé clic en una comisión arriba para cargar horarios.</p>
                 </div>
               )}
             </>

@@ -15,7 +15,9 @@ export const createUserValidation = [
     .withMessage('Email inválido'),
   body('password')
     .isLength({ min: 8 })
-    .withMessage('Password debe tener al menos 8 caracteres'),
+    .withMessage('Password debe tener al menos 8 caracteres')
+    .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password debe incluir al menos una minúscula, una mayúscula y un número'),
   body('rol')
     .optional()
     .isIn(['admin', 'profesor', 'tutor'])
@@ -47,7 +49,9 @@ export const updateUserValidation = [
   body('password')
     .optional()
     .isLength({ min: 8 })
-    .withMessage('Password debe tener al menos 8 caracteres'),
+    .withMessage('Password debe tener al menos 8 caracteres')
+    .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password debe incluir al menos una minúscula, una mayúscula y un número'),
   body('rol')
     .optional()
     .isIn(['admin', 'profesor', 'tutor'])

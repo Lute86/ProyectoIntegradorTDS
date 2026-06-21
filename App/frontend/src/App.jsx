@@ -46,12 +46,9 @@ function ThemeInitializer({ children }) {
     inyectarVariables(config);
   }, [config]);
 
-  // Solo trae datos de la API si es la primera visita (no hay nada persistido aun)
+  // Siempre trae datos de la API para mantener el sitio actualizado
   useEffect(() => {
-    const persistido = localStorage.getItem('site-config-storage');
-    if (!persistido) {
-      fetchConfig();
-    }
+    fetchConfig();
   }, [fetchConfig]);
 
   return children;
