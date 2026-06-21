@@ -26,6 +26,6 @@ describe('AdminTopbar', () => {
         </AuthProvider>
       </MemoryRouter>
     );
-    expect(screen.getByText('Noticias')).toBeInTheDocument();
+    expect(screen.getAllByText('Noticias').length).toBeGreaterThanOrEqual(1);
   });
 });

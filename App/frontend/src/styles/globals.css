@@ -151,6 +151,9 @@
   background-size: 200% auto;
 }
 
+/* --- Sombra de texto para titulos de hero sobre imagen --- */
+.text-shadow-hero { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45); }
+
 /* --- Clases de delay --- */
 .delay-75  { animation-delay: 75ms; }
 .delay-100 { animation-delay: 100ms; }

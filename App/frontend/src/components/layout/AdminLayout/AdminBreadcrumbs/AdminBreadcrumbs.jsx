@@ -18,12 +18,12 @@ export default function AdminBreadcrumbs() {
   const segments = pathname.split('/').filter(Boolean);
 
   return (
-    <div className="text-sm text-gray-500">
-      <Link to="/admin/dashboard" className="hover:text-blue-600 transition-colors">Inicio</Link>
+    <div className="text-sm text-gray-500 dark:text-slate-400">
+      <Link to="/admin/dashboard" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Inicio</Link>
       {segments.length > 1 && (
         <span>
           {' '}/{' '}
-          <span className="text-gray-800 font-medium">
+          <span className="text-gray-800 dark:text-slate-200 font-medium">
             {labels[segments[1]] || segments[1]}
           </span>
         </span>

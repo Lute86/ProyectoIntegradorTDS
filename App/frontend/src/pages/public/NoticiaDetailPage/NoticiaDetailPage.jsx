@@ -67,7 +67,8 @@ export default function NoticiaDetailPage() {
         <div className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center"
           style={{ backgroundImage: `url(${noticiaBg})` }}
         >
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/55 to-slate-950/75" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)]/30 via-transparent to-[var(--color-secondary)]/20 mix-blend-multiply" />
           <div className="relative z-10 max-w-4xl mx-auto px-4 py-12 md:py-16">
             <div className="h-6 bg-blue-300/30 rounded w-24 mb-4 animate-pulse" />
             <div className="h-10 bg-blue-300/30 rounded w-2/3 mb-4 animate-pulse" />
@@ -114,7 +115,8 @@ export default function NoticiaDetailPage() {
         className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
         style={{ backgroundImage: `url(${noticiaBg})` }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/55 to-slate-950/75" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)]/30 via-transparent to-[var(--color-secondary)]/20 mix-blend-multiply" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 py-16 md:py-24">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${badgeColor}`}>
             <IconoCategoria categoria={noticia.categoria} className="w-4 h-4" />
