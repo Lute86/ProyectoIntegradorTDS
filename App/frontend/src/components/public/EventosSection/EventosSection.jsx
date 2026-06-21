@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import EventosCard from './EventosCard'
+import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function EventosSection({ eventos, onVerDetalle }) {
@@ -40,12 +41,7 @@ export default function EventosSection({ eventos, onVerDetalle }) {
   return (
     <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
       <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
-        <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent drop-shadow-sm">
-            Proximos Eventos
-          </h2>
-          <p className="text-body/70 dark:text-white/70 mt-2">No te pierdas las actividades del instituto</p>
-        </div>
+        <SectionHeader eyebrow="Agenda" title="Proximos Eventos" />
 
         {total === 0 ? (
           <p className="text-center text-body/50 dark:text-white/50 py-8 text-sm">No hay eventos proximos por ahora.</p>

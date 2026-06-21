@@ -85,7 +85,7 @@ export default function HomePage() {
       return (
         <div
           key={s.id}
-          className={banded ? 'bg-white dark:bg-white/[0.04] border-y border-slate-200/60 dark:border-white/[0.06]' : ''}
+          className={banded ? 'bg-white/70 dark:bg-white/[0.04] border-y border-slate-200/60 dark:border-white/[0.06] backdrop-blur-sm' : ''}
         >
           {render()}
         </div>
@@ -94,8 +94,14 @@ export default function HomePage() {
   }, [config.sections, carreras, noticias, eventos, testimoniosVisibles, setSelectedNoticia])
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
-      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-50 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500">
+      {/* Acentos decorativos de fondo para dar profundidad entre secciones */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute top-[20%] -left-40 w-[30rem] h-[30rem] rounded-full bg-[var(--color-primary)]/5 dark:bg-[var(--color-primary)]/10 blur-3xl" />
+        <div className="absolute top-[55%] -right-40 w-[34rem] h-[34rem] rounded-full bg-[var(--color-secondary)]/5 dark:bg-[var(--color-secondary)]/10 blur-3xl" />
+        <div className="absolute top-[85%] left-1/3 w-[26rem] h-[26rem] rounded-full bg-[var(--color-accent)]/5 dark:bg-[var(--color-accent)]/8 blur-3xl" />
+      </div>
+      <div className={`relative z-10 ${layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}`}>
         {secciones}
       </div>
       {selectedEvento && (

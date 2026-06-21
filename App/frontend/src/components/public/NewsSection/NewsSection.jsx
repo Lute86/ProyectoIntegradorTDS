@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import NewsCard from './NewsCard'
+import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function NewsSection({ noticias, onVerDetalle }) {
@@ -42,12 +43,7 @@ export default function NewsSection({ noticias, onVerDetalle }) {
   return (
     <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
       <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
-        <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent drop-shadow-sm">
-            Ultimas Noticias
-          </h2>
-          <p className="text-body/70 dark:text-white/70 mt-2">Mantenete informado sobre las novedades del instituto</p>
-        </div>
+        <SectionHeader eyebrow="Actualidad" icon="globe" title="Ultimas Noticias" />
 
         <div className="relative">
           {total > visible && current > 0 && (
