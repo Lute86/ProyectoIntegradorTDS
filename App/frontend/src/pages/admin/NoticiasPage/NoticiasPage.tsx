@@ -43,17 +43,22 @@ const NoticiasPage = () => {
     },
     {
       header: 'Estado',
-      accessor: (n) => (
-        <span
-          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-            n.estado === 'publicado'
-              ? 'bg-green-50 text-green-600 border-green-100'
-              : 'bg-amber-50 text-amber-600 border-amber-100'
-          }`}
-        >
-          {n.estado}
-        </span>
-      ),
+      accessor: (n) => {
+        const estilos: Record<string, string> = {
+          publicado: 'bg-green-50 text-green-600 border-green-100',
+          borrador: 'bg-amber-50 text-amber-600 border-amber-100',
+          archivado: 'bg-gray-100 text-gray-500 border-gray-200',
+        };
+        return (
+          <span
+            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+              estilos[n.estado] || 'bg-amber-50 text-amber-600 border-amber-100'
+            }`}
+          >
+            {n.estado}
+          </span>
+        );
+      },
     },
     {
       header: 'Fecha',

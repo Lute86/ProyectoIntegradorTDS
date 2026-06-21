@@ -43,15 +43,22 @@ export default function HomePage() {
   const { eventos, fetchEventos } = useEventosStore()
   const { testimonios, fetchTestimonios } = useTestimoniosStore()
 
-  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+  useEffect(() => { fetchCarreras({ activa: true }) }, [fetchCarreras])
   useEffect(() => { fetchNoticias({ estado: 'publicado' }) }, [fetchNoticias])
   useEffect(() => { fetchEventos() }, [fetchEventos])
-  useEffect(() => { fetchTestimonios() }, [fetchTestimonios])
+  useEffect(() => { fetchTestimonios({ visible: true }) }, [fetchTestimonios])
 
   const noticias = useMemo(() => {
     const lista = Array.isArray(storeNoticias) ? storeNoticias : []
     return lista.map(adaptNoticia)
   }, [storeNoticias])
+
+  // Defensa extra: aunque la API ya filtra por visible=true, nunca mostramos
+  // testimonios ocultos en la home (el store es compartido con el admin).
+  const testimoniosVisibles = useMemo(
+    () => (Array.isArray(testimonios) ? testimonios.filter((t) => t.visible !== false) : []),
+    [testimonios],
+  )
 
   const secciones = useMemo(() => {
     const components = {
@@ -60,7 +67,7 @@ export default function HomePage() {
       careers:     () => <CareerCarousel carreras={carreras} />,
       news:        () => <NewsSection noticias={noticias} onVerDetalle={(n) => setSelectedNoticia(n)} />,
       events:      () => <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
-      testimonials:() => <TestimonialsCarousel testimonios={testimonios} />,
+      testimonials:() => <TestimonialsCarousel testimonios={testimoniosVisibles} />,
       gallery:     () => <GaleriaCarousel />,
     }
 
@@ -84,7 +91,7 @@ export default function HomePage() {
         </div>
       )
     }).filter(Boolean)
-  }, [config.sections, carreras, noticias, eventos, testimonios, setSelectedNoticia])
+  }, [config.sections, carreras, noticias, eventos, testimoniosVisibles, setSelectedNoticia])
 
   return (
     <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">

@@ -48,7 +48,7 @@ export default function NoticiasPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedNoticia, setSelectedNoticia] = useState(null)
 
-  useEffect(() => { fetchNoticias() }, [fetchNoticias])
+  useEffect(() => { fetchNoticias({ estado: 'publicado' }) }, [fetchNoticias])
 
   useEffect(() => {
     const cat = searchParams.get('categoria')

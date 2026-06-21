@@ -46,6 +46,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
   });
 
   useEffect(() => {
+    if (!isOpen) return;
     if (eventoToEdit) {
       reset({
         nombre: eventoToEdit.nombre,
@@ -57,7 +58,7 @@ const EventoFormModal = ({ isOpen, onClose, eventoToEdit }: EventoFormModalProps
     } else {
       reset({ nombre: '', fecha: '', ubicacion: '', estado: undefined, descripcion: '' });
     }
-  }, [eventoToEdit, reset]);
+  }, [isOpen, eventoToEdit, reset]);
 
   const onSubmit = (data: EventoFormData) => {
     if (esEdicion && eventoToEdit) {

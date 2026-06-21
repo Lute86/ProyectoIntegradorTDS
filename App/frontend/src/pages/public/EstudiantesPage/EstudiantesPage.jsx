@@ -43,7 +43,7 @@ export default function EstudiantesPage() {
   const [cuatriFilter, setCuatriFilter] = useState('')
   const [anioFilter, setAnioFilter] = useState('')
 
-  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+  useEffect(() => { fetchCarreras({ activa: true }) }, [fetchCarreras])
 
   const fetchHorarios = async (id) => {
     if (!id) { setHorarios([]); return }

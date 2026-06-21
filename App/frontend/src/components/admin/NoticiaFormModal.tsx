@@ -12,7 +12,7 @@ const noticiaSchema = z.object({
   slug: z.string().min(3, 'El slug debe tener al menos 3 caracteres')
     .regex(/^[a-z0-9-]+$/, 'Solo minusculas, numeros y guiones'),
   categoria_id: z.string().min(1, 'Seleccione una categoria'),
-  estado: z.enum(['borrador', 'publicado'], { required_error: 'Seleccione un estado' }),
+  estado: z.enum(['borrador', 'publicado', 'archivado'], { required_error: 'Seleccione un estado' }),
   contenido: z.string().min(10, 'El contenido debe tener al menos 10 caracteres'),
 });
 
@@ -166,6 +166,7 @@ const NoticiaFormModal = ({ isOpen, onClose, noticiaToEdit }: NoticiaFormModalPr
                 <option value="">Seleccione un estado</option>
                 <option value="borrador">Borrador</option>
                 <option value="publicado">Publicado</option>
+                <option value="archivado">Archivado</option>
               </select>
               {errors.estado && (
                 <p className="text-xs text-red-500 mt-1">{errors.estado.message}</p>
