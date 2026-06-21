@@ -7,7 +7,9 @@ const badgeMap = {
 
 export default function EventosCard({ evento, onVerDetalle }) {
   const titulo = evento.nombre || evento.titulo
-  const descripcion = evento.descripcion
+  // Los eventos creados desde el admin guardan HTML (editor enriquecido); en la
+  // tarjeta mostramos solo texto plano para no ver los tags (<p>, etc.).
+  const descripcion = (evento.descripcion || '').replace(/<[^>]*>/g, '').trim()
   const fecha = evento.fecha
   const hora = evento.hora || ''
   const modalidad = evento.modalidad || (evento.ubicacion ? 'presencial' : '')

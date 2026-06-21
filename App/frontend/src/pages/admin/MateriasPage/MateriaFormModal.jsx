@@ -35,15 +35,12 @@ const MateriaFormModal = ({ isOpen, onClose, materiaToEdit }) => {
   }, [materiaToEdit, reset, isOpen])
 
   const onSubmit = async (data) => {
-    try {
-      if (esEdicion && materiaToEdit) {
-        await updateMateria(materiaToEdit.id, data)
-      } else {
-        await createMateria(data)
-      }
-      onClose()
-    } catch {
+    if (esEdicion && materiaToEdit) {
+      await updateMateria(materiaToEdit.id, data)
+    } else {
+      await createMateria(data)
     }
+    onClose()
   }
 
   if (!isOpen) return null

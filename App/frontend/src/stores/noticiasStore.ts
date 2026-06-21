@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { noticiasService } from '../services/noticiasService';
+import useUIStore from './uiStore';
 
 export interface Noticia {
   id: number;
@@ -108,9 +109,11 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
       set((state) => ({
         noticias: [...state.noticias, response.data.data],
       }));
+      useUIStore.getState().setPageNotification({ message: 'Noticia creada exitosamente', type: 'success' });
     } catch (err: any) {
-      const mensaje = err.response?.data?.message || 'Error al crear la noticia';
-      set({ error: mensaje });
+      let mensaje = err.response?.data?.message || 'Error al crear la noticia';
+      mensaje = mensaje.replace(/[Ss]lug/g, 'título');
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 
@@ -122,9 +125,11 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
           n.id === id ? { ...n, ...response.data.data } : n
         ),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Noticia actualizada exitosamente', type: 'success' });
     } catch (err: any) {
-      const mensaje = err.response?.data?.message || 'Error al actualizar la noticia';
-      set({ error: mensaje });
+      let mensaje = err.response?.data?.message || 'Error al actualizar la noticia';
+      mensaje = mensaje.replace(/[Ss]lug/g, 'título');
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 
@@ -134,9 +139,10 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
       set((state) => ({
         noticias: state.noticias.filter((n) => n.id !== id),
       }));
+      useUIStore.getState().setPageNotification({ message: 'Noticia eliminada exitosamente', type: 'success' });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la noticia';
-      set({ error: mensaje });
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' });
     }
   },
 

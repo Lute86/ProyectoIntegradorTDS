@@ -51,7 +51,7 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
     } else {
       reset({ nombre: '', apellido: '', email: '', rol: undefined });
     }
-  }, [usuarioToEdit, reset]);
+  }, [usuarioToEdit, reset, isOpen]);
 
   const onSubmit = async (data: UsuarioFormData) => {
     setErrorMsg('');

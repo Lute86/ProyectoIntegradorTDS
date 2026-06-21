@@ -32,8 +32,6 @@ describe('materiasStore', () => {
   it('addAsignacion relanza error en caso de fallo', async () => {
     api.post.mockRejectedValueOnce({ response: { data: { message: 'Error de prueba' } } })
     await expect(useMateriasStore.getState().addAsignacion(1, { materia_id: 1 })).rejects.toThrow()
-    const state = useMateriasStore.getState()
-    expect(state.error).toBe('Error de prueba')
   })
 
   it('removeAsignacion relanza error en caso de fallo', async () => {

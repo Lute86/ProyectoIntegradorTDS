@@ -65,7 +65,7 @@ const GaleriaPage = () => {
               </div>
               {/* Boton eliminar superpuesto */}
               <button
-                onClick={() => deleteImagen(img.id)}
+                onClick={() => { if (confirm('Eliminar esta imagen?')) deleteImagen(img.id); }}
                 className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white text-xs font-bold opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all flex items-center justify-center"
                 title="Eliminar imagen"
               >

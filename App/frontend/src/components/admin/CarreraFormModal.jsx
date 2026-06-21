@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,14 +10,14 @@ const carreraSchema = z.object({
   nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
   slug: z.string().min(2, 'El slug debe tener al menos 2 caracteres')
     .regex(/^[a-z0-9-]+$/, 'Solo minusculas, numeros y guiones'),
-  descripcion: z.string().optional(),
+  descripcion: z.string().min(10, 'La descripcion debe tener al menos 10 caracteres'),
   duracion: z.preprocess(
     (val) => (val === '' || val === undefined || val === null) ? undefined : Number(val),
-    z.number().int().min(1, 'La duracion debe ser un numero positivo').optional(),
+    z.number().int().min(1, 'La duracion debe ser un numero positivo'),
   ),
-  modalidad: z.string().optional(),
+  modalidad: z.string().min(1, 'Seleccione una modalidad'),
   color: z.string().regex(/^#[0-9A-F]{6}$/i, 'Color hex invalido (ej: #FF0000)').optional().or(z.literal('')),
-  activa: z.boolean().default(true),
+  activa: z.boolean(),
 });
 
 // Genera un slug a partir de un texto
@@ -32,7 +32,6 @@ const generarSlug = (texto) => {
 
 const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
   const { addCarrera, updateCarrera } = useCarrerasStore();
-  const [errorMsg, setErrorMsg] = useState('')
   const esEdicion = carreraToEdit !== null;
 
   const {
@@ -57,7 +56,6 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Cuando se edita, precarga los datos de la carrera
   useEffect(() => {
-    setErrorMsg('')
     if (carreraToEdit) {
       reset({
         nombre: carreraToEdit.nombre,
@@ -74,7 +72,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
         duracion: '', modalidad: '', color: '#3B82F6', activa: true,
       });
     }
-  }, [carreraToEdit, reset]);
+  }, [carreraToEdit, reset, isOpen]);
 
   // Auto-genera el slug cuando cambia el nombre
   const nombreActual = watch('nombre');
@@ -86,27 +84,22 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Envia los datos a la API
   const onSubmit = async (data) => {
-    setErrorMsg('')
     const body = {
       nombre: data.nombre,
       slug: data.slug,
-      descripcion: data.descripcion || undefined,
-      duracion: data.duracion || undefined,
-      modalidad: data.modalidad || undefined,
+      descripcion: data.descripcion,
+      duracion: data.duracion,
+      modalidad: data.modalidad,
       color: data.color || undefined,
       activa: data.activa,
     };
 
-    try {
-      if (esEdicion && carreraToEdit) {
-        await updateCarrera(carreraToEdit.id, body);
-      } else {
-        await addCarrera(body);
-      }
-      onClose();
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || 'Error al guardar la carrera')
+    if (esEdicion && carreraToEdit) {
+      await updateCarrera(carreraToEdit.id, body);
+    } else {
+      await addCarrera(body);
     }
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -224,12 +217,6 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
               )}
             </div>
           </div>
-
-          {errorMsg && (
-            <div className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-red-50 text-red-700 border border-red-200">
-              {errorMsg}
-            </div>
-          )}
 
           {/* Botones de accion */}
           <div className="flex gap-3 pt-2">
