@@ -9,6 +9,7 @@ import EstudiantesPage from './pages/public/EstudiantesPage/EstudiantesPage'
 import NoticiasPage from './pages/public/NoticiasPage/NoticiasPage'
 import NoticiaDetailPage from './pages/public/NoticiaDetailPage/NoticiaDetailPage'
 import EventosPagePublic from './pages/public/EventosPage/EventosPage'
+import NotFoundPage from './pages/public/NotFoundPage/NotFoundPage'
 import LoginPage from './pages/admin/LoginPage/LoginPage'
 import DashboardPage from './pages/admin/DashboardPage/DashboardPage.tsx'
 import UsuariosPage from './pages/admin/UsuariosPage'
@@ -51,6 +52,7 @@ export default function AppRouter() {
           <Route path="/eventos" element={<SectionGuard sectionId="events"><EventosPagePublic /></SectionGuard>} />
           <Route path="/contacto" element={<SectionGuard sectionId="contact"><ContactoPage /></SectionGuard>} />
           <Route path="/estudiantes" element={<SectionGuard sectionId="students"><EstudiantesPage /></SectionGuard>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/admin/dashboard" replace />} />
@@ -71,8 +73,6 @@ export default function AppRouter() {
           <Route path="ajustes" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><AjustesPage /></ProtectedRoute>} />
           <Route path="consultas" element={<ProtectedRoute user={user} loading={loading} allowedRoles={['admin']}><ConsultasPage /></ProtectedRoute>} />
         </Route>
-
-        <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
       </Routes>
     </BrowserRouter>
   )
