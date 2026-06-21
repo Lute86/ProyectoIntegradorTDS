@@ -34,7 +34,7 @@ export default function AdminLayout() {
   }, [isDesktop]);
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-50">
+    <div className="h-screen flex overflow-hidden bg-gray-50 dark:bg-slate-900">
       <AdminSidebar
         expanded={isDesktop || sidebarExpanded}
         collapsible={!isDesktop}

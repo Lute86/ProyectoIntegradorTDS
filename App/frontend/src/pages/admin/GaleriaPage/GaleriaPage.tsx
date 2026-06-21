@@ -13,8 +13,8 @@ const GaleriaPage = () => {
       {/* Header de la Pagina */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Galeria de Imagenes</h1>
-          <p className="text-sm text-gray-500">Administra las imagenes del instituto.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Galeria de Imagenes</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Administra las imagenes del instituto.</p>
         </div>
 
         <button
@@ -38,13 +38,13 @@ const GaleriaPage = () => {
       {isLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="aspect-[4/3] rounded-xl bg-gray-200 animate-pulse" />
+            <div key={i} className="aspect-[4/3] rounded-xl bg-gray-200 dark:bg-slate-700 animate-pulse" />
           ))}
         </div>
       ) : imagenes.length === 0 ? (
         /* Estado vacio */
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-          <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-300 font-bold text-2xl mb-4">+</div>
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-slate-500">
+          <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700/50 flex items-center justify-center text-gray-300 dark:text-slate-500 font-bold text-2xl mb-4">+</div>
           <p className="text-sm font-medium">No hay imagenes en la galeria.</p>
           <p className="text-xs mt-1">Haga clic en "Nueva Imagen" para agregar la primera.</p>
         </div>
@@ -52,7 +52,7 @@ const GaleriaPage = () => {
         /* Grid de imagenes */
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {imagenes.map((img) => (
-            <div key={img.id} className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 shadow-sm border border-gray-200">
+            <div key={img.id} className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-700/50 shadow-sm border border-gray-200 dark:border-slate-700">
               <img
                 src={img.url}
                 alt={img.titulo}

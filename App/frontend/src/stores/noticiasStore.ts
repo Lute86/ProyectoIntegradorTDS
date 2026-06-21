@@ -30,6 +30,7 @@ interface NoticiasState {
   isLoading: boolean;
   error: string | null;
   _lastFetched: number;
+  _lastParams: string;
   fetchNoticias: (params?: Record<string, unknown>) => Promise<void>;
   fetchNoticiaBySlug: (slug: string) => Promise<void>;
   fetchCategorias: () => Promise<void>;
@@ -46,12 +47,21 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
   isLoading: false,
   error: null,
   _lastFetched: 0,
+  _lastParams: '\0',
 
   fetchNoticias: async (params?: Record<string, unknown>) => {
     const now = Date.now();
-    const { _lastFetched, noticias } = get();
-    // Si ya hay datos frescos (TTL 30s) y no hay filtros nuevos, saltea el fetch
-    if (!params && _lastFetched > 0 && now - _lastFetched < TTL && noticias.length > 0) {
+    const { _lastFetched, _lastParams, noticias } = get();
+    const paramsKey = params ? JSON.stringify(params) : '';
+    // Solo usa cache si los datos son frescos (TTL 30s) Y se pidieron con los mismos
+    // filtros. Asi, alternar entre la home (estado=publicado) y el admin (todos los
+    // estados) siempre vuelve a pedir el listado correcto en vez de reusar el filtrado.
+    if (
+      paramsKey === _lastParams &&
+      _lastFetched > 0 &&
+      now - _lastFetched < TTL &&
+      noticias.length > 0
+    ) {
       return;
     }
     set({ isLoading: true, error: null });
@@ -60,7 +70,7 @@ export const useNoticiasStore = create<NoticiasState>((set, get) => ({
       // La API devuelve { success, data: { data: [...], total, page, limit, totalPages } }
       const datos = response.data?.data;
       const noticiasData = datos?.data ?? [];
-      set({ noticias: noticiasData, isLoading: false, _lastFetched: Date.now() });
+      set({ noticias: noticiasData, isLoading: false, _lastFetched: Date.now(), _lastParams: paramsKey });
     } catch (err: any) {
       const mensaje = err.response?.data?.message || 'Error al cargar las noticias';
       set({ error: mensaje, isLoading: false });

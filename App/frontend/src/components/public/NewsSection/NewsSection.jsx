@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import NewsCard from './NewsCard'
+import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function NewsSection({ noticias, onVerDetalle }) {
@@ -40,14 +41,9 @@ export default function NewsSection({ noticias, onVerDetalle }) {
   if (total === 0) return null
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
-      <div className="max-w-content mx-auto px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-            Ultimas Noticias
-          </h2>
-          <p className="text-body/70 dark:text-white/70 mt-2">Mantenete informado sobre las novedades del instituto</p>
-        </div>
+    <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
+        <SectionHeader eyebrow="Actualidad" icon="globe" title="Ultimas Noticias" />
 
         <div className="relative">
           {total > visible && current > 0 && (
@@ -91,8 +87,9 @@ export default function NewsSection({ noticias, onVerDetalle }) {
 
         <div className="text-center mt-8">
           <Link to="/noticias"
-            className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 hover:shadow-lg hover:scale-105 transition-all duration-300">
+            className="group inline-flex items-center gap-2 px-7 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
             Ver todas las noticias
+            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </Link>
         </div>
       </div>

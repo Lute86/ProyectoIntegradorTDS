@@ -78,37 +78,37 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-5">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md p-6 space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">{esEdicion ? 'Editar Usuario' : 'Nuevo Usuario'}</h2>
-          <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors">X</button>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">{esEdicion ? 'Editar Usuario' : 'Nuevo Usuario'}</h2>
+          <button type="button" onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 dark:text-slate-500 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors">X</button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[65vh] pr-1">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
-            <input {...register('nombre')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Ingrese el nombre" />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Nombre</label>
+            <input {...register('nombre')} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Ingrese el nombre" />
             {errors.nombre && <p className="text-xs text-red-500 mt-1">{errors.nombre.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Apellido</label>
-            <input {...register('apellido')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Ingrese el apellido" />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Apellido</label>
+            <input {...register('apellido')} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Ingrese el apellido" />
             {errors.apellido && <p className="text-xs text-red-500 mt-1">{errors.apellido.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-            <input {...register('email')} type="email" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="correo@ifts29.edu.ar" />
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Email</label>
+            <input {...register('email')} type="email" className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="correo@ifts29.edu.ar" />
             {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
           </div>
 
           {/* Contrasena */}
           {!esEdicion ? (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Contrasena</label>
-              <input {...register('password')} type="password" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Minimo 8 caracteres" />
-              <p className="text-xs text-gray-400 mt-1">Minimo 8 caracteres, 1 mayuscula y 1 numero.</p>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Contrasena</label>
+              <input {...register('password')} type="password" className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Minimo 8 caracteres" />
+              <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Minimo 8 caracteres, 1 mayuscula y 1 numero.</p>
               {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
             </div>
           ) : (
@@ -119,9 +119,9 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
               </button>
               {cambiarPass && (
                 <div className="mt-3">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nueva Contrasena</label>
-                  <input {...register('password')} type="password" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Dejar en blanco para mantener" />
-                  <p className="text-xs text-gray-400 mt-1">Minimo 8 caracteres, 1 mayuscula y 1 numero. Deje vacio para mantener la actual.</p>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Nueva Contrasena</label>
+                  <input {...register('password')} type="password" className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Dejar en blanco para mantener" />
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Minimo 8 caracteres, 1 mayuscula y 1 numero. Deje vacio para mantener la actual.</p>
                   {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
                 </div>
               )}
@@ -136,8 +136,8 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Rol</label>
-            <select {...register('rol')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Rol</label>
+            <select {...register('rol')} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700">
               <option value="">Seleccione un rol</option>
               <option value="admin">Admin</option>
               <option value="profesor">Profesor</option>
@@ -147,7 +147,7 @@ const UsuarioFormModal = ({ isOpen, onClose, usuarioToEdit }: UsuarioFormModalPr
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition">Cancelar</button>
+            <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition">Cancelar</button>
             <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg transition shadow-sm">
               {esEdicion ? 'Guardar cambios' : 'Crear usuario'}
             </button>

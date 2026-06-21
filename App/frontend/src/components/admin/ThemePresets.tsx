@@ -74,13 +74,13 @@ const ThemePresets = () => {
               className={clsx(
                 "text-left p-3 lg:p-4 rounded-xl border-2 transition-all",
                 activo
-                  ? "border-blue-500 bg-blue-50 shadow-md"
-                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:border-blue-400 shadow-md"
+                  : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-gray-300 hover:shadow-sm"
               )}
             >
-              <h3 className="text-sm font-bold text-gray-900 mb-0.5">{tema.nombre}</h3>
-              <p className="text-[10px] text-gray-500 mb-2">{tema.descripcion}</p>
-              <div className="flex h-4 rounded-lg overflow-hidden border border-gray-200">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100 mb-0.5">{tema.nombre}</h3>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 mb-2">{tema.descripcion}</p>
+              <div className="flex h-4 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700">
                 {Object.values(tema.colores).map((color) => (
                   <div key={color} className="flex-1" style={{ backgroundColor: color }} />
                 ))}
@@ -91,9 +91,9 @@ const ThemePresets = () => {
       </div>
 
       {/* Selectores de color individuales (acordeon) */}
-      <div className="border-t border-gray-200 pt-4">
+      <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
         <button type="button" onClick={() => setMostrarAjustes(!mostrarAjustes)}
-          className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+          className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-slate-200 hover:text-blue-600 transition-colors">
           <span className="text-lg font-mono">{mostrarAjustes ? '-' : '+'}</span>
           Ajuste fino de colores
         </button>

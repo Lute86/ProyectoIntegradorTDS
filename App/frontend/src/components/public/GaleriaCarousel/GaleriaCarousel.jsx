@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useGaleriaStore } from '../../../stores/galeriaStore';
+import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
 const badgeColors = {
@@ -45,14 +46,9 @@ export default function GaleriaCarousel() {
   }, [goNext, total, visible])
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
-      <div className="max-w-content mx-auto px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-            Galeria del Instituto
-          </h2>
-          <p className="text-body/70 dark:text-white/70 mt-2">Imagenes de nuestras instalaciones, eventos y alumnos</p>
-        </div>
+    <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
+        <SectionHeader eyebrow="Nuestro instituto" title="Galeria del Instituto" />
 
         <div className="relative">
           {total > visible && current > 0 && (

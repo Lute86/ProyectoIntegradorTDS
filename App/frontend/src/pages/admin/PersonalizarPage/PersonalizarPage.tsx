@@ -26,10 +26,10 @@ const PersonalizarPage = () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 animate-pulse space-y-6 flex-1 overflow-y-auto bg-white">
-        <div className="h-8 bg-gray-200 rounded w-1/3" />
-        <div className="h-4 bg-gray-100 rounded w-1/4" />
-        <div className="h-96 bg-gray-100 rounded-xl" />
+      <div className="p-4 md:p-8 animate-pulse space-y-6 flex-1 overflow-y-auto bg-white dark:bg-slate-800">
+        <div className="h-8 bg-gray-200 dark:bg-slate-700/50 rounded w-1/3" />
+        <div className="h-4 bg-gray-100 dark:bg-slate-700/50 rounded w-1/4" />
+        <div className="h-96 bg-gray-100 dark:bg-slate-700/50 rounded-xl" />
       </div>
     );
   }
@@ -37,11 +37,11 @@ const PersonalizarPage = () => {
   if (!config) return null;
 
   return (
-    <div className="p-4 md:p-8 animate-in fade-in duration-500 w-full bg-white pb-24">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 w-full bg-white dark:bg-slate-800 pb-24">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Personalizar Sitio</h1>
-          <p className="text-sm text-gray-500 mt-1">Personaliza la apariencia visual del sitio.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Personalizar Sitio</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Personaliza la apariencia visual del sitio.</p>
         </div>
         <div className="flex items-center gap-3">
           {isDirty && <span className="text-xs text-amber-600 font-medium">Hay cambios sin guardar</span>}
@@ -60,34 +60,34 @@ const PersonalizarPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6 min-w-0">
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
+          <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 md:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Temas y Colores</h2>
-              <p className="text-xs text-gray-500">Seleccione un tema o ajuste cada color de forma individual.</p>
+              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Temas y Colores</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Seleccione un tema o ajuste cada color de forma individual.</p>
             </div>
             <ThemePresets />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
+          <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 md:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Tipografia</h2>
-              <p className="text-xs text-gray-500">Configure las fuentes y el tamano base del sitio.</p>
+              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Tipografía</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Configure las fuentes y el tamaño base del sitio.</p>
             </div>
             <TypographyConfig />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
+          <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 md:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Layout</h2>
-              <p className="text-xs text-gray-500">Seleccione la disposicion del contenido.</p>
+              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Layout</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Seleccione la disposicion del contenido.</p>
             </div>
             <LayoutSelector />
           </section>
 
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-5 space-y-4">
+          <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 md:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Orden de Secciones</h2>
-              <p className="text-xs text-gray-500">Active, desactive o reordene las secciones. Los cambios afectaran tanto a la Landing Page como al Menu de Navegacion (Navbar).</p>
+              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Orden de Secciones</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Active, desactive o reordene las secciones. Los cambios afectaran tanto a la Landing Page como al Menu de Navegacion (Navbar).</p>
             </div>
             <SectionManager />
           </section>
