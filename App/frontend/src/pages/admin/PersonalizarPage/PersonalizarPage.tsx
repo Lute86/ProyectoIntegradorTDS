@@ -70,8 +70,8 @@ const PersonalizarPage = () => {
 
           <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 md:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Tipografia</h2>
-              <p className="text-xs text-gray-500 dark:text-slate-400">Configure las fuentes y el tamano base del sitio.</p>
+              <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">Tipografía</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Configure las fuentes y el tamaño base del sitio.</p>
             </div>
             <TypographyConfig />
           </section>
