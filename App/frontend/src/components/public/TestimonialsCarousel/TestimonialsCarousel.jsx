@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import TestimonialSlide from './TestimonialSlide'
+import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
 export default function TestimonialsCarousel({ testimonios }) {
@@ -26,14 +27,9 @@ export default function TestimonialsCarousel({ testimonios }) {
   const t = testimonios[current]
 
   return (
-    <section ref={ref} className={`py-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
-      <div className="max-w-content mx-auto px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-h2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-            Lo que dicen nuestros estudiantes
-          </h2>
-          <p className="text-body/70 dark:text-white/70 mt-2">Testimonios de quienes forman parte del IFTS 29</p>
-        </div>
+    <section ref={ref} className={`py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={style}>
+      <div className="max-w-content-narrow mx-auto px-6 lg:px-10">
+        <SectionHeader eyebrow="Experiencias" icon="users" title="Lo que dicen nuestros estudiantes" />
 
         <div className="max-w-2xl mx-auto">
           <TestimonialSlide testimonio={t} />

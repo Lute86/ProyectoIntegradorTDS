@@ -13,7 +13,7 @@ export default function Skeleton({ variant = 'text', className }) {
   return (
     <div
       className={clsx(
-        'animate-pulse bg-gray-200',
+        'animate-pulse bg-gray-200 dark:bg-slate-700',
         variants[variant] || variants.text,
         className
       )}

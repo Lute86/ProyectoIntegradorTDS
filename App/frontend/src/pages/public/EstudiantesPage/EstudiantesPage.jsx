@@ -3,6 +3,7 @@ import useCarrerasStore from '../../../stores/carrerasStore'
 import { horariosService } from '../../../services/horariosService'
 import { useSiteConfigStore } from '../../../stores/siteConfigStore'
 import QuickLinks from './QuickLinks'
+import PageHero from '../../../components/public/PageHero/PageHero'
 import estudiantesBg from '../../../assets/fonts/estudiantes1.png'
 
 const nombresCuatri = {
@@ -43,7 +44,7 @@ export default function EstudiantesPage() {
   const [cuatriFilter, setCuatriFilter] = useState('')
   const [anioFilter, setAnioFilter] = useState('')
 
-  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+  useEffect(() => { fetchCarreras({ activa: true }) }, [fetchCarreras])
 
   const fetchHorarios = async (id) => {
     if (!id) { setHorarios([]); return }
@@ -129,18 +130,14 @@ export default function EstudiantesPage() {
   useEffect(() => { setComision(''); setCuatriFilter('') }, [anioFilter])
 
   return (
-    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-100">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-      <div
-        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
-        style={{ backgroundImage: `url(${estudiantesBg})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Portal del Estudiante</h1>
-          <p className="text-white text-xl">Todo lo que necesitas en un solo lugar</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Portal"
+        title="Portal del Estudiante"
+        subtitle="Todo lo que necesitas en un solo lugar"
+        image={estudiantesBg}
+      />
 
       <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8 space-y-12`}>
         <section>
@@ -151,7 +148,7 @@ export default function EstudiantesPage() {
           <div className="flex flex-wrap justify-center gap-6">
             {portalCards.map((card) => (
                 <div key={card.title}
-                  className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-64"
+                  className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md p-6 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-64"
               >
                 <div className={`w-20 h-20 rounded-full ${card.bg} flex items-center justify-center text-3xl mx-auto mb-4`}>
                   {card.icon}
@@ -175,7 +172,7 @@ export default function EstudiantesPage() {
             </h2>
           </div>
 
-          <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-5">
+          <div className="max-w-2xl mx-auto mb-6 bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-5">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label className="block text-center text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Carrera</label>
@@ -235,7 +232,7 @@ export default function EstudiantesPage() {
           </div>
 
           {loadingHorarios ? (
-            <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden p-8">
+            <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm overflow-hidden p-8">
               <div className="space-y-3 animate-pulse">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-full" />
@@ -247,7 +244,7 @@ export default function EstudiantesPage() {
               {horariosPorCuatri.map(([cuatri, filas]) => (
                 <div key={cuatri}>
                   <h3 className="text-lg font-bold text-body dark:text-white mb-2">{nombresCuatri[cuatri] || `Cuatrimestre ${cuatri}`}</h3>
-                  <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm overflow-hidden">
+                  <div className="bg-white dark:bg-white/10 rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>

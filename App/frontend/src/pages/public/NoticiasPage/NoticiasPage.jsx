@@ -13,8 +13,20 @@ const BADGE_COLORS = {
 import { useNoticiasStore } from '../../../stores/noticiasStore'
 import IconoCategoria from '../../../components/ui/IconoCategoria/IconoCategoria'
 import NoticiaDetailModal from '../../../components/public/NoticiaDetailModal/NoticiaDetailModal'
+import PageHero from '../../../components/public/PageHero/PageHero'
 import NewsSidebar from './NewsSidebar'
 import noticiaBg from '../../../assets/fonts/noticia1.png'
+
+// Gradientes decorativos por categoria (coherente con NewsCard de la home)
+const THUMB_GRADIENTS = {
+  Inscripciones: 'from-blue-500 to-blue-700',
+  Examenes: 'from-emerald-500 to-emerald-700',
+  'Exámenes': 'from-emerald-500 to-emerald-700',
+  Evento: 'from-amber-500 to-orange-600',
+  Tecnologia: 'from-violet-500 to-purple-700',
+  'Tecnología': 'from-violet-500 to-purple-700',
+  Becas: 'from-rose-500 to-pink-700',
+}
 
 
 const ITEMS_PER_PAGE = 4
@@ -48,7 +60,7 @@ export default function NoticiasPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedNoticia, setSelectedNoticia] = useState(null)
 
-  useEffect(() => { fetchNoticias() }, [fetchNoticias])
+  useEffect(() => { fetchNoticias({ estado: 'publicado' }) }, [fetchNoticias])
 
   useEffect(() => {
     const cat = searchParams.get('categoria')
@@ -93,23 +105,19 @@ export default function NoticiasPage() {
   const handleCategoryFilter = (cat) => { setSelectedCategory(cat === selectedCategory ? '' : cat); setCurrentPage(1) }
 
   return (
-    <div className="dark:bg-gradient-to-b dark:from-slate-600 dark:to-slate-500 bg-site-bg">
+    <div className="dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-slate-50">
       <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
-      <div
-        className="relative bg-gradient-to-br from-slate-900 to-blue-700 text-white bg-cover bg-center min-h-[220px] md:min-h-[280px] flex items-center"
-        style={{ backgroundImage: `url(${noticiaBg})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-content mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-h1 mb-3">Noticias</h1>
-          <p className="text-white text-xl">Mantenete informado sobre las novedades del instituto</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Actualidad"
+        title="Noticias"
+        subtitle="Mantenete informado sobre las novedades del instituto"
+        image={noticiaBg}
+      />
 
-      <div className={`${layout === 'boxed' ? '' : 'max-w-content'} mx-auto px-4 py-8`}>
+      <div className={`${layout === 'boxed' ? '' : 'max-w-content-narrow'} mx-auto px-6 lg:px-8 py-8`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <div className="lg:col-span-2 xl:col-span-3">
-            <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm p-6 mb-6">
+            <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row gap-4 mb-5">
                 <div className="flex-1 relative">
                   <input
@@ -158,10 +166,11 @@ export default function NoticiasPage() {
                 <div className="space-y-5">
                   {paginatedNoticias.map((n) => (
                     <div key={n.id} onClick={() => setSelectedNoticia(n)}
-                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-white/20 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                      className="block bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                       <div className="flex flex-col sm:flex-row gap-5 p-5">
-                        <div className="sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-400 to-slate-600 text-white">
-                          <IconoCategoria categoria={n.categoria} className="w-10 h-10" selected />
+                        <div className={`relative sm:min-w-[140px] sm:w-[140px] h-28 sm:h-auto rounded-lg flex items-center justify-center overflow-hidden text-white bg-gradient-to-br ${THUMB_GRADIENTS[n.categoria] || 'from-slate-400 to-slate-600'}`}>
+                          <div className="absolute -right-4 -top-5 w-20 h-20 rounded-full bg-white/15 blur-md" />
+                          <IconoCategoria categoria={n.categoria} className="relative w-10 h-10 drop-shadow-md" selected />
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${BADGE_COLORS[n.categoria] || 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300'}`}>

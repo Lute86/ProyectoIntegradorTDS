@@ -43,15 +43,22 @@ export default function HomePage() {
   const { eventos, fetchEventos } = useEventosStore()
   const { testimonios, fetchTestimonios } = useTestimoniosStore()
 
-  useEffect(() => { fetchCarreras() }, [fetchCarreras])
+  useEffect(() => { fetchCarreras({ activa: true }) }, [fetchCarreras])
   useEffect(() => { fetchNoticias({ estado: 'publicado' }) }, [fetchNoticias])
   useEffect(() => { fetchEventos() }, [fetchEventos])
-  useEffect(() => { fetchTestimonios() }, [fetchTestimonios])
+  useEffect(() => { fetchTestimonios({ visible: true }) }, [fetchTestimonios])
 
   const noticias = useMemo(() => {
     const lista = Array.isArray(storeNoticias) ? storeNoticias : []
     return lista.map(adaptNoticia)
   }, [storeNoticias])
+
+  // Defensa extra: aunque la API ya filtra por visible=true, nunca mostramos
+  // testimonios ocultos en la home (el store es compartido con el admin).
+  const testimoniosVisibles = useMemo(
+    () => (Array.isArray(testimonios) ? testimonios.filter((t) => t.visible !== false) : []),
+    [testimonios],
+  )
 
   const secciones = useMemo(() => {
     const components = {
@@ -60,7 +67,7 @@ export default function HomePage() {
       careers:     () => <CareerCarousel carreras={carreras} />,
       news:        () => <NewsSection noticias={noticias} onVerDetalle={(n) => setSelectedNoticia(n)} />,
       events:      () => <EventosSection eventos={eventos} onVerDetalle={(e) => setSelectedEvento(e)} />,
-      testimonials:() => <TestimonialsCarousel testimonios={testimonios} />,
+      testimonials:() => <TestimonialsCarousel testimonios={testimoniosVisibles} />,
       gallery:     () => <GaleriaCarousel />,
     }
 
@@ -68,15 +75,33 @@ export default function HomePage() {
       .filter((s) => s.visible && HOME_SECTION_IDS.includes(s.id))
       .sort((a, b) => a.order - b.order)
 
+    let bandIndex = 0
     return visibleItems.map((s) => {
       const render = components[s.id]
-      return render ? <div key={s.id}>{render()}</div> : null
+      if (!render) return null
+      if (s.id === 'hero') return <div key={s.id}>{render()}</div>
+      const banded = bandIndex % 2 === 0
+      bandIndex += 1
+      return (
+        <div
+          key={s.id}
+          className={banded ? 'bg-white/70 dark:bg-white/[0.04] border-y border-slate-200/60 dark:border-white/[0.06] backdrop-blur-sm' : ''}
+        >
+          {render()}
+        </div>
+      )
     }).filter(Boolean)
-  }, [config.sections, carreras, noticias, eventos, testimonios, setSelectedNoticia])
+  }, [config.sections, carreras, noticias, eventos, testimoniosVisibles, setSelectedNoticia])
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500 bg-site-bg">
-      <div className={layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-50 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-700 dark:to-slate-500">
+      {/* Acentos decorativos de fondo para dar profundidad entre secciones */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute top-[20%] -left-40 w-[30rem] h-[30rem] rounded-full bg-[var(--color-primary)]/5 dark:bg-[var(--color-primary)]/10 blur-3xl" />
+        <div className="absolute top-[55%] -right-40 w-[34rem] h-[34rem] rounded-full bg-[var(--color-secondary)]/5 dark:bg-[var(--color-secondary)]/10 blur-3xl" />
+        <div className="absolute top-[85%] left-1/3 w-[26rem] h-[26rem] rounded-full bg-[var(--color-accent)]/5 dark:bg-[var(--color-accent)]/8 blur-3xl" />
+      </div>
+      <div className={`relative z-10 ${layout === 'boxed' ? 'max-w-[1280px] mx-auto' : ''}`}>
         {secciones}
       </div>
       {selectedEvento && (

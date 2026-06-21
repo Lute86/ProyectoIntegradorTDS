@@ -18,7 +18,7 @@ const ColorPicker = ({ label, value, onChange }: ColorPickerProps) => {
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700">{label}</label>
+      <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300">{label}</label>
 
       {/*Selector visual con preview y valor HEX */}
       <div className="flex items-center gap-3">
@@ -26,12 +26,12 @@ const ColorPicker = ({ label, value, onChange }: ColorPickerProps) => {
           type="button"
           onClick={() => inputRef.current?.click()}
           className={clsx(
-            'w-10 h-10 rounded-lg border-2 border-gray-200 shrink-0 shadow-sm',
+            'w-10 h-10 rounded-lg border-2 border-gray-200 dark:border-slate-600 shrink-0 shadow-sm',
             'hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer'
           )}
           style={{ backgroundColor: value }}
         />
-        <span className="text-sm font-mono text-gray-600">{value}</span>
+        <span className="text-sm font-mono text-gray-600 dark:text-slate-400">{value}</span>
         <input
           ref={inputRef}
           type="color"
@@ -51,8 +51,8 @@ const ColorPicker = ({ label, value, onChange }: ColorPickerProps) => {
             className={clsx(
               'w-6 h-6 rounded-full border-2 transition-all',
               value === color
-                ? 'border-gray-800 scale-110 ring-2 ring-blue-300'
-                : 'border-gray-200 hover:scale-110'
+                ? 'border-gray-800 dark:border-slate-200 scale-110 ring-2 ring-blue-300'
+                : 'border-gray-200 dark:border-slate-600 hover:scale-110'
             )}
             style={{ backgroundColor: color }}
             title={color}

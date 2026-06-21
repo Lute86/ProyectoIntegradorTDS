@@ -29,20 +29,20 @@ const LayoutSelector = () => {
             className={clsx(
               'text-left p-3 lg:p-4 rounded-xl border-2 transition-all',
               activo
-                ? 'border-blue-500 bg-blue-50 shadow-md'
-                : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:border-blue-400 shadow-md'
+                : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-gray-300 hover:shadow-sm'
             )}
           >
             <div className={clsx(
-              'flex border border-gray-300 rounded-lg p-1.5 mb-2 justify-center'
+              'flex border border-gray-300 dark:border-slate-600 rounded-lg p-1.5 mb-2 justify-center'
             )}>
               <div className={clsx(
                 'h-8 bg-blue-200 rounded',
                 layout.id === 'full-width' ? 'w-full' : 'w-3/4'
               )} />
             </div>
-            <h3 className="text-sm font-bold text-gray-900">{layout.nombre}</h3>
-            <p className="text-[10px] text-gray-500 mt-0.5">{layout.descripcion}</p>
+            <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">{layout.nombre}</h3>
+            <p className="text-[10px] text-gray-500 dark:text-slate-400 mt-0.5">{layout.descripcion}</p>
           </button>
         );
       })}

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import api from '../services/api'
+import useUIStore from './uiStore'
 
 const useCarrerasStore = create((set, get) => ({
   carreras: [],
@@ -7,10 +8,10 @@ const useCarrerasStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  fetchCarreras: async () => {
+  fetchCarreras: async (params) => {
     set({ loading: true, error: null })
     try {
-      const response = await api.get('/carreras')
+      const response = await api.get('/carreras', { params })
       set({ carreras: response.data.data, loading: false })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al cargar las carreras'
@@ -44,10 +45,11 @@ const useCarrerasStore = create((set, get) => ({
     try {
       const response = await api.post('/carreras', carrera)
       set((state) => ({ carreras: [...state.carreras, response.data.data] }))
+      useUIStore.getState().setPageNotification({ message: 'Carrera creada exitosamente', type: 'success' })
     } catch (err) {
-      const mensaje = err.response?.data?.message || 'Error al crear la carrera'
-      set({ error: mensaje })
-      throw err
+      let mensaje = err.response?.data?.message || 'Error al crear la carrera'
+      mensaje = mensaje.replace(/[Ss]lug/g, 'título')
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 
@@ -59,10 +61,11 @@ const useCarrerasStore = create((set, get) => ({
           c.id === id ? { ...c, ...response.data.data } : c
         ),
       }))
+      useUIStore.getState().setPageNotification({ message: 'Carrera actualizada exitosamente', type: 'success' })
     } catch (err) {
-      const mensaje = err.response?.data?.message || 'Error al actualizar la carrera'
-      set({ error: mensaje })
-      throw err
+      let mensaje = err.response?.data?.message || 'Error al actualizar la carrera'
+      mensaje = mensaje.replace(/[Ss]lug/g, 'título')
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 
@@ -72,10 +75,10 @@ const useCarrerasStore = create((set, get) => ({
       set((state) => ({
         carreras: state.carreras.filter((c) => c.id !== id),
       }))
+      useUIStore.getState().setPageNotification({ message: 'Carrera eliminada exitosamente', type: 'success' })
     } catch (err) {
       const mensaje = err.response?.data?.message || 'Error al eliminar la carrera'
-      set({ error: mensaje })
-      throw err
+      useUIStore.getState().setPageNotification({ message: mensaje, type: 'error' })
     }
   },
 

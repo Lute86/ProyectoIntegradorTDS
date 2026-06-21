@@ -97,33 +97,33 @@ export const DataTable = <T extends { id?: string | number }>({
 
   if (isLoading) {
     return (
-      <div className="w-full animate-pulse border border-gray-100 rounded-lg overflow-hidden">
-        <div className="h-12 bg-gray-50 border-b border-gray-100 mb-1" />
+      <div className="w-full animate-pulse border border-gray-100 dark:border-slate-700 rounded-lg overflow-hidden">
+        <div className="h-12 bg-gray-50 dark:bg-slate-700 border-b border-gray-100 dark:border-slate-700 mb-1" />
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-16 bg-white border-b border-gray-50" />
+          <div key={i} className="h-16 bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-700" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className={clsx('w-full bg-white rounded-lg shadow-sm border border-gray-200', className)}>
+    <div className={clsx('w-full bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700', className)}>
       {/* Busqueda */}
       {searchable && (
-        <div className="px-3 md:px-4 py-3 border-b border-gray-200">
+        <div className="px-3 md:px-4 py-3 border-b border-gray-200 dark:border-slate-700">
           <input
             type="text"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             placeholder="Buscar..."
-            className="w-full sm:max-w-sm px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full sm:max-w-sm px-3 py-1.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           />
         </div>
       )}
 
       <div className="w-full overflow-x-auto block">
         <table className="w-full min-w-[600px] text-left border-collapse">
-          <thead className="bg-gray-50/80 border-b border-gray-200">
+          <thead className="bg-gray-50/80 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-700">
             <tr>
               {selectable && (
                 <th className="px-3 md:px-4 py-3 md:py-4 w-10">
@@ -139,8 +139,8 @@ export const DataTable = <T extends { id?: string | number }>({
                 <th
                   key={index}
                   className={clsx(
-                    'px-3 md:px-6 py-3 md:py-4 text-xs font-bold text-gray-500 uppercase tracking-wider',
-                    col.sortable && 'cursor-pointer select-none hover:text-gray-700',
+                    'px-3 md:px-6 py-3 md:py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider',
+                    col.sortable && 'cursor-pointer select-none hover:text-gray-700 dark:hover:text-slate-200',
                     col.className
                   )}
                   onClick={() => col.sortable && typeof col.accessor === 'string' && handleSort(col.accessor)}
@@ -154,18 +154,18 @@ export const DataTable = <T extends { id?: string | number }>({
                 </th>
               ))}
               {actions && (
-                <th className="px-3 md:px-6 py-3 md:py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                <th className="px-3 md:px-6 py-3 md:py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">
                   Acciones
                 </th>
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
             {paginated.length > 0 ? (
               paginated.map((item, rowIndex) => (
                 <tr
                   key={item.id ?? rowIndex}
-                  className="hover:bg-blue-50/30 transition-colors duration-150 group"
+                  className="hover:bg-blue-50/30 dark:hover:bg-slate-700/50 transition-colors duration-150 group"
                 >
                   {selectable && (
                     <td className="px-3 md:px-4 py-3 md:py-4 w-10" onClick={(e) => e.stopPropagation()}>
@@ -180,7 +180,7 @@ export const DataTable = <T extends { id?: string | number }>({
                   {columns.map((col, colIndex) => (
                     <td
                       key={colIndex}
-                      className={clsx('px-3 md:px-6 py-3 md:py-4 text-sm text-gray-600 whitespace-nowrap', col.className)}
+                      className={clsx('px-3 md:px-6 py-3 md:py-4 text-sm text-gray-600 dark:text-slate-300 whitespace-nowrap', col.className)}
                     >
                       {typeof col.accessor === 'function'
                         ? col.accessor(item)
@@ -196,7 +196,7 @@ export const DataTable = <T extends { id?: string | number }>({
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length + (actions ? 1 : 0) + (selectable ? 1 : 0)} className="px-3 md:px-6 py-12 text-center text-gray-400 italic text-sm">
+                <td colSpan={columns.length + (actions ? 1 : 0) + (selectable ? 1 : 0)} className="px-3 md:px-6 py-12 text-center text-gray-400 dark:text-slate-500 italic text-sm">
                   {search ? 'No se encontraron resultados para la busqueda.' : emptyMessage}
                 </td>
               </tr>
@@ -207,25 +207,25 @@ export const DataTable = <T extends { id?: string | number }>({
 
       {/* Paginacion */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-3 md:px-6 py-3 border-t border-gray-200 text-xs md:text-sm">
-          <span className="text-gray-500 hidden sm:inline">
+        <div className="flex items-center justify-between px-3 md:px-6 py-3 border-t border-gray-200 dark:border-slate-700 text-xs md:text-sm">
+          <span className="text-gray-500 dark:text-slate-400 hidden sm:inline">
             {sorted.length} registro{sorted.length !== 1 ? 's' : ''} — Pag. {page} de {totalPages}
           </span>
-          <span className="text-gray-500 sm:hidden">
+          <span className="text-gray-500 dark:text-slate-400 sm:hidden">
             {page}/{totalPages}
           </span>
           <div className="flex gap-1">
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-2 md:px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold"
+              className="px-2 md:px-3 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold"
             >
               Ant.
             </button>
             <button
               disabled={page >= totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="px-2 md:px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold"
+              className="px-2 md:px-3 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition text-xs font-semibold"
             >
               Sig.
             </button>

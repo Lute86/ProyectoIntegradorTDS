@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,14 +10,14 @@ const carreraSchema = z.object({
   nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
   slug: z.string().min(2, 'El slug debe tener al menos 2 caracteres')
     .regex(/^[a-z0-9-]+$/, 'Solo minusculas, numeros y guiones'),
-  descripcion: z.string().optional(),
+  descripcion: z.string().min(10, 'La descripcion debe tener al menos 10 caracteres'),
   duracion: z.preprocess(
     (val) => (val === '' || val === undefined || val === null) ? undefined : Number(val),
-    z.number().int().min(1, 'La duracion debe ser un numero positivo').optional(),
+    z.number().int().min(1, 'La duracion debe ser un numero positivo'),
   ),
-  modalidad: z.string().optional(),
+  modalidad: z.string().min(1, 'Seleccione una modalidad'),
   color: z.string().regex(/^#[0-9A-F]{6}$/i, 'Color hex invalido (ej: #FF0000)').optional().or(z.literal('')),
-  activa: z.boolean().default(true),
+  activa: z.boolean(),
 });
 
 // Genera un slug a partir de un texto
@@ -32,7 +32,6 @@ const generarSlug = (texto) => {
 
 const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
   const { addCarrera, updateCarrera } = useCarrerasStore();
-  const [errorMsg, setErrorMsg] = useState('')
   const esEdicion = carreraToEdit !== null;
 
   const {
@@ -57,7 +56,6 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Cuando se edita, precarga los datos de la carrera
   useEffect(() => {
-    setErrorMsg('')
     if (carreraToEdit) {
       reset({
         nombre: carreraToEdit.nombre,
@@ -74,7 +72,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
         duracion: '', modalidad: '', color: '#3B82F6', activa: true,
       });
     }
-  }, [carreraToEdit, reset]);
+  }, [carreraToEdit, reset, isOpen]);
 
   // Auto-genera el slug cuando cambia el nombre
   const nombreActual = watch('nombre');
@@ -86,43 +84,38 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
   // Envia los datos a la API
   const onSubmit = async (data) => {
-    setErrorMsg('')
     const body = {
       nombre: data.nombre,
       slug: data.slug,
-      descripcion: data.descripcion || undefined,
-      duracion: data.duracion || undefined,
-      modalidad: data.modalidad || undefined,
+      descripcion: data.descripcion,
+      duracion: data.duracion,
+      modalidad: data.modalidad,
       color: data.color || undefined,
       activa: data.activa,
     };
 
-    try {
-      if (esEdicion && carreraToEdit) {
-        await updateCarrera(carreraToEdit.id, body);
-      } else {
-        await addCarrera(body);
-      }
-      onClose();
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || 'Error al guardar la carrera')
+    if (esEdicion && carreraToEdit) {
+      await updateCarrera(carreraToEdit.id, body);
+    } else {
+      await addCarrera(body);
     }
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-5">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-5">
         {/* Header del modal */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             {esEdicion ? 'Editar Carrera' : 'Nueva Carrera'}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
+            className="w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 dark:text-slate-500 hover:text-gray-600 flex items-center justify-center text-lg font-bold transition-colors"
           >
             X
           </button>
@@ -131,10 +124,10 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Campo: Nombre */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Nombre</label>
             <input
               {...register('nombre')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="Nombre de la carrera"
             />
             {errors.nombre && (
@@ -147,11 +140,11 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
 
           {/* Campo: Descripcion */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Descripcion</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Descripcion</label>
             <textarea
               {...register('descripcion')}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
               placeholder="Descripcion de la carrera"
             />
             {errors.descripcion && (
@@ -162,13 +155,13 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
           {/* Filas: Duracion + Modalidad */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Duracion (años)</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Duracion (años)</label>
               <input
                 type="number"
                 min={1}
                 max={10}
                 {...register('duracion')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                 placeholder="3"
               />
               {errors.duracion && (
@@ -177,10 +170,10 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Modalidad</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Modalidad</label>
               <select
                 {...register('modalidad')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-slate-700"
               >
                 <option value="">Seleccione modalidad</option>
                 <option value="presencial">Presencial</option>
@@ -207,7 +200,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Activa</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Activa</label>
               <div className="flex items-center h-10">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -216,7 +209,7 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  <span className="ms-3 text-sm text-gray-600">Carrera activa</span>
+                  <span className="ms-3 text-sm text-gray-600 dark:text-slate-400">Carrera activa</span>
                 </label>
               </div>
               {errors.activa && (
@@ -225,18 +218,12 @@ const CarreraFormModal = ({ isOpen, onClose, carreraToEdit }) => {
             </div>
           </div>
 
-          {errorMsg && (
-            <div className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-red-50 text-red-700 border border-red-200">
-              {errorMsg}
-            </div>
-          )}
-
           {/* Botones de accion */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition"
             >
               Cancelar
             </button>
