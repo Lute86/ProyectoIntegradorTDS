@@ -11,7 +11,7 @@ vi.mock('../../../services/api', () => ({
   },
 }))
 
-import DashboardPage from '../../../pages/admin/DashboardPage/DashboardPage.tsx'
+import DashboardPage from '../../../pages/admin/DashboardPage/DashboardPage.jsx'
 
 describe('DashboardPage', () => {
   beforeEach(() => {

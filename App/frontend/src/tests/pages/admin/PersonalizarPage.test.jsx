@@ -44,7 +44,7 @@ vi.mock('../../../components/admin/PreviewPanel', () => ({
   default: () => <div>PreviewPanel mock</div>,
 }))
 
-import PersonalizarPage from '../../../pages/admin/PersonalizarPage/PersonalizarPage.tsx'
+import PersonalizarPage from '../../../pages/admin/PersonalizarPage/PersonalizarPage.jsx'
 
 describe('PersonalizarPage', () => {
   beforeEach(() => {
