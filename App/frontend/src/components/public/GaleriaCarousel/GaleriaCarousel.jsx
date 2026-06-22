@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useGaleriaStore } from '../../../stores/galeriaStore';
+import { getImageUrl } from '../../../services/api';
 import SectionHeader from '../SectionHeader/SectionHeader'
 import useScrollReveal from '../../../hooks/useScrollReveal'
 
@@ -67,7 +68,7 @@ export default function GaleriaCarousel() {
                   style={{ flex: `0 0 ${100 / visible}%` }}>
                   <div className="bg-white/10 dark:bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden group">
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img src={img.url} alt={img.titulo}
+                      <img src={getImageUrl(img.url)} alt={img.titulo}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     <div className="p-4">

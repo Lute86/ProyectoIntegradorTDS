@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GaleriaImagen, useGaleriaStore } from '../../../stores/galeriaStore';
 import ImageUploadModal from '../../../components/admin/ImageUploadModal';
+import { getImageUrl } from '../../../services/api';
 
 const GaleriaPage = () => {
   const { imagenes, isLoading, error, fetchImagenes, deleteImagen } = useGaleriaStore();
@@ -54,7 +55,7 @@ const GaleriaPage = () => {
           {imagenes.map((img) => (
             <div key={img.id} className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-700/50 shadow-sm border border-gray-200 dark:border-slate-700">
               <img
-                src={img.url}
+                src={getImageUrl(img.url)}
                 alt={img.titulo}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

@@ -28,4 +28,11 @@ api.interceptors.response.use(
   }
 );
 
+export function getImageUrl(path) {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const base = import.meta.env?.VITE_UPLOADS_URL || ''
+  return `${base}${path}`
+}
+
 export default api;

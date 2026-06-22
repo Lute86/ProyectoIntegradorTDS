@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { getImageUrl } from '../services/api';
 
 interface UserAvatarProps {
   nombre: string;
@@ -19,7 +20,7 @@ const UserAvatar = ({ nombre, apellido, imagenUrl, size = 'md' }: UserAvatarProp
   if (imagenUrl) {
     return (
       <img
-        src={imagenUrl}
+        src={getImageUrl(imagenUrl)}
         alt={`${nombre} ${apellido}`}
         className={clsx('rounded-full object-cover border border-gray-200', SIZE_MAP[size])}
       />
