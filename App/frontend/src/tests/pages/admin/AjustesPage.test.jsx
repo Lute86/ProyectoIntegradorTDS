@@ -16,7 +16,7 @@ vi.mock('../../../stores/siteConfigStore', () => ({
   })),
 }))
 
-import AjustesPage from '../../../pages/admin/AjustesPage/AjustesPage.tsx'
+import AjustesPage from '../../../pages/admin/AjustesPage/AjustesPage.jsx'
 
 describe('AjustesPage', () => {
   beforeEach(() => {
