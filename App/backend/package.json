@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "API REST — IFTS 29 Nueva Web · GoSoftware",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon --watch src src/server.js",
