@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { getImageUrl } from '../services/api';
+import { getImageUrl } from '../../services/api';
 
 interface UserAvatarProps {
   nombre: string;

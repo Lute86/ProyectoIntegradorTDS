@@ -9,6 +9,7 @@ const router = Router();
 
 router.get('/', imagenController.getAll);
 router.get('/:id', idParamValidation, imagenController.getById);
+router.get('/:id/data', imagenController.getImageData);
 
 router.use(authenticate);
 

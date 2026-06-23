@@ -1,24 +1,7 @@
 import multer from 'multer';
-import crypto from 'crypto';
-import { fileURLToPath } from 'url';
-import { dirname, join, extname } from 'path';
-import mkdirp from 'mkdirp';
+import { extname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const uploadDir = process.env.UPLOAD_DIR || join(__dirname, '../../uploads');
-mkdirp.sync(uploadDir);
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
-    cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
-  },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;

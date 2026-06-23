@@ -11,7 +11,14 @@ async function start() {
   try {
     await models.sequelize.authenticate();
     logger.info('[db] conexión establecida correctamente');
-    
+
+    if (process.env.NODE_ENV === 'production') {
+      logger.info('[db] ejecutando migraciones...');
+      const { execSync } = await import('child_process');
+      execSync('npx sequelize-cli db:migrate', { stdio: 'inherit', cwd: import.meta.dirname });
+      logger.info('[db] migraciones ejecutadas');
+    }
+
     app.listen(PORT, () => {
       logger.info(`[server] corriendo en http://localhost:${PORT}`);
     });

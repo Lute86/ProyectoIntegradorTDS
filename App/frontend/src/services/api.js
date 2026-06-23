@@ -33,7 +33,11 @@ api.interceptors.response.use(
 
 export function getImageUrl(path) {
   if (!path) return ''
-  if (path.startsWith('http')) return path
+  if (path.startsWith('http') || path.startsWith('data:')) return path
+  if (path.startsWith('/api/')) {
+    const base = import.meta.env?.VITE_API_URL || ''
+    return `${base}${path}`
+  }
   const base = import.meta.env?.VITE_UPLOADS_URL || ''
   return `${base}${path}`
 }

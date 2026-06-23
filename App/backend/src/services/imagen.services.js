@@ -31,16 +31,25 @@ export const getById = handleDbErrors(async (id) => {
   return imagen;
 });
 
-export const create = handleDbErrors(async (data) => {
-  const imagen = await models.Imagen.create(data);
+export const create = handleDbErrors(async (data, fileBuffer) => {
+  const payload = { ...data };
+  if (fileBuffer) {
+    payload.data = fileBuffer;
+  }
+  const imagen = await models.Imagen.create(payload);
   return imagen;
 });
 
-export const update = handleDbErrors(async (id, data) => {
+export const update = handleDbErrors(async (id, data, fileBuffer) => {
   const imagen = await models.Imagen.findByPk(id);
 
   if (!imagen) {
     throw new NotFoundError('Imagen no encontrada');
+  }
+
+  const payload = { ...data };
+  if (fileBuffer) {
+    payload.data = fileBuffer;
   }
 
   if (data.url && data.url !== imagen.url) {
@@ -50,7 +59,7 @@ export const update = handleDbErrors(async (id, data) => {
     }
   }
 
-  await imagen.update(data);
+  await imagen.update(payload);
   return imagen;
 });
 

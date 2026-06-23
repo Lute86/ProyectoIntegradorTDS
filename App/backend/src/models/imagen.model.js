@@ -13,6 +13,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    data: {
+      type: DataTypes.BLOB('long'),
+      allowNull: true,
+    },
     alt_text: {
       type: DataTypes.STRING,
       allowNull: true,
