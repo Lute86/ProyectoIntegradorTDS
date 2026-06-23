@@ -5,6 +5,7 @@ import app from './app.js';
 import models from './models/index.js';
 import logger from './utils/logger.js';
 
+import { resolve } from 'path';
 const PORT = process.env.PORT || 3000;
 
 async function start() {
@@ -15,7 +16,8 @@ async function start() {
     if (process.env.NODE_ENV === 'production') {
       logger.info('[db] ejecutando migraciones...');
       const { execSync } = await import('child_process');
-      execSync('npx sequelize-cli db:migrate', { stdio: 'inherit', cwd: import.meta.dirname });
+    //  execSync('npx sequelize-cli db:migrate', { stdio: 'inherit', cwd: import.meta.dirname });
+      execSync('npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all', { stdio: 'inherit', cwd: resolve(import.meta.dirname, '..') });
       logger.info('[db] migraciones ejecutadas');
     }
 
