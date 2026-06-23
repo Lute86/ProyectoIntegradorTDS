@@ -21,7 +21,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // ── Seguridad y utilidades ──────────────────────────────────────────────
-app.use(helmet());
+//app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', {
   stream: { write: (msg) => logger.http(msg.trim()) },
